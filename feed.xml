@@ -35,22 +35,22 @@
             <category>Reflection</category>
         </item>
         <item>
-            <title><![CDATA[Dropout as Implicit Bagging]]></title>
+            <title><![CDATA[Dropout as Implicit Bagging in Deep Learning]]></title>
             <link>https://alexleung.ca/blog/dropout-as-implicit-bagging/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/dropout-as-implicit-bagging/</guid>
             <pubDate>Sat, 07 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Chapter 7 gave me a better model for dropout: a cheap approximation to averaging many thinned networks with shared parameters.]]></description>
+            <description><![CDATA[A concrete way to understand dropout in deep learning: shared-parameter ensemble training that approximates bagging without training separate models.]]></description>
             <category>Deep Learning</category>
             <category>ML Theory</category>
             <category>Book Notes</category>
             <category>Regularization</category>
         </item>
         <item>
-            <title><![CDATA[iPad Air M3 11-Inch: First Impressions]]></title>
+            <title><![CDATA[iPad Air M3 11-Inch for Note-Taking: First Impressions]]></title>
             <link>https://alexleung.ca/blog/ipad-air-m3-11-inch-first-impressions/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/ipad-air-m3-11-inch-first-impressions/</guid>
             <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[For one study-heavy workflow, a lightweight iPad Air setup covered more than I expected.]]></description>
+            <description><![CDATA[First impressions of the 11-inch iPad Air M3 as a lightweight reading, annotation, and note-taking setup for a study-heavy workflow.]]></description>
             <category>Tech</category>
             <category>Review</category>
             <category>Lifestyle</category>
@@ -76,11 +76,11 @@
             <category>Reflection</category>
         </item>
         <item>
-            <title><![CDATA[Medium and Meaning]]></title>
+            <title><![CDATA[Using AI Tools for Small Site Edits and Visual Ideas]]></title>
             <link>https://alexleung.ca/blog/medium-and-meaning/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/medium-and-meaning/</guid>
             <pubDate>Sun, 22 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A few reflections on using AI tools for small site edits and exploratory visuals.]]></description>
+            <description><![CDATA[Reflections on how Codex, Sora, and other AI tools change the texture of small site edits, exploratory visuals, and creative judgment.]]></description>
             <category>AI</category>
             <category>Creativity</category>
             <category>Reflection</category>
@@ -96,21 +96,21 @@
             <category>Book Notes</category>
         </item>
         <item>
-            <title><![CDATA[Short Review: Deep Learning Part I]]></title>
+            <title><![CDATA[Deep Learning Part I Review: Goodfellow, Bengio, and Courville]]></title>
             <link>https://alexleung.ca/blog/deep-learning-part-1-review/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/deep-learning-part-1-review/</guid>
             <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Thoughts on the mathematical foundations section of Goodfellow, Bengio, and Courville's Deep Learning textbook.]]></description>
+            <description><![CDATA[A short review of Part I of Goodfellow, Bengio, and Courville's Deep Learning textbook, focused on the mathematical foundations.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
             <category>Review</category>
         </item>
         <item>
-            <title><![CDATA[How My AI Coding Workflow Changed]]></title>
+            <title><![CDATA[My AI Coding Workflow: Planning, Review, and Verification]]></title>
             <link>https://alexleung.ca/blog/from-coder-to-orchestrator/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/from-coder-to-orchestrator/</guid>
             <pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[How my AI workflow moved from quick snippets to clearer briefs, review checkpoints, and verification.]]></description>
+            <description><![CDATA[How my AI coding workflow moved from quick snippets to clearer briefs, agent review checkpoints, and build/lint/test verification.]]></description>
             <category>AI</category>
             <category>Developer Workflow</category>
             <category>Future of Work</category>
