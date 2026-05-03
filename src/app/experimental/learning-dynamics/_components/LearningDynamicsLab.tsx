@@ -23,8 +23,10 @@ import {
   SurfaceId,
   Vector2,
 } from "@/features/optimizer-lab/types";
+import { trackExperimentInteraction } from "@/lib/analytics";
 
 const DEFAULT_SURFACE_ID: SurfaceId = "quadratic-elongated";
+const EXPERIMENT_ID = "learning_dynamics_lab";
 const DEFAULT_RUN_CONFIGS: RunConfig[] = [
   {
     id: "run-a",
@@ -110,6 +112,13 @@ export function LearningDynamicsLab() {
   const [isPlaying, setIsPlaying] = useState(false);
   const hasActiveRun = hasAnyActiveRun(runs, runConfigs);
 
+  const trackLearningDynamicsInteraction = (
+    action: string,
+    params: Record<string, string | number> = {}
+  ) => {
+    trackExperimentInteraction(EXPERIMENT_ID, action, params);
+  };
+
   const resetRuns = (
     nextSurface = surface,
     nextConfigs = runConfigs,
@@ -120,6 +129,10 @@ export function LearningDynamicsLab() {
   };
 
   const handleRunConfigChange = (runId: RunId, patch: Partial<RunConfig>) => {
+    trackLearningDynamicsInteraction("change_run_config", {
+      fields: Object.keys(patch).join(","),
+      run_id: runId,
+    });
     const nextConfigs = runConfigs.map((config) =>
       config.id === runId ? { ...config, ...patch } : config
     );
@@ -129,6 +142,9 @@ export function LearningDynamicsLab() {
   };
 
   const handleSurfaceChange = (nextSurfaceId: SurfaceId) => {
+    trackLearningDynamicsInteraction("change_surface", {
+      surface_id: nextSurfaceId,
+    });
     const nextSurface = getSurfaceById(nextSurfaceId);
     const nextStartPoint = nextSurface.defaultStart;
 
@@ -257,7 +273,12 @@ export function LearningDynamicsLab() {
                 <button
                   type="button"
                   className="rounded-md border border-cyan-400/50 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-500/20"
-                  onClick={() => setIsPlaying((currentValue) => !currentValue)}
+                  onClick={() => {
+                    trackLearningDynamicsInteraction(
+                      isPlaying ? "pause" : "play"
+                    );
+                    setIsPlaying((currentValue) => !currentValue);
+                  }}
                 >
                   {isPlaying ? "Pause" : "Play"}
                 </button>
@@ -265,6 +286,7 @@ export function LearningDynamicsLab() {
                   type="button"
                   className="rounded-md border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
                   onClick={() => {
+                    trackLearningDynamicsInteraction("single_step");
                     setIsPlaying(false);
                     stepAllRuns();
                   }}
@@ -274,7 +296,10 @@ export function LearningDynamicsLab() {
                 <button
                   type="button"
                   className="rounded-md border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
-                  onClick={() => resetRuns()}
+                  onClick={() => {
+                    trackLearningDynamicsInteraction("reset");
+                    resetRuns();
+                  }}
                 >
                   Reset
                 </button>

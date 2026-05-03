@@ -22,7 +22,7 @@ jest.mock("@/lib/blogApi", () => ({
 }));
 
 describe("sitemap", () => {
-  it("emits canonical trailing-slash URLs for top-level, experiment, and tag pages", () => {
+  it("emits canonical trailing-slash URLs for top-level, experiment, and indexable tag pages", () => {
     const entries = sitemap();
     expect(entries).toEqual(
       expect.arrayContaining([
@@ -33,7 +33,7 @@ describe("sitemap", () => {
         expect.objectContaining({ url: "https://alexleung.ca/experimental/" }),
         expect.objectContaining({ url: "https://alexleung.ca/contact/" }),
         expect.objectContaining({
-          url: "https://alexleung.ca/blog/tags/ai/",
+          url: "https://alexleung.ca/blog/tags/deep-learning/",
         }),
       ])
     );
@@ -52,6 +52,11 @@ describe("sitemap", () => {
     expect(blogPostEntry).toBeDefined();
     expect(pidControllerEntry).toBeDefined();
     expect(tagEntry).toBeDefined();
+    expect(
+      entries.some(
+        (entry) => entry.url === "https://alexleung.ca/blog/tags/ai/"
+      )
+    ).toBe(false);
   });
 
   it("includes all crawlable experimental tools", () => {

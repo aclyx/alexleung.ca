@@ -20,8 +20,10 @@ import {
   updateBranch,
   updateBus,
 } from "@/features/load-flow/state/loadFlowStore";
+import { trackExperimentInteraction } from "@/lib/analytics";
 
 const BUS_TYPE_OPTIONS: BusType[] = ["SLACK", "PV", "PQ"];
+const EXPERIMENT_ID = "load_flow_workspace";
 type BranchStatus = NonNullable<Branch["status"]>;
 const BRANCH_STATUS_OPTIONS: readonly BranchStatus[] = [
   "IN_SERVICE",
@@ -94,11 +96,21 @@ export function LoadFlowWorkspace() {
     [solveResult.branchFlows]
   );
 
+  const trackLoadFlowInteraction = (
+    action: string,
+    params: Record<string, string | number> = {}
+  ) => {
+    trackExperimentInteraction(EXPERIMENT_ID, action, params);
+  };
+
   const resetActiveReferenceCase = () => {
     if (!selectedReferenceScenario) {
       return;
     }
 
+    trackLoadFlowInteraction("reset_reference_case", {
+      scenario_id: selectedReferenceScenario.id,
+    });
     setEditorState((previousState) => {
       const resetState = replaceEditorStateFromLoadFlowCase(
         selectedReferenceScenario.loadFlowCase
@@ -144,6 +156,7 @@ export function LoadFlowWorkspace() {
             type="button"
             className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
             onClick={() => {
+              trackLoadFlowInteraction("reset_editor_model");
               setSelectedReferenceScenarioId(null);
               setEditorState(createInitialLoadFlowEditorState());
             }}
@@ -156,6 +169,9 @@ export function LoadFlowWorkspace() {
               type="button"
               className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
               onClick={() => {
+                trackLoadFlowInteraction("load_reference_case", {
+                  scenario_id: scenario.id,
+                });
                 setSelectedReferenceScenarioId(scenario.id);
                 setEditorState(
                   replaceEditorStateFromLoadFlowCase(scenario.loadFlowCase)
@@ -224,14 +240,20 @@ export function LoadFlowWorkspace() {
           <button
             type="button"
             className="mt-3 rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
-            onClick={() => setEditorState((prev) => addBus(prev))}
+            onClick={() => {
+              trackLoadFlowInteraction("add_bus");
+              setEditorState((prev) => addBus(prev));
+            }}
           >
             Add bus
           </button>
           <button
             type="button"
             className="ml-2 mt-3 rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
-            onClick={() => setEditorState((prev) => autoLayoutBuses(prev))}
+            onClick={() => {
+              trackLoadFlowInteraction("auto_layout");
+              setEditorState((prev) => autoLayoutBuses(prev));
+            }}
           >
             Auto-layout SLD
           </button>
@@ -245,6 +267,7 @@ export function LoadFlowWorkspace() {
                 className="rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
                 onClick={() => {
                   const [fromBusId, toBusId] = editorState.busOrder;
+                  trackLoadFlowInteraction("add_branch");
                   setEditorState((prev) => addBranch(prev, fromBusId, toBusId));
                 }}
               >
@@ -271,9 +294,12 @@ export function LoadFlowWorkspace() {
                       ? "border-emerald-300 bg-emerald-900/40 text-emerald-100"
                       : "border-gray-600 hover:bg-gray-800"
                   }`}
-                  onClick={() =>
-                    setEditorState((prev) => selectElement(prev, "BUS", bus.id))
-                  }
+                  onClick={() => {
+                    trackLoadFlowInteraction("select_bus", { bus_id: bus.id });
+                    setEditorState((prev) =>
+                      selectElement(prev, "BUS", bus.id)
+                    );
+                  }}
                 >
                   {bus.name} • {bus.type} • {bus.baseKV} kV
                 </button>
@@ -294,11 +320,14 @@ export function LoadFlowWorkspace() {
                       ? "border-emerald-300 bg-emerald-900/40 text-emerald-100"
                       : "border-blue-800 text-blue-200 hover:bg-gray-800"
                   }`}
-                  onClick={() =>
+                  onClick={() => {
+                    trackLoadFlowInteraction("select_branch", {
+                      branch_id: branch.id,
+                    });
                     setEditorState((prev) =>
                       selectElement(prev, "BRANCH", branch.id)
-                    )
-                  }
+                    );
+                  }}
                 >
                   {branch.id}: {branch.fromBusId} → {branch.toBusId}
                 </button>

@@ -1,7 +1,7 @@
 ---
-title: "Medium and Meaning"
+title: "Using AI Tools for Small Site Edits and Visual Ideas"
 date: "2026-02-22"
-excerpt: "A few reflections on using AI tools for small site edits and exploratory visuals."
+excerpt: "Reflections on how Codex, Sora, and other AI tools change the texture of small site edits, exploratory visuals, and creative judgment."
 coverImage: "/assets/blog/medium-and-meaning/cover.webp"
 tags:
   - "AI"

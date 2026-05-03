@@ -1,8 +1,8 @@
 ---
-title: "Short Review: Deep Learning Part I"
+title: "Deep Learning Part I Review: Goodfellow, Bengio, and Courville"
 date: "2026-02-07"
 updated: "2026-02-14"
-excerpt: "Thoughts on the mathematical foundations section of Goodfellow, Bengio, and Courville's Deep Learning textbook."
+excerpt: "A short review of Part I of Goodfellow, Bengio, and Courville's Deep Learning textbook, focused on the mathematical foundations."
 coverImage: "/assets/blog/deep-learning-part-1-review/cover.webp"
 tags:
   - "Deep Learning"

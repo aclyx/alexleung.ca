@@ -1,6 +1,8 @@
 import { getAllPosts } from "@/lib/blogApi";
 
-type TagEntry = {
+const INDEXABLE_TAG_MIN_POST_COUNT = 2;
+
+export type TagEntry = {
   count: number;
   latestModified: string;
   name: string;
@@ -57,6 +59,10 @@ export function getAllTags(): TagEntry[] {
   }
 
   return [...tagMap.values()];
+}
+
+export function isIndexableTag(tag: Pick<TagEntry, "count">): boolean {
+  return tag.count >= INDEXABLE_TAG_MIN_POST_COUNT;
 }
 
 export function getTagBySlug(tagSlug: string): TagEntry | null {

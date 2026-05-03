@@ -21,8 +21,10 @@ import {
   SimulatorPresetId,
 } from "@/features/pid-simulator/types";
 import { roundTo } from "@/features/pid-simulator/utils";
+import { trackExperimentInteraction } from "@/lib/analytics";
 
 const FIXED_DT_SECONDS = 1 / 60;
+const EXPERIMENT_ID = "pid_controller_simulator";
 const MAX_ELAPSED_SECONDS = 0.25;
 const MAX_CATCH_UP_STEPS_PER_FRAME = 12;
 const DEFAULT_MAX_TIME_SECONDS = 20;
@@ -217,6 +219,12 @@ export function PidSimulatorWorkspace() {
     () => computeControlBehaviorMetrics(metricSamplesRef.current, setpoint),
     [setpoint, simulationState.timeSeconds]
   );
+  const trackPidInteraction = (
+    action: string,
+    params: Record<string, string | number> = {}
+  ) => {
+    trackExperimentInteraction(EXPERIMENT_ID, action, params);
+  };
 
   return (
     <section className="space-y-6 rounded-xl border border-gray-700 bg-gray-900/60 p-6 shadow-sm">
@@ -257,6 +265,9 @@ export function PidSimulatorWorkspace() {
               return;
             }
 
+            trackPidInteraction("change_preset", {
+              preset_id: preset.id,
+            });
             applySimulationParameters({
               nextPresetId: preset.id,
               nextKp: preset.gains.kp,
@@ -265,33 +276,44 @@ export function PidSimulatorWorkspace() {
               nextSetpoint: preset.setpoint,
             });
           }}
-          onKpChange={(value) =>
+          onKpChange={(value) => {
+            trackPidInteraction("change_gain", { gain: "kp", value });
             applySimulationParameters({
               nextKp: value,
-            })
-          }
-          onKiChange={(value) =>
+            });
+          }}
+          onKiChange={(value) => {
+            trackPidInteraction("change_gain", { gain: "ki", value });
             applySimulationParameters({
               nextKi: value,
-            })
-          }
-          onKdChange={(value) =>
+            });
+          }}
+          onKdChange={(value) => {
+            trackPidInteraction("change_gain", { gain: "kd", value });
             applySimulationParameters({
               nextKd: value,
-            })
-          }
-          onSetpointChange={(value) =>
+            });
+          }}
+          onSetpointChange={(value) => {
+            trackPidInteraction("change_setpoint", { value });
             applySimulationParameters({
               nextSetpoint: value,
-            })
-          }
-          onSimulationSpeedChange={setSimulationSpeed}
-          onMaxTimeChange={(value) =>
+            });
+          }}
+          onSimulationSpeedChange={(value) => {
+            trackPidInteraction("change_simulation_speed", { value });
+            setSimulationSpeed(value);
+          }}
+          onMaxTimeChange={(value) => {
+            trackPidInteraction("change_max_time", { value });
             applySimulationParameters({
               nextMaxTimeSeconds: value,
-            })
-          }
+            });
+          }}
           onToggleRunning={() => {
+            trackPidInteraction(
+              hasReachedMaxTime ? "restart_after_complete" : "toggle_running"
+            );
             if (hasReachedMaxTime) {
               resetSimulation(true);
               return;
@@ -299,7 +321,10 @@ export function PidSimulatorWorkspace() {
 
             setIsRunning((current) => !current);
           }}
-          onReset={resetSimulation}
+          onReset={() => {
+            trackPidInteraction("reset");
+            resetSimulation();
+          }}
         />
       </div>
 

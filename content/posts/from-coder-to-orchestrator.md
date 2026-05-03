@@ -1,14 +1,13 @@
 ---
-title: "How My AI Coding Workflow Changed"
+title: "My AI Coding Workflow: Planning, Review, and Verification"
 date: "2026-02-03"
 updated: "2026-02-14"
-excerpt: "How my AI workflow moved from quick snippets to clearer briefs, review checkpoints, and verification."
+excerpt: "How my AI coding workflow moved from quick snippets to clearer briefs, agent review checkpoints, and build/lint/test verification."
 coverImage: "/assets/blog/from-coder-to-orchestrator/cover.webp"
 tags:
   - "AI"
   - "Developer Workflow"
   - "Future of Work"
-
 ---
 
 Over the past two years, my day-to-day coding workflow has moved from quick AI help toward clearer task definition and verification. In early 2024, I used AI mostly for autocomplete-level tasks such as snippets, error explanations, and small refactors. By 2026, I still write code when needed, but far more of my time goes to defining tasks clearly, checking outputs, and fixing edge cases the tools miss.

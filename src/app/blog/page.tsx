@@ -71,7 +71,10 @@ export default function BlogIndex() {
               />
             ))}
           </div>
-          <FollowItSubscribeForm className="my-6" />
+          <FollowItSubscribeForm
+            analyticsPlacement="blog_index"
+            className="my-6"
+          />
         </ResponsiveContainer>
       </PageShell>
       <JsonLdBreadcrumbs

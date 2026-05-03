@@ -8,6 +8,7 @@ export function SocialMediaList() {
     <ResponsiveContainer element="section">
       <Subtitle title="Connect" id="social" />
       <SocialLinkList
+        analyticsPlacement="contact_page"
         className="mt-8 flex flex-wrap justify-center gap-6"
         itemClassName="list-none"
         linkClassName={surfaceClassNames({

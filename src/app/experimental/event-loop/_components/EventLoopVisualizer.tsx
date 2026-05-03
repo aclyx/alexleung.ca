@@ -14,8 +14,10 @@ import {
   createInitialState,
   stepEventLoop,
 } from "@/features/event-loop/model/scheduler";
+import { trackExperimentInteraction } from "@/lib/analytics";
 
 const DEFAULT_EXAMPLE_ID = EVENT_LOOP_EXAMPLES[0].id;
+const EXPERIMENT_ID = "event_loop_visualizer";
 
 export function EventLoopVisualizer() {
   const [selectedExampleId, setSelectedExampleId] =
@@ -57,6 +59,12 @@ export function EventLoopVisualizer() {
         : state.timers.length > 0
           ? "No runnable work yet; clock advances until a timer is due."
           : "All queues are empty. Execution is complete.";
+  const trackEventLoopInteraction = (
+    action: string,
+    params: Record<string, string | number> = {}
+  ) => {
+    trackExperimentInteraction(EXPERIMENT_ID, action, params);
+  };
 
   return (
     <section className="mt-6 rounded-xl border border-gray-700 bg-gray-950/70 p-6 shadow-sm">
@@ -73,7 +81,12 @@ export function EventLoopVisualizer() {
               id="example"
               className="mt-2 w-full rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100"
               value={selectedExampleId}
-              onChange={(event) => setSelectedExampleId(event.target.value)}
+              onChange={(event) => {
+                trackEventLoopInteraction("change_example", {
+                  example_id: event.target.value,
+                });
+                setSelectedExampleId(event.target.value);
+              }}
             >
               {EVENT_LOOP_EXAMPLES.map((example) => (
                 <option key={example.id} value={example.id}>
@@ -95,13 +108,23 @@ export function EventLoopVisualizer() {
             isPlaying={isPlaying}
             isComplete={state.completed}
             speedMs={speedMs}
-            onPlayPause={() => setIsPlaying((previous) => !previous)}
-            onStep={() => setState((previous) => stepEventLoop(previous))}
+            onPlayPause={() => {
+              trackEventLoopInteraction(isPlaying ? "pause" : "play");
+              setIsPlaying((previous) => !previous);
+            }}
+            onStep={() => {
+              trackEventLoopInteraction("single_step");
+              setState((previous) => stepEventLoop(previous));
+            }}
             onReset={() => {
+              trackEventLoopInteraction("reset");
               setIsPlaying(false);
               setState(createInitialState(selectedExample));
             }}
-            onSpeedChange={setSpeedMs}
+            onSpeedChange={(value) => {
+              trackEventLoopInteraction("change_speed", { value });
+              setSpeedMs(value);
+            }}
           />
 
           <div className="rounded-lg border border-violet-700/40 bg-violet-950/20 p-4">
