@@ -9,6 +9,7 @@ export default function Footer() {
   return (
     <section className="section-center py-4 text-center">
       <SocialLinkList
+        analyticsPlacement="footer"
         itemClassName="mx-2 mb-4 inline-block list-none"
         linkClassName="text-xl text-white"
       />

@@ -46,7 +46,7 @@ export default function ContactPage() {
         <SocialMediaList />
         <ResponsiveContainer element="section">
           <Subtitle title="Subscribe" id="subscribe" />
-          <FollowItSubscribeForm />
+          <FollowItSubscribeForm analyticsPlacement="contact_page" />
         </ResponsiveContainer>
       </PageShell>
     </>

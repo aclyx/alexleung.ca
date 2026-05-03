@@ -1,6 +1,9 @@
 import { render, screen } from "@testing-library/react";
 
-import TagArchivePage, { generateStaticParams } from "../page";
+import TagArchivePage, {
+  generateMetadata,
+  generateStaticParams,
+} from "../page";
 
 jest.mock("next/link", () => {
   return function MockLink({
@@ -74,6 +77,9 @@ describe("TagArchivePage", () => {
       "/blog/agent-notes/"
     );
     expect(screen.queryByText("Deep Learning Review")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/Posts about AI tools, coding agents, creativity/i)
+    ).toBeInTheDocument();
   });
 
   it("generates one static param per unique tag slug", () => {
@@ -98,5 +104,13 @@ describe("TagArchivePage", () => {
     expect(itemListSchema["@id"]).toBe(
       "https://alexleung.ca/blog/tags/ai/#itemlist"
     );
+  });
+
+  it("marks single-post tag archives as noindex while preserving follow", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ tag: "ai" }),
+    });
+
+    expect(metadata.robots).toEqual({ index: false, follow: true });
   });
 });

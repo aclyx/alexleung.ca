@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 
+import { TrackedSocialLink } from "@/components/TrackedSocialLink";
 import { data } from "@/constants/socialLinks";
 
 type SocialLinkListProps = {
@@ -10,10 +11,12 @@ type SocialLinkListProps = {
   iconClassName?: string;
   rel?: string;
   showLabel?: boolean;
+  analyticsPlacement?: string;
   labelFormatter?: (label: string) => ReactNode;
 };
 
 export function SocialLinkList({
+  analyticsPlacement = "social_links",
   className,
   itemClassName,
   linkClassName,
@@ -27,12 +30,12 @@ export function SocialLinkList({
     <ul className={className}>
       {data.map((link) => (
         <li key={link.id} className={itemClassName}>
-          <a
+          <TrackedSocialLink
             href={link.url}
             className={linkClassName}
             rel={rel}
-            target="_blank"
-            aria-label={link.label}
+            label={link.label}
+            analyticsPlacement={analyticsPlacement}
           >
             <span className={iconClassName}>{link.icon}</span>
             {showLabel ? (
@@ -40,7 +43,7 @@ export function SocialLinkList({
                 {labelFormatter(link.label)}
               </span>
             ) : null}
-          </a>
+          </TrackedSocialLink>
         </li>
       ))}
     </ul>

@@ -16,7 +16,13 @@ import {
   buildPageMetadata,
   toAbsoluteUrl,
 } from "@/lib/seo";
-import { getAllTags, getTagBySlug, getTagPath } from "@/lib/tags";
+import {
+  getAllTags,
+  getTagBySlug,
+  getTagPath,
+  isIndexableTag,
+  type TagEntry,
+} from "@/lib/tags";
 
 export const dynamicParams = false;
 
@@ -37,6 +43,37 @@ function getPostsForTag(tagName: string) {
   ]).filter((post) => post.tags.includes(tagName));
 }
 
+const TAG_DESCRIPTIONS: Record<string, string> = {
+  ai: "Posts about AI tools, coding agents, creativity, and how software work changes when rough prototypes get cheaper.",
+  architecture:
+    "Notes on software architecture, static site trade-offs, and the small systems that keep this site maintainable.",
+  "book-notes":
+    "Book notes from Alex Leung, with a focus on deep learning, machine learning foundations, and technical reading.",
+  "deep-learning":
+    "Posts on deep learning concepts, textbook notes, regularization, and the structural assumptions behind neural networks.",
+  "developer-workflow":
+    "Notes on developer workflow, AI coding tools, verification loops, and small improvements to the way software gets built.",
+  "future-of-work":
+    "Reflections on how AI tools change software work, prototyping, review, and who gets to test rough ideas.",
+  lifestyle:
+    "Personal notes on tools, moving, study routines, and the small practical details around work and life.",
+  "ml-theory":
+    "Machine learning theory notes on regularization, model structure, optimization, and the reasoning behind familiar techniques.",
+  "next-js":
+    "Posts about building this Next.js site, including static export, image handling, and practical architecture choices.",
+  reflection:
+    "Personal reflections on software, AI tools, creativity, learning, and the texture of day-to-day work.",
+  review:
+    "Short reviews and impressions of books, tools, and devices that changed how I work or learn.",
+};
+
+function getTagDescription(tag: TagEntry): string {
+  return (
+    TAG_DESCRIPTIONS[tag.slug] ??
+    `Posts tagged ${tag.name} on Alex Leung's blog.`
+  );
+}
+
 export function generateStaticParams() {
   return getAllTags().map((tag) => ({
     tag: tag.slug,
@@ -53,9 +90,8 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   const posts = getPostsForTag(tag.name);
   const firstCoverImage = posts.find((post) => post.coverImage)?.coverImage;
-  const description = `Posts tagged ${tag.name} on Alex Leung's blog.`;
-
-  return buildPageMetadata({
+  const description = getTagDescription(tag);
+  const metadata = buildPageMetadata({
     title: `${tag.name} | Alex Leung`,
     description,
     path: getTagPath(tag.name),
@@ -67,6 +103,13 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
         ]
       : undefined,
   });
+
+  return isIndexableTag(tag)
+    ? metadata
+    : {
+        ...metadata,
+        robots: { index: false, follow: true },
+      };
 }
 
 export default async function TagArchivePage({ params }: Props) {
@@ -79,7 +122,7 @@ export default async function TagArchivePage({ params }: Props) {
 
   const posts = getPostsForTag(tag.name);
   const path = getTagPath(tag.name);
-  const description = `Posts tagged ${tag.name} on Alex Leung's blog.`;
+  const description = getTagDescription(tag);
 
   return (
     <>
@@ -106,7 +149,8 @@ export default async function TagArchivePage({ params }: Props) {
 
       <PageShell title={tag.name} titleId={`tag-${tag.slug}`}>
         <ResponsiveContainer variant="wide" className="space-y-8">
-          <p className="text-body max-w-3xl text-gray-300">
+          <p className="text-body max-w-3xl text-gray-300">{description}</p>
+          <p className="text-body-sm max-w-3xl text-gray-400">
             {tag.count} {tag.count === 1 ? "post" : "posts"} currently filed
             under <strong className="text-white">{tag.name}</strong>.
           </p>

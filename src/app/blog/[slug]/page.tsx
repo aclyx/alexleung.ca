@@ -187,7 +187,10 @@ export default async function Post({ params }: Props) {
                 </div>
               </section>
             )}
-            <FollowItSubscribeForm className="mt-10" />
+            <FollowItSubscribeForm
+              analyticsPlacement="blog_post"
+              className="mt-10"
+            />
 
             {relatedPosts.length > 0 && (
               <section

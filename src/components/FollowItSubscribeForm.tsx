@@ -3,6 +3,7 @@
 import { useState } from "react";
 
 import { surfaceClassNames } from "@/components/Surface";
+import { trackNewsletterSubscribe } from "@/lib/analytics";
 
 const DEFAULT_FOLLOW_IT_ACTION =
   "https://api.follow.it/subscription-form/RkY1QllwUjBPUEZhSnNWMnZQVjdlK2tMZWtJOWRrVGlma0xlT09iU0pIUWtPWjVVMWVucTE1WWdNYjZIckhoWGwzTy9yME5WNjJaQUxyUG5oclg2VC9Td2FIRGl5aWZZL3JheTB0UTdHOFZMaXJDV1FXcGlham5lSlFXc013NGl8bTM1Qkt0b1VwU0RNS1Z1Y1EzU0dnUkt1NjFOQ0FBd01wbW5RTFB2dHFHVT0=/8";
@@ -14,6 +15,7 @@ type FollowItSubscribeFormProps = {
   placeholder?: string;
   buttonLabel?: string;
   action?: string;
+  analyticsPlacement?: string;
 };
 
 export function FollowItSubscribeForm({
@@ -23,6 +25,7 @@ export function FollowItSubscribeForm({
   placeholder = "Enter your email",
   buttonLabel = "Subscribe",
   action = DEFAULT_FOLLOW_IT_ACTION,
+  analyticsPlacement = "newsletter_form",
 }: FollowItSubscribeFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const buttonClassName = [
@@ -55,6 +58,7 @@ export function FollowItSubscribeForm({
         className="mt-5 space-y-3"
         aria-busy={isSubmitting}
         onSubmit={() => {
+          trackNewsletterSubscribe(analyticsPlacement);
           setIsSubmitting(true);
         }}
       >

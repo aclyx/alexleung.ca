@@ -37,6 +37,7 @@ import {
   resizeViewport,
   zoomViewportAtPoint,
 } from "@/features/mandelbrot/viewport";
+import { trackExperimentInteraction } from "@/lib/analytics";
 
 import { MandelbrotCanvas } from "./MandelbrotCanvas";
 
@@ -90,6 +91,7 @@ const sectionTitleClass = "text-heading-sm text-white";
 const metaValueClass = "break-all text-sm text-cyan-100";
 const toolbarButtonClass =
   "rounded-md border border-white/15 px-3 py-2 text-sm text-white transition hover:border-cyan-300 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-40";
+const EXPERIMENT_ID = "mandelbrot_explorer";
 
 function isRenderBackendPreference(
   value: string
@@ -199,6 +201,25 @@ export function MandelbrotExplorer() {
     );
   }
 
+  function trackMandelbrotInteraction(
+    action: string,
+    params: Record<string, string | number> = {}
+  ) {
+    trackExperimentInteraction(EXPERIMENT_ID, action, params);
+  }
+
+  function handleZoom(multiplier: number, source: string) {
+    trackMandelbrotInteraction(multiplier < 1 ? "zoom_in" : "zoom_out", {
+      source,
+    });
+    zoomAroundCenter(multiplier);
+  }
+
+  function handleReset(source: string) {
+    trackMandelbrotInteraction("reset_view", { source });
+    commitViewport(defaultViewport);
+  }
+
   function handleIterationsChange(value: string) {
     const nextIterations = Number.parseInt(value, 10);
 
@@ -250,9 +271,9 @@ export function MandelbrotExplorer() {
             onPreviewViewport={setPreviewViewport}
             onCommitViewport={commitViewport}
             onHoverPointChange={setHoverPoint}
-            onZoomIn={() => zoomAroundCenter(0.5)}
-            onZoomOut={() => zoomAroundCenter(2)}
-            onReset={() => commitViewport(defaultViewport)}
+            onZoomIn={() => handleZoom(0.5, "canvas")}
+            onZoomOut={() => handleZoom(2, "canvas")}
+            onReset={() => handleReset("canvas")}
           />
 
           <Surface padding="md" className="grid gap-4 md:grid-cols-2">
@@ -266,7 +287,12 @@ export function MandelbrotExplorer() {
                       ? "border-cyan-300 bg-cyan-400/10 text-cyan-100"
                       : ""
                   }`}
-                  onClick={() => setDragMode("pan")}
+                  onClick={() => {
+                    trackMandelbrotInteraction("change_drag_mode", {
+                      drag_mode: "pan",
+                    });
+                    setDragMode("pan");
+                  }}
                 >
                   Pan mode
                 </button>
@@ -277,7 +303,12 @@ export function MandelbrotExplorer() {
                       ? "border-cyan-300 bg-cyan-400/10 text-cyan-100"
                       : ""
                   }`}
-                  onClick={() => setDragMode("box-zoom")}
+                  onClick={() => {
+                    trackMandelbrotInteraction("change_drag_mode", {
+                      drag_mode: "box_zoom",
+                    });
+                    setDragMode("box-zoom");
+                  }}
                 >
                   Box zoom mode
                 </button>
@@ -287,21 +318,21 @@ export function MandelbrotExplorer() {
                 <button
                   type="button"
                   className={toolbarButtonClass}
-                  onClick={() => zoomAroundCenter(0.5)}
+                  onClick={() => handleZoom(0.5, "toolbar")}
                 >
                   Zoom in
                 </button>
                 <button
                   type="button"
                   className={toolbarButtonClass}
-                  onClick={() => zoomAroundCenter(2)}
+                  onClick={() => handleZoom(2, "toolbar")}
                 >
                   Zoom out
                 </button>
                 <button
                   type="button"
                   className={toolbarButtonClass}
-                  onClick={() => commitViewport(defaultViewport)}
+                  onClick={() => handleReset("toolbar")}
                 >
                   Reset view
                 </button>
@@ -309,6 +340,7 @@ export function MandelbrotExplorer() {
                   type="button"
                   className={toolbarButtonClass}
                   onClick={() => {
+                    trackMandelbrotInteraction("undo_view");
                     setPreviewViewport(null);
                     setHistory((currentHistory) =>
                       undoViewport(currentHistory)
@@ -322,6 +354,7 @@ export function MandelbrotExplorer() {
                   type="button"
                   className={toolbarButtonClass}
                   onClick={() => {
+                    trackMandelbrotInteraction("redo_view");
                     setPreviewViewport(null);
                     setHistory((currentHistory) =>
                       redoViewport(currentHistory)
@@ -348,6 +381,9 @@ export function MandelbrotExplorer() {
                         return;
                       }
 
+                      trackMandelbrotInteraction("change_render_backend", {
+                        render_backend: renderBackendPreference,
+                      });
                       setSettings((currentSettings) => ({
                         ...currentSettings,
                         renderBackendPreference,
@@ -370,9 +406,10 @@ export function MandelbrotExplorer() {
                     max={4000}
                     step={25}
                     value={settings.maxIterations}
-                    onChange={(event) =>
-                      handleIterationsChange(event.target.value)
-                    }
+                    onChange={(event) => {
+                      trackMandelbrotInteraction("change_max_iterations");
+                      handleIterationsChange(event.target.value);
+                    }}
                     className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
                   />
                 </label>
@@ -387,6 +424,9 @@ export function MandelbrotExplorer() {
                         return;
                       }
 
+                      trackMandelbrotInteraction("change_palette", {
+                        palette_id: paletteId,
+                      });
                       setSettings((currentSettings) => ({
                         ...currentSettings,
                         paletteId,
@@ -412,6 +452,9 @@ export function MandelbrotExplorer() {
                         return;
                       }
 
+                      trackMandelbrotInteraction("change_coloring_mode", {
+                        coloring_mode: coloringMode,
+                      });
                       setSettings((currentSettings) => ({
                         ...currentSettings,
                         coloringMode,
@@ -430,9 +473,10 @@ export function MandelbrotExplorer() {
                   <span>Render quality</span>
                   <select
                     value={settings.resolutionScale}
-                    onChange={(event) =>
-                      handleResolutionScaleChange(event.target.value)
-                    }
+                    onChange={(event) => {
+                      trackMandelbrotInteraction("change_render_quality");
+                      handleResolutionScaleChange(event.target.value);
+                    }}
                     className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
                   >
                     {QUALITY_OPTIONS.map((option) => (

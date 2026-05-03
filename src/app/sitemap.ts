@@ -4,7 +4,7 @@ import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
 import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
-import { getAllTags, getTagPath } from "@/lib/tags";
+import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
 
 export const dynamic = "force-static";
 
@@ -21,7 +21,7 @@ const PAGE_LAST_MODIFIED: Record<string, string> = {
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const posts = getAllPosts(["slug", "date", "updated"]);
-  const tags = getAllTags();
+  const tags = getAllTags().filter(isIndexableTag);
 
   const blogPosts = posts.map((post) => ({
     url: toCanonical(`/blog/${post.slug}`),

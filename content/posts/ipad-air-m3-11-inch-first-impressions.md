@@ -1,7 +1,7 @@
 ---
-title: "iPad Air M3 11-Inch: First Impressions"
+title: "iPad Air M3 11-Inch for Note-Taking: First Impressions"
 date: "2026-03-05"
-excerpt: "For one study-heavy workflow, a lightweight iPad Air setup covered more than I expected."
+excerpt: "First impressions of the 11-inch iPad Air M3 as a lightweight reading, annotation, and note-taking setup for a study-heavy workflow."
 coverImage: "/assets/blog/ipad-air-m3-11-inch-first-impressions/cover.webp"
 tags:
   - "Tech"

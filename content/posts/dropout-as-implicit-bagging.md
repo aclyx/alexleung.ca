@@ -1,7 +1,7 @@
 ---
-title: "Dropout as Implicit Bagging"
+title: "Dropout as Implicit Bagging in Deep Learning"
 date: "2026-03-07"
-excerpt: "Chapter 7 gave me a better model for dropout: a cheap approximation to averaging many thinned networks with shared parameters."
+excerpt: "A concrete way to understand dropout in deep learning: shared-parameter ensemble training that approximates bagging without training separate models."
 coverImage: "/assets/blog/dropout-as-implicit-bagging/cover.webp"
 tags:
   - "Deep Learning"
