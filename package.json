@@ -9,6 +9,8 @@
     "prepare": "git config core.hooksPath .githooks || true",
     "image:variants": "node scripts/generate-image-variants.mjs",
     "image:variants:stage": "node scripts/generate-image-variants.mjs --staged --stage-generated",
+    "now:timeline:backfill": "node scripts/backfill-now-timeline.mjs",
+    "now:timeline:check": "node scripts/check-now-timeline.mjs",
     "prebuild": "yarn image:variants",
     "build": "next build && yarn build:deploy-marker",
     "build:prod": "NEXT_PUBLIC_ENABLE_ANALYTICS=true yarn build",
