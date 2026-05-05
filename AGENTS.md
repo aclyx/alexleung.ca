@@ -98,6 +98,14 @@ yarn deploy           # Build and deploy to GitHub Pages
 - JSON-LD Person schema with `react-schemaorg` and `schema-dts`
 - Open Graph and Twitter card metadata
 
+### Now Page Timeline Workflow
+
+- The current `/now/` page and `/now/timeline/` archive render from `src/content/nowSnapshots.json`.
+- When changing current Now page content, update `src/content/nowSnapshots.json` rather than hardcoding dated content in `src/app/now/page.tsx`.
+- For a same-day copy fix, edit the latest snapshot and preserve existing snapshot, section, block, and list item IDs when the meaning is still the same.
+- For a new dated Now update, add a new first snapshot with a unique `now-YYYY-MM-DD` id, preserve semantic section and block IDs where possible, and create new IDs only for genuinely new content.
+- After changing Now timeline data or the Now page renderer, run `yarn now:timeline:check`.
+
 ### Testing
 
 - Jest with React Testing Library

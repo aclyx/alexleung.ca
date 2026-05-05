@@ -1,6 +1,6 @@
 import sitemap from "@/app/sitemap";
 
-jest.mock("@/app/now/page", () => ({
+jest.mock("@/lib/nowTimeline", () => ({
   NOW_PAGE_LAST_UPDATED_ISO: "2026-01-15",
 }));
 
@@ -29,6 +29,9 @@ describe("sitemap", () => {
         expect.objectContaining({ url: "https://alexleung.ca/" }),
         expect.objectContaining({ url: "https://alexleung.ca/about/" }),
         expect.objectContaining({ url: "https://alexleung.ca/now/" }),
+        expect.objectContaining({
+          url: "https://alexleung.ca/now/timeline/",
+        }),
         expect.objectContaining({ url: "https://alexleung.ca/blog/" }),
         expect.objectContaining({ url: "https://alexleung.ca/experimental/" }),
         expect.objectContaining({ url: "https://alexleung.ca/contact/" }),

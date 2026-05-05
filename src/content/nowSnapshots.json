@@ -1,0 +1,1655 @@
+[
+  {
+    "id": "now-2026-05-01",
+    "date": "2026-05-01",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm spending most of my time getting settled into my new role at"
+              },
+              {
+                "text": "OpenAI",
+                "href": "https://openai.com/"
+              },
+              {
+                "text": "."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Outside of that, I'm still finding my rhythm in San Francisco after the recent move. Most of my attention is on building context at work, getting the rest of life into a steadier shape, and waiting for my possessions to arrive. I'm hoping everything can be delivered and unloaded by Thursday, May 7."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 9 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I finished"
+              },
+              {
+                "text": "Children of Time",
+                "emphasis": true
+              },
+              {
+                "text": "and absolutely loved it. I want to pick up the next book once I have a bit more time."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold while I work through Deep Learning."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish the Deep Learning book and write notes as I go"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Build context in my new role"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get settled in San Francisco"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-4",
+                "segments": [
+                  {
+                    "text": "Keep improving at tennis"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-5",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "recently-watched",
+        "icon": "🎬",
+        "title": "Recently Watched",
+        "blocks": [
+          {
+            "id": "recently-watched-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I watched"
+              },
+              {
+                "text": "Project Hail Mary",
+                "emphasis": true
+              },
+              {
+                "text": "and really liked it."
+              }
+            ]
+          },
+          {
+            "id": "recently-watched-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "The movie was a good time, but I still enjoyed the detail and depth of the book more."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-04-21",
+    "date": "2026-04-21",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm now based in San Francisco and getting settled after a recent move."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "There's a lot of logistics to sort through right now, so most of my attention has gone into getting settled after the transition."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 9 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I finished"
+              },
+              {
+                "text": "Children of Time",
+                "emphasis": true
+              },
+              {
+                "text": "and absolutely loved it. I want to pick up the next book once I have a bit more time."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold while I work through Deep Learning."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish the Deep Learning book and write notes as I go"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Get settled in San Francisco"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Keep improving at tennis"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-4",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "recently-watched",
+        "icon": "🎬",
+        "title": "Recently Watched",
+        "blocks": [
+          {
+            "id": "recently-watched-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I watched"
+              },
+              {
+                "text": "Project Hail Mary",
+                "emphasis": true
+              },
+              {
+                "text": "and really liked it."
+              }
+            ]
+          },
+          {
+            "id": "recently-watched-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "The movie was a good time, but I still enjoyed the detail and depth of the book more."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-04-10",
+    "date": "2026-04-10",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm planning for an upcoming move to San Francisco to start a new role at the end of April."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "There's a lot of logistics to sort through right now, so most of my attention has gone into getting ready for that transition."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 9 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I finished"
+              },
+              {
+                "text": "Children of Time",
+                "emphasis": true
+              },
+              {
+                "text": "and absolutely loved it. I want to pick up the next book once I have a bit more time."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold for a while I tackle Deep Learning."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Get settled ahead of the move to San Francisco"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-4",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "recently-watched",
+        "icon": "🎬",
+        "title": "Recently Watched",
+        "blocks": [
+          {
+            "id": "recently-watched-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I watched"
+              },
+              {
+                "text": "Project Hail Mary",
+                "emphasis": true
+              },
+              {
+                "text": "and really liked it."
+              }
+            ]
+          },
+          {
+            "id": "recently-watched-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "The movie was a good time, but I still enjoyed the detail and depth of the book more."
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-03-13",
+    "date": "2026-03-13",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I started playing with OpenClaw a bit. On Windows in WSL, I added some basic orchestration commands to manipulate a Docker container."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I started the container with OpenClaw, ran openclaw onboard, and set things up with Gemini 3.1 Pro Preview plus a WhatsApp connection."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've only chatted with it briefly so far, and I haven't gone much further yet."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 8 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I also started reading"
+              },
+              {
+                "text": "Children of Time",
+                "emphasis": true
+              },
+              {
+                "text": "on a colleague's recommendation. The hook in Chapter 1.1 pulled me in right away."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold for a while I tackle Deep Learning."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-03-05",
+    "date": "2026-03-05",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I recently launched the blog section of this site. It's been fun to build a \"boring\" but effective static architecture for sharing technical ideas."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've also been using Codex more often for practical tasks, especially quick site updates and small maintenance workflows. I've also started using"
+              },
+              {
+                "text": "Conductor",
+                "href": "https://www.conductor.build/"
+              },
+              {
+                "text": "; I like the UI and how easy it is to spin up new worktrees."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've also been experimenting a bit with SEO and thinking through what it would look like to make this website self-improving over time."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 8 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I also started reading"
+              },
+              {
+                "text": "Children of Time",
+                "emphasis": true
+              },
+              {
+                "text": "on a colleague's recommendation. The hook in Chapter 1.1 pulled me in right away."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold for now while I go deeper on AI."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-02-20",
+    "date": "2026-02-20",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I recently launched the blog section of this site. It's been fun to build a \"boring\" but effective static architecture for sharing technical ideas."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've also been using Codex more often for practical tasks, especially quick site updates and small maintenance workflows. I've also started using"
+              },
+              {
+                "text": "Conductor",
+                "href": "https://www.conductor.build/"
+              },
+              {
+                "text": "; I like the UI and how easy it is to spin up new worktrees."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Right now my priorities are simple: ship consistently on the blog, use tooling pragmatically to move faster, and stay curious about emerging AI-native products."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 7 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold for now while I go deeper on AI."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-02-14",
+    "date": "2026-02-14",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I recently launched the blog section of this site. It's been fun to build a \"boring\" but effective static architecture for sharing technical ideas."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've also been using Codex more often for practical tasks, especially quick site updates and small maintenance workflows."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm also intrigued by the recent viral rise of"
+              },
+              {
+                "text": "Moltbook",
+                "href": "https://moltbook.com"
+              },
+              {
+                "text": "and the underlying"
+              },
+              {
+                "text": "Moltbot",
+                "href": "https://github.com/openclaw/moltbot"
+              },
+              {
+                "text": "framework. The idea of autonomous agents having their own social network is fascinating (and a little terrifying). I'm observing for now instead of jumping in."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-4",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Right now my priorities are simple: ship consistently on the blog, use tooling pragmatically to move faster, and stay curious about emerging AI-native products."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm currently on Chapter 7 of"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "It's been refreshing to revisit math concepts I haven't used in years, and I'm planning to write up thoughts on Chapter 6 soon."
+              }
+            ]
+          },
+          {
+            "id": "currently-reading-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold for now while I go deeper on AI."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-02-01",
+    "date": "2026-02-01",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I recently launched the blog section of this site! It's been a fun project to build a \"boring\" but effective static architecture to share my technical thoughts."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm also deeply intrigued by the recent viral rise of"
+              },
+              {
+                "text": "Moltbook",
+                "href": "https://moltbook.com"
+              },
+              {
+                "text": "and the underlying"
+              },
+              {
+                "text": "Moltbot",
+                "href": "https://github.com/openclaw/moltbot"
+              },
+              {
+                "text": "framework. The idea of autonomous agents having their own social network is both fascinating and a bit terrifying. I'm not willing to give it a try just yet."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm almost done with Part 1 of the"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "book by Goodfellow, Bengio, and Courville. It's been refreshing to touch on many math concepts I haven't used in years, and I'm thinking of writing a blog post about my experience soon."
+              },
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "has been put on hold indefinitely—I'm too enthralled by AI these days."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-01-31",
+    "date": "2026-01-31",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I recently launched the blog section of this site! It's been a fun project to build a \"boring\" but effective static architecture to share my technical thoughts."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I'm also deeply intrigued by the recent viral rise of"
+              },
+              {
+                "text": "Moltbook",
+                "href": "https://moltbook.com"
+              },
+              {
+                "text": "and the underlying"
+              },
+              {
+                "text": "Moltbot",
+                "href": "https://github.com/openclaw/moltbot"
+              },
+              {
+                "text": "framework. The idea of autonomous agents having their own social network is both fascinating and a bit terrifying—I'm not yet brave enough to let a bot take over my \"life admin\" just yet."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-3",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've also been absorbing a ton of AI and ML content recently by trading social media time for reading time. Makes me wonder what eliminating those apps completely would unlock."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've started reading"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville. It's refreshing to touch on many math concepts I haven't used in years."
+              },
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "has been put on hold indefinitely—I'm too enthralled by AI these days."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Finish and understand the Deep Learning book"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Get to A2 proficiency in Chinese"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-01-18",
+    "date": "2026-01-18",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've been experimenting with the"
+              },
+              {
+                "text": "ralph-wiggum plugin",
+                "href": "https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum"
+              },
+              {
+                "text": "for Claude Code—it's a loop that lets Claude work autonomously on larger tasks with periodic check-ins."
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've also been absorbing a ton of AI and ML content recently by trading social media time for reading time. Makes me wonder what eliminating those apps completely would unlock."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've started reading"
+              },
+              {
+                "text": "Deep Learning",
+                "href": "https://www.deeplearningbook.org/",
+                "emphasis": true
+              },
+              {
+                "text": "by Goodfellow, Bengio, and Courville. It's refreshing to touch on many math concepts I haven't used in years."
+              },
+              {
+                "text": "Domain Driven Design",
+                "href": "https://www.domainlanguage.com/ddd/",
+                "emphasis": true
+              },
+              {
+                "text": "has been put on hold indefinitely—I'm too enthralled by AI these days."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Building stronger ML foundations"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Developing practical intuition for agentic AI systems"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-01-10",
+    "date": "2026-01-10",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've been experimenting with the"
+              },
+              {
+                "text": "ralph-wiggum plugin",
+                "href": "https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum"
+              },
+              {
+                "text": "for Claude Code. So far I've had some good success with prompts like:"
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "One useful pattern has been asking it to implement a design plan, commit as it completes work, and keep checking the build and tests. I've also been absorbing a ton of AI and ML content recently by trading social media time for reading time. Makes me wonder what eliminating those apps completely would unlock."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Rereading sections of"
+              },
+              {
+                "text": "AI Engineering",
+                "emphasis": true
+              },
+              {
+                "text": "by Chip Huyen and"
+              },
+              {
+                "text": "Designing Machine Learning Systems",
+                "emphasis": true
+              },
+              {
+                "text": "by Chip Huyen."
+              },
+              {
+                "text": "Domain Driven Design",
+                "emphasis": true
+              },
+              {
+                "text": "is on hold for a while, but I still want to finish it by February."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Developing practical intuition for applying agentic AI systems"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Figuring out a good way to do AI evals"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-3",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2026-01-01",
+    "date": "2026-01-01",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've been experimenting with the"
+              },
+              {
+                "text": "ralph-wiggum plugin",
+                "href": "https://github.com/anthropics/claude-code/tree/main/plugins/ralph-wiggum"
+              },
+              {
+                "text": "for Claude Code. So far I've had some good success with prompts like:"
+              }
+            ]
+          },
+          {
+            "id": "top-of-mind-paragraph-2",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "One useful pattern has been asking it to implement a design plan, commit as it completes work, and keep checking the build and tests. I've also been absorbing a ton of AI and ML content recently by trading social media time for reading time. Makes me wonder what eliminating those apps completely would unlock."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "emphasis": true
+              },
+              {
+                "text": "by Eric Evans - Finally diving into this classic. Wish I'd read it years ago when grappling with complex system boundaries."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Developing practical intuition for applying agentic AI systems"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "now-2025-12-30",
+    "date": "2025-12-30",
+    "sections": [
+      {
+        "id": "top-of-mind",
+        "icon": "🚀",
+        "title": "Top of Mind",
+        "blocks": [
+          {
+            "id": "top-of-mind-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "I've been absorbing a ton of AI and ML content recently by trading social media time for reading time. Makes me wonder what eliminating those apps completely would unlock."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "currently-reading",
+        "icon": "📚",
+        "title": "Currently Reading",
+        "blocks": [
+          {
+            "id": "currently-reading-paragraph-1",
+            "type": "paragraph",
+            "segments": [
+              {
+                "text": "Domain Driven Design",
+                "emphasis": true
+              },
+              {
+                "text": "by Eric Evans - Finally diving into this classic. Wish I'd read it years ago when grappling with complex system boundaries."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "id": "current-goals",
+        "icon": "🎯",
+        "title": "Current Goals",
+        "blocks": [
+          {
+            "id": "current-goals-list-1",
+            "type": "list",
+            "items": [
+              {
+                "id": "current-goals-item-1",
+                "segments": [
+                  {
+                    "text": "Developing practical intuition for applying agentic AI systems"
+                  }
+                ]
+              },
+              {
+                "id": "current-goals-item-2",
+                "segments": [
+                  {
+                    "text": "Leveling up my tennis game"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  }
+]

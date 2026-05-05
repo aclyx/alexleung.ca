@@ -1,8 +1,8 @@
 import { MetadataRoute } from "next";
 
-import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
 import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
 import { getAllPosts } from "@/lib/blogApi";
+import { NOW_PAGE_LAST_UPDATED_ISO } from "@/lib/nowTimeline";
 import { toCanonical } from "@/lib/seo/url";
 import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
 
@@ -75,6 +75,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(PAGE_LAST_MODIFIED.now),
       changeFrequency: MONTHLY,
       priority: 0.8,
+    },
+    {
+      url: toCanonical("/now/timeline"),
+      lastModified: new Date(PAGE_LAST_MODIFIED.now),
+      changeFrequency: MONTHLY,
+      priority: 0.6,
     },
     {
       url: toCanonical("/blog"),

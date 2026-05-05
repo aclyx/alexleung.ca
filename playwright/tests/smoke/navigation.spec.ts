@@ -79,6 +79,17 @@ test("primary navigation routes render expected page headings", async ({
   }
 });
 
+test("now page links to the timeline archive", async ({ page }) => {
+  await gotoAndStabilize(page, "/now/");
+
+  await page.getByRole("link", { name: "Past Now Pages" }).click();
+  await waitForStablePage(page);
+
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Now Archive" })
+  ).toBeVisible();
+});
+
 test("experiment child routes keep the experiments nav item active", async ({
   page,
 }) => {
