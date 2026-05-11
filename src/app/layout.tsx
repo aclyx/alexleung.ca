@@ -18,7 +18,7 @@ import {
 
 import "./globals.css";
 
-const title = "Alex Leung | Software engineer and writer";
+const title = "Alex Leung | Software Engineer and Occasional Writer";
 const description =
   "Alex Leung is a San Francisco-based software engineer writing notes on software systems, AI tools, and small experiments from his own projects.";
 
