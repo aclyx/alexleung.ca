@@ -300,7 +300,7 @@ export function buildPersonSchema(input: {
       name: "San Francisco, California, United States",
     },
     skills:
-      "Software engineering, systems design, AI tools, distributed systems, product engineering, and technical writing",
+      "Software engineering, systems design, AI-assisted software workflows, distributed systems, backend reliability, product engineering, and technical writing",
   };
 
   return {
@@ -367,13 +367,11 @@ export function buildPersonSchema(input: {
     ],
     knowsAbout: [
       "Software Engineering",
-      "AI and Machine Learning Systems",
       "AI-Assisted Software Development and Tools",
-      "Evaluation",
+      "AI-Assisted Software Workflows",
       "Distributed Systems",
-      "Backend Architecture",
+      "Backend Architecture and Reliability",
       "Full-Stack Product Engineering",
-      "Engineering Review",
       "Systems Design",
       "Embedded Systems",
       "Electrical Engineering",
