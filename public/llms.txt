@@ -13,12 +13,11 @@ He is a licensed Professional Engineer (P.Eng.) through Professional Engineers O
 ## Topics This Site Covers
 
 - Software Engineering
-- AI and Machine Learning Systems
 - AI-Assisted Software Development and Tools
-- Distributed Systems
+- AI-Assisted Software Workflows
+- Distributed Systems and Backend Reliability
 - Full-Stack Product Engineering
 - Systems Design
-- Engineering Review and Project Shaping
 - Embedded Systems
 
 ## Contact and Social

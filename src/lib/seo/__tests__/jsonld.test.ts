@@ -218,10 +218,10 @@ describe("seo jsonld builders", () => {
     );
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([
-        "AI and Machine Learning Systems",
         "AI-Assisted Software Development and Tools",
+        "AI-Assisted Software Workflows",
+        "Backend Architecture and Reliability",
         "Full-Stack Product Engineering",
-        "Engineering Review",
       ])
     );
     expect(person.alternateName).toEqual(

@@ -105,7 +105,7 @@ describe("RootLayout", () => {
       });
       expect(schema.knowsAbout).toEqual(
         expect.arrayContaining([
-          "AI and Machine Learning Systems",
+          "AI-Assisted Software Workflows",
           "Distributed Systems",
         ])
       );
