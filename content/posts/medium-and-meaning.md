@@ -7,6 +7,8 @@ tags:
   - "AI"
   - "Creativity"
   - "Reflection"
+series: "AI Tools and Workflows"
+seriesOrder: 2
 ---
 
 Lately, I have been using Codex a lot to improve this site, often from my phone: fixing a layout bug, tightening a sentence, adjusting spacing by a few pixels. I like that these changes no longer require a full work session at a desk. The project stays close enough that I can keep tending it in small idle moments.

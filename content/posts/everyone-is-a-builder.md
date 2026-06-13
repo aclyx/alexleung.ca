@@ -7,6 +7,8 @@ tags:
   - "AI"
   - "Future of Work"
   - "Reflection"
+series: "AI Tools and Workflows"
+seriesOrder: 3
 ---
 
 Over drinks recently, a few colleagues and I kept circling the same idea: with AI tools, more people can build rough internal tools, automations, and prototypes without waiting for a dedicated engineer. Software engineering experience still helps a lot, but it no longer fully determines who gets to test an idea.

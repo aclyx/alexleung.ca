@@ -8,6 +8,8 @@ tags:
   - "Deep Learning"
   - "Book Notes"
   - "Review"
+series: "Deep Learning Notes"
+seriesOrder: 1
 ---
 
 I recently finished Part I of _Deep Learning_ by Goodfellow, Bengio, and Courville. As an introduction to the mathematical foundations behind the rest of the book, it works well. It is clear and compact about the background the reader is expected to carry forward. It also clarified what I still want from the later chapters: not just results and terminology, but more of the reasoning behind them.
