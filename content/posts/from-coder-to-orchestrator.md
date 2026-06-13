@@ -1,19 +1,18 @@
 ---
-title: "My AI Coding Workflow: Planning, Review, and Verification"
+title: "Planning and Verification in AI-Assisted Coding"
 date: "2026-02-03"
 updated: "2026-02-14"
-excerpt: "How my AI coding workflow moved from quick snippets to clearer briefs, agent review checkpoints, and build/lint/test verification."
+excerpt: "How my AI-assisted coding workflow shifted from quick snippets to clearer briefs, review checkpoints, and build/lint/test verification."
 coverImage: "/assets/blog/from-coder-to-orchestrator/cover.webp"
-coverAlt: "Illustration of Alex conducting a room of robots working at screens with code and charts."
+coverAlt: "Illustration of Alex reviewing code across several screens with assistant panels nearby"
 tags:
   - "AI"
   - "Developer Workflow"
-  - "Future of Work"
 series: "AI Tools and Workflows"
 seriesOrder: 1
 ---
 
-Over the past two years, my day-to-day coding workflow has moved from quick AI help toward clearer task definition and verification. In early 2024, I used AI mostly for autocomplete-level tasks such as snippets, error explanations, and small refactors. By 2026, I still write code when needed, but far more of my time goes to defining tasks clearly, checking outputs, and fixing edge cases the tools miss.
+Over the past two years, my day-to-day coding workflow has shifted from quick AI help toward clearer task definition and verification. In early 2024, I used AI mostly for autocomplete-level work: snippets, error explanations, and small refactors. By 2026, I still write code when needed, but more of the leverage comes from defining tasks clearly, checking outputs, and fixing edge cases the tools miss.
 
 ![Timeline diagram comparing software development workflow in 2024 versus 2026](/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution.webp)
 
@@ -69,10 +68,10 @@ This workflow is productive, but it has clear costs:
 
 ## Where the work moved
 
-The useful part of my work has moved toward clearer requirements, tighter constraints, and stronger review discipline.
+A larger share of the work now sits in requirements, constraints, and review discipline.
 
 Implementation still matters, but I now spend more attention on deciding what to build, writing clearer constraints, and checking whether the result is right.
 
 ![Software engineering effort evolution from 2024 to 2026](/assets/blog/from-coder-to-orchestrator/swe-effort-evolution.webp)
 
-The biggest open question for me is this: if newer engineers spend less time in low-level debugging, how do they build the judgment needed to review AI-generated changes well?
+The question I keep coming back to is how newer engineers build review judgment if they spend less time in low-level debugging.

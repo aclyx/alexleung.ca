@@ -15,6 +15,7 @@ import type {
 } from "schema-dts";
 
 import { NAV_LINKS } from "@/constants/navigation";
+import { getCoverVariantPath } from "@/lib/coverVariants";
 import { toAbsoluteUrl, toCanonical } from "@/lib/seo/url";
 
 const PERSON_ID = "/#person";
@@ -123,6 +124,26 @@ function buildBasePageSchema<TPageType extends string>({
   };
 }
 
+function buildPostImageUrls(
+  coverImage: string | undefined
+): string[] | undefined {
+  if (!coverImage) {
+    return undefined;
+  }
+
+  return Array.from(
+    new Set(
+      [
+        coverImage,
+        getCoverVariantPath(coverImage, "hero"),
+        getCoverVariantPath(coverImage, "card"),
+      ]
+        .filter((imageUrl): imageUrl is string => Boolean(imageUrl))
+        .map(toAbsoluteUrl)
+    )
+  );
+}
+
 function buildBasePostSchema(input: PostSchemaInput): BasePostSchema {
   const canonicalPostUrl = toCanonical(`/blog/${input.slug}`);
 
@@ -133,7 +154,7 @@ function buildBasePostSchema(input: PostSchemaInput): BasePostSchema {
       headline: input.title,
       description: input.description,
       keywords: input.tags.length > 0 ? input.tags.join(", ") : undefined,
-      image: input.coverImage ? [toAbsoluteUrl(input.coverImage)] : undefined,
+      image: buildPostImageUrls(input.coverImage),
       datePublished: new Date(input.date).toISOString(),
       dateModified: new Date(input.updated ?? input.date).toISOString(),
       author: PERSON_REFERENCE,

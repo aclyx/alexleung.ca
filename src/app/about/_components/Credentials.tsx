@@ -6,7 +6,7 @@ import { SectionBlock } from "@/components/SectionBlock";
 export function Credentials() {
   return (
     <ResponsiveContainer element="section">
-      <SectionBlock title="Credentials" titleId="credentials">
+      <SectionBlock title="Education and Licensure" titleId="credentials">
         <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           <Card>
             <div className="mb-4">

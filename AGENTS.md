@@ -140,6 +140,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 - When creating a pull request, default to a regular ready-for-review PR rather than a draft PR unless the user explicitly asks for draft status or the work is intentionally incomplete/blocking on follow-up.
 - Do not add PR labels/tags by default. If a tool or workflow offers labels such as `codex`, leave them off unless the user explicitly requests specific labels or the repository requires them.
 - For any request path that creates commits or pull requests (including the yeet skill), keep wording tool-agnostic: do not mention Codex or any other AI agent/model by name.
+- After pushing a commit or PR branch, do not watch or wait for remote CI by default. Check current status once only if useful for the handoff, then stop unless the user explicitly asks you to wait, watch, or fix a failing check.
 
 ### Windows / WSL Worktrees (Agent Guidance)
 
@@ -173,6 +174,11 @@ yarn deploy           # Build and deploy to GitHub Pages
 - For metadata and machine-facing summaries, prefer durable wording over quickly stale current-state details unless the surface is intentionally time-stamped, such as the body of the Now page.
 - Use credentials, project history, and domain experience as factual context when relevant, but avoid turning them into a pitch.
 - Prefer direct, literal phrasing over abstract framing when editing prose. If the concrete mechanism, limitation, UI behavior, or comparison can be named directly, name it.
+- For blog titles, excerpts, and AI-tool posts, avoid influencer-style packaging, clickbait, and broad future-of-work framing. Prefer literal scope, concrete workflow details, and tags that match the actual argument.
+- For learning notes and book reviews, do not overuse `I learned`, `I realized`, `I discovered`, or similar beginner-coded framing. Present the post as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism while preserving honest limits.
+- In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
+- Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow/textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
+- Do not add internal links or prose references from a dated blog entry to later-dated blog entries unless also updating the entry's `updated` date to reflect an intentional retrospective edit.
 - For personal reflections and lifestyle posts, open from concrete lived details before interpretation. Avoid polished thesis scaffolding, rhetorical contrast templates, and decorative atmosphere labels unless the user explicitly asks for a more essayistic style.
 - If the user corrects tone more than once, stop making local sentence swaps. Reread the whole section, name the repeated pattern, and revise from the user-provided facts outward.
 - Avoid draft-scaffolding phrases such as `the third thread`, `interesting middle ground`, or similar meta-organizing language when the actual point can be stated plainly.

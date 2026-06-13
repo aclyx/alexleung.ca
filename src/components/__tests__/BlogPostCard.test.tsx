@@ -64,16 +64,16 @@ describe("BlogPostCard", () => {
     ).toBeInTheDocument();
   });
 
-  it("uses custom cover alt text when a cover image is present", () => {
+  it("uses post cover alt text when rendering the cover image", () => {
     render(
       <BlogPostCard
         post={{
-          slug: "cover-alt-post",
-          title: "Cover Alt Post",
+          slug: "cover-post",
+          title: "Cover Post",
           date: "2026-01-01T00:00:00.000Z",
           coverImage: "/assets/blog/cover.webp",
-          coverAlt: "A laptop beside a notebook on a desk.",
-          excerpt: undefined,
+          coverAlt: "A person measuring framed landscape images",
+          excerpt: "A short summary",
           tags: [],
         }}
       />
@@ -81,8 +81,8 @@ describe("BlogPostCard", () => {
 
     expect(
       screen.getByRole("img", {
-        name: "A laptop beside a notebook on a desk.",
+        name: "A person measuring framed landscape images",
       })
-    ).toBeInTheDocument();
+    ).toHaveAttribute("src", "/assets/blog/cover.webp");
   });
 });

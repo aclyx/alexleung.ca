@@ -274,6 +274,23 @@ describe("seo jsonld builders", () => {
     });
   });
 
+  it("includes generated cover variants in blog posting image metadata", () => {
+    const posting = buildBlogPostingSchema({
+      slug: "everyone-is-a-builder",
+      title: "Everyone Is a Builder",
+      description: "A post with generated cover variants",
+      coverImage: "/assets/blog/everyone-is-a-builder/cover.webp",
+      date: "2026-02-16",
+      tags: ["ai"],
+    });
+
+    expect(posting.image).toEqual([
+      "https://alexleung.ca/assets/blog/everyone-is-a-builder/cover.webp",
+      "https://alexleung.ca/assets/blog/everyone-is-a-builder/cover-hero.webp",
+      "https://alexleung.ca/assets/blog/everyone-is-a-builder/cover-card.webp",
+    ]);
+  });
+
   it("builds article schema for blog posts", () => {
     const article = buildArticleSchema({
       slug: "deep-dive",

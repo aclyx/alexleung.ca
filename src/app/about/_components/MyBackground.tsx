@@ -16,14 +16,25 @@ export function Journey() {
 
   return (
     <ResponsiveContainer element="section">
-      <SectionBlock title="My Background" titleId="background" spacing="lg">
+      <SectionBlock title="Background" titleId="background" spacing="lg">
         <div className="md:grid md:grid-cols-[3fr_2fr] md:gap-x-16 md:pt-8">
           <div className="text-body mb-8 space-y-6 text-left">
-            <IconTextRow icon="👋" title="Overview">
+            <IconTextRow icon="👋" title="Currently">
               <p>
                 Hi, I&apos;m Alex, a software engineer based in San Francisco. I
                 work at{" "}
                 <ExternalLink href="https://openai.com/">OpenAI</ExternalLink>.
+              </p>
+              <p>
+                For a more current snapshot of what I&apos;m focused on, I keep
+                a short{" "}
+                <Link
+                  href="/now/"
+                  className="text-accent-link transition-colors hover:text-accent-link-hover"
+                >
+                  Now page
+                </Link>
+                .
               </p>
               <p>
                 My background spans embedded systems, distributed systems, and
@@ -41,9 +52,9 @@ export function Journey() {
               </p>
             </IconTextRow>
 
-            <IconTextRow icon="🛠️" title="What I build">
+            <IconTextRow icon="🛠️" title="Building Style">
               <p>
-                I like building software products and systems that feel simple
+                I&apos;m drawn to software products and systems that feel simple
                 to use.
               </p>
               <p>
@@ -53,11 +64,12 @@ export function Journey() {
               </p>
             </IconTextRow>
 
-            <IconTextRow icon="🧭" title="Problems I like">
+            <IconTextRow icon="🧩" title="Problem Shape">
               <p>
-                I like problems where the shape is still being figured out:
-                early ideas, product inflection points, and systems that need to
-                grow without becoming harder to reason about.
+                I&apos;m especially interested in problems where the shape is
+                still being figured out: early ideas, product inflection points,
+                and systems that need to grow without becoming harder to reason
+                about.
               </p>
               <p>
                 Lately, I&apos;ve been especially interested in AI tools and
@@ -65,12 +77,13 @@ export function Journey() {
                 evaluate them, and where they still need careful review.
               </p>
               <p>
-                I tend to like work where there are many possible paths forward,
-                and progress depends on taste, iteration, and good feedback.
+                I&apos;m usually happiest in work where there are several
+                plausible paths forward, and progress depends on taste,
+                iteration, and good feedback.
               </p>
             </IconTextRow>
 
-            <IconTextRow icon="✍️" title="Writing and outside work">
+            <IconTextRow icon="✍️" title="Writing and Outside Work">
               <p>
                 I write notes on software, AI tools, and learning from small
                 projects. If you want a better sense of how I think, start with
