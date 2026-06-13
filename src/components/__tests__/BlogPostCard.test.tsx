@@ -25,6 +25,7 @@ describe("BlogPostCard", () => {
           title: "Test Post",
           date: "2026-01-01T00:00:00.000Z",
           coverImage: undefined,
+          coverAlt: undefined,
           excerpt: "A short summary",
           tags: ["ai"],
         }}
@@ -51,6 +52,7 @@ describe("BlogPostCard", () => {
           title: "Inline Code Post",
           date: "2026-01-01T00:00:00.000Z",
           coverImage: undefined,
+          coverAlt: undefined,
           excerpt: "Use `srcSet` variants to improve performance.",
           tags: [],
         }}
@@ -59,6 +61,28 @@ describe("BlogPostCard", () => {
 
     expect(
       screen.getByText("srcSet", { selector: "code" })
+    ).toBeInTheDocument();
+  });
+
+  it("uses custom cover alt text when a cover image is present", () => {
+    render(
+      <BlogPostCard
+        post={{
+          slug: "cover-alt-post",
+          title: "Cover Alt Post",
+          date: "2026-01-01T00:00:00.000Z",
+          coverImage: "/assets/blog/cover.webp",
+          coverAlt: "A laptop beside a notebook on a desk.",
+          excerpt: undefined,
+          tags: [],
+        }}
+      />
+    );
+
+    expect(
+      screen.getByRole("img", {
+        name: "A laptop beside a notebook on a desk.",
+      })
     ).toBeInTheDocument();
   });
 });

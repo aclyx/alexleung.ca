@@ -38,6 +38,7 @@ function getPostsForTag(tagName: string) {
     "date",
     "slug",
     "coverImage",
+    "coverAlt",
     "excerpt",
     "tags",
   ]).filter((post) => post.tags.includes(tagName));

@@ -21,6 +21,7 @@ const POST_FIELDS = defineLiteralArray([
   "updated",
   "excerpt",
   "coverImage",
+  "coverAlt",
   "tags",
   "series",
   "seriesOrder",
@@ -43,6 +44,7 @@ export type Post = {
   updated?: string;
   excerpt?: string;
   coverImage?: string;
+  coverAlt?: string;
   tags: string[];
   series?: string;
   seriesOrder?: number;
@@ -58,6 +60,7 @@ const PostFrontMatterSchema = z
     updated: z.string().trim().min(1).optional(),
     excerpt: z.string().trim().min(1).optional(),
     coverImage: z.string().trim().min(1).optional(),
+    coverAlt: z.string().trim().min(1).optional(),
     tags: z.array(z.string().trim().min(1)).default([]),
     series: z.string().trim().min(1).optional(),
     seriesOrder: z.number().int().positive().optional(),
@@ -184,6 +187,7 @@ function parsePostBySlug(slug: string): Post | null {
       : undefined,
     excerpt: frontMatter.excerpt,
     coverImage: frontMatter.coverImage,
+    coverAlt: frontMatter.coverAlt,
     tags: frontMatter.tags,
     series: frontMatter.series,
     seriesOrder: frontMatter.seriesOrder,
@@ -256,7 +260,7 @@ function assertUniqueSeriesOrder(posts: readonly Post[]) {
 
 type RelatedPost = Pick<
   Post,
-  "slug" | "title" | "date" | "excerpt" | "coverImage" | "tags"
+  "slug" | "title" | "date" | "excerpt" | "coverImage" | "coverAlt" | "tags"
 >;
 
 type SeriesPost = Pick<Post, "slug" | "title" | "seriesOrder">;
@@ -501,6 +505,7 @@ export function getRelatedPosts(
     date: post.date,
     excerpt: post.excerpt,
     coverImage: post.coverImage,
+    coverAlt: post.coverAlt,
     tags: post.tags,
   }));
 }

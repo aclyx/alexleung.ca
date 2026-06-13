@@ -67,6 +67,18 @@ describe("blogApi front matter validation", () => {
     expect(post?.readingTimeMinutes).toBe(7);
   });
 
+  test("parses optional cover alt text", async () => {
+    const tempDir = setupTempPosts({
+      "cover-alt": `---\ntitle: "Cover Alt"\ndate: "2026-02-16"\ncoverImage: "/assets/blog/cover.webp"\ncoverAlt: "A desk with a laptop and notebook."\n---\nBody`,
+    });
+
+    const { getPostBySlug } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getPostBySlug("cover-alt", ["coverAlt"])).toEqual({
+      coverAlt: "A desk with a laptop and notebook.",
+    });
+  });
+
   test("throws when front matter contains invalid types", async () => {
     const tempDir = setupTempPosts({
       "bad-types": `---\ntitle: "Hello"\ndate: "2026-02-16"\ntags: test\n---\nBody`,

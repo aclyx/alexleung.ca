@@ -4,6 +4,7 @@ date: "2026-02-03"
 updated: "2026-02-14"
 excerpt: "How my AI coding workflow moved from quick snippets to clearer briefs, agent review checkpoints, and build/lint/test verification."
 coverImage: "/assets/blog/from-coder-to-orchestrator/cover.webp"
+coverAlt: "Illustration of Alex conducting a room of robots working at screens with code and charts."
 tags:
   - "AI"
   - "Developer Workflow"

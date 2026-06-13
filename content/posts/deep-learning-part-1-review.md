@@ -4,6 +4,7 @@ date: "2026-02-07"
 updated: "2026-02-14"
 excerpt: "A short review of Part I of Goodfellow, Bengio, and Courville's Deep Learning textbook, focused on the mathematical foundations."
 coverImage: "/assets/blog/deep-learning-part-1-review/cover.webp"
+coverAlt: "Illustration of Alex taking notes in front of a chalkboard filled with math and probability diagrams."
 tags:
   - "Deep Learning"
   - "Book Notes"

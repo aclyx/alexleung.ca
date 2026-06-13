@@ -4,6 +4,7 @@ date: "2026-02-15"
 updated: "2026-02-15"
 excerpt: "Chapter 6 sharpened how I think about architecture as a structural assumption, not just a tuning choice."
 coverImage: "/assets/blog/structural-reasoning-about-deep-networks/cover.webp"
+coverAlt: "Illustration of Alex studying neural network diagrams beside a lake."
 tags:
   - "Deep Learning"
   - "ML Theory"

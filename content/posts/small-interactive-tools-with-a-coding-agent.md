@@ -3,6 +3,7 @@ title: "Relearning Through Small Interactive Tools"
 date: "2026-04-10"
 excerpt: "Using a coding agent to build small browser tools turned out to be a good way to revisit concepts I had not touched in a while."
 coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png"
+coverAlt: "Illustration of Alex working across several screens showing small interactive tools and charts."
 tags:
   - "AI"
   - "Learning"

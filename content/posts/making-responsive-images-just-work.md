@@ -3,6 +3,7 @@ title: "Making Responsive Images Just Work"
 date: "2026-03-04"
 excerpt: "I replaced scattered responsive-image conventions with a manifest-driven workflow that made authoring simpler and failures easier to see."
 coverImage: "/assets/blog/making-responsive-images-just-work/cover.webp"
+coverAlt: "Illustration of Alex measuring framed landscape images labeled with responsive sizes."
 tags:
   - "Web Performance"
   - "Architecture"

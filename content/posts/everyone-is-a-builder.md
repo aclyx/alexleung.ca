@@ -3,6 +3,7 @@ title: "More People Can Build Rough Tools Now"
 date: "2026-02-28"
 excerpt: "A conversation with colleagues made me think about what changes when the first version of a small tool gets cheaper."
 coverImage: "/assets/blog/everyone-is-a-builder/cover.webp"
+coverAlt: "Illustration of Alex and two colleagues talking over drinks with a city skyline and sketched buildings in the sky."
 tags:
   - "AI"
   - "Future of Work"
