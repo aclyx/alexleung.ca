@@ -3,6 +3,7 @@ title: "Camping Indoors in San Francisco"
 date: "2026-04-27"
 excerpt: "My first week in San Francisco has mostly been logistics, empty rooms, cats, and the slow work of making enough space to focus."
 coverImage: "/assets/blog/camping-indoors-in-san-francisco/cover.webp"
+coverAlt: "Illustration of Alex sitting in an empty apartment with two cats, moving boxes, and a San Francisco view."
 tags:
   - "Reflection"
   - "Lifestyle"

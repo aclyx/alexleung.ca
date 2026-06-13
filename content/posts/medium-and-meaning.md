@@ -3,6 +3,7 @@ title: "Using AI Tools for Small Site Edits and Visual Ideas"
 date: "2026-02-22"
 excerpt: "Reflections on how Codex, Sora, and other AI tools change the texture of small site edits, exploratory visuals, and creative judgment."
 coverImage: "/assets/blog/medium-and-meaning/cover.webp"
+coverAlt: "Illustration of Alex holding a phone beside a train platform, laptop, and floating interface sketches."
 tags:
   - "AI"
   - "Creativity"

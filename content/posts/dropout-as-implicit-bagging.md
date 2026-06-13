@@ -3,6 +3,7 @@ title: "Dropout as Implicit Bagging in Deep Learning"
 date: "2026-03-07"
 excerpt: "A concrete way to understand dropout in deep learning: shared-parameter ensemble training that approximates bagging without training separate models."
 coverImage: "/assets/blog/dropout-as-implicit-bagging/cover.webp"
+coverAlt: "Illustration of Alex drawing glowing neural network diagrams at a desk."
 tags:
   - "Deep Learning"
   - "ML Theory"

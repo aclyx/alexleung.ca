@@ -15,7 +15,7 @@ import { getTagPath } from "@/lib/tags";
 type BlogPostCardProps = {
   post: Pick<
     Post,
-    "slug" | "title" | "date" | "coverImage" | "excerpt" | "tags"
+    "slug" | "title" | "date" | "coverImage" | "coverAlt" | "excerpt" | "tags"
   >;
   coverPriority?: boolean;
   className?: string;
@@ -44,7 +44,7 @@ export function BlogPostCard({
           <CoverImage
             src={cardCoverImage || post.coverImage}
             srcSet={cardCoverSrcSet}
-            alt={`Cover for ${post.title}`}
+            alt={post.coverAlt || `Cover for ${post.title}`}
             variant="card"
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             priority={coverPriority}

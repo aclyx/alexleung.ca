@@ -48,6 +48,7 @@ export default function BlogIndex() {
     "date",
     "slug",
     "coverImage",
+    "coverAlt",
     "excerpt",
     "tags",
   ]);
