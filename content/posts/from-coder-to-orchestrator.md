@@ -8,6 +8,8 @@ tags:
   - "AI"
   - "Developer Workflow"
   - "Future of Work"
+series: "AI Tools and Workflows"
+seriesOrder: 1
 ---
 
 Over the past two years, my day-to-day coding workflow has moved from quick AI help toward clearer task definition and verification. In early 2024, I used AI mostly for autocomplete-level tasks such as snippets, error explanations, and small refactors. By 2026, I still write code when needed, but far more of my time goes to defining tasks clearly, checking outputs, and fixing edge cases the tools miss.

@@ -259,6 +259,22 @@ type RelatedPost = Pick<
   "slug" | "title" | "date" | "excerpt" | "coverImage" | "tags"
 >;
 
+type SeriesPost = Pick<Post, "slug" | "title" | "seriesOrder">;
+
+type SeriesNavigation = {
+  name: string;
+  currentPart: number;
+  totalParts: number;
+  previousPost?: SeriesPost;
+  nextPost?: SeriesPost;
+};
+
+type SeriesSummary = {
+  name: string;
+  count: number;
+  firstPost: SeriesPost;
+};
+
 type GetRelatedPostsOptions = {
   limit?: number;
   includeDrafts?: boolean;
@@ -290,6 +306,25 @@ function isPostField(field: string): field is PostField {
 
 function pickPostFields<T extends PostField>(post: Post, fields: readonly T[]) {
   return Object.fromEntries(fields.map((field) => [field, post[field]]));
+}
+
+function getOrderedSeriesPosts(
+  series: string,
+  options?: PostQueryOptions
+): SeriesPost[] {
+  return getAllPosts({
+    includeDrafts: options?.includeDrafts ?? false,
+  })
+    .filter(
+      (post): post is Post & { seriesOrder: number } =>
+        post.series === series && Boolean(post.seriesOrder)
+    )
+    .sort((post1, post2) => post1.seriesOrder - post2.seriesOrder)
+    .map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      seriesOrder: post.seriesOrder,
+    }));
 }
 
 function getPostSlugs() {
@@ -346,6 +381,70 @@ export function getAllPosts(
   }
 
   return posts.map((post) => pickPostFields(post, fields));
+}
+
+export function getSeriesNavigation(
+  slug: string,
+  options?: PostQueryOptions
+): SeriesNavigation | null {
+  const post = getPostBySlug(slug, {
+    includeDrafts: options?.includeDrafts ?? false,
+  });
+
+  if (!post?.series || !post.seriesOrder) {
+    return null;
+  }
+
+  const seriesPosts = getOrderedSeriesPosts(post.series, options);
+
+  if (seriesPosts.length <= 1) {
+    return null;
+  }
+
+  const currentIndex = seriesPosts.findIndex(
+    (seriesPost) => seriesPost.slug === post.slug
+  );
+
+  if (currentIndex === -1) {
+    return null;
+  }
+
+  return {
+    name: post.series,
+    currentPart: currentIndex + 1,
+    totalParts: seriesPosts.length,
+    previousPost: seriesPosts[currentIndex - 1],
+    nextPost: seriesPosts[currentIndex + 1],
+  };
+}
+
+export function getSeriesSummaries(
+  options?: PostQueryOptions
+): SeriesSummary[] {
+  const posts = getAllPosts({
+    includeDrafts: options?.includeDrafts ?? false,
+  });
+  const seriesNames = new Set(
+    posts.flatMap((post) =>
+      post.series && post.seriesOrder ? [post.series] : []
+    )
+  );
+
+  return [...seriesNames]
+    .map((series) => {
+      const seriesPosts = getOrderedSeriesPosts(series, options);
+
+      return {
+        name: series,
+        count: seriesPosts.length,
+        firstPost: seriesPosts[0],
+      };
+    })
+    .filter(
+      (summary): summary is SeriesSummary =>
+        summary.count > 1 && Boolean(summary.firstPost)
+    )
+    .sort((summary1, summary2) => summary1.name.localeCompare(summary2.name));
 }
 
 export function getRelatedPosts(

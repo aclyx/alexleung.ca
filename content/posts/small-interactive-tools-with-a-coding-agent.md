@@ -7,6 +7,8 @@ tags:
   - "AI"
   - "Learning"
   - "Reflection"
+series: "AI Tools and Workflows"
+seriesOrder: 4
 ---
 
 I started building a small set of frontend-only interactive tools mostly out of curiosity. I wanted to see how coding agents would handle more involved static web applications without server-side components.

@@ -8,6 +8,8 @@ tags:
   - "ML Theory"
   - "Book Notes"
   - "Regularization"
+series: "Deep Learning Notes"
+seriesOrder: 3
 ---
 
 I worked through Chapter 7 of _Deep Learning_ last week, and the most useful change in my thinking was the bagging interpretation of dropout. I had mostly treated dropout as a practical anti-overfitting trick that adds noise and often helps. The chapter gave me a more concrete model: dropout works like a relatively inexpensive form of model averaging, close in spirit to bagging.

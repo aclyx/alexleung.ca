@@ -8,7 +8,8 @@ tags:
   - "Deep Learning"
   - "ML Theory"
   - "Book Notes"
-
+series: "Deep Learning Notes"
+seriesOrder: 2
 ---
 
 Working through Chapter 6, _Deep Feedforward Networks_, sharpened how I reason about neural networks. It did not expand my practical toolkit so much as clarify what I mean when I talk about architecture. After completing coursework like the DeepLearning.AI specialization, I was comfortable training multilayer perceptrons and reasoning about gradients. What this chapter made sharper is that architecture is not just a tuning dimension. It is a structural assumption about the function class we are willing to search.

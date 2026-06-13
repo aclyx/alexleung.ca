@@ -15,7 +15,12 @@ import { ProseContent } from "@/components/ProseContent";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Surface } from "@/components/Surface";
 import { Tag } from "@/components/Tag";
-import { getAllPosts, getPostBySlug, getRelatedPosts } from "@/lib/blogApi";
+import {
+  getAllPosts,
+  getPostBySlug,
+  getRelatedPosts,
+  getSeriesNavigation,
+} from "@/lib/blogApi";
 import {
   getCoverVariantPath,
   getCoverVariantSourceSet,
@@ -116,6 +121,7 @@ export default async function Post({ params }: Props) {
 
   const content = await markdownToHtml(post.content || "");
   const relatedPosts = getRelatedPosts(post.slug, { limit: 3 });
+  const seriesNavigation = getSeriesNavigation(post.slug);
   const heroCoverImage = getCoverVariantPath(post.coverImage, "hero");
   const heroCoverSrcSet = getCoverVariantSourceSet(post.coverImage, "hero");
 
@@ -167,6 +173,46 @@ export default async function Post({ params }: Props) {
                 </time>
               )}
             </div>
+            {seriesNavigation ? (
+              <nav
+                aria-label={`${seriesNavigation.name} series navigation`}
+                className="mb-6 border-y border-white/10 py-4"
+              >
+                <p className="text-sm font-semibold uppercase tracking-wide text-gray-300">
+                  {seriesNavigation.name}
+                </p>
+                <p className="mt-1 text-body-sm text-gray-200">
+                  Part {seriesNavigation.currentPart} of{" "}
+                  {seriesNavigation.totalParts}
+                </p>
+                <div className="mt-3 grid gap-3 md:grid-cols-2">
+                  {seriesNavigation.previousPost ? (
+                    <Link
+                      href={`/blog/${seriesNavigation.previousPost.slug}/`}
+                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover"
+                    >
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        Previous
+                      </span>
+                      {seriesNavigation.previousPost.title}
+                    </Link>
+                  ) : (
+                    <span />
+                  )}
+                  {seriesNavigation.nextPost ? (
+                    <Link
+                      href={`/blog/${seriesNavigation.nextPost.slug}/`}
+                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover md:text-right"
+                    >
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                        Next
+                      </span>
+                      {seriesNavigation.nextPost.title}
+                    </Link>
+                  ) : null}
+                </div>
+              </nav>
+            ) : null}
             <CoverImage
               src={heroCoverImage || post.coverImage}
               srcSet={heroCoverSrcSet}

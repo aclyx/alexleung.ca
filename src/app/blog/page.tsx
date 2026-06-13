@@ -9,13 +9,15 @@ import { FollowItSubscribeForm } from "@/components/FollowItSubscribeForm";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { getAllPosts } from "@/lib/blogApi";
+import { Tag } from "@/components/Tag";
+import { getAllPosts, getSeriesSummaries } from "@/lib/blogApi";
 import {
   buildBlogCollectionPageSchema,
   buildBlogItemListSchema,
   buildPageMetadata,
   toAbsoluteUrl,
 } from "@/lib/seo";
+import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
 
 const title = "Blog | Alex Leung";
 const description =
@@ -50,11 +52,63 @@ export default function BlogIndex() {
     "tags",
   ]);
   const [firstPost, ...remainingPosts] = allPosts;
+  const topics = getAllTags().filter(isIndexableTag);
+  const seriesSummaries = getSeriesSummaries();
 
   return (
     <>
       <PageShell title="Blog">
         <ResponsiveContainer variant="wide" className="space-y-8">
+          <section
+            aria-labelledby="blog-orientation-heading"
+            className="max-w-3xl space-y-5"
+          >
+            <div className="space-y-2">
+              <h2
+                id="blog-orientation-heading"
+                className="text-heading-sm text-white"
+              >
+                Notes from the workbench
+              </h2>
+              <p className="text-body text-gray-200">
+                I write here when a tool, system, book, or small experiment
+                changes how I think about building software.
+              </p>
+            </div>
+            <div className="grid gap-4 md:grid-cols-2">
+              {topics.length > 0 ? (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
+                    Topics
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {topics.map((topic) => (
+                      <Tag key={topic.slug} href={getTagPath(topic.name)}>
+                        {topic.name}
+                      </Tag>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+              {seriesSummaries.length > 0 ? (
+                <div>
+                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
+                    Series
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {seriesSummaries.map((series) => (
+                      <Tag
+                        key={series.name}
+                        href={`/blog/${series.firstPost.slug}/`}
+                      >
+                        {series.name}
+                      </Tag>
+                    ))}
+                  </div>
+                </div>
+              ) : null}
+            </div>
+          </section>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {firstPost ? (
               <BlogPostCard

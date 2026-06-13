@@ -368,3 +368,66 @@ Body`,
     expect(getRelatedPosts("a", { limit: 0 })).toEqual([]);
   });
 });
+
+describe("series helpers", () => {
+  test("returns ordered navigation for multi-post series", async () => {
+    const tempDir = setupTempPosts({
+      first: `---\ntitle: "First"\ndate: "2026-02-14"\nseries: "Notes"\nseriesOrder: 1\n---\nBody`,
+      second: `---\ntitle: "Second"\ndate: "2026-02-16"\nseries: "Notes"\nseriesOrder: 2\n---\nBody`,
+      third: `---\ntitle: "Third"\ndate: "2026-02-15"\nseries: "Notes"\nseriesOrder: 3\n---\nBody`,
+    });
+
+    const { getSeriesNavigation } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getSeriesNavigation("second")).toEqual({
+      name: "Notes",
+      currentPart: 2,
+      totalParts: 3,
+      previousPost: {
+        slug: "first",
+        title: "First",
+        seriesOrder: 1,
+      },
+      nextPost: {
+        slug: "third",
+        title: "Third",
+        seriesOrder: 3,
+      },
+    });
+  });
+
+  test("omits navigation for standalone and single-post series", async () => {
+    const tempDir = setupTempPosts({
+      standalone: `---\ntitle: "Standalone"\ndate: "2026-02-16"\n---\nBody`,
+      solo: `---\ntitle: "Solo"\ndate: "2026-02-15"\nseries: "Solo Series"\nseriesOrder: 1\n---\nBody`,
+    });
+
+    const { getSeriesNavigation } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getSeriesNavigation("standalone")).toBeNull();
+    expect(getSeriesNavigation("solo")).toBeNull();
+  });
+
+  test("returns multi-post series summaries linked to their first posts", async () => {
+    const tempDir = setupTempPosts({
+      "alpha-two": `---\ntitle: "Alpha Two"\ndate: "2026-02-16"\nseries: "Alpha"\nseriesOrder: 2\n---\nBody`,
+      "alpha-one": `---\ntitle: "Alpha One"\ndate: "2026-02-15"\nseries: "Alpha"\nseriesOrder: 1\n---\nBody`,
+      "beta-one": `---\ntitle: "Beta One"\ndate: "2026-02-14"\nseries: "Beta"\nseriesOrder: 1\n---\nBody`,
+      unlisted: `---\ntitle: "Unlisted"\ndate: "2026-02-13"\nseries: "Unlisted"\n---\nBody`,
+    });
+
+    const { getSeriesSummaries } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getSeriesSummaries()).toEqual([
+      {
+        name: "Alpha",
+        count: 2,
+        firstPost: {
+          slug: "alpha-one",
+          title: "Alpha One",
+          seriesOrder: 1,
+        },
+      },
+    ]);
+  });
+});
