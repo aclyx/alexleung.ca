@@ -55,24 +55,39 @@ export default function ExperimentsPage() {
               <Link
                 key={experiment.id}
                 href={experiment.path}
-                className="block"
+                className="group block"
               >
                 <Surface
-                  className="flex h-full flex-col justify-between p-5 transition-colors hover:border-white/30"
+                  className="flex h-full flex-col overflow-hidden p-0 transition-colors hover:border-accent-secondary/40"
                   interactive
                 >
-                  <div>
-                    <h2 className="text-heading-sm text-white">
-                      {experiment.pageTitle}
-                    </h2>
-                    <p className="text-body-sm mt-3 text-gray-300">
-                      {experiment.description}
-                    </p>
+                  <div className="overflow-hidden border-b border-white/10 bg-slate-950/70">
+                    <img
+                      src={experiment.thumbnail.src}
+                      alt={experiment.thumbnail.alt}
+                      width={960}
+                      height={540}
+                      loading="lazy"
+                      className="aspect-[16/9] w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                    />
                   </div>
-                  <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent-link">
-                    Open experiment
-                    <span aria-hidden="true">→</span>
-                  </span>
+                  <div className="flex grow flex-col justify-between p-5">
+                    <div>
+                      <div className="mb-3 inline-flex min-h-8 items-center rounded-full border border-accent-secondary/30 bg-accent-secondary/10 px-3 py-1 text-xs font-semibold text-accent-secondary-soft">
+                        {experiment.kind}
+                      </div>
+                      <h2 className="text-heading-sm font-semibold text-white">
+                        {experiment.pageTitle}
+                      </h2>
+                      <p className="text-body-sm mt-3 text-gray-300">
+                        {experiment.description}
+                      </p>
+                    </div>
+                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent-link transition-colors group-hover:text-accent-link-hover">
+                      Open experiment
+                      <span aria-hidden="true">→</span>
+                    </span>
+                  </div>
                 </Surface>
               </Link>
             ))}

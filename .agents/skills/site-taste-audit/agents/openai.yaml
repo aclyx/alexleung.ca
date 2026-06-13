@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Taste Audit"
+  short_description: "Review site tone, taste, and visual restraint."
+  default_prompt: "Use $site-taste-audit to review alexleung.ca for style, tone, typography, layout balance, and mobile/desktop taste issues."

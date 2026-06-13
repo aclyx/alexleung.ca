@@ -19,6 +19,7 @@ Load references only when needed:
 - Keep tone warm, direct, and measured; avoid hype, slogans, and recruiter-style positioning.
 - Show experience through concrete observations, trade-offs, mechanisms, and limits.
 - Prefer literal phrasing over abstract framing when the concrete system, UI behavior, or comparison can be named.
+- Apply the root `AGENTS.md` taste profile for any title, intro, excerpt, index copy, or cover prompt: concrete, understated, utility-minded, plain-spoken, and specific.
 - For personal reflections, lead with the lived detail before the interpretation. Do not manufacture thesis energy with polished setup phrases.
 - Let significance emerge from facts and consequences instead of declaring that something "matters" or is "important".
 
@@ -28,11 +29,13 @@ Load references only when needed:
 2. Keep claims tightly bounded to what the user actually said.
 3. Avoid repeated one-sentence paragraphs as the dominant cadence.
 4. Prefer concise titles and specific excerpts over authority-oriented positioning.
-5. Use section headings that name the idea of the section, not generic scaffolds like `What`, `How`, `Why`, `The Goal`, or `The Implementation`.
-6. Do not turn learning notes, project writeups, or personal reflections into portfolio pitches.
-7. Avoid intro scaffolding that announces a thesis before showing the experience: rhetorical contrast, abstract significance framing, or decorative labels for mood/place/context.
-8. If the user corrects tone more than once, stop incremental patching. Reread the full piece, identify the repeated failure pattern, and revise the affected section from concrete facts outward.
-9. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
+5. For blog titles, prefer a crisp active claim, a concrete object/use case, or a named-tool contrast over generic `Why...` or `Using...` packaging.
+6. Use section headings that name the idea of the section, not generic scaffolds like `What`, `How`, `Why`, `The Goal`, or `The Implementation`.
+7. Avoid one-off metaphors in blog index headings or section intros unless the surrounding page already supports that metaphor; plain labels usually fit this site better.
+8. Do not turn learning notes, project writeups, or personal reflections into portfolio pitches.
+9. Avoid intro scaffolding that announces a thesis before showing the experience: rhetorical contrast, abstract significance framing, or decorative labels for mood/place/context.
+10. If the user corrects tone more than once, stop incremental patching. Reread the full piece, identify the repeated failure pattern, and revise the affected section from concrete facts outward.
+11. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
 
 ## Workflow
 

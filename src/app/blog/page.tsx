@@ -4,6 +4,10 @@ import { Metadata } from "next";
 
 import { CollectionPage, ItemList } from "schema-dts";
 
+import {
+  TopicRevealList,
+  type TopicLink,
+} from "@/app/blog/_components/TopicRevealList";
 import { BlogPostCard } from "@/components/BlogPostCard";
 import { FollowItSubscribeForm } from "@/components/FollowItSubscribeForm";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
@@ -17,7 +21,12 @@ import {
   buildPageMetadata,
   toAbsoluteUrl,
 } from "@/lib/seo";
-import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
+import {
+  getAllTags,
+  getTagPath,
+  isIndexableTag,
+  sortTagsByPopularity,
+} from "@/lib/tags";
 
 const title = "Blog | Alex Leung";
 const description =
@@ -53,7 +62,12 @@ export default function BlogIndex() {
     "tags",
   ]);
   const [firstPost, ...remainingPosts] = allPosts;
-  const topics = getAllTags().filter(isIndexableTag);
+  const topics: TopicLink[] = sortTagsByPopularity(
+    getAllTags().filter(isIndexableTag)
+  ).map((topic) => ({
+    name: topic.name,
+    href: getTagPath(topic.name),
+  }));
   const seriesSummaries = getSeriesSummaries();
 
   return (
@@ -61,42 +75,20 @@ export default function BlogIndex() {
       <PageShell title="Blog">
         <ResponsiveContainer variant="wide" className="space-y-8">
           <section
-            aria-labelledby="blog-orientation-heading"
-            className="max-w-3xl space-y-5"
+            aria-label="Blog overview"
+            className="mx-auto max-w-5xl space-y-4 text-left md:text-center"
           >
-            <div className="space-y-2">
-              <h2
-                id="blog-orientation-heading"
-                className="text-heading-sm text-white"
-              >
-                Notes from the workbench
-              </h2>
-              <p className="text-body text-gray-200">
-                I write here when a tool, system, book, or small experiment
-                changes how I think about building software.
-              </p>
-            </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              {topics.length > 0 ? (
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
-                    Topics
-                  </h3>
-                  <div className="flex flex-wrap gap-2">
-                    {topics.map((topic) => (
-                      <Tag key={topic.slug} href={getTagPath(topic.name)}>
-                        {topic.name}
-                      </Tag>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
+            <p className="mx-auto max-w-2xl text-body text-gray-200">
+              Software systems, AI tools, books, and experiments.
+            </p>
+            <div className="space-y-3">
+              <TopicRevealList topics={topics} />
               {seriesSummaries.length > 0 ? (
                 <div>
                   <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
                     Series
                   </h3>
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 md:justify-center">
                     {seriesSummaries.map((series) => (
                       <Tag
                         key={series.name}
@@ -110,7 +102,7 @@ export default function BlogIndex() {
               ) : null}
             </div>
           </section>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {firstPost ? (
               <BlogPostCard
                 key={firstPost.slug}
@@ -122,6 +114,7 @@ export default function BlogIndex() {
               <BlogPostCard
                 key={post.slug}
                 post={post}
+                compactOnMobile
                 className="[content-visibility:auto] [contain-intrinsic-size:520px]"
               />
             ))}

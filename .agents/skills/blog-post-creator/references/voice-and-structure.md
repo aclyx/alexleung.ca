@@ -7,7 +7,11 @@
 - Keep tone warm but restrained; avoid hype, slogans, and performative phrasing.
 - Keep the voice humble, grounded, and clearly experienced through concrete evidence rather than self-description.
 - Avoid recruiter-optimized or self-promotional framing; prefer factual context over authority claims.
+- Use the site's broader taste profile when choosing wording: concrete, understated, utility-minded, lightly warm, and plain-spoken. Avoid copy that sounds like it is performing sophistication.
 - Avoid influencer-style packaging in titles, excerpts, and AI-tool posts. Use concrete scope and workflow details instead of clickbait, broad future-of-work framing, or claims that outgrow the post.
+- Keep blog titles short enough to scan and specific enough to identify the post. Prefer one strong axis: an active claim, a concrete object/use case, or a named-tool contrast. Avoid `Why...` and `Using...` title forms when they only make the title sound more formal.
+- When revising a weak title, remove stacked softeners and category words before reaching for cleverness. Words like `rough`, `workflow`, `small`, `ideas`, `fit`, and `tools` often hide the concrete subject unless they are doing necessary work.
+- For blog index headings and intros, prefer plain labels over decorative metaphors. Do not introduce standalone workbench/workshop/lab/journey language unless the surrounding page already uses that frame.
 - In learning notes and book reviews, frame the writing as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism. Do not lean on repeated "I learned", "I realized", or "I discovered" phrasing that makes the author sound new to the subject.
 - In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like "a person" when the intended subject is Alex.
 - Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow/textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.

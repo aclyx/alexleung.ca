@@ -1,5 +1,5 @@
 export const interests = [
-  "AI tools for software products and engineering workflows",
+  "AI product development",
   "Distributed systems, backend architecture, and reliability",
   "Full-stack product engineering",
   "Cloud infrastructure and developer tools",
