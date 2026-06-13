@@ -11,14 +11,15 @@ type TagProps = {
 };
 
 export function Tag({ children, className = "", href }: TagProps) {
-  const sharedClassName = `border-white/20 text-gray-200 ${className}`.trim();
+  const sharedClassName =
+    `border-accent-secondary/30 bg-accent-secondary/10 text-accent-secondary-soft ${className}`.trim();
 
   if (href) {
     return (
       <Link
         href={href}
         className={chipClassName(
-          `${sharedClassName} transition-colors hover:border-accent-link hover:text-white`
+          `${sharedClassName} transition-colors hover:border-accent-secondary hover:bg-accent-secondary/15 hover:text-white`
         )}
       >
         {children}

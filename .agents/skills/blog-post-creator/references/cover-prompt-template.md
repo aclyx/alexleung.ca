@@ -8,6 +8,7 @@ Use this template to generate a prompt for a blog cover image. Assume the user w
 - Default to Ghibli-style visual direction unless asked otherwise.
 - Instruct the model to use Alex's reference image for facial likeness.
 - Keep composition readable as a thumbnail and as a wide blog cover.
+- Keep visuals grounded, specific, and content-revealing rather than purely atmospheric or decorative.
 - Avoid text overlays, logos, and busy backgrounds.
 
 ## Primary Prompt Template

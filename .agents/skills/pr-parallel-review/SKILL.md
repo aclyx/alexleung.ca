@@ -72,5 +72,5 @@ After the six sections, add a short `Cross-cutting notes` section only if multip
 - Review the actual diff, not the whole repository in the abstract.
 - Prefer changed files first, but inspect adjacent code when needed to confirm impact.
 - Distinguish confirmed issues from plausible risks.
-- Avoid style-only feedback unless it affects correctness, reviewability, or maintenance cost.
+- Avoid style-only feedback unless it affects correctness, reviewability, maintenance cost, or the user explicitly asks for taste/style/tone review. For visible site changes under that explicit request, apply the root `AGENTS.md` taste profile or the repo-local `site-taste-audit` skill.
 - If you did not run tests or static checks, say so.

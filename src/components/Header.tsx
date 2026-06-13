@@ -94,7 +94,7 @@ export default function Header() {
           <Link
             href="/"
             onClick={closeMenu}
-            className="relative z-50 text-lg font-black uppercase tracking-wider transition-colors hover:text-gray-300 md:text-2xl"
+            className="relative z-50 inline-flex min-h-11 items-center text-lg font-black uppercase tracking-wider transition-colors hover:text-gray-300 md:text-2xl"
           >
             Alex Leung
           </Link>
@@ -106,7 +106,7 @@ export default function Header() {
           <button
             ref={menuButtonRef}
             onClick={toggleMenu}
-            className="relative z-50 text-2xl transition-all duration-300 hover:text-gray-300 md:hidden"
+            className="relative z-50 flex size-11 items-center justify-center rounded-md text-2xl transition-all duration-300 hover:bg-white/10 hover:text-gray-300 md:hidden"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-nav-drawer"

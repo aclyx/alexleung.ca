@@ -75,7 +75,7 @@ Focus on reviewability and engineering quality problems:
 - dead branches or inconsistent patterns
 - error handling that is hard to reason about
 
-Ignore pure style preferences unless they materially hurt clarity.
+Ignore pure style preferences unless they materially hurt clarity, or unless the user explicitly asked for taste/style/tone review. For visible site changes under that explicit request, apply the root `AGENTS.md` taste profile or the repo-local `site-taste-audit` skill.
 
 ### 3. Bugs
 

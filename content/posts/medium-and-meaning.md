@@ -1,5 +1,5 @@
 ---
-title: "Using AI Tools for Small Site Edits and Visual Ideas"
+title: "Codex for Site Edits, Sora for Visual Sketches"
 date: "2026-02-22"
 excerpt: "How Codex made small website edits easier to make from a phone, while Sora still feels more useful for exploratory visuals than finished work."
 coverImage: "/assets/blog/medium-and-meaning/cover.webp"

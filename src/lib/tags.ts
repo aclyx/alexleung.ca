@@ -61,6 +61,15 @@ export function getAllTags(): TagEntry[] {
   return [...tagMap.values()];
 }
 
+export function sortTagsByPopularity<
+  T extends Pick<TagEntry, "count" | "name">,
+>(tags: readonly T[]): T[] {
+  return [...tags].sort(
+    (tagA, tagB) =>
+      tagB.count - tagA.count || tagA.name.localeCompare(tagB.name)
+  );
+}
+
 export function isIndexableTag(tag: Pick<TagEntry, "count">): boolean {
   return tag.count >= INDEXABLE_TAG_MIN_POST_COUNT;
 }

@@ -19,6 +19,9 @@ const config = {
         accent: {
           link: "#60a5fa", // blue-400
           "link-hover": "#93c5fd", // blue-300
+          secondary: "#f59e0b", // amber-500
+          "secondary-hover": "#fbbf24", // amber-400
+          "secondary-soft": "#fde68a", // amber-200
           success: "#86efac", // green-300
           warning: "#fcd34d", // yellow-300
           info: "#93c5fd", // blue-300

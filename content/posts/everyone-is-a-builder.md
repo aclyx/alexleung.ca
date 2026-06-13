@@ -1,5 +1,5 @@
 ---
-title: "Rough Internal Tools Are Cheaper to Try"
+title: "Make Internal Tools Cheap to Try"
 date: "2026-02-28"
 excerpt: "A conversation with colleagues about lower-friction AI-assisted prototypes for small internal tools."
 coverImage: "/assets/blog/everyone-is-a-builder/cover.webp"

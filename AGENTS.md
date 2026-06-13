@@ -161,6 +161,19 @@ yarn deploy           # Build and deploy to GitHub Pages
 - `ProseContent` defaults to base prose sizing. Use `size="lg"` for `md:prose-lg`; for small notes/footers, explicitly set `size="sm"` so both `prose-sm` and `md:prose-sm` are applied.
 - When editing typography classes, verify rendered size at both mobile and `md`+ breakpoints via local browser inspection or the relevant Playwright coverage. Do not claim breakpoint verification unless you actually performed one of those checks.
 
+### Taste and Style Guardrails (Agent Guidance)
+
+- Target taste: concrete, understated, utility-minded, and quietly polished. The site should feel calm, aligned, readable, and specific rather than flashy, clever, decorative, or like it is performing sophistication.
+- Prefer direct labels, specific nouns, and visible hierarchy over metaphors, slogans, or abstract framing. If the real thing can be named plainly, name it plainly.
+- Layout should feel balanced and intentional on both mobile and desktop. Avoid compositions that feel artificially constrained to one side, overly boxed-in, or visually uneven across columns and sections.
+- Favor dense but scannable browsing surfaces for repeat-use pages such as blog indexes, tag lists, and experiment grids. Reduce ceremony before reducing information.
+- Typography should read as editorial but practical: clear hierarchy, comfortable line length, restrained display sizes, and no oversized type inside compact panels.
+- Color and visual accents should support orientation and warmth without becoming the main event. Use secondary accents sparingly, avoid one-note palettes, and prefer backgrounds/images that create consistency without lowering legibility.
+- Visual assets should reveal the actual subject, object, or state. Avoid purely atmospheric, dark, blurred, cropped, or stock-like imagery when the user needs to understand the content.
+- Interaction polish matters: cards that look clickable should be clickable, mobile tap targets should be comfortable, and hover/focus states should reinforce the hierarchy without layout shift.
+- Treat AI product development as a first-class interest when relevant, but keep AI wording practical and grounded. Avoid hype, broad future-of-work claims, or self-congratulatory tooling language.
+- When the user asks for a taste, style, tone, typography, color, mobile/desktop, or visual critique of the site, use the repo-local `site-taste-audit` skill if it is available.
+
 ### Copy Editing Guardrails (Agent Guidance)
 
 - Target site voice: first-person where appropriate; humble, grounded, and clearly experienced; warm but understated; professional without becoming sterile. Confidence should come from evidence, specific work, and concrete observations rather than self-description or positioning claims.
@@ -175,6 +188,9 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Use credentials, project history, and domain experience as factual context when relevant, but avoid turning them into a pitch.
 - Prefer direct, literal phrasing over abstract framing when editing prose. If the concrete mechanism, limitation, UI behavior, or comparison can be named directly, name it.
 - For blog titles, excerpts, and AI-tool posts, avoid influencer-style packaging, clickbait, and broad future-of-work framing. Prefer literal scope, concrete workflow details, and tags that match the actual argument.
+- Blog titles should feel concise and spoken, not like category labels. Prefer one crisp shape: an active claim (`Make Internal Tools Cheap to Try`), a concrete object/use case (`Studying with the 11-Inch iPad Air`), or a named-tool contrast (`Codex for Site Edits, Sora for Visual Sketches`). Avoid `Why...` or `Using...` title forms when they add ceremony without adding meaning.
+- When a title feels flat, look for stacked softeners or abstractions such as `rough`, `workflow`, `small`, `ideas`, `fit`, or `tools`. Keep the useful constraint and cut the vague scaffolding.
+- For blog index and section labels, use plain labels unless the page has already earned a metaphor. Avoid one-off workshop, workbench, journey, lab, or craft metaphors in headings and intros; they tend to feel forced against the site's otherwise literal voice.
 - For learning notes and book reviews, do not overuse `I learned`, `I realized`, `I discovered`, or similar beginner-coded framing. Present the post as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism while preserving honest limits.
 - In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
 - Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow/textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.

@@ -10,11 +10,14 @@ export default function Footer() {
     <section className="section-center py-4 text-center">
       <SocialLinkList
         analyticsPlacement="footer"
-        itemClassName="mx-2 mb-4 inline-block list-none"
-        linkClassName="text-xl text-white"
+        itemClassName="mx-1 mb-3 inline-block list-none"
+        linkClassName="inline-flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xl text-white transition-colors hover:border-accent-secondary/60 hover:text-accent-secondary"
       />
       <p className="text-body-sm pb-1">
-        <LinkText href="/feed.xml" className="inline-flex items-center gap-2">
+        <LinkText
+          href="/feed.xml"
+          className="inline-flex min-h-11 items-center gap-2 px-3"
+        >
           <FaRss aria-hidden="true" />
           <span>Subscribe via RSS</span>
         </LinkText>
