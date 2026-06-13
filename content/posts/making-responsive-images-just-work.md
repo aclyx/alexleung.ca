@@ -1,11 +1,11 @@
 ---
-title: "Making Responsive Images Just Work"
+title: "Manifest-Driven Responsive Images in Next.js"
 date: "2026-03-04"
-excerpt: "I replaced scattered responsive-image conventions with a manifest-driven workflow that made authoring simpler and failures easier to see."
+excerpt: "I replaced scattered responsive-image conventions in a Next.js static site with a manifest-driven workflow that made authoring simpler and failures easier to see."
 coverImage: "/assets/blog/making-responsive-images-just-work/cover.webp"
-coverAlt: "Illustration of Alex measuring framed landscape images labeled with responsive sizes."
+coverAlt: "Illustration of Alex measuring framed landscape images labeled sm, md, and lg"
 tags:
-  - "Web Performance"
+  - "Next.js"
   - "Architecture"
   - "Developer Workflow"
 ---

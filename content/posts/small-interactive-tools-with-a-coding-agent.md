@@ -1,12 +1,12 @@
 ---
-title: "Relearning Through Small Interactive Tools"
+title: "Inspectable Browser Tools Built with Coding Agents"
 date: "2026-04-10"
-excerpt: "Using a coding agent to build small browser tools turned out to be a good way to revisit concepts I had not touched in a while."
+excerpt: "Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me inspectable ways to revisit technical models."
 coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png"
-coverAlt: "Illustration of Alex working across several screens showing small interactive tools and charts."
+coverAlt: "Illustration of Alex working across screens showing event loop, control, and fractal visualizations"
 tags:
   - "AI"
-  - "Learning"
+  - "Developer Workflow"
   - "Reflection"
 series: "AI Tools and Workflows"
 seriesOrder: 4
@@ -16,7 +16,7 @@ I started building a small set of frontend-only interactive tools mostly out of 
 
 So far, that set includes a [load flow tool](/experimental/load-flow/), an [event loop visualizer](/experimental/event-loop/), a [learning dynamics lab](/experimental/learning-dynamics/), and a [Mandelbrot explorer](/experimental/mandelbrot/).
 
-These were useful test cases because they are small enough to live entirely on the client side in a Next.js app, but they still involve interaction, visualization, timing, feedback, state, and sometimes numerical precision. The logic needs to live in the client. They also became a useful way to revisit concepts I had not touched closely in a while.
+These were useful test cases because they are small enough to live entirely on the client side in a Next.js app, but they still involve interaction, visualization, timing, feedback, state, and sometimes numerical precision. The logic needs to live in the client. They also gave me a compact way to make older technical models inspectable again.
 
 ## Load flow in the browser
 
@@ -36,10 +36,10 @@ What I wanted to see on the web was whether I could still handle those same two 
 
 The current implementation still has a practical precision ceiling: if I zoom too far in, the browser can freeze. I do not remember running into issues at deeper zoom levels in my earlier C++ version using the GNU Multiple Precision Arithmetic Library.
 
-## Relearning through small models
+## Inspectable models
 
-These tools also turned out to be a good way to refresh concepts I am actively revisiting. The [Learning Dynamics Lab](/experimental/learning-dynamics/) is useful for that because it makes optimizer behavior visible instead of leaving it at the level of equations or static notes. The [Event Loop Visualizer](/experimental/event-loop/) fits the same pattern. Queuing `Promise.then(...)` beside `setTimeout(..., 0)` and stepping the runtime forward makes the ordering much easier to see: the microtask queue drains before the next task starts.
+The tools work best when they make a model visible instead of leaving it at the level of equations or static notes. The [Learning Dynamics Lab](/experimental/learning-dynamics/) does that for optimizer behavior. The [Event Loop Visualizer](/experimental/event-loop/) fits the same pattern. Queuing `Promise.then(...)` beside `setTimeout(..., 0)` and stepping the runtime forward makes the ordering easier to inspect: the microtask queue drains before the next task starts.
 
 That is also where the coding agent has been most useful. It is good at helping me get started, scaffolding the UI, and accelerating implementation. It can also explain concepts reasonably well. But a tool still teaches me something different. A chatbot is turn-based and less effective for sustained exploration. A tool gives me something inspectable. If the behavior looks wrong, I can inspect the code directly instead of stopping at the explanation.
 
-For now, the pattern that has felt most useful to me is simpler: use the agent to help build a small tool, then learn by pushing on the model directly.
+For now, the pattern that has felt most useful to me is simpler: use the agent to help build a small tool, then test my understanding by pushing on the model directly.

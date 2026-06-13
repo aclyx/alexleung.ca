@@ -7,6 +7,11 @@
 - Keep tone warm but restrained; avoid hype, slogans, and performative phrasing.
 - Keep the voice humble, grounded, and clearly experienced through concrete evidence rather than self-description.
 - Avoid recruiter-optimized or self-promotional framing; prefer factual context over authority claims.
+- Avoid influencer-style packaging in titles, excerpts, and AI-tool posts. Use concrete scope and workflow details instead of clickbait, broad future-of-work framing, or claims that outgrow the post.
+- In learning notes and book reviews, frame the writing as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism. Do not lean on repeated "I learned", "I realized", or "I discovered" phrasing that makes the author sound new to the subject.
+- In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like "a person" when the intended subject is Alex.
+- Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow/textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
+- Preserve publication chronology. Do not add links or prose references from a dated entry to later-dated entries unless the entry is intentionally revised and its `updated` date reflects that retrospective edit.
 - Do not signal significance with lines like "this matters because"; make the stakes legible through concrete detail and consequence instead.
 - Explain trade-offs and constraints instead of presenting absolute claims.
 - Prefer direct mechanism over framing language; if a sentence can name the actual behavior, constraint, or operation, do that instead of abstract setup.

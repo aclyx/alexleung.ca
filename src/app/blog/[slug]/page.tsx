@@ -125,6 +125,7 @@ export default async function Post({ params }: Props) {
   const seriesNavigation = getSeriesNavigation(post.slug);
   const heroCoverImage = getCoverVariantPath(post.coverImage, "hero");
   const heroCoverSrcSet = getCoverVariantSourceSet(post.coverImage, "hero");
+  const heroCoverAlt = post.coverAlt || `Cover for ${post.title}`;
 
   return (
     <>
@@ -217,7 +218,7 @@ export default async function Post({ params }: Props) {
             <CoverImage
               src={heroCoverImage || post.coverImage}
               srcSet={heroCoverSrcSet}
-              alt={post.coverAlt || `Cover for ${post.title}`}
+              alt={heroCoverAlt}
               variant="hero"
               sizes="(min-width: 1024px) 896px, 100vw"
               className="mb-6 sm:mx-0 md:mb-10"

@@ -28,6 +28,7 @@ export function BlogPostCard({
 }: BlogPostCardProps) {
   const cardCoverImage = getCoverVariantPath(post.coverImage, "card");
   const cardCoverSrcSet = getCoverVariantSourceSet(post.coverImage, "card");
+  const coverAlt = post.coverAlt || `Cover for ${post.title}`;
 
   return (
     <Surface
@@ -44,7 +45,7 @@ export function BlogPostCard({
           <CoverImage
             src={cardCoverImage || post.coverImage}
             srcSet={cardCoverSrcSet}
-            alt={post.coverAlt || `Cover for ${post.title}`}
+            alt={coverAlt}
             variant="card"
             sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             priority={coverPriority}

@@ -4,11 +4,10 @@ date: "2026-01-31"
 updated: "2026-02-14"
 excerpt: "How I added a fully static, markdown-based blog to my Next.js portfolio."
 coverImage: "/assets/blog/boring-blog-architecture/cover.webp"
-coverAlt: "Illustration of Alex working at a laptop under a desk lamp."
+coverAlt: "Illustration of Alex wearing headphones while working at a laptop under a desk lamp"
 tags:
   - "Next.js"
   - "Architecture"
-  - "Blogging"
 ---
 
 I recently added a blog to this site. Rather than reaching for a CMS, I decided to build it directly into the existing Next.js application using standard tools.

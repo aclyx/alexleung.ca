@@ -54,8 +54,6 @@ const TAG_DESCRIPTIONS: Record<string, string> = {
     "Posts on deep learning concepts, textbook notes, regularization, and the structural assumptions behind neural networks.",
   "developer-workflow":
     "Notes on developer workflow, AI coding tools, verification loops, and small improvements to the way software gets built.",
-  "future-of-work":
-    "Reflections on how AI tools change software work, prototyping, review, and who gets to test rough ideas.",
   lifestyle:
     "Personal notes on tools, moving, study routines, and the small practical details around work and life.",
   "ml-theory":

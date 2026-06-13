@@ -55,16 +55,20 @@ describe("blogApi front matter validation", () => {
     expect(post?.draft).toBe(false);
   });
 
-  test("parses explicit tags and readingTimeMinutes", async () => {
+  test("parses explicit tags, cover alt text, and readingTimeMinutes", async () => {
     const tempDir = setupTempPosts({
-      tagged: `---\ntitle: "Tagged"\ndate: "2026-02-16"\ntags:\n  - "AI"\n  - "Systems"\nreadingTimeMinutes: 7\n---\nBody`,
+      tagged: `---\ntitle: "Tagged"\ndate: "2026-02-16"\ncoverAlt: "Descriptive cover image alt text"\ntags:\n  - "AI"\n  - "Systems"\nreadingTimeMinutes: 7\n---\nBody`,
     });
 
-    const { getPostBySlug } = await loadBlogApiAtCwd(tempDir);
+    const { getAllPosts, getPostBySlug } = await loadBlogApiAtCwd(tempDir);
     const post = getPostBySlug("tagged");
 
     expect(post?.tags).toEqual(["AI", "Systems"]);
+    expect(post?.coverAlt).toBe("Descriptive cover image alt text");
     expect(post?.readingTimeMinutes).toBe(7);
+    expect(getAllPosts(["coverAlt"])).toEqual([
+      { coverAlt: "Descriptive cover image alt text" },
+    ]);
   });
 
   test("parses optional cover alt text", async () => {
