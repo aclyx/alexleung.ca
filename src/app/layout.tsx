@@ -4,11 +4,11 @@ import { JsonLd } from "react-schemaorg";
 import type { Metadata, Viewport } from "next";
 import { Lato } from "next/font/google";
 
-import { GoogleAnalytics } from "@next/third-parties/google";
-
 import { AppBackground } from "@/components/AppBackground";
 import Footer from "@/components/Footer";
+import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import Header from "@/components/Header";
+import { SiteLinkAnalytics } from "@/components/SiteLinkAnalytics";
 import { BASE_URL } from "@/constants";
 import {
   buildPersonSchema,
@@ -98,11 +98,14 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <Header />
         <main className="flex grow flex-col">{children}</main>
         <Footer />
+        <SiteLinkAnalytics />
         <JsonLd item={buildPersonSchema({ description })} />
         <JsonLd item={buildWebsiteSchema({ description })} />
         <JsonLd item={buildSiteNavigationSchema()} />
+        {googleAnalyticsId ? (
+          <GoogleAnalytics measurementId={googleAnalyticsId} />
+        ) : null}
       </body>
-      {googleAnalyticsId ? <GoogleAnalytics gaId={googleAnalyticsId} /> : null}
     </html>
   );
 }

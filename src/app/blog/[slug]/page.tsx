@@ -35,6 +35,8 @@ import {
 } from "@/lib/seo";
 import { getTagPath } from "@/lib/tags";
 
+import { BlogPostAnalytics } from "./_components/BlogPostAnalytics";
+
 export const dynamicParams = false;
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
@@ -158,6 +160,7 @@ export default async function Post({ params }: Props) {
           tags: post.tags,
         })}
       />
+      <BlogPostAnalytics slug={post.slug} title={post.title} />
       <PageShell title={post.title}>
         <ResponsiveContainer
           element="article"

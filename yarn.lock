@@ -1564,18 +1564,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/third-parties@npm:^16.2.4":
-  version: 16.2.4
-  resolution: "@next/third-parties@npm:16.2.4"
-  dependencies:
-    third-party-capital: "npm:1.0.20"
-  peerDependencies:
-    next: ^13.0.0 || ^14.0.0 || ^15.0.0 || ^16.0.0-beta.0
-    react: ^18.2.0 || 19.0.0-rc-de68d2f4-20241204 || ^19.0.0
-  checksum: 10c0/acb055e17f121ffd543cedc8f0268c856544e54a160cfd2c7fb475dee5ad655a1303cf012126fb075a6bd72f93dd53f37615071de2953694adbe357c17e302a6
-  languageName: node
-  linkType: hard
-
 "@nodelib/fs.scandir@npm:2.1.5":
   version: 2.1.5
   resolution: "@nodelib/fs.scandir@npm:2.1.5"
@@ -2962,7 +2950,6 @@ __metadata:
   dependencies:
     "@ianvs/prettier-plugin-sort-imports": "npm:^4.7.1"
     "@lhci/cli": "npm:^0.15.1"
-    "@next/third-parties": "npm:^16.2.4"
     "@playwright/test": "npm:1.59.1"
     "@tailwindcss/postcss": "npm:^4.2.4"
     "@tailwindcss/typography": "npm:^0.5.19"
@@ -9647,13 +9634,6 @@ __metadata:
   dependencies:
     b4a: "npm:^1.6.4"
   checksum: 10c0/929938ed154fbadb660a7f3d1aca30b7e53649a731af7583168fcfba0c158046325d35d945926e2a512bb62d1a49a7818151c987ea38b48853f01e1615722fc5
-  languageName: node
-  linkType: hard
-
-"third-party-capital@npm:1.0.20":
-  version: 1.0.20
-  resolution: "third-party-capital@npm:1.0.20"
-  checksum: 10c0/7f45ff156ec9d7e2957a5b39061be22b780ffbd2d93c127252d908e2bff6cdd09f827a95909d457c8096e036f155006a38e355a06ee11cb6d63c7f4b150bbfb0
   languageName: node
   linkType: hard
 
