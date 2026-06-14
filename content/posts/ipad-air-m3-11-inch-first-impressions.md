@@ -1,5 +1,5 @@
 ---
-title: "Studying with the 11-Inch iPad Air"
+title: "Studying with the 11-Inch M3 iPad Air"
 date: "2026-03-05"
 excerpt: "Notes on the 11-inch iPad Air M3 as a lightweight reading, annotation, and remote-workflow setup for studying."
 coverImage: "/assets/blog/ipad-air-m3-11-inch-first-impressions/cover.webp"
