@@ -163,6 +163,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Taste and Style Guardrails (Agent Guidance)
 
+- Canonical taste-audit workflow: `.agents/skills/site-taste-audit/SKILL.md`. Blog voice details live in `.agents/skills/blog-post-creator/references/voice-and-structure.md`; keep those files and this summary aligned when preferences change.
 - Target taste: concrete, understated, utility-minded, and quietly polished. The site should feel calm, aligned, readable, and specific rather than flashy, clever, decorative, or like it is performing sophistication.
 - Prefer direct labels, specific nouns, and visible hierarchy over metaphors, slogans, or abstract framing. If the real thing can be named plainly, name it plainly.
 - Layout should feel balanced and intentional on both mobile and desktop. Avoid compositions that feel artificially constrained to one side, overly boxed-in, or visually uneven across columns and sections.

@@ -31,6 +31,9 @@ export function BlogPostCard({
   const cardCoverImage = getCoverVariantPath(post.coverImage, "card");
   const cardCoverSrcSet = getCoverVariantSourceSet(post.coverImage, "card");
   const coverAlt = post.coverAlt || `Cover for ${post.title}`;
+  const coverSizes = compactOnMobile
+    ? "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 96px"
+    : "(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw";
 
   return (
     <Surface
@@ -58,7 +61,7 @@ export function BlogPostCard({
             srcSet={cardCoverSrcSet}
             alt={coverAlt}
             variant="card"
-            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            sizes={coverSizes}
             priority={coverPriority}
             compactOnMobile={compactOnMobile}
             className={compactOnMobile ? "md:mb-4" : "mb-4"}

@@ -9,7 +9,7 @@ export function Hero() {
       className="flex flex-grow items-center justify-center pb-12 pt-[calc(var(--header-height)+1.5rem)] md:pb-12 md:pt-[calc(var(--header-height)+3rem)]"
     >
       <div className="section-center">
-        <div className="max-w-3xl">
+        <div className="mx-auto max-w-3xl">
           <p className="text-hero-subtitle mb-4 tracking-wider">
             Hi, my name is
           </p>

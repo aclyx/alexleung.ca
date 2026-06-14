@@ -7,7 +7,7 @@ type ChipProps<T extends ElementType = "span"> = {
 };
 
 const chipBaseClassName =
-  "inline-flex min-h-8 items-center rounded-full border px-3 py-1.5 text-xs font-semibold";
+  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 py-1.5 text-xs font-semibold md:min-h-8 md:min-w-0";
 
 export function chipClassName(className = "") {
   return `${chipBaseClassName} ${className}`.trim();
