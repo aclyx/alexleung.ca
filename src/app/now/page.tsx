@@ -1,7 +1,6 @@
 import { JsonLd } from "react-schemaorg";
 
 import { Metadata } from "next";
-import Link from "next/link";
 
 import { WebPage } from "schema-dts";
 
@@ -18,10 +17,12 @@ import {
   formatNowSnapshotDate,
   latestNowSnapshot,
   NOW_PAGE_LAST_UPDATED_ISO,
+  pastNowSnapshots,
 } from "@/lib/nowTimeline";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 import { NowSnapshotContent } from "./_components/NowSnapshotContent";
+import { NowTimeCapsuleDrawer } from "./_components/NowTimeCapsuleDrawer";
 
 export { NOW_PAGE_LAST_UPDATED_ISO };
 
@@ -67,17 +68,12 @@ export default function NowPage() {
           <Badge tone="info">
             Last updated: {NOW_PAGE_LAST_UPDATED_DISPLAY}
           </Badge>
-          <Link
-            href="/now/timeline/"
-            className="text-body-sm font-semibold text-accent-link transition-colors hover:text-accent-link-hover"
-          >
-            Past Now Pages
-          </Link>
         </div>
 
         <ResponsiveContainer element="section">
           <SectionBlock spacing="lg">
             <NowSnapshotContent snapshot={latestNowSnapshot} />
+            <NowTimeCapsuleDrawer snapshots={pastNowSnapshots} />
 
             <ProseContent
               size="sm"

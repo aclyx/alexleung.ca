@@ -7,7 +7,7 @@ jest.mock("@/lib/blogApi", () => ({
 }));
 
 describe("NowPage", () => {
-  it("renders the latest Now snapshot and timeline link", () => {
+  it("renders the latest Now snapshot and time capsule drawer", () => {
     render(<NowPage />);
 
     expect(
@@ -17,10 +17,13 @@ describe("NowPage", () => {
       screen.getByText(`Last updated: ${NOW_PAGE_LAST_UPDATED_DISPLAY}`)
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: "Past Now Pages" })
-    ).toHaveAttribute("href", expect.stringMatching(/^\/now\/timeline\/?$/));
+      screen.getByText("Time capsule", { selector: "summary *" })
+    ).toBeInTheDocument();
+    expect(screen.getByText("12 past snapshots")).toBeInTheDocument();
+    expect(screen.queryByRole("link", { name: "Past Now Pages" })).toBeNull();
     expect(
       screen.getByText(/getting settled into my new role/i)
     ).toBeInTheDocument();
+    expect(screen.getByText("April 21, 2026")).toBeInTheDocument();
   });
 });

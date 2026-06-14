@@ -29,9 +29,6 @@ describe("sitemap", () => {
         expect.objectContaining({ url: "https://alexleung.ca/" }),
         expect.objectContaining({ url: "https://alexleung.ca/about/" }),
         expect.objectContaining({ url: "https://alexleung.ca/now/" }),
-        expect.objectContaining({
-          url: "https://alexleung.ca/now/timeline/",
-        }),
         expect.objectContaining({ url: "https://alexleung.ca/blog/" }),
         expect.objectContaining({ url: "https://alexleung.ca/experimental/" }),
         expect.objectContaining({ url: "https://alexleung.ca/contact/" }),
@@ -58,6 +55,11 @@ describe("sitemap", () => {
     expect(
       entries.some(
         (entry) => entry.url === "https://alexleung.ca/blog/tags/ai/"
+      )
+    ).toBe(false);
+    expect(
+      entries.some(
+        (entry) => entry.url === "https://alexleung.ca/now/timeline/"
       )
     ).toBe(false);
   });

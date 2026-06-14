@@ -79,14 +79,15 @@ test("primary navigation routes render expected page headings", async ({
   }
 });
 
-test("now page links to the timeline archive", async ({ page }) => {
+test("now page opens the time capsule drawer", async ({ page }) => {
   await gotoAndStabilize(page, "/now/");
 
-  await page.getByRole("link", { name: "Past Now Pages" }).click();
-  await waitForStablePage(page);
+  await page.locator("summary").filter({ hasText: "Time capsule" }).click();
 
+  await expect(page.getByText("April 21, 2026", { exact: true })).toBeVisible();
+  await page.locator("summary").filter({ hasText: "April 21, 2026" }).click();
   await expect(
-    page.getByRole("heading", { level: 1, name: "Now Archive" })
+    page.getByText(/I'm now based in San Francisco and getting settled/i)
   ).toBeVisible();
 });
 

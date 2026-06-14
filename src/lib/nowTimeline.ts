@@ -154,6 +154,7 @@ export function validateNowSnapshots(input: unknown): NowSnapshot[] {
 
 export const nowSnapshots = validateNowSnapshots(rawNowSnapshots);
 export const latestNowSnapshot = nowSnapshots[0];
+export const pastNowSnapshots = nowSnapshots.slice(1);
 export const NOW_PAGE_LAST_UPDATED_ISO = latestNowSnapshot.date;
 
 export function formatNowSnapshotDate(date: string) {

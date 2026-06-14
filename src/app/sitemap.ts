@@ -77,12 +77,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: toCanonical("/now/timeline"),
-      lastModified: new Date(PAGE_LAST_MODIFIED.now),
-      changeFrequency: MONTHLY,
-      priority: 0.6,
-    },
-    {
       url: toCanonical("/blog"),
       lastModified: latestPostUpdate,
       changeFrequency: WEEKLY,
