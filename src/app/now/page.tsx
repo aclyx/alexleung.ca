@@ -16,7 +16,9 @@ import { SectionBlock } from "@/components/SectionBlock";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
-export const NOW_PAGE_LAST_UPDATED_ISO = "2026-05-01";
+import { SanFranciscoPhotos } from "./_components/SanFranciscoPhotos";
+
+export const NOW_PAGE_LAST_UPDATED_ISO = "2026-06-14";
 
 const nowPageLastUpdatedDate = new Date(
   `${NOW_PAGE_LAST_UPDATED_ISO}T00:00:00Z`
@@ -83,11 +85,12 @@ export default function NowPage() {
                   Outside of that, I&apos;m still finding my rhythm in San
                   Francisco after the recent move. Most of my attention is on
                   building context at work, getting the rest of life into a
-                  steadier shape, and waiting for my possessions to arrive.
-                  I&apos;m hoping everything can be delivered and unloaded by
-                  Thursday, May 7.
+                  steadier shape, and exploring the city in small pieces between
+                  errands.
                 </p>
               </IconTextRow>
+
+              <SanFranciscoPhotos />
 
               <IconTextRow
                 icon="📚"
