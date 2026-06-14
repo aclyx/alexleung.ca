@@ -88,6 +88,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 ### Adding Images (Agent Guidance)
 
 - Always add source images under `public/assets/...`.
+- Prefer WebP for website source images. When starting from a camera export or screenshot in another format, convert it to a metadata-stripped `.webp` source asset and do not keep the temporary JPEG/PNG export in the repo unless there is a specific reason.
 - For blog covers: update frontmatter `coverImage` in `content/posts/*.md`.
 - For inline blog images: add standard markdown image references.
 - After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit) and ensure the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json` are included.

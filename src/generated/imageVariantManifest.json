@@ -75,6 +75,20 @@
         }
       }
     },
+    "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
     "/assets/blog/camping-indoors-in-san-francisco/cover.webp": {
       "variants": {
         "card": {

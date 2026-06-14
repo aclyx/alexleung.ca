@@ -33,6 +33,8 @@ The tap water also tastes good. Apparently San Francisco water is snowmelt water
 
 I have been enjoying the outdoor runs, especially along the Bay Trail. It has been a nice way to get out of the apartment between errands and setup tasks.
 
+![San Francisco skyline viewed from Corona Heights Park on a clear afternoon](/assets/blog/camping-indoors-in-san-francisco/corona-heights-view.webp)
+
 I also often overhear people talking about tech: startups, AI, infrastructure, products, companies, jobs. It is a little odd, but also not surprising here. For now it is mostly just part of the environment.
 
 Overall, I am enjoying it. This first week has mostly been paperwork, deliveries, empty rooms, and figuring out what the cats need. I am also looking forward to the coming week, when hopefully more of my attention can move from getting established here to the work I came here to do.
