@@ -70,6 +70,82 @@ describe("BlogPostAnalytics", () => {
     });
   });
 
+  it("resets scroll tracking when navigating between posts", () => {
+    const { container, rerender } = render(
+      <>
+        <main>
+          <article>Post body</article>
+        </main>
+        <BlogPostAnalytics slug="first-post" title="First Post" />
+      </>
+    );
+    const article = container.querySelector("article");
+
+    expect(article).not.toBeNull();
+    Object.defineProperties(article!, {
+      offsetHeight: { configurable: true, value: 1000 },
+      scrollHeight: { configurable: true, value: 1000 },
+    });
+    article!.getBoundingClientRect = jest.fn(() => ({
+      bottom: 0,
+      height: 1000,
+      left: 0,
+      right: 0,
+      top: -100,
+      width: 0,
+      x: 0,
+      y: -100,
+      toJSON: () => ({}),
+    }));
+
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+
+    expect(trackArticleScrollDepth).toHaveBeenCalledWith({
+      depth: 50,
+      slug: "first-post",
+      title: "First Post",
+    });
+
+    rerender(
+      <>
+        <main>
+          <article>Post body</article>
+        </main>
+        <BlogPostAnalytics slug="second-post" title="Second Post" />
+      </>
+    );
+    const nextArticle = container.querySelector("article");
+
+    expect(nextArticle).not.toBeNull();
+    Object.defineProperties(nextArticle!, {
+      offsetHeight: { configurable: true, value: 1000 },
+      scrollHeight: { configurable: true, value: 1000 },
+    });
+    nextArticle!.getBoundingClientRect = jest.fn(() => ({
+      bottom: 0,
+      height: 1000,
+      left: 0,
+      right: 0,
+      top: -100,
+      width: 0,
+      x: 0,
+      y: -100,
+      toJSON: () => ({}),
+    }));
+
+    act(() => {
+      window.dispatchEvent(new Event("scroll"));
+    });
+
+    expect(trackArticleScrollDepth).toHaveBeenCalledWith({
+      depth: 50,
+      slug: "second-post",
+      title: "Second Post",
+    });
+  });
+
   it("tracks engaged reads after enough time and scroll depth", () => {
     const { container } = render(
       <>

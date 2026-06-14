@@ -40,6 +40,11 @@ export function BlogPostAnalytics({ slug, title }: BlogPostAnalyticsProps) {
   const firedEngagedReadRef = useRef(false);
 
   useEffect(() => {
+    maxScrollDepthRef.current = 0;
+    firedScrollDepthsRef.current = new Set<ScrollDepth>();
+    elapsedEnoughTimeRef.current = false;
+    firedEngagedReadRef.current = false;
+
     const article = document.querySelector<HTMLElement>("main article");
 
     if (!article) {
