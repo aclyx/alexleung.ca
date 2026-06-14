@@ -34,7 +34,6 @@
     "deploy": "gh-pages -d out"
   },
   "dependencies": {
-    "@next/third-parties": "^16.2.4",
     "decimal.js": "^10.6.0",
     "feed": "^5.2.1",
     "next": "^16.2.6",
