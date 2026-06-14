@@ -12,6 +12,9 @@ describe("SocialMediaList", () => {
     render(<SocialMediaList />);
     expect(screen.getByLabelText("LinkedIn Profile")).toBeInTheDocument();
     expect(screen.getByLabelText("GitHub Profile")).toBeInTheDocument();
+    expect(
+      screen.getByLabelText("Corporate GitHub Profile")
+    ).toBeInTheDocument();
     expect(screen.getByLabelText("X (Twitter) Profile")).toBeInTheDocument();
     expect(screen.getByLabelText("Bluesky Profile")).toBeInTheDocument();
     expect(screen.getByLabelText("Instagram Profile")).toBeInTheDocument();
@@ -27,6 +30,10 @@ describe("SocialMediaList", () => {
       "href",
       "https://www.github.com/aclyx"
     );
+    expect(screen.getByLabelText("Corporate GitHub Profile")).toHaveAttribute(
+      "href",
+      "https://github.com/aclyx-oai"
+    );
   });
 
   it("opens links in new tab with security attributes", () => {
@@ -40,6 +47,7 @@ describe("SocialMediaList", () => {
     render(<SocialMediaList />);
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
+    expect(screen.getByText("Corporate GitHub")).toBeInTheDocument();
     expect(screen.getByText("X (Twitter)")).toBeInTheDocument();
     expect(screen.getByText("Bluesky")).toBeInTheDocument();
     expect(screen.getByText("Instagram")).toBeInTheDocument();

@@ -127,6 +127,7 @@ describe("RootLayout", () => {
       expect(schema.sameAs.length).toBeGreaterThan(0);
       expect(schema.sameAs).toContain("https://www.linkedin.com/in/aclyx");
       expect(schema.sameAs).toContain("https://github.com/aclyx");
+      expect(schema.sameAs).toContain("https://github.com/aclyx-oai");
     });
   });
 });

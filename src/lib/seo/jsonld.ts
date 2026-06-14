@@ -32,6 +32,7 @@ const SITE_NAVIGATION_ELEMENT_TYPE: "SiteNavigationElement" =
 const SOCIAL_PROFILES = [
   "https://www.linkedin.com/in/aclyx",
   "https://github.com/aclyx",
+  "https://github.com/aclyx-oai",
   "https://www.x.com/aclyxpse",
   "https://bsky.app/profile/alexleung.ca",
   "https://www.instagram.com/rootpanda",
@@ -340,6 +341,7 @@ export function buildPersonSchema(input: {
       "acl",
       "aclyxpse",
       "aclyx",
+      "aclyx-oai",
       "yattaro",
       "rootpanda",
     ],
