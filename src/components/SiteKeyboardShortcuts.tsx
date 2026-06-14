@@ -5,6 +5,10 @@ import { useEffect } from "react";
 const MIN_SCROLL_STEP = 160;
 const MAX_SCROLL_STEP = 320;
 const SCROLL_VIEWPORT_RATIO = 0.28;
+export const SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY =
+  "alexleung.ca.siteKeyboardShortcuts";
+export const SITE_KEYBOARD_SHORTCUTS_CHANGED_EVENT =
+  "site-keyboard-shortcuts-changed";
 const IGNORED_TARGET_SELECTOR = [
   "input",
   "textarea",
@@ -46,10 +50,63 @@ function hasModifierKey(event: KeyboardEvent) {
   return event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
 }
 
+export function readSiteKeyboardShortcutsEnabled() {
+  try {
+    return (
+      window.localStorage.getItem(SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY) !== "off"
+    );
+  } catch {
+    return true;
+  }
+}
+
+export function setSiteKeyboardShortcutsEnabled(enabled: boolean) {
+  try {
+    window.localStorage.setItem(
+      SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY,
+      enabled ? "on" : "off"
+    );
+  } catch {
+    // Keep the runtime preference active even if storage is unavailable.
+  }
+
+  window.dispatchEvent(
+    new CustomEvent(SITE_KEYBOARD_SHORTCUTS_CHANGED_EVENT, {
+      detail: { enabled },
+    })
+  );
+}
+
 export default function SiteKeyboardShortcuts() {
   useEffect(() => {
+    let enabled = readSiteKeyboardShortcutsEnabled();
+
+    const handlePreferenceChange = (event: Event) => {
+      if (
+        event instanceof CustomEvent &&
+        event.detail !== null &&
+        typeof event.detail === "object"
+      ) {
+        const detail = event.detail;
+
+        if (typeof detail.enabled === "boolean") {
+          enabled = detail.enabled;
+          return;
+        }
+      }
+
+      enabled = readSiteKeyboardShortcutsEnabled();
+    };
+
+    const handleStorage = (event: StorageEvent) => {
+      if (event.key === SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY) {
+        enabled = readSiteKeyboardShortcutsEnabled();
+      }
+    };
+
     const handleKeyDown = (event: KeyboardEvent) => {
       if (
+        !enabled ||
         event.defaultPrevented ||
         event.isComposing ||
         hasModifierKey(event) ||
@@ -71,9 +128,19 @@ export default function SiteKeyboardShortcuts() {
     };
 
     document.addEventListener("keydown", handleKeyDown);
+    window.addEventListener(
+      SITE_KEYBOARD_SHORTCUTS_CHANGED_EVENT,
+      handlePreferenceChange
+    );
+    window.addEventListener("storage", handleStorage);
 
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener(
+        SITE_KEYBOARD_SHORTCUTS_CHANGED_EVENT,
+        handlePreferenceChange
+      );
+      window.removeEventListener("storage", handleStorage);
     };
   }, []);
 

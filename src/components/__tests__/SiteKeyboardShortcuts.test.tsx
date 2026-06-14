@@ -1,6 +1,9 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import SiteKeyboardShortcuts from "../SiteKeyboardShortcuts";
+import SiteKeyboardShortcuts, {
+  SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY,
+} from "../SiteKeyboardShortcuts";
+import { SiteKeyboardShortcutToggle } from "../SiteKeyboardShortcutToggle";
 
 describe("SiteKeyboardShortcuts", () => {
   let scrollBy: jest.Mock;
@@ -20,6 +23,7 @@ describe("SiteKeyboardShortcuts", () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    window.localStorage.clear();
   });
 
   it("scrolls down with j and up with k", () => {
@@ -89,5 +93,44 @@ describe("SiteKeyboardShortcuts", () => {
     fireEvent.keyDown(document, { key: "j" });
 
     expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("honors the persistent opt-out", () => {
+    window.localStorage.setItem(SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY, "off");
+
+    render(<SiteKeyboardShortcuts />);
+
+    fireEvent.keyDown(document, { key: "j" });
+
+    expect(scrollBy).not.toHaveBeenCalled();
+  });
+
+  it("can be disabled and re-enabled from the footer toggle", () => {
+    render(
+      <>
+        <SiteKeyboardShortcuts />
+        <SiteKeyboardShortcutToggle />
+      </>
+    );
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Disable j/k shortcuts" })
+    );
+    fireEvent.keyDown(document, { key: "j" });
+
+    expect(scrollBy).not.toHaveBeenCalled();
+    expect(
+      screen.getByRole("button", { name: "Enable j/k shortcuts" })
+    ).toHaveAttribute("aria-pressed", "false");
+
+    fireEvent.click(
+      screen.getByRole("button", { name: "Enable j/k shortcuts" })
+    );
+    fireEvent.keyDown(document, { key: "j" });
+
+    expect(scrollBy).toHaveBeenCalledWith({ top: 280, left: 0 });
+    expect(
+      screen.getByRole("button", { name: "Disable j/k shortcuts" })
+    ).toHaveAttribute("aria-pressed", "true");
   });
 });
