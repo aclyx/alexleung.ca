@@ -200,6 +200,7 @@ describe("seo jsonld builders", () => {
     expect(person.sameAs).toContain("https://www.linkedin.com/in/aclyx");
     expect(person.sameAs).toContain("https://ca.linkedin.com/in/aclyx");
     expect(person.sameAs).toContain("https://github.com/aclyx");
+    expect(person.sameAs).toContain("https://github.com/aclyx-oai");
     expect(person.hasOccupation).toMatchObject({
       "@type": "Occupation",
       name: "Software Engineer",
@@ -232,6 +233,7 @@ describe("seo jsonld builders", () => {
         "acl",
         "aclyxpse",
         "aclyx",
+        "aclyx-oai",
         "yattaro",
         "rootpanda",
       ])

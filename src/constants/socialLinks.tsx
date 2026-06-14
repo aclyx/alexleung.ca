@@ -21,18 +21,24 @@ export const data = [
   },
   {
     id: 3,
+    icon: <FaGithub />,
+    url: "https://github.com/aclyx-oai",
+    label: "Corporate GitHub Profile",
+  },
+  {
+    id: 4,
     icon: <FaXTwitter />,
     url: "https://www.x.com/aclyxpse",
     label: "X (Twitter) Profile",
   },
   {
-    id: 4,
+    id: 5,
     icon: <FaBluesky />,
     url: "https://bsky.app/profile/alexleung.ca",
     label: "Bluesky Profile",
   },
   {
-    id: 5,
+    id: 6,
     icon: <FaInstagram />,
     url: "https://www.instagram.com/rootpanda",
     label: "Instagram Profile",

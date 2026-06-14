@@ -40,14 +40,15 @@ test("contact page shows the email CTA and social profile links", async ({
 
   await expect(page.getByText("alex [at] alexleung.ca")).toBeVisible();
   await expect(page.getByRole("heading", { name: "Subscribe" })).toBeVisible();
-  await expect(main.getByRole("link", { name: "LinkedIn" })).toHaveAttribute(
-    "href",
-    "https://www.linkedin.com/in/aclyx"
-  );
-  await expect(main.getByRole("link", { name: "GitHub" })).toHaveAttribute(
-    "href",
-    "https://www.github.com/aclyx"
-  );
+  await expect(
+    main.getByRole("link", { name: "LinkedIn Profile", exact: true })
+  ).toHaveAttribute("href", "https://www.linkedin.com/in/aclyx");
+  await expect(
+    main.getByRole("link", { name: "GitHub Profile", exact: true })
+  ).toHaveAttribute("href", "https://www.github.com/aclyx");
+  await expect(
+    main.getByRole("link", { name: "Corporate GitHub Profile", exact: true })
+  ).toHaveAttribute("href", "https://github.com/aclyx-oai");
 });
 
 test("unknown routes render the exported not found page", async ({ page }) => {
