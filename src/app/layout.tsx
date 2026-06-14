@@ -8,6 +8,7 @@ import { AppBackground } from "@/components/AppBackground";
 import Footer from "@/components/Footer";
 import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import Header from "@/components/Header";
+import SiteKeyboardShortcuts from "@/components/SiteKeyboardShortcuts";
 import { SiteLinkAnalytics } from "@/components/SiteLinkAnalytics";
 import { BASE_URL } from "@/constants";
 import {
@@ -95,6 +96,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
     <html lang="en">
       <body className={`${lato.className} flex min-h-screen flex-col`}>
         <AppBackground />
+        <SiteKeyboardShortcuts />
         <Header />
         <main className="flex grow flex-col">{children}</main>
         <Footer />
