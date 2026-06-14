@@ -31,6 +31,7 @@ const SITE_NAVIGATION_ELEMENT_TYPE: "SiteNavigationElement" =
   "SiteNavigationElement";
 const SOCIAL_PROFILES = [
   "https://www.linkedin.com/in/aclyx",
+  "https://ca.linkedin.com/in/aclyx",
   "https://github.com/aclyx",
   "https://www.x.com/aclyxpse",
   "https://bsky.app/profile/alexleung.ca",
