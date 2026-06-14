@@ -111,12 +111,7 @@ export default function BlogIndex() {
               />
             ) : null}
             {remainingPosts.map((post) => (
-              <BlogPostCard
-                key={post.slug}
-                post={post}
-                compactOnMobile
-                className="[content-visibility:auto] [contain-intrinsic-size:520px]"
-              />
+              <BlogPostCard key={post.slug} post={post} compactOnMobile />
             ))}
           </div>
           <FollowItSubscribeForm

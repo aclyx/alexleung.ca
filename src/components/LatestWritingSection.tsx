@@ -62,7 +62,7 @@ export function LatestWritingSection({
         <div>
           <Link
             href="/blog/"
-            className="text-body inline-flex items-center gap-2 font-semibold text-accent-link transition-colors hover:text-accent-link-hover"
+            className="text-body -ml-3 inline-flex min-h-11 items-center gap-2 rounded-md px-3 font-semibold text-accent-link transition-colors hover:text-accent-link-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             {ctaLabel}
             <HiOutlineArrowRight aria-hidden="true" className="text-lg" />

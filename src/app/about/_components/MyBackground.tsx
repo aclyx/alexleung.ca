@@ -72,9 +72,9 @@ export function Journey() {
                 about.
               </p>
               <p>
-                Lately, I&apos;ve been especially interested in AI tools and
-                workflows: how they change the way software gets built, how to
-                evaluate them, and where they still need careful review.
+                Lately, I&apos;ve been especially interested in AI product
+                development: shaping useful product behavior, evaluating agent
+                workflows, and keeping careful review in the loop.
               </p>
               <p>
                 I&apos;m usually happiest in work where there are several

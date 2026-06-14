@@ -16,7 +16,7 @@ import { Interests } from "./_components/Interests";
 
 const title = "About Alex Leung | Software Engineer and Occasional Writer";
 const description =
-  "Alex Leung's background across embedded systems, distributed systems, product work, and writing about software, AI tools, and learning.";
+  "Alex Leung's background across embedded systems, distributed systems, product engineering, AI product development, and writing about software.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({
