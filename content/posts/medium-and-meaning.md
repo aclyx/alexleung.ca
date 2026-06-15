@@ -1,6 +1,7 @@
 ---
 title: "Codex for Site Edits, Sora for Visual Sketches"
 date: "2026-02-22"
+updated: "2026-06-15"
 excerpt: "How Codex made small website edits easier to make from a phone, while Sora still feels more useful for exploratory visuals than finished work."
 coverImage: "/assets/blog/medium-and-meaning/cover.webp"
 coverAlt: "Illustration of Alex holding a phone at a sunny train platform with a laptop showing code"
@@ -11,12 +12,12 @@ series: "AI Tools and Workflows"
 seriesOrder: 2
 ---
 
-Lately, I have been using Codex a lot to improve this site, often from my phone: fixing a layout bug, tightening a sentence, adjusting spacing by a few pixels. I like that these changes no longer require a full work session at a desk. The project stays close enough that I can keep tending it in small idle moments.
+Codex has become part of how I maintain this site, often from my phone: fixing a layout bug, tightening a sentence, adjusting spacing by a few pixels. I like that these changes no longer require a full work session at a desk. The project stays close enough that I can maintain it in spare moments.
 
-That has changed my relationship to the site in a specific way. The work is less batch-oriented now. Instead of waiting until I have an uninterrupted hour, I can make one precise improvement and move on. The project feels less like something I only "go work on" and more like something I can keep in motion.
+That has changed my relationship to the site in a specific way. The work is less batch-oriented now. Instead of waiting until I have an uninterrupted hour, I can make one precise improvement and move on.
 
-Sora feels different. With Codex, I usually know what I want before I start: fix this bug, rewrite this line, clean up this layout. With Sora, I am often still discovering the idea while I am using the tool. Most of what I make there still feels exploratory rather than finished.
+Sora feels different. With Codex, I usually know what I want before I start: fix this bug, rewrite this line, clean up this layout. With Sora, I am often still discovering the idea while I am using the tool, such as testing a cover direction or a visual treatment before I know whether it belongs anywhere. Most of what I make there still feels exploratory rather than finished.
 
-That difference is part of why the authorship question does not feel especially confusing to me. In both cases, the intention and judgment are still mine. I decide what to ask for, what to keep, and what to throw away. The interface changes the texture of the work, but not the need for taste.
+That difference is part of why the authorship question does not feel especially confusing to me. In both cases, the intention and judgment are still mine. I decide what to ask for, what to keep, and what to throw away: whether a generated image direction is usable, whether a sentence sounds like me, or whether a patch actually improves the page.
 
 I am less interested in defending these tools in the abstract than in whether they help me work something out more clearly. For this site, Codex has made iteration lighter. With Sora, the answer still feels less settled, which is part of why I am still drawn to it.
