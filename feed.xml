@@ -5,7 +5,7 @@
         <title>Alex Leung's Blog</title>
         <link>https://alexleung.ca/blog/</link>
         <description>Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and small browser experiments.</description>
-        <lastBuildDate>Sun, 14 Jun 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 15 Jun 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -30,26 +30,26 @@
             <link>https://alexleung.ca/blog/camping-indoors-in-san-francisco/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/camping-indoors-in-san-francisco/</guid>
             <pubDate>Mon, 27 Apr 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[My first week in San Francisco has mostly been logistics, empty rooms, cats, and the slow work of making enough space to focus.]]></description>
+            <description><![CDATA[My first week in San Francisco: paperwork, an unfurnished apartment, two cats, Bay Trail runs, and waiting for furniture.]]></description>
             <category>Reflection</category>
             <category>Lifestyle</category>
         </item>
         <item>
-            <title><![CDATA[Inspectable Browser Tools Built with Coding Agents]]></title>
+            <title><![CDATA[Coding Agents for Inspectable Browser Tools]]></title>
             <link>https://alexleung.ca/blog/small-interactive-tools-with-a-coding-agent/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/small-interactive-tools-with-a-coding-agent/</guid>
             <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me inspectable ways to revisit technical models.]]></description>
+            <description><![CDATA[Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me concrete ways to inspect older technical models.]]></description>
             <category>AI</category>
             <category>Developer Workflow</category>
             <category>Reflection</category>
         </item>
         <item>
-            <title><![CDATA[Dropout as Implicit Bagging in Deep Learning]]></title>
+            <title><![CDATA[Dropout as Shared-Parameter Bagging]]></title>
             <link>https://alexleung.ca/blog/dropout-as-implicit-bagging/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/dropout-as-implicit-bagging/</guid>
             <pubDate>Sat, 07 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A concrete way to understand dropout in deep learning: shared-parameter ensemble training that approximates bagging without training separate models.]]></description>
+            <description><![CDATA[A concrete way to understand dropout in deep learning: sampled subnetworks with shared weights, standing in for a much more expensive ensemble.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
             <category>Regularization</category>
@@ -64,11 +64,11 @@
             <category>Lifestyle</category>
         </item>
         <item>
-            <title><![CDATA[Manifest-Driven Responsive Images in Next.js]]></title>
+            <title><![CDATA[One Manifest for Responsive Images]]></title>
             <link>https://alexleung.ca/blog/making-responsive-images-just-work/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/making-responsive-images-just-work/</guid>
             <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[I replaced scattered responsive-image conventions in a Next.js static site with a manifest-driven workflow that made authoring simpler and failures easier to see.]]></description>
+            <description><![CDATA[I replaced scattered responsive-image conventions in a Next.js static site with one generated manifest for variants, dimensions, and runtime lookup.]]></description>
             <category>Next.js</category>
             <category>Architecture</category>
             <category>Developer Workflow</category>
@@ -92,23 +92,22 @@
             <category>Reflection</category>
         </item>
         <item>
-            <title><![CDATA[Structural Reasoning About Deep Networks]]></title>
+            <title><![CDATA[Representation, Efficiency, and Learnability]]></title>
             <link>https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</guid>
             <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Goodfellow Chapter 6 on deep feedforward networks sharpened how I think about architecture as a structural assumption, not just a tuning choice.]]></description>
+            <description><![CDATA[Goodfellow Chapter 6 sharpened how I separate representation, parameter efficiency, and optimization when thinking about deep feedforward networks.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
         </item>
         <item>
-            <title><![CDATA[Deep Learning Part I Review: Goodfellow, Bengio, and Courville]]></title>
+            <title><![CDATA[Math Foundations for Deep Learning]]></title>
             <link>https://alexleung.ca/blog/deep-learning-part-1-review/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/deep-learning-part-1-review/</guid>
             <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A short review of Part I of Goodfellow, Bengio, and Courville's Deep Learning textbook, focused on the mathematical foundations.]]></description>
+            <description><![CDATA[Part I of Goodfellow, Bengio, and Courville works best as shared vocabulary for later chapters, with proof details still worth supplementing.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
-            <category>Review</category>
         </item>
         <item>
             <title><![CDATA[Planning and Verification in AI-Assisted Coding]]></title>
@@ -120,11 +119,11 @@
             <category>Developer Workflow</category>
         </item>
         <item>
-            <title><![CDATA[The 'Boring' Architecture Behind This Blog]]></title>
+            <title><![CDATA[Static Markdown Inside This Next.js Site]]></title>
             <link>https://alexleung.ca/blog/boring-blog-architecture/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/boring-blog-architecture/</guid>
             <pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[How I added a fully static, markdown-based blog to my Next.js portfolio.]]></description>
+            <description><![CDATA[How I added a repo-backed Markdown blog to my static Next.js portfolio without adding a CMS or runtime admin surface.]]></description>
             <category>Next.js</category>
             <category>Architecture</category>
         </item>

@@ -4,4 +4,4 @@
 :HL["/assets/experimental/event-loop.webp","image",{"fetchPriority":"high"}]
 :HL["/assets/experimental/learning-dynamics.webp","image",{"fetchPriority":"high"}]
 :HL["/assets/experimental/load-flow.webp","image",{"fetchPriority":"high"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"experimental","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"BWB9Jwkip0yuc-DJMcmDw"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"experimental","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"ZsBJ-uYpdrZ7VKucksEUx"}
