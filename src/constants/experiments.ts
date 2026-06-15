@@ -13,6 +13,8 @@ type ExperimentEntry = {
 };
 
 const EXPERIMENT_LAST_MODIFIED_ISO = "2026-04-20";
+const EXPERIMENT_THUMBNAIL_WIDTH = 960;
+const EXPERIMENT_THUMBNAIL_HEIGHT = 540;
 
 type ExperimentsHub = Pick<
   ExperimentEntry,
@@ -37,6 +39,25 @@ export function buildExperimentBreadcrumbItems(
     { name: EXPERIMENTS_HUB.pageTitle, item: EXPERIMENTS_HUB.path },
     { name: pageTitle, item: path },
   ];
+}
+
+export function getExperimentById(id: string): ExperimentEntry {
+  const experiment = EXPERIMENTS.find((entry) => entry.id === id);
+
+  if (!experiment) {
+    throw new Error(`Unknown experiment: ${id}`);
+  }
+
+  return experiment;
+}
+
+export function getExperimentMetadataImage(experiment: ExperimentEntry) {
+  return {
+    url: experiment.thumbnail.src,
+    alt: experiment.thumbnail.alt,
+    width: EXPERIMENT_THUMBNAIL_WIDTH,
+    height: EXPERIMENT_THUMBNAIL_HEIGHT,
+  };
 }
 
 export const EXPERIMENTS: readonly ExperimentEntry[] = [

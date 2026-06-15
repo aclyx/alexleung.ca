@@ -9,13 +9,18 @@ import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Surface } from "@/components/Surface";
-import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
+import {
+  EXPERIMENTS,
+  EXPERIMENTS_HUB,
+  getExperimentMetadataImage,
+} from "@/constants/experiments";
 import { buildCollectionPageSchema, buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: EXPERIMENTS_HUB.title,
   description: EXPERIMENTS_HUB.description,
   path: EXPERIMENTS_HUB.path,
+  images: [getExperimentMetadataImage(EXPERIMENTS[0])],
 });
 
 export default function ExperimentsPage() {

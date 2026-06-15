@@ -20,7 +20,7 @@ import "./globals.css";
 
 const title = "Alex Leung | Software Engineer and Occasional Writer";
 const description =
-  "Alex Leung is a San Francisco-based software engineer writing notes on software systems, AI tools, and small experiments from his own projects.";
+  "Alex Leung is a San Francisco-based software engineer writing about software systems, AI-assisted coding, deep learning notes, and browser experiments from his own projects.";
 
 const lato = Lato({
   subsets: ["latin"],

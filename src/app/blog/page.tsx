@@ -15,11 +15,11 @@ import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Tag } from "@/components/Tag";
 import { getAllPosts, getSeriesSummaries } from "@/lib/blogApi";
+import { getCoverVariant } from "@/lib/coverVariants";
 import {
   buildBlogCollectionPageSchema,
   buildBlogItemListSchema,
   buildPageMetadata,
-  toAbsoluteUrl,
 } from "@/lib/seo";
 import {
   getAllTags,
@@ -30,24 +30,35 @@ import {
 
 const title = "Blog | Alex Leung";
 const description =
-  "Notes on software systems, AI tools, learning, and small experiments.";
+  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and small browser experiments.";
 const path = "/blog";
 
 export function generateMetadata(): Metadata {
-  const posts = getAllPosts(["coverImage"]);
-  const firstCoverImage = posts.find((post) => post.coverImage)?.coverImage;
+  const firstCoverPost = getAllPosts(["coverImage", "coverAlt", "title"]).find(
+    (post) => post.coverImage
+  );
+  const metadataCoverImage = getCoverVariant(
+    firstCoverPost?.coverImage,
+    "hero"
+  );
+  const metadataImage = firstCoverPost?.coverImage
+    ? {
+        url: metadataCoverImage?.path || firstCoverPost.coverImage,
+        alt: firstCoverPost.coverAlt || `Cover for ${firstCoverPost.title}`,
+        ...(metadataCoverImage
+          ? {
+              width: metadataCoverImage.width,
+              height: metadataCoverImage.height,
+            }
+          : {}),
+      }
+    : undefined;
 
   return buildPageMetadata({
     title,
     description,
     path,
-    images: firstCoverImage
-      ? [
-          {
-            url: toAbsoluteUrl(firstCoverImage),
-          },
-        ]
-      : undefined,
+    images: metadataImage ? [metadataImage] : undefined,
   });
 }
 
