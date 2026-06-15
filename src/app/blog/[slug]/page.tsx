@@ -45,6 +45,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     "title",
     "excerpt",
     "coverImage",
+    "coverAlt",
     "date",
     "updated",
     "tags",
@@ -68,6 +69,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
       ? [
           {
             url: post.coverImage,
+            alt: post.coverAlt || `Cover for ${post.title}`,
+            width: 1200,
+            height: 630,
           },
         ]
       : undefined,

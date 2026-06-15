@@ -22,7 +22,6 @@ export function buildPageMetadata(input: SeoInput): Metadata {
   return {
     title: input.title,
     description: input.description,
-    keywords: input.keywords,
     alternates: {
       canonical: canonicalUrl,
       types: {

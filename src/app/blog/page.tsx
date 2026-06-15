@@ -19,7 +19,6 @@ import {
   buildBlogCollectionPageSchema,
   buildBlogItemListSchema,
   buildPageMetadata,
-  toAbsoluteUrl,
 } from "@/lib/seo";
 import {
   getAllTags,
@@ -30,21 +29,25 @@ import {
 
 const title = "Blog | Alex Leung";
 const description =
-  "Notes on software systems, AI tools, learning, and small experiments.";
+  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and small browser experiments.";
 const path = "/blog";
 
 export function generateMetadata(): Metadata {
-  const posts = getAllPosts(["coverImage"]);
-  const firstCoverImage = posts.find((post) => post.coverImage)?.coverImage;
+  const firstCoverPost = getAllPosts(["coverImage", "coverAlt", "title"]).find(
+    (post) => post.coverImage
+  );
 
   return buildPageMetadata({
     title,
     description,
     path,
-    images: firstCoverImage
+    images: firstCoverPost?.coverImage
       ? [
           {
-            url: toAbsoluteUrl(firstCoverImage),
+            url: firstCoverPost.coverImage,
+            alt: firstCoverPost.coverAlt || `Cover for ${firstCoverPost.title}`,
+            width: 1200,
+            height: 630,
           },
         ]
       : undefined,
@@ -79,7 +82,8 @@ export default function BlogIndex() {
             className="mx-auto max-w-5xl space-y-4 text-left md:text-center"
           >
             <p className="mx-auto max-w-2xl text-body text-gray-200">
-              Software systems, AI tools, books, and experiments.
+              Software systems, AI-assisted coding, deep learning, and browser
+              experiments.
             </p>
             <div className="space-y-3">
               <TopicRevealList topics={topics} />

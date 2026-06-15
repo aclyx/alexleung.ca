@@ -7,27 +7,32 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  buildExperimentBreadcrumbItems,
+  getExperimentById,
+  getExperimentMetadataImage,
+} from "@/constants/experiments";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 import { EventLoopVisualizer } from "./_components/EventLoopVisualizer";
 
-const title = "Event Loop Visualizer | Alex Leung";
-const description =
-  "A small event loop visualizer for call stack, microtasks, tasks, timers, and execution order.";
-const path = "/experimental/event-loop/";
+const experiment = getExperimentById("event-loop");
+const title = experiment.title;
+const description = experiment.description;
+const path = experiment.path;
 
 export const metadata: Metadata = buildPageMetadata({
   title,
   description,
   path,
+  images: [getExperimentMetadataImage(experiment)],
 });
 
 export default function EventLoopPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("Event Loop Visualizer", path)}
+        items={buildExperimentBreadcrumbItems(experiment.pageTitle, path)}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
@@ -37,7 +42,7 @@ export default function EventLoopPage() {
         })}
       />
 
-      <PageShell title="Event Loop Visualizer" titleId="event-loop-visualizer">
+      <PageShell title={experiment.pageTitle} titleId="event-loop-visualizer">
         <ResponsiveContainer element="section" className="space-y-4">
           <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
             <p className="text-body text-gray-300 md:text-center">

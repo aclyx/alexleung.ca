@@ -1,10 +1,10 @@
 # Alex Leung
 
-> San Francisco-based software engineer writing notes on software systems, AI tools, and small experiments from his own projects. Licensed Professional Engineer (P.Eng.).
+> Software engineer writing about software systems, AI-assisted coding, deep learning notes, and browser experiments from his own projects. Licensed Professional Engineer (P.Eng.).
 
 ## Background
 
-Alex Leung's software work has spanned embedded systems, distributed systems, and full-stack product engineering. He has worked across home electrification, AR/AI hardware, and consumer product engineering, and writes notes on software systems, AI tools, and small experiments.
+Alex Leung's software work has spanned embedded systems, distributed systems, and full-stack product engineering. He has worked across home electrification, AR/AI hardware, and consumer product engineering, and writes about software systems, AI-assisted coding, deep learning notes, and browser experiments.
 
 He holds a Master of Science in Electrical and Computer Engineering from Georgia Institute of Technology and a Bachelor of Applied Science in Electrical Engineering from the University of Waterloo.
 

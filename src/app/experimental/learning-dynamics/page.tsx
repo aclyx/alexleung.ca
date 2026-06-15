@@ -8,25 +8,30 @@ import { LearningDynamicsLab } from "@/app/experimental/learning-dynamics/_compo
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  buildExperimentBreadcrumbItems,
+  getExperimentById,
+  getExperimentMetadataImage,
+} from "@/constants/experiments";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
-const title = "Learning Dynamics Lab | Alex Leung";
-const description =
-  "A client-side optimizer visualizer for comparing SGD, Momentum, RMSProp, and Adam on simple 2D loss surfaces.";
-const path = "/experimental/learning-dynamics/";
+const experiment = getExperimentById("learning-dynamics");
+const title = experiment.title;
+const description = experiment.description;
+const path = experiment.path;
 
 export const metadata: Metadata = buildPageMetadata({
   title,
   description,
   path,
+  images: [getExperimentMetadataImage(experiment)],
 });
 
 export default function LearningDynamicsPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("Learning Dynamics Lab", path)}
+        items={buildExperimentBreadcrumbItems(experiment.pageTitle, path)}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
@@ -36,7 +41,7 @@ export default function LearningDynamicsPage() {
         })}
       />
 
-      <PageShell title="Learning Dynamics Lab" titleId="learning-dynamics">
+      <PageShell title={experiment.pageTitle} titleId="learning-dynamics">
         <ResponsiveContainer element="section" className="space-y-6">
           <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
             <p className="text-body text-slate-300 md:text-center">
