@@ -1,4 +1,4 @@
-import { FaRss } from "react-icons/fa6";
+import { FaKeyboard, FaRss } from "react-icons/fa6";
 
 import { LinkText } from "@/components/LinkText";
 import { SiteKeyboardShortcutToggle } from "@/components/SiteKeyboardShortcutToggle";
@@ -22,7 +22,9 @@ export default function Footer() {
           <FaRss aria-hidden="true" />
           <span>Subscribe via RSS</span>
         </LinkText>
-        <SiteKeyboardShortcutToggle />
+        <SiteKeyboardShortcutToggle>
+          <FaKeyboard aria-hidden="true" />
+        </SiteKeyboardShortcutToggle>
       </div>
       <p>Copyright &copy; 2020 - {currentYear} Alex Leung</p>
     </section>

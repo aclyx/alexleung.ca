@@ -1,9 +1,17 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import SiteKeyboardShortcuts, {
+import {
   SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY,
-} from "../SiteKeyboardShortcuts";
-import { SiteKeyboardShortcutToggle } from "../SiteKeyboardShortcutToggle";
+  SiteKeyboardShortcutToggle,
+} from "../SiteKeyboardShortcutToggle";
+
+function renderShortcutToggle() {
+  return render(
+    <SiteKeyboardShortcutToggle>
+      <span aria-hidden="true" />
+    </SiteKeyboardShortcutToggle>
+  );
+}
 
 describe("SiteKeyboardShortcuts", () => {
   let scrollBy: jest.Mock;
@@ -27,7 +35,7 @@ describe("SiteKeyboardShortcuts", () => {
   });
 
   it("scrolls down with j and up with k", () => {
-    render(<SiteKeyboardShortcuts />);
+    renderShortcutToggle();
 
     fireEvent.keyDown(document, { key: "j" });
     fireEvent.keyDown(document, { key: "k" });
@@ -37,7 +45,7 @@ describe("SiteKeyboardShortcuts", () => {
   });
 
   it("ignores shortcuts when modifier keys are held", () => {
-    render(<SiteKeyboardShortcuts />);
+    renderShortcutToggle();
 
     fireEvent.keyDown(document, { key: "j", metaKey: true });
     fireEvent.keyDown(document, { key: "k", shiftKey: true });
@@ -48,7 +56,9 @@ describe("SiteKeyboardShortcuts", () => {
   it("ignores shortcuts from form controls and buttons", () => {
     render(
       <>
-        <SiteKeyboardShortcuts />
+        <SiteKeyboardShortcutToggle>
+          <span aria-hidden="true" />
+        </SiteKeyboardShortcutToggle>
         <input aria-label="Name" />
         <textarea aria-label="Message" />
         <select aria-label="Options" />
@@ -69,7 +79,9 @@ describe("SiteKeyboardShortcuts", () => {
   it("ignores shortcuts inside contenteditable regions", () => {
     render(
       <>
-        <SiteKeyboardShortcuts />
+        <SiteKeyboardShortcutToggle>
+          <span aria-hidden="true" />
+        </SiteKeyboardShortcutToggle>
         <div contentEditable suppressContentEditableWarning>
           <span data-testid="editable-child">Draft</span>
         </div>
@@ -84,7 +96,9 @@ describe("SiteKeyboardShortcuts", () => {
   it("uses the focused element when a keydown starts at the document", () => {
     render(
       <>
-        <SiteKeyboardShortcuts />
+        <SiteKeyboardShortcutToggle>
+          <span aria-hidden="true" />
+        </SiteKeyboardShortcutToggle>
         <input aria-label="Focused input" />
       </>
     );
@@ -98,7 +112,7 @@ describe("SiteKeyboardShortcuts", () => {
   it("honors the persistent opt-out", () => {
     window.localStorage.setItem(SITE_KEYBOARD_SHORTCUTS_STORAGE_KEY, "off");
 
-    render(<SiteKeyboardShortcuts />);
+    renderShortcutToggle();
 
     fireEvent.keyDown(document, { key: "j" });
 
@@ -107,10 +121,9 @@ describe("SiteKeyboardShortcuts", () => {
 
   it("can be disabled and re-enabled from the footer toggle", () => {
     render(
-      <>
-        <SiteKeyboardShortcuts />
-        <SiteKeyboardShortcutToggle />
-      </>
+      <SiteKeyboardShortcutToggle>
+        <span aria-hidden="true" />
+      </SiteKeyboardShortcutToggle>
     );
 
     fireEvent.click(
