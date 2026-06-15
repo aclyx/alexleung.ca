@@ -15,6 +15,7 @@ import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Tag } from "@/components/Tag";
 import { getAllPosts, getSeriesSummaries } from "@/lib/blogApi";
+import { getCoverVariant } from "@/lib/coverVariants";
 import {
   buildBlogCollectionPageSchema,
   buildBlogItemListSchema,
@@ -36,21 +37,25 @@ export function generateMetadata(): Metadata {
   const firstCoverPost = getAllPosts(["coverImage", "coverAlt", "title"]).find(
     (post) => post.coverImage
   );
+  const metadataCoverImage = getCoverVariant(firstCoverPost?.coverImage, "hero");
+  const metadataImage = firstCoverPost?.coverImage
+    ? {
+        url: metadataCoverImage?.path || firstCoverPost.coverImage,
+        alt: firstCoverPost.coverAlt || `Cover for ${firstCoverPost.title}`,
+        ...(metadataCoverImage
+          ? {
+              width: metadataCoverImage.width,
+              height: metadataCoverImage.height,
+            }
+          : {}),
+      }
+    : undefined;
 
   return buildPageMetadata({
     title,
     description,
     path,
-    images: firstCoverPost?.coverImage
-      ? [
-          {
-            url: firstCoverPost.coverImage,
-            alt: firstCoverPost.coverAlt || `Cover for ${firstCoverPost.title}`,
-            width: 1200,
-            height: 630,
-          },
-        ]
-      : undefined,
+    images: metadataImage ? [metadataImage] : undefined,
   });
 }
 
