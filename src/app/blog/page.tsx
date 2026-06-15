@@ -37,7 +37,10 @@ export function generateMetadata(): Metadata {
   const firstCoverPost = getAllPosts(["coverImage", "coverAlt", "title"]).find(
     (post) => post.coverImage
   );
-  const metadataCoverImage = getCoverVariant(firstCoverPost?.coverImage, "hero");
+  const metadataCoverImage = getCoverVariant(
+    firstCoverPost?.coverImage,
+    "hero"
+  );
   const metadataImage = firstCoverPost?.coverImage
     ? {
         url: metadataCoverImage?.path || firstCoverPost.coverImage,
@@ -87,8 +90,7 @@ export default function BlogIndex() {
             className="mx-auto max-w-5xl space-y-4 text-left md:text-center"
           >
             <p className="mx-auto max-w-2xl text-body text-gray-200">
-              Software systems, AI-assisted coding, deep learning, and browser
-              experiments.
+              Software systems, AI tools, books, and experiments.
             </p>
             <div className="space-y-3">
               <TopicRevealList topics={topics} />

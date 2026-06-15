@@ -368,7 +368,7 @@ export function buildPersonSchema(input: {
     worksFor: OPENAI_ORGANIZATION,
     description: input.description,
     disambiguatingDescription:
-      "Software engineer writing about software systems, AI-assisted coding, deep learning notes, and browser experiments.",
+      "San Francisco-based software engineer writing about software systems, AI-assisted coding, deep learning notes, and browser experiments.",
     knowsLanguage: ["en-CA"],
     sameAs: SOCIAL_PROFILES,
     address: {
