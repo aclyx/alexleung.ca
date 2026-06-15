@@ -205,6 +205,35 @@
         }
       }
     },
+    "/assets/blog/farming-expensive-coding-agent-sessions/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card.webp",
+          "width": 768,
+          "height": 432
+        },
+        "card-md": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card-md.webp",
+          "width": 640,
+          "height": 360
+        },
+        "card-sm": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card-sm.webp",
+          "width": 480,
+          "height": 270
+        },
+        "hero": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-hero.webp",
+          "width": 1280,
+          "height": 720
+        },
+        "hero-sm": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-hero-sm.webp",
+          "width": 640,
+          "height": 360
+        }
+      }
+    },
     "/assets/blog/from-coder-to-orchestrator/cover.webp": {
       "variants": {
         "card": {
