@@ -1,7 +1,8 @@
 ---
-title: "Manifest-Driven Responsive Images in Next.js"
+title: "One Manifest for Responsive Images"
 date: "2026-03-04"
-excerpt: "I replaced scattered responsive-image conventions in a Next.js static site with a manifest-driven workflow that made authoring simpler and failures easier to see."
+updated: "2026-06-15"
+excerpt: "I replaced scattered responsive-image conventions in a Next.js static site with one generated manifest for variants, dimensions, and runtime lookup."
 coverImage: "/assets/blog/making-responsive-images-just-work/cover.webp"
 coverAlt: "Illustration of Alex measuring framed landscape images labeled sm, md, and lg"
 tags:
@@ -10,7 +11,7 @@ tags:
   - "Developer Workflow"
 ---
 
-I started this as a performance task: downscale assets, add `srcSet`/`sizes`, and improve LCP. The bigger problem turned out to be maintainability.
+The responsive-image cleanup started as a performance task: downscale assets, add `srcSet`/`sizes`, and improve LCP. The bigger problem turned out to be maintainability.
 
 Image behavior was spread across scripts and components with repeated conventions:
 
@@ -18,7 +19,7 @@ Image behavior was spread across scripts and components with repeated convention
 - hardcoded `srcSet` strings,
 - multiple script aliases and legacy paths.
 
-That made drift easy, and small changes in one place could quietly break expectations elsewhere. I replaced that with a simpler pattern: generate one manifest at build time (`src/generated/imageVariantManifest.json`) and resolve variants from it at runtime.
+That made drift easy. A renamed variant or new profile could leave a hardcoded `srcSet` behind. I replaced that with a simpler pattern: generate one manifest at build time (`src/generated/imageVariantManifest.json`) and resolve variants from it at runtime.
 
 ## One manifest instead of scattered assumptions
 
@@ -26,7 +27,7 @@ The main change was replacing repeated conventions with one manifest-driven path
 
 ## A simpler authoring path
 
-This was an important constraint for me: I do not want to manually create `-sm`, `-md`, `-lg` files every time I add an image.
+I do not want to manually create `-sm`, `-md`, `-lg` files every time I add an image.
 
 The workflow is now simple: add the source image, reference it in frontmatter or markdown, then run `yarn image:variants`. That keeps authoring lightweight while still making outputs consistent.
 
@@ -36,4 +37,4 @@ Once maintainability improved, performance work became easier to verify. I also 
 
 ## What I actually fixed
 
-I started by chasing LCP. The durable fix was maintainability: fewer scattered conventions, one source of truth, and clearer build/runtime boundaries. For this site, performance improvements became much easier once the image system became easier to reason about.
+I started by chasing LCP. The fix that stuck was maintainability: fewer scattered conventions, generated metadata, and a clearer boundary between build-time image work and runtime rendering. For this site, performance work became easier once the image system became easier to reason about.
