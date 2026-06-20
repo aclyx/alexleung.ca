@@ -12,7 +12,7 @@ describe("Hero", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: /Software Engineer and Occasional Writer\./i,
+        name: /Software Engineer in San Francisco\./i,
       })
     ).toBeInTheDocument();
   });

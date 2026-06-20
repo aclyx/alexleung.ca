@@ -18,7 +18,7 @@ export function Hero() {
           </h1>
 
           <h2 className="text-hero-description">
-            Software Engineer and Occasional Writer.
+            Software Engineer in San Francisco.
           </h2>
           <p className="mt-3 text-sm italic text-gray-200 md:text-gray-300">
             I build software, write notes, and make small tools for

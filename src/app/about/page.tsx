@@ -15,9 +15,9 @@ import { buildPageMetadata, buildProfilePageSchema } from "@/lib/seo";
 import { Interests } from "./_components/Interests";
 import { PersonalPhotos } from "./_components/PersonalPhotos";
 
-const title = "About Alex Leung | Software Engineer and Occasional Writer";
+const title = "About Alex Leung | San Francisco Software Engineer";
 const description =
-  "Alex Leung's background across embedded systems, distributed systems, product engineering, AI product development, and writing about software.";
+  "Alex Leung is a San Francisco software engineer with experience across embedded systems, distributed systems, product engineering, and AI product development.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({
