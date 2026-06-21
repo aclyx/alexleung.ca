@@ -1,6 +1,7 @@
-import { FaRss } from "react-icons/fa6";
+import { FaKeyboard, FaRss } from "react-icons/fa6";
 
 import { LinkText } from "@/components/LinkText";
+import { SiteKeyboardShortcutToggle } from "@/components/SiteKeyboardShortcutToggle";
 import { SocialLinkList } from "@/components/SocialLinkList";
 
 export default function Footer() {
@@ -13,7 +14,7 @@ export default function Footer() {
         itemClassName="mx-1 mb-3 inline-block list-none"
         linkClassName="inline-flex size-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-xl text-white transition-colors hover:border-accent-secondary/60 hover:text-accent-secondary"
       />
-      <p className="text-body-sm pb-1">
+      <div className="text-body-sm flex items-center justify-center gap-2 pb-1">
         <LinkText
           href="/feed.xml"
           className="inline-flex min-h-11 items-center gap-2 px-3"
@@ -21,7 +22,10 @@ export default function Footer() {
           <FaRss aria-hidden="true" />
           <span>Subscribe via RSS</span>
         </LinkText>
-      </p>
+        <SiteKeyboardShortcutToggle>
+          <FaKeyboard aria-hidden="true" />
+        </SiteKeyboardShortcutToggle>
+      </div>
       <p>Copyright &copy; 2020 - {currentYear} Alex Leung</p>
     </section>
   );
