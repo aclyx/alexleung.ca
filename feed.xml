@@ -4,7 +4,7 @@
     <channel>
         <title>Alex Leung's Blog</title>
         <link>https://alexleung.ca/blog/</link>
-        <description>Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and small browser experiments.</description>
+        <description>Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and browser experiments.</description>
         <lastBuildDate>Mon, 15 Jun 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
