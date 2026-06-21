@@ -112,6 +112,107 @@ describe("SingleLineDiagram", () => {
     expect(screen.getByText("140% (Ctrl + wheel)")).toBeInTheDocument();
   });
 
+  it("reattaches ctrl-wheel zoom after the SVG is recreated", () => {
+    const { container, rerender } = render(
+      <SingleLineDiagram
+        buses={[]}
+        branches={[]}
+        selectedElementId={null}
+        selectedElementType={null}
+        onBusSelect={onBusSelect}
+        onBusMove={onBusMove}
+        onBranchSelect={onBranchSelect}
+      />
+    );
+
+    expect(container.querySelector("svg")).toBeNull();
+
+    rerender(
+      <SingleLineDiagram
+        buses={horizontalBuses}
+        branches={[]}
+        selectedElementId={null}
+        selectedElementType={null}
+        onBusSelect={onBusSelect}
+        onBusMove={onBusMove}
+        onBranchSelect={onBranchSelect}
+      />
+    );
+
+    const svg = container.querySelector("svg");
+    expect(svg).not.toBeNull();
+    if (!svg) {
+      return;
+    }
+
+    fireEvent.wheel(svg, { ctrlKey: true, deltaY: -100 });
+    expect(screen.getByText("120% (Ctrl + wheel)")).toBeInTheDocument();
+  });
+
+  it("uses the SVG transform for bus drag deltas", () => {
+    const { container } = render(
+      <SingleLineDiagram
+        buses={horizontalBuses}
+        branches={[]}
+        selectedElementId={null}
+        selectedElementType={null}
+        onBusSelect={onBusSelect}
+        onBusMove={onBusMove}
+        onBranchSelect={onBranchSelect}
+      />
+    );
+
+    const svg = container.querySelector("svg");
+    expect(svg).not.toBeNull();
+    if (!svg) {
+      return;
+    }
+
+    Object.defineProperty(svg, "getScreenCTM", {
+      configurable: true,
+      value: () => ({
+        inverse: () => ({
+          a: 0.5,
+          b: 0,
+          c: 0,
+          d: 0.5,
+          e: -10,
+          f: -20,
+        }),
+      }),
+    });
+
+    const busGroup = screen.getByText("Bus A").closest("g");
+    expect(busGroup).not.toBeNull();
+    if (!busGroup) {
+      return;
+    }
+
+    busGroup.setPointerCapture = jest.fn();
+    busGroup.hasPointerCapture = jest.fn(() => true);
+    busGroup.releasePointerCapture = jest.fn();
+
+    const dispatchPointerEvent = (
+      type: string,
+      init: { clientX?: number; clientY?: number } = {}
+    ) => {
+      const event = new MouseEvent(type, {
+        bubbles: true,
+        clientX: init.clientX,
+        clientY: init.clientY,
+      });
+      Object.defineProperty(event, "pointerId", { value: 1 });
+      busGroup.dispatchEvent(event);
+    };
+
+    dispatchPointerEvent("pointerdown", { clientX: 300, clientY: 220 });
+    dispatchPointerEvent("pointermove", { clientX: 340, clientY: 260 });
+    dispatchPointerEvent("pointerup");
+
+    expect(onBusSelect).toHaveBeenCalledWith("bus-a");
+    expect(onBusMove).toHaveBeenCalledWith("bus-a", 120, 120);
+  });
+
   it("renders hop markers when two line segments cross", () => {
     const { container } = render(
       <SingleLineDiagram

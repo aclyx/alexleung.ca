@@ -1,4 +1,4 @@
-import { PointerEvent, useEffect, useMemo, useRef, useState } from "react";
+import { PointerEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import {
   BranchFlowSolution,
@@ -62,18 +62,37 @@ interface BranchLabelPoint {
   hasClearance: boolean;
 }
 
+interface ClientToSvgMatrix {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  e: number;
+  f: number;
+}
+
 interface BusDragSession {
   busId: string;
-  startClientX: number;
-  startClientY: number;
-  startX: number;
-  startY: number;
-  svgUnitsPerClientPixelX: number;
-  svgUnitsPerClientPixelY: number;
+  pointerOffsetX: number;
+  pointerOffsetY: number;
+}
+
+interface SvgWheelListener {
+  node: SVGSVGElement;
+  handler: (event: WheelEvent) => void;
 }
 
 const getSegmentLength = (segment: BranchSegment) =>
   Math.hypot(segment.x2 - segment.x1, segment.y2 - segment.y1);
+
+const transformClientPoint = (
+  matrix: ClientToSvgMatrix,
+  clientX: number,
+  clientY: number
+) => ({
+  x: matrix.a * clientX + matrix.c * clientY + matrix.e,
+  y: matrix.b * clientX + matrix.d * clientY + matrix.f,
+});
 
 const branchLabelOverlapsBus = (
   point: { x: number; y: number },
@@ -216,63 +235,38 @@ export function SingleLineDiagram({
 }: SingleLineDiagramProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
   const dragSessionRef = useRef<BusDragSession | null>(null);
+  const svgWheelListenerRef = useRef<SvgWheelListener | null>(null);
   const [zoom, setZoom] = useState(1);
 
-  const handleBusPointerDown = (
-    event: PointerEvent<SVGGElement>,
-    busId: string
-  ) => {
-    const svg = svgRef.current;
-    const bus = busesById.get(busId);
-    const svgBounds = svg?.getBoundingClientRect();
+  const handleSvgRef = useCallback((node: SVGSVGElement | null) => {
+    const previousListener = svgWheelListenerRef.current;
+    if (previousListener) {
+      previousListener.node.removeEventListener(
+        "wheel",
+        previousListener.handler
+      );
+      svgWheelListenerRef.current = null;
+    }
 
-    if (
-      !svg ||
-      !bus ||
-      !svgBounds ||
-      svgBounds.width <= 0 ||
-      svgBounds.height <= 0
-    ) {
+    svgRef.current = node;
+    if (!node) {
       return;
     }
 
-    event.preventDefault();
-    dragSessionRef.current = {
-      busId,
-      startClientX: event.clientX,
-      startClientY: event.clientY,
-      startX: bus.x,
-      startY: bus.y,
-      svgUnitsPerClientPixelX: zoomedViewBoxWidth / svgBounds.width,
-      svgUnitsPerClientPixelY: zoomedViewBoxHeight / svgBounds.height,
+    const handleWheel = (event: WheelEvent) => {
+      if (!event.ctrlKey) {
+        return;
+      }
+
+      event.preventDefault();
+      setZoom((previousZoom) =>
+        clampZoom(previousZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP))
+      );
     };
-    onBusSelect(busId);
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
 
-  const handleBusPointerMove = (event: PointerEvent<SVGGElement>) => {
-    const dragSession = dragSessionRef.current;
-    if (!dragSession) {
-      return;
-    }
-
-    onBusMove(
-      dragSession.busId,
-      dragSession.startX +
-        (event.clientX - dragSession.startClientX) *
-          dragSession.svgUnitsPerClientPixelX,
-      dragSession.startY +
-        (event.clientY - dragSession.startClientY) *
-          dragSession.svgUnitsPerClientPixelY
-    );
-  };
-
-  const handleBusPointerUp = (event: PointerEvent<SVGGElement>) => {
-    dragSessionRef.current = null;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-  };
+    node.addEventListener("wheel", handleWheel, { passive: false });
+    svgWheelListenerRef.current = { node, handler: handleWheel };
+  }, []);
 
   const busesById = useMemo(
     () => new Map(buses.map((bus) => [bus.id, bus])),
@@ -316,29 +310,59 @@ export function SingleLineDiagram({
     setZoom((previousZoom) => clampZoom(previousZoom - ZOOM_STEP));
   };
 
-  useEffect(() => {
+  const handleBusPointerDown = (
+    event: PointerEvent<SVGGElement>,
+    busId: string
+  ) => {
     const svg = svgRef.current;
-    if (!svg) {
+    const bus = busesById.get(busId);
+    const clientToSvgMatrix = svg?.getScreenCTM()?.inverse();
+
+    if (!svg || !bus || !clientToSvgMatrix) {
       return;
     }
 
-    const handleWheel = (event: WheelEvent) => {
-      if (!event.ctrlKey) {
-        return;
-      }
-
-      event.preventDefault();
-      setZoom((previousZoom) =>
-        clampZoom(previousZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP))
-      );
+    event.preventDefault();
+    const startPointer = transformClientPoint(
+      clientToSvgMatrix,
+      event.clientX,
+      event.clientY
+    );
+    dragSessionRef.current = {
+      busId,
+      pointerOffsetX: bus.x - startPointer.x,
+      pointerOffsetY: bus.y - startPointer.y,
     };
+    onBusSelect(busId);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
 
-    svg.addEventListener("wheel", handleWheel, { passive: false });
+  const handleBusPointerMove = (event: PointerEvent<SVGGElement>) => {
+    const dragSession = dragSessionRef.current;
+    const clientToSvgMatrix = svgRef.current?.getScreenCTM()?.inverse();
+    if (!dragSession || !clientToSvgMatrix) {
+      return;
+    }
 
-    return () => {
-      svg.removeEventListener("wheel", handleWheel);
-    };
-  }, []);
+    const nextPointer = transformClientPoint(
+      clientToSvgMatrix,
+      event.clientX,
+      event.clientY
+    );
+
+    onBusMove(
+      dragSession.busId,
+      nextPointer.x + dragSession.pointerOffsetX,
+      nextPointer.y + dragSession.pointerOffsetY
+    );
+  };
+
+  const handleBusPointerUp = (event: PointerEvent<SVGGElement>) => {
+    dragSessionRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+  };
 
   const routedBranchesById = useMemo(() => {
     const routedById = new Map<string, RoutedBranch>();
@@ -431,7 +455,7 @@ export function SingleLineDiagram({
             </span>
           </div>
           <svg
-            ref={svgRef}
+            ref={handleSvgRef}
             viewBox={`${zoomedViewBoxX} ${zoomedViewBoxY} ${zoomedViewBoxWidth} ${zoomedViewBoxHeight}`}
             role="img"
             aria-label="Single line diagram"
