@@ -18,10 +18,10 @@ export function Hero() {
           </h1>
 
           <h2 className="text-hero-description">
-            Software Engineer and Occasional Writer.
+            Software Engineer and Writer.
           </h2>
           <p className="mt-3 text-sm italic text-gray-200 md:text-gray-300">
-            I build software, write notes, and make small tools for
+            I build software, write notes, and make browser tools for
             understanding systems and AI.
           </p>
 
@@ -43,16 +43,17 @@ export function Hero() {
                 id="positioning-heading"
                 className="text-heading font-semibold"
               >
-                What you&apos;ll find here
+                Writing, Notes, and Tools
               </h2>
               <p className="text-body mt-4 text-gray-200">
-                I keep essays, notes, and small project writeups here: software
-                engineering, system design, AI, product work, and learning.
+                I keep essays, technical notes, and project writeups here:
+                software systems, AI product development, deep learning, and
+                browser tools.
               </p>
               <p className="text-body mt-3 text-gray-200">
-                I tend to write from the practical edge of those topics: what I
-                tried, what held up, where the tools helped, and where the rough
-                edges stayed visible.
+                Most pieces start from a concrete thing I tried: an
+                implementation detail, a reading note, a tool behavior, or a
+                product or system trade-off.
               </p>
             </section>
           </div>

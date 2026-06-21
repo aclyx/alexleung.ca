@@ -1,8 +1,8 @@
 {
   "id": "https://alexleung.ca/",
   "short_name": "Alex Leung",
-  "name": "Alex Leung - Software Engineer and Occasional Writer",
-  "description": "Personal site of Alex Leung, a San Francisco-based software engineer writing about software systems, AI-assisted coding, deep learning notes, and browser experiments from his own projects.",
+  "name": "Alex Leung - Software Engineer and Writer",
+  "description": "Personal site of Alex Leung, a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and browser experiments.",
   "lang": "en",
   "icons": [
     {
@@ -119,7 +119,7 @@
       "sizes": "3440x1732",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Alex Leung - Software Engineer and Occasional Writer website"
+      "label": "Alex Leung - Software Engineer and Writer website"
     }
   ]
 }
