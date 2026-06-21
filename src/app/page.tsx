@@ -14,7 +14,7 @@ import { buildHomePageSchema, buildPageMetadata } from "@/lib/seo";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer in San Francisco writing about AI product development, software systems, deep learning notes, and small browser experiments.";
+  "Alex Leung is a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and browser experiments.";
 const path = "/";
 
 export const metadata: Metadata = buildPageMetadata({

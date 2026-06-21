@@ -22,13 +22,13 @@ describe("Hero", () => {
 
     expect(
       screen.getByText(
-        /I build software, write notes, and make small tools for understanding systems and AI\./i
+        /I build software, write notes, and make browser tools for understanding systems and AI\./i
       )
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: /What you'll find here/i,
+        name: /Writing, Notes, and Tools/i,
       })
     ).toBeInTheDocument();
   });

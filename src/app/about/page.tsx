@@ -17,7 +17,7 @@ import { PersonalPhotos } from "./_components/PersonalPhotos";
 
 const title = "About Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer in San Francisco with experience across embedded systems, distributed systems, product engineering, and AI product development.";
+  "Alex Leung is a software engineer and writer in San Francisco with experience across embedded systems, distributed systems, product engineering, and AI product development.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({

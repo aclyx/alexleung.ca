@@ -1,6 +1,6 @@
 # Alex Leung
 
-> Software engineer in San Francisco writing about AI product development, software systems, deep learning notes, and small browser experiments. Licensed Professional Engineer (P.Eng.).
+> Software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and browser experiments. Licensed Professional Engineer (P.Eng.).
 
 ## Background
 

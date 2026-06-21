@@ -30,7 +30,7 @@ import {
 
 const title = "Blog | Alex Leung";
 const description =
-  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and small browser experiments.";
+  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and browser experiments.";
 const path = "/blog";
 
 export function generateMetadata(): Metadata {
