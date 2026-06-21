@@ -47,13 +47,45 @@ describe("createMandelbrotRenderPlan", () => {
     expect(plan.completionMessage).toBe("Ready at 100% render scale.");
   });
 
-  it("uses a capped deep-zoom preview once Decimal iteration is required", () => {
+  it("uses a full perturbation render once Decimal viewport precision is required", () => {
     const plan = createMandelbrotRenderPlan(
       createViewport("1e-13"),
       defaultSettings
     );
 
     expect(plan.passes).toHaveLength(1);
+    expect(plan.passes[0]).toEqual({
+      phase: "refining",
+      scale: 1,
+      settings: defaultSettings,
+      message: "Rendering perturbation deep-zoom frame...",
+    });
+    expect(plan.completionMessage).toBe(
+      "Ready at 100% perturbation deep-zoom render (2000 iterations)."
+    );
+  });
+
+  it("preserves lower user quality and iteration budgets for perturbation renders", () => {
+    const settings = {
+      ...defaultSettings,
+      maxIterations: 80,
+      resolutionScale: 0.5,
+    };
+    const plan = createMandelbrotRenderPlan(createViewport("1e-80"), settings);
+
+    expect(plan.passes[0]?.scale).toBe(0.5);
+    expect(plan.passes[0]?.settings.maxIterations).toBe(80);
+    expect(plan.completionMessage).toBe(
+      "Ready at 50% perturbation deep-zoom render (80 iterations)."
+    );
+  });
+
+  it("keeps a capped Decimal preview beyond perturbation's practical number range", () => {
+    const plan = createMandelbrotRenderPlan(
+      createViewport("1e-320"),
+      defaultSettings
+    );
+
     expect(plan.passes[0]).toEqual({
       phase: "refining",
       scale: 0.05,
@@ -65,21 +97,6 @@ describe("createMandelbrotRenderPlan", () => {
     });
     expect(plan.completionMessage).toBe(
       "Ready at 5% deep-zoom preview (100 iterations)."
-    );
-  });
-
-  it("does not raise a lower user iteration budget for deep zooms", () => {
-    const settings = {
-      ...defaultSettings,
-      maxIterations: 80,
-      resolutionScale: 0.5,
-    };
-    const plan = createMandelbrotRenderPlan(createViewport("1e-80"), settings);
-
-    expect(plan.passes[0]?.scale).toBe(0.05);
-    expect(plan.passes[0]?.settings.maxIterations).toBe(80);
-    expect(plan.completionMessage).toBe(
-      "Ready at 5% deep-zoom preview (80 iterations)."
     );
   });
 });
