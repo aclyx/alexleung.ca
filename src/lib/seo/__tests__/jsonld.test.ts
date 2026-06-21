@@ -217,7 +217,7 @@ describe("seo jsonld builders", () => {
       addressCountry: "United States",
     });
     expect(person.disambiguatingDescription).toBe(
-      "San Francisco software engineer writing about AI product development, software systems, deep learning notes, and small browser experiments."
+      "Software engineer in San Francisco writing about AI product development, software systems, deep learning notes, and small browser experiments."
     );
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([

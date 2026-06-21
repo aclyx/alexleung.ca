@@ -12,9 +12,9 @@ import { SectionBlock } from "@/components/SectionBlock";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildHomePageSchema, buildPageMetadata } from "@/lib/seo";
 
-const title = "Alex Leung | San Francisco Software Engineer";
+const title = "Alex Leung | Software Engineer";
 const description =
-  "Alex Leung is a San Francisco software engineer writing about AI product development, software systems, deep learning notes, and small browser experiments.";
+  "Alex Leung is a software engineer in San Francisco writing about AI product development, software systems, deep learning notes, and small browser experiments.";
 const path = "/";
 
 export const metadata: Metadata = buildPageMetadata({
