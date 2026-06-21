@@ -4,9 +4,12 @@ import {
   renderMandelbrotWithWebGpu,
 } from "@/features/mandelbrot/gpu";
 import {
+  createPerturbationReferenceOrbit,
   iterateMandelbrot,
   iterateMandelbrotNumber,
+  iterateMandelbrotPerturbation,
   shouldUseNumberIteration,
+  shouldUsePerturbationIteration,
 } from "@/features/mandelbrot/mandelbrot";
 import { colorEscapeResult } from "@/features/mandelbrot/palettes";
 import {
@@ -71,9 +74,12 @@ async function renderMandelbrot({
   const safeWidth = Math.max(1, Math.round(size.width));
   const safeHeight = Math.max(1, Math.round(size.height));
   const useNumberIteration = shouldUseNumberIteration(viewport.width);
-  const rowsPerChunk = useNumberIteration
-    ? NUMBER_ROWS_PER_CHUNK
-    : DECIMAL_ROWS_PER_CHUNK;
+  const shouldUsePerturbation =
+    !useNumberIteration && shouldUsePerturbationIteration(viewport.width);
+  const rowsPerChunk =
+    useNumberIteration || shouldUsePerturbation
+      ? NUMBER_ROWS_PER_CHUNK
+      : DECIMAL_ROWS_PER_CHUNK;
   const left = viewport.centerX.sub(viewport.width.div(2));
   const top = viewport.centerY.add(viewport.height.div(2));
   const stepX = viewport.width.div(safeWidth);
@@ -82,6 +88,27 @@ async function renderMandelbrot({
   const topNumber = top.toNumber();
   const stepXNumber = stepX.toNumber();
   const stepYNumber = stepY.toNumber();
+  const deltaXStartNumber = viewport.width
+    .neg()
+    .div(2)
+    .add(stepX.div(2))
+    .toNumber();
+  const deltaYStartNumber = viewport.height.div(2).sub(stepY.div(2)).toNumber();
+  const usePerturbationIteration =
+    shouldUsePerturbation &&
+    Number.isFinite(deltaXStartNumber) &&
+    Number.isFinite(deltaYStartNumber) &&
+    Number.isFinite(stepXNumber) &&
+    Number.isFinite(stepYNumber) &&
+    stepXNumber > 0 &&
+    stepYNumber > 0;
+  const perturbationReferenceOrbit = usePerturbationIteration
+    ? createPerturbationReferenceOrbit(
+        viewport.centerX,
+        viewport.centerY,
+        settings.maxIterations
+      )
+    : null;
   let row = 0;
 
   while (row < safeHeight) {
@@ -104,13 +131,27 @@ async function renderMandelbrot({
           return false;
         }
 
-        const result = useNumberIteration
-          ? iterateMandelbrotNumber(
-              leftNumber + stepXNumber * (x + 0.5),
-              topNumber - stepYNumber * (y + 0.5),
-              settings.maxIterations
-            )
-          : renderDecimalPixel(viewport, size, x, y, settings.maxIterations);
+        const result =
+          usePerturbationIteration && perturbationReferenceOrbit?.usable
+            ? iterateMandelbrotPerturbation(
+                deltaXStartNumber + stepXNumber * x,
+                deltaYStartNumber - stepYNumber * y,
+                perturbationReferenceOrbit,
+                settings.maxIterations
+              )
+            : useNumberIteration
+              ? iterateMandelbrotNumber(
+                  leftNumber + stepXNumber * (x + 0.5),
+                  topNumber - stepYNumber * (y + 0.5),
+                  settings.maxIterations
+                )
+              : renderDecimalPixel(
+                  viewport,
+                  size,
+                  x,
+                  y,
+                  settings.maxIterations
+                );
         const [red, green, blue, alpha] = colorEscapeResult(
           result,
           settings.maxIterations,

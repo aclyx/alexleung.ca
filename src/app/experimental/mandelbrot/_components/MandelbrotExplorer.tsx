@@ -603,6 +603,11 @@ export function MandelbrotExplorer() {
                 frames whenever the view changes.
               </li>
               <li>
+                Deep frames use a high-precision reference orbit with
+                perturbation deltas so tiny viewports can still render at the
+                selected quality.
+              </li>
+              <li>
                 Query parameters can seed the initial center, width, backend,
                 palette, quality, and iteration budget.
               </li>

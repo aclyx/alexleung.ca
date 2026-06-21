@@ -1,4 +1,7 @@
-import { shouldUseNumberIteration } from "@/features/mandelbrot/mandelbrot";
+import {
+  shouldUseNumberIteration,
+  shouldUsePerturbationIteration,
+} from "@/features/mandelbrot/mandelbrot";
 import {
   MandelbrotSettings,
   PreciseViewport,
@@ -25,6 +28,22 @@ export function createMandelbrotRenderPlan(
   viewport: PreciseViewport,
   settings: MandelbrotSettings
 ): MandelbrotRenderPlan {
+  if (shouldUsePerturbationIteration(viewport.width)) {
+    return {
+      passes: [
+        {
+          phase: "refining",
+          scale: settings.resolutionScale,
+          settings,
+          message: "Rendering perturbation deep-zoom frame...",
+        },
+      ],
+      completionMessage: `Ready at ${Math.round(
+        settings.resolutionScale * 100
+      )}% perturbation deep-zoom render (${settings.maxIterations} iterations).`,
+    };
+  }
+
   if (!shouldUseNumberIteration(viewport.width)) {
     const scale = Math.min(settings.resolutionScale, DEEP_ZOOM_PREVIEW_SCALE);
     const maxIterations = Math.min(
