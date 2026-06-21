@@ -32,7 +32,7 @@ export default function PidControllerPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("PID Controller", path)}
+        items={buildExperimentBreadcrumbItems(experiment.pageTitle, path)}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
@@ -42,7 +42,7 @@ export default function PidControllerPage() {
         })}
       />
 
-      <PageShell title="PID Controller" titleId="pid-controller">
+      <PageShell title={experiment.pageTitle} titleId="pid-controller">
         <ResponsiveContainer element="section" className="space-y-6">
           <PidSimulatorWorkspace />
         </ResponsiveContainer>
