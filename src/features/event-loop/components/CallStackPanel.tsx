@@ -5,6 +5,14 @@ type CallStackPanelProps = {
   frames: Frame[];
 };
 
+function formatFrameProgress(frame: Frame): string {
+  if (!isFrameActive(frame)) {
+    return "complete";
+  }
+
+  return `next op ${frame.cursor + 1}/${frame.operations.length}`;
+}
+
 export function CallStackPanel({ frames }: CallStackPanelProps) {
   return (
     <section className="rounded-lg border border-gray-700 bg-gray-900/70 p-4">
@@ -31,8 +39,7 @@ export function CallStackPanel({ frames }: CallStackPanelProps) {
             >
               <p className="text-sm text-white">{frame.label}</p>
               <p className="text-xs text-gray-300">
-                source: {frame.source} • next op {frame.cursor + 1}/
-                {frame.operations.length} •{" "}
+                source: {frame.source} • {formatFrameProgress(frame)} •{" "}
                 {isFrameActive(frame) ? "active" : "done"}
               </p>
             </li>

@@ -1,4 +1,4 @@
-import { PointerEvent, useMemo, useRef, useState, WheelEvent } from "react";
+import { PointerEvent, useCallback, useMemo, useRef, useState } from "react";
 
 import {
   BranchFlowSolution,
@@ -29,6 +29,16 @@ const MIN_ZOOM = 0.6;
 const MAX_ZOOM = 2.5;
 const ZOOM_STEP = 0.2;
 const LINE_HOP_RADIUS = 10;
+const MAX_ALWAYS_LABELED_BRANCHES = 20;
+const DETAILED_LABEL_ZOOM = 1.6;
+const MIN_BRANCH_LABEL_SEGMENT_LENGTH = 96;
+const BRANCH_LABEL_HALF_WIDTH = 42;
+const BRANCH_LABEL_TOP_OFFSET = 24;
+const BRANCH_LABEL_BOTTOM_OFFSET = 10;
+const BRANCH_LABEL_BUS_MARGIN = 0;
+
+const clampZoom = (nextZoom: number) =>
+  Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, nextZoom));
 
 interface BranchSegment {
   branchId: string;
@@ -44,6 +54,100 @@ interface RoutedBranch {
   points: Array<{ x: number; y: number }>;
   segments: BranchSegment[];
 }
+
+interface BranchLabelPoint {
+  x: number;
+  y: number;
+  segmentLength: number;
+  hasClearance: boolean;
+}
+
+interface ClientToSvgMatrix {
+  a: number;
+  b: number;
+  c: number;
+  d: number;
+  e: number;
+  f: number;
+}
+
+interface BusDragSession {
+  busId: string;
+  pointerOffsetX: number;
+  pointerOffsetY: number;
+}
+
+interface SvgWheelListener {
+  node: SVGSVGElement;
+  handler: (event: WheelEvent) => void;
+}
+
+const getSegmentLength = (segment: BranchSegment) =>
+  Math.hypot(segment.x2 - segment.x1, segment.y2 - segment.y1);
+
+const transformClientPoint = (
+  matrix: ClientToSvgMatrix,
+  clientX: number,
+  clientY: number
+) => ({
+  x: matrix.a * clientX + matrix.c * clientY + matrix.e,
+  y: matrix.b * clientX + matrix.d * clientY + matrix.f,
+});
+
+const branchLabelOverlapsBus = (
+  point: { x: number; y: number },
+  bus: BusNode
+) => {
+  const labelBox = {
+    left: point.x - BRANCH_LABEL_HALF_WIDTH,
+    right: point.x + BRANCH_LABEL_HALF_WIDTH,
+    top: point.y - BRANCH_LABEL_TOP_OFFSET,
+    bottom: point.y + BRANCH_LABEL_BOTTOM_OFFSET,
+  };
+  const busBox = {
+    left: bus.x - BUS_HALF_WIDTH - BRANCH_LABEL_BUS_MARGIN,
+    right: bus.x + BUS_HALF_WIDTH + BRANCH_LABEL_BUS_MARGIN,
+    top: bus.y - BUS_HALF_HEIGHT - BRANCH_LABEL_BUS_MARGIN,
+    bottom: bus.y + BUS_HALF_HEIGHT + BRANCH_LABEL_BUS_MARGIN,
+  };
+
+  return !(
+    labelBox.right <= busBox.left ||
+    busBox.right <= labelBox.left ||
+    labelBox.bottom <= busBox.top ||
+    busBox.bottom <= labelBox.top
+  );
+};
+
+const toBranchLabelPoint = (segment: BranchSegment): BranchLabelPoint => ({
+  x: (segment.x1 + segment.x2) / 2,
+  y: (segment.y1 + segment.y2) / 2,
+  segmentLength: getSegmentLength(segment),
+  hasClearance: true,
+});
+
+const getBranchLabelPoint = (
+  branch: RoutedBranch,
+  buses: BusNode[]
+): BranchLabelPoint => {
+  const labelCandidates = branch.segments
+    .map(toBranchLabelPoint)
+    .sort((first, second) => second.segmentLength - first.segmentLength);
+
+  if (labelCandidates.length === 0) {
+    return {
+      ...(branch.points.at(-1) ?? { x: 0, y: 0 }),
+      segmentLength: 0,
+      hasClearance: false,
+    };
+  }
+
+  const clearCandidate = labelCandidates.find(
+    (candidate) => !buses.some((bus) => branchLabelOverlapsBus(candidate, bus))
+  );
+
+  return clearCandidate ?? { ...labelCandidates[0], hasClearance: false };
+};
 
 const getOrthogonalCrossingPoint = (
   firstSegment: BranchSegment,
@@ -130,56 +234,44 @@ export function SingleLineDiagram({
   branchFlowsById,
 }: SingleLineDiagramProps) {
   const svgRef = useRef<SVGSVGElement | null>(null);
-  const draggingBusIdRef = useRef<string | null>(null);
+  const dragSessionRef = useRef<BusDragSession | null>(null);
+  const svgWheelListenerRef = useRef<SvgWheelListener | null>(null);
   const [zoom, setZoom] = useState(1);
 
-  const toSvgPoint = (clientX: number, clientY: number) => {
-    const svg = svgRef.current;
-    if (!svg) {
-      return null;
+  const handleSvgRef = useCallback((node: SVGSVGElement | null) => {
+    const previousListener = svgWheelListenerRef.current;
+    if (previousListener) {
+      previousListener.node.removeEventListener(
+        "wheel",
+        previousListener.handler
+      );
+      svgWheelListenerRef.current = null;
     }
 
-    const point = svg.createSVGPoint();
-    point.x = clientX;
-    point.y = clientY;
-    const transform = svg.getScreenCTM();
-    if (!transform) {
-      return null;
-    }
-
-    return point.matrixTransform(transform.inverse());
-  };
-
-  const handleBusPointerDown = (
-    event: PointerEvent<SVGRectElement>,
-    busId: string
-  ) => {
-    event.preventDefault();
-    draggingBusIdRef.current = busId;
-    onBusSelect(busId);
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const handleBusPointerMove = (event: PointerEvent<SVGRectElement>) => {
-    const draggingBusId = draggingBusIdRef.current;
-    if (!draggingBusId) {
+    svgRef.current = node;
+    if (!node) {
       return;
     }
 
-    const point = toSvgPoint(event.clientX, event.clientY);
-    if (!point) {
-      return;
-    }
+    const handleWheel = (event: WheelEvent) => {
+      if (!event.ctrlKey) {
+        return;
+      }
 
-    onBusMove(draggingBusId, point.x, point.y);
-  };
+      event.preventDefault();
+      setZoom((previousZoom) =>
+        clampZoom(previousZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP))
+      );
+    };
 
-  const handleBusPointerUp = (event: PointerEvent<SVGRectElement>) => {
-    draggingBusIdRef.current = null;
-    event.currentTarget.releasePointerCapture(event.pointerId);
-  };
+    node.addEventListener("wheel", handleWheel, { passive: false });
+    svgWheelListenerRef.current = { node, handler: handleWheel };
+  }, []);
 
-  const busesById = new Map(buses.map((bus) => [bus.id, bus]));
+  const busesById = useMemo(
+    () => new Map(buses.map((bus) => [bus.id, bus])),
+    [buses]
+  );
   const busCentersX = buses.map((bus) => bus.x);
   const busCentersY = buses.map((bus) => bus.y);
 
@@ -210,9 +302,6 @@ export function SingleLineDiagram({
   const zoomedViewBoxX = viewBoxCenterX - zoomedViewBoxWidth / 2;
   const zoomedViewBoxY = viewBoxCenterY - zoomedViewBoxHeight / 2;
 
-  const clampZoom = (nextZoom: number) =>
-    Math.max(MIN_ZOOM, Math.min(MAX_ZOOM, nextZoom));
-
   const handleZoomIn = () => {
     setZoom((previousZoom) => clampZoom(previousZoom + ZOOM_STEP));
   };
@@ -221,15 +310,58 @@ export function SingleLineDiagram({
     setZoom((previousZoom) => clampZoom(previousZoom - ZOOM_STEP));
   };
 
-  const handleWheel = (event: WheelEvent<SVGSVGElement>) => {
-    if (!event.ctrlKey) {
+  const handleBusPointerDown = (
+    event: PointerEvent<SVGGElement>,
+    busId: string
+  ) => {
+    const svg = svgRef.current;
+    const bus = busesById.get(busId);
+    const clientToSvgMatrix = svg?.getScreenCTM()?.inverse();
+
+    if (!svg || !bus || !clientToSvgMatrix) {
       return;
     }
 
     event.preventDefault();
-    setZoom((previousZoom) =>
-      clampZoom(previousZoom + (event.deltaY < 0 ? ZOOM_STEP : -ZOOM_STEP))
+    const startPointer = transformClientPoint(
+      clientToSvgMatrix,
+      event.clientX,
+      event.clientY
     );
+    dragSessionRef.current = {
+      busId,
+      pointerOffsetX: bus.x - startPointer.x,
+      pointerOffsetY: bus.y - startPointer.y,
+    };
+    onBusSelect(busId);
+    event.currentTarget.setPointerCapture(event.pointerId);
+  };
+
+  const handleBusPointerMove = (event: PointerEvent<SVGGElement>) => {
+    const dragSession = dragSessionRef.current;
+    const clientToSvgMatrix = svgRef.current?.getScreenCTM()?.inverse();
+    if (!dragSession || !clientToSvgMatrix) {
+      return;
+    }
+
+    const nextPointer = transformClientPoint(
+      clientToSvgMatrix,
+      event.clientX,
+      event.clientY
+    );
+
+    onBusMove(
+      dragSession.busId,
+      nextPointer.x + dragSession.pointerOffsetX,
+      nextPointer.y + dragSession.pointerOffsetY
+    );
+  };
+
+  const handleBusPointerUp = (event: PointerEvent<SVGGElement>) => {
+    dragSessionRef.current = null;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
   };
 
   const routedBranchesById = useMemo(() => {
@@ -323,12 +455,11 @@ export function SingleLineDiagram({
             </span>
           </div>
           <svg
-            ref={svgRef}
+            ref={handleSvgRef}
             viewBox={`${zoomedViewBoxX} ${zoomedViewBoxY} ${zoomedViewBoxWidth} ${zoomedViewBoxHeight}`}
             role="img"
             aria-label="Single line diagram"
             className="h-[360px] min-w-[980px] w-full"
-            onWheel={handleWheel}
           >
             <rect
               x={viewBoxX}
@@ -350,12 +481,16 @@ export function SingleLineDiagram({
               if (!routedBranch) {
                 return null;
               }
-              const elbowPoint = routedBranch.points[1];
-              const fallbackLabelPoint =
-                routedBranch.points[routedBranch.points.length - 1];
+              const labelPoint = getBranchLabelPoint(routedBranch, buses);
               const isSelected =
                 selectedElementType === "BRANCH" &&
                 selectedElementId === branch.id;
+              const showBranchLabels =
+                labelPoint.hasClearance &&
+                labelPoint.segmentLength >= MIN_BRANCH_LABEL_SEGMENT_LENGTH &&
+                (branches.length <= MAX_ALWAYS_LABELED_BRANCHES ||
+                  zoom >= DETAILED_LABEL_ZOOM ||
+                  isSelected);
               const branchFlow = branchFlowsById?.get(branch.id);
               const activePowerFromTo = branchFlow?.pFromToMW;
               const flowDirectionSymbol =
@@ -370,32 +505,49 @@ export function SingleLineDiagram({
                   : Math.abs(activePowerFromTo).toFixed(2);
 
               return (
-                <g key={branch.id}>
+                <g
+                  key={branch.id}
+                  className="cursor-pointer"
+                  onClick={() => onBranchSelect(branch.id)}
+                >
                   <polyline
                     points={routedBranch.points
                       .map((point) => `${point.x},${point.y}`)
                       .join(" ")}
                     fill="none"
-                    className={`${lineClassName(isSelected)} cursor-pointer transition`}
-                    onClick={() => onBranchSelect(branch.id)}
+                    stroke="transparent"
+                    strokeWidth={16}
+                    vectorEffect="non-scaling-stroke"
+                    pointerEvents="stroke"
                   />
-                  <text
-                    x={elbowPoint?.x ?? fallbackLabelPoint?.x ?? 0}
-                    y={(elbowPoint?.y ?? fallbackLabelPoint?.y ?? 0) - 10}
-                    textAnchor="middle"
-                    className="fill-slate-300 text-[10px]"
-                  >
-                    {branch.id}
-                  </text>
-                  {flowMagnitudeMW ? (
-                    <text
-                      x={elbowPoint?.x ?? fallbackLabelPoint?.x ?? 0}
-                      y={(elbowPoint?.y ?? fallbackLabelPoint?.y ?? 0) + 4}
-                      textAnchor="middle"
-                      className="fill-emerald-200 text-[10px]"
-                    >
-                      {flowDirectionSymbol} {flowMagnitudeMW} MW
-                    </text>
+                  <polyline
+                    points={routedBranch.points
+                      .map((point) => `${point.x},${point.y}`)
+                      .join(" ")}
+                    fill="none"
+                    className={`${lineClassName(isSelected)} transition`}
+                  />
+                  {showBranchLabels ? (
+                    <>
+                      <text
+                        x={labelPoint.x}
+                        y={labelPoint.y - 10}
+                        textAnchor="middle"
+                        className="fill-slate-300 text-[10px]"
+                      >
+                        {branch.id}
+                      </text>
+                      {flowMagnitudeMW ? (
+                        <text
+                          x={labelPoint.x}
+                          y={labelPoint.y + 4}
+                          textAnchor="middle"
+                          className="fill-emerald-200 text-[10px]"
+                        >
+                          {flowDirectionSymbol} {flowMagnitudeMW} MW
+                        </text>
+                      ) : null}
+                    </>
                   ) : null}
                 </g>
               );
@@ -439,6 +591,12 @@ export function SingleLineDiagram({
                 <g
                   key={bus.id}
                   transform={`translate(${bus.x - BUS_HALF_WIDTH}, ${bus.y - BUS_HALF_HEIGHT})`}
+                  className="cursor-pointer"
+                  onClick={() => onBusSelect(bus.id)}
+                  onPointerDown={(event) => handleBusPointerDown(event, bus.id)}
+                  onPointerMove={handleBusPointerMove}
+                  onPointerUp={handleBusPointerUp}
+                  onPointerCancel={handleBusPointerUp}
                 >
                   <rect
                     x={0}
@@ -446,13 +604,7 @@ export function SingleLineDiagram({
                     rx={6}
                     width={BUS_WIDTH}
                     height={BUS_HEIGHT}
-                    className={`${busClassName(isSelected)} cursor-pointer stroke-2 transition`}
-                    onClick={() => onBusSelect(bus.id)}
-                    onPointerDown={(event) =>
-                      handleBusPointerDown(event, bus.id)
-                    }
-                    onPointerMove={handleBusPointerMove}
-                    onPointerUp={handleBusPointerUp}
+                    className={`${busClassName(isSelected)} stroke-2 transition`}
                   />
                   <text
                     x={BUS_HALF_WIDTH}

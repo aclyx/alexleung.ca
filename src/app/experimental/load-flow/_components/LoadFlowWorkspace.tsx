@@ -31,7 +31,11 @@ const BRANCH_STATUS_OPTIONS: readonly BranchStatus[] = [
 ];
 
 const parseFiniteNumber = (value: string): number | null => {
-  const parsed = Number.parseFloat(value);
+  if (value.trim() === "") {
+    return null;
+  }
+
+  const parsed = Number(value);
   return Number.isFinite(parsed) ? parsed : null;
 };
 

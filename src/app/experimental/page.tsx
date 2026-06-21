@@ -9,13 +9,18 @@ import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Surface } from "@/components/Surface";
-import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
+import {
+  EXPERIMENTS,
+  EXPERIMENTS_HUB,
+  getExperimentMetadataImage,
+} from "@/constants/experiments";
 import { buildCollectionPageSchema, buildPageMetadata } from "@/lib/seo";
 
 export const metadata: Metadata = buildPageMetadata({
   title: EXPERIMENTS_HUB.title,
   description: EXPERIMENTS_HUB.description,
   path: EXPERIMENTS_HUB.path,
+  images: [getExperimentMetadataImage(EXPERIMENTS[0])],
 });
 
 export default function ExperimentsPage() {
@@ -43,10 +48,11 @@ export default function ExperimentsPage() {
         <ResponsiveContainer variant="wide" className="space-y-8">
           <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
             <p className="text-body text-gray-300 md:text-center">
-              These are small browser tools I built to make a few systems ideas
-              easier to poke at. They are static, client-side pages with
-              controls, visuals, and enough state to learn from the model
-              directly.
+              These are browser tools for inspecting technical behavior
+              directly: event-loop ordering, optimizer dynamics, AC load flow,
+              Mandelbrot zooming, and PID response. They are static, client-side
+              pages with controls, visuals, and enough state to learn from the
+              behavior itself.
             </p>
           </div>
 

@@ -1,7 +1,8 @@
 ---
-title: "Dropout as Implicit Bagging in Deep Learning"
+title: "Dropout as Shared-Parameter Bagging"
 date: "2026-03-07"
-excerpt: "A concrete way to understand dropout in deep learning: shared-parameter ensemble training that approximates bagging without training separate models."
+updated: "2026-06-15"
+excerpt: "A concrete way to understand dropout in deep learning: sampled subnetworks with shared weights, standing in for a much more expensive ensemble."
 coverImage: "/assets/blog/dropout-as-implicit-bagging/cover.webp"
 coverAlt: "Illustration of Alex drawing glowing neural network diagrams beside an open Deep Learning book"
 tags:
@@ -20,11 +21,11 @@ Bagging is powerful because it reduces variance by averaging predictions from ma
 
 That makes dropout easier to explain. It is not just random noise for regularization. It is a cheap way to get some of the benefits of averaging over many related models without training each one separately.
 
-## Capacity and co-adaptation
+## Masks, Capacity, and Co-Adaptation
 
-The bagging interpretation also makes another part of dropout easier to think about: the apparent paradox that it can increase effective model capacity while still regularizing. If each mask defines a different subnetwork, the system explores a very large family of predictors. In that sense, capacity expands. At the same time, any one unit cannot rely on a specific partner always being present, so representations are pushed to be useful across many subnet configurations.
+The bagging interpretation also makes another part of dropout easier to think about: the apparent paradox that it can widen the set of subnetworks seen during training while still regularizing. Each binary mask defines a different thinned network, but those networks share weights. At the same time, any one unit cannot rely on a specific partner always being present, so representations are pushed to be useful across many subnet configurations.
 
-That pressure reduces fragile co-adaptation. Features that only work in one narrow pathway get penalized indirectly, while more robust features survive across many sampled masks. The result is a model that is both expressive and less brittle. I like this framing because it explains how dropout can support rich function classes without simply memorizing training data.
+That pressure reduces fragile co-adaptation. Features that only work in one narrow pathway get penalized indirectly, while more robust features survive across many sampled masks. I like this framing because it explains dropout through the training setup itself, not just through the shortcut phrase "add noise."
 
 ## The useful frame
 

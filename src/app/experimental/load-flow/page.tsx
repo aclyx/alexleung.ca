@@ -7,27 +7,32 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  buildExperimentBreadcrumbItems,
+  getExperimentById,
+  getExperimentMetadataImage,
+} from "@/constants/experiments";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 import { LoadFlowWorkspace } from "./_components/LoadFlowWorkspace";
 
-const title = "Load Flow | Alex Leung";
-const description =
-  "A browser AC load flow workspace for editing one-line models and solving bus voltages and branch flows.";
-const path = "/experimental/load-flow/";
+const experiment = getExperimentById("load-flow");
+const title = experiment.title;
+const description = experiment.description;
+const path = experiment.path;
 
 export const metadata: Metadata = buildPageMetadata({
   title,
   description,
   path,
+  images: [getExperimentMetadataImage(experiment)],
 });
 
 export default function LoadFlowPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("Load Flow", path)}
+        items={buildExperimentBreadcrumbItems(experiment.pageTitle, path)}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
@@ -37,7 +42,7 @@ export default function LoadFlowPage() {
         })}
       />
 
-      <PageShell title="Load Flow" titleId="load-flow">
+      <PageShell title={experiment.pageTitle} titleId="load-flow">
         <ResponsiveContainer element="section" className="space-y-6">
           <p className="text-body text-gray-300">
             This workspace uses a Newton-Raphson AC load flow engine with
