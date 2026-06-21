@@ -20,7 +20,7 @@ import {
   precise,
 } from "@/features/mandelbrot/viewport";
 
-const DECIMAL_ROWS_PER_CHUNK = 6;
+const DECIMAL_ROWS_PER_CHUNK = 1;
 const NUMBER_ROWS_PER_CHUNK = 20;
 
 type RenderExecutionResult = {
@@ -93,9 +93,17 @@ async function renderMandelbrot({
     const pixels = new Uint8ClampedArray(safeWidth * rowCount * 4);
 
     for (let rowOffset = 0; rowOffset < rowCount; rowOffset += 1) {
+      if (signal?.aborted) {
+        return false;
+      }
+
       const y = row + rowOffset;
 
       for (let x = 0; x < safeWidth; x += 1) {
+        if (signal?.aborted) {
+          return false;
+        }
+
         const result = useNumberIteration
           ? iterateMandelbrotNumber(
               leftNumber + stepXNumber * (x + 0.5),
