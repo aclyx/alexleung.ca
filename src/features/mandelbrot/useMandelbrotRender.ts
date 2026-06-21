@@ -6,6 +6,7 @@ import {
   renderMandelbrotWithStrategy,
   shouldAttemptWebGpu,
 } from "@/features/mandelbrot/renderer";
+import { createMandelbrotRenderPlan } from "@/features/mandelbrot/renderPlan";
 import {
   MandelbrotSettings,
   PixelSize,
@@ -72,11 +73,7 @@ export function useMandelbrotRender({
     }
 
     const abortController = new AbortController();
-    const previewScale = Math.min(settings.resolutionScale * 0.5, 0.4);
-    const scales =
-      settings.resolutionScale - previewScale >= 0.15
-        ? [previewScale, settings.resolutionScale]
-        : [settings.resolutionScale];
+    const renderPlan = createMandelbrotRenderPlan(viewport, settings);
     const renderingCanvas = canvas;
     const renderingContext = context;
     const renderingGpuCanvas = gpuCanvas;
@@ -136,9 +133,8 @@ export function useMandelbrotRender({
         renderingContext.fillRect(0, 0, size.width, size.height);
       }
 
-      for (let index = 0; index < scales.length; index += 1) {
-        const scale = scales[index];
-        const phase = index === 0 && scales.length > 1 ? "preview" : "refining";
+      for (const renderPass of renderPlan.passes) {
+        const { message, phase, scale } = renderPass;
         const buffer = document.createElement("canvas");
         const bufferSize = renderSizeForScale(size, scale);
         const bufferContext = buffer.getContext("2d");
@@ -147,7 +143,7 @@ export function useMandelbrotRender({
             viewport,
             size: bufferSize,
           },
-          settings.renderBackendPreference
+          renderPass.settings.renderBackendPreference
         );
 
         if (!bufferContext) {
@@ -174,10 +170,7 @@ export function useMandelbrotRender({
         setRenderState({
           phase,
           progress: 0,
-          message:
-            phase === "preview"
-              ? "Rendering preview..."
-              : `Rendering ${bufferSize.width}×${bufferSize.height} frame...`,
+          message,
           backend: activeBackend,
         });
 
@@ -185,7 +178,7 @@ export function useMandelbrotRender({
           {
             viewport,
             size: bufferSize,
-            settings,
+            settings: renderPass.settings,
             gpuTargetCanvas: renderingGpuCanvas,
             signal: abortController.signal,
             onChunk: (chunk) => {
@@ -209,15 +202,12 @@ export function useMandelbrotRender({
               setRenderState({
                 phase,
                 progress,
-                message:
-                  phase === "preview"
-                    ? "Rendering preview..."
-                    : `Rendering ${bufferSize.width}×${bufferSize.height} frame...`,
+                message,
                 backend: activeBackend,
               });
             },
           },
-          settings.renderBackendPreference
+          renderPass.settings.renderBackendPreference
         );
 
         activeBackend = renderResult.backend;
@@ -231,7 +221,7 @@ export function useMandelbrotRender({
         setRenderState({
           phase: "ready",
           progress: 1,
-          message: `Ready at ${Math.round(settings.resolutionScale * 100)}% render scale.`,
+          message: renderPlan.completionMessage,
           backend: activeBackend,
         });
       }

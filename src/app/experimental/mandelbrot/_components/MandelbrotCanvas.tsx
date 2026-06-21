@@ -436,47 +436,49 @@ export function MandelbrotCanvas({
         />
       ) : null}
 
-      <div className="pointer-events-none absolute left-4 top-4 z-30 rounded-md border border-white/10 bg-slate-950/80 px-3 py-2 text-xs text-gray-200 backdrop-blur-sm">
-        <p className="font-semibold text-cyan-100">Plot controls</p>
-        <p>Wheel to zoom at cursor.</p>
-        <p>
-          {dragMode === "pan"
-            ? "Click to zoom in, drag to pan."
-            : "Click to zoom in, drag a box to reframe."}
-        </p>
-      </div>
+      <div className="pointer-events-none absolute left-3 right-3 top-3 z-30 flex flex-col gap-2 sm:left-4 sm:right-4 sm:top-4 sm:flex-row sm:items-start sm:justify-between">
+        <div className="w-fit max-w-full rounded-md border border-white/10 bg-slate-950/80 px-3 py-2 text-xs text-gray-200 backdrop-blur-sm">
+          <p className="font-semibold text-cyan-100">Plot controls</p>
+          <p>Wheel to zoom at cursor.</p>
+          <p>
+            {dragMode === "pan"
+              ? "Click to zoom in, drag to pan."
+              : "Click to zoom in, drag a box to reframe."}
+          </p>
+        </div>
 
-      <div className="absolute right-4 top-4 z-30 flex gap-2">
-        <button
-          type="button"
-          className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
-          onClick={() => {
-            cancelPendingWheelCommit();
-            onZoomIn();
-          }}
-        >
-          Zoom in
-        </button>
-        <button
-          type="button"
-          className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
-          onClick={() => {
-            cancelPendingWheelCommit();
-            onZoomOut();
-          }}
-        >
-          Zoom out
-        </button>
-        <button
-          type="button"
-          className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
-          onClick={() => {
-            cancelPendingWheelCommit();
-            onReset();
-          }}
-        >
-          Reset
-        </button>
+        <div className="pointer-events-auto flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
+            onClick={() => {
+              cancelPendingWheelCommit();
+              onZoomIn();
+            }}
+          >
+            Zoom in
+          </button>
+          <button
+            type="button"
+            className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
+            onClick={() => {
+              cancelPendingWheelCommit();
+              onZoomOut();
+            }}
+          >
+            Zoom out
+          </button>
+          <button
+            type="button"
+            className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
+            onClick={() => {
+              cancelPendingWheelCommit();
+              onReset();
+            }}
+          >
+            Reset
+          </button>
+        </div>
       </div>
 
       <div className="pointer-events-none absolute bottom-4 left-4 z-30 rounded-md border border-white/10 bg-slate-950/80 px-3 py-2 text-xs text-gray-200 backdrop-blur-sm">
