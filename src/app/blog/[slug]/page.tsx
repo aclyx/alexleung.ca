@@ -22,6 +22,7 @@ import {
   getSeriesNavigation,
 } from "@/lib/blogApi";
 import {
+  getCoverVariant,
   getCoverVariantPath,
   getCoverVariantSourceSet,
 } from "@/lib/coverVariants";
@@ -45,6 +46,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     "title",
     "excerpt",
     "coverImage",
+    "coverAlt",
     "date",
     "updated",
     "tags",
@@ -58,19 +60,26 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   const description =
     post.excerpt || `Read ${post.title} on Alex Leung's blog.`;
   const path = `/blog/${params_awaited.slug}`;
+  const metadataCoverImage = getCoverVariant(post.coverImage, "hero");
+  const metadataImage = post.coverImage
+    ? {
+        url: metadataCoverImage?.path || post.coverImage,
+        alt: post.coverAlt || `Cover for ${post.title}`,
+        ...(metadataCoverImage
+          ? {
+              width: metadataCoverImage.width,
+              height: metadataCoverImage.height,
+            }
+          : {}),
+      }
+    : undefined;
 
   const metadata = buildPageMetadata({
     title,
     description,
     path,
     type: "article",
-    images: post.coverImage
-      ? [
-          {
-            url: post.coverImage,
-          },
-        ]
-      : undefined,
+    images: metadataImage ? [metadataImage] : undefined,
   });
 
   return {

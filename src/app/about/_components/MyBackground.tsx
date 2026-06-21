@@ -122,6 +122,19 @@ export function Journey() {
               fetchPriority="low"
               decoding="async"
             />
+            <div className="overflow-hidden rounded-lg border border-white/10 bg-slate-950/65">
+              <img
+                src="/assets/alex_vibing.webp"
+                alt="Alex Leung seated indoors near a desk and wall notes"
+                width={1536}
+                height={1024}
+                sizes="(min-width: 1024px) 28vw, (min-width: 768px) 36vw, 88vw"
+                loading="lazy"
+                fetchPriority="low"
+                decoding="async"
+                className="aspect-[3/2] w-full object-cover"
+              />
+            </div>
           </div>
         </div>
       </SectionBlock>

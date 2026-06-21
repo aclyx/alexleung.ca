@@ -2,6 +2,7 @@ import {
   getCoverVariantProfile,
   getImageVariantSourceSet,
   getLargestImageVariant,
+  type VariantInfo,
 } from "@/lib/imageVariantManifest";
 
 type CoverVariant = "card" | "hero";
@@ -18,5 +19,12 @@ export function getCoverVariantPath(
   src: string | undefined,
   variant: CoverVariant
 ): string | undefined {
-  return getLargestImageVariant(src, getCoverVariantProfile(variant))?.path;
+  return getCoverVariant(src, variant)?.path;
+}
+
+export function getCoverVariant(
+  src: string | undefined,
+  variant: CoverVariant
+): VariantInfo | undefined {
+  return getLargestImageVariant(src, getCoverVariantProfile(variant));
 }

@@ -1,7 +1,8 @@
 ---
 title: "Camping Indoors in San Francisco"
 date: "2026-04-27"
-excerpt: "My first week in San Francisco has mostly been logistics, empty rooms, cats, and the slow work of making enough space to focus."
+updated: "2026-06-15"
+excerpt: "My first week in San Francisco: paperwork, an unfurnished apartment, two cats, Bay Trail runs, and waiting for furniture."
 coverImage: "/assets/blog/camping-indoors-in-san-francisco/cover.webp"
 coverAlt: "Illustration of Alex sitting on the floor of an unfurnished apartment with moving boxes and two cats"
 tags:
@@ -25,14 +26,16 @@ The cats needed their own plan. We used a pet taxi service, which turned out to 
 
 Conveniently, having them come by pet taxi also gave me time to set up cat trees and cat beds before they arrived. The apartment is still unfinished, but having them here changes it immediately. Their beds and trees make the place feel occupied even before the furniture arrives.
 
-## Environment
+## Small Day-to-Day Differences
 
 I have been noticing small everyday differences too. Amazon is much better here than it was in Waterloo, which has been useful while most of my things are still in transit.
 
-The tap water also tastes good. Apparently San Francisco water is snowmelt water, which makes drinking from the tap unusually pleasant.
+The tap water also tastes better than I expected, which has made the apartment feel a little easier to settle into.
 
 I have been enjoying the outdoor runs, especially along the Bay Trail. It has been a nice way to get out of the apartment between errands and setup tasks.
 
+![San Francisco skyline viewed from Corona Heights Park on a clear afternoon](/assets/blog/camping-indoors-in-san-francisco/corona-heights-view.webp)
+
 I also often overhear people talking about tech: startups, AI, infrastructure, products, companies, jobs. It is a little odd, but also not surprising here. For now it is mostly just part of the environment.
 
-Overall, I am enjoying it. This first week has mostly been paperwork, deliveries, empty rooms, and figuring out what the cats need. I am also looking forward to the coming week, when hopefully more of my attention can move from getting established here to the work I came here to do.
+Overall, I am enjoying it. This first week has mostly been paperwork, deliveries, empty rooms, and figuring out what the cats need. Next week, I mostly want the apartment to become less of a setup project and more of a normal place to wake up, work, run, and come home to with the cats.

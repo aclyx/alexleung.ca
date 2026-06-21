@@ -88,6 +88,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 ### Adding Images (Agent Guidance)
 
 - Always add source images under `public/assets/...`.
+- Prefer WebP for website source images. When starting from a camera export or screenshot in another format, convert it to a metadata-stripped `.webp` source asset and do not keep the temporary JPEG/PNG export in the repo unless there is a specific reason.
 - For blog covers: update frontmatter `coverImage` in `content/posts/*.md`.
 - For inline blog images: add standard markdown image references.
 - After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit) and ensure the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json` are included.
@@ -191,12 +192,16 @@ yarn deploy           # Build and deploy to GitHub Pages
 - For blog titles, excerpts, and AI-tool posts, avoid influencer-style packaging, clickbait, and broad future-of-work framing. Prefer literal scope, concrete workflow details, and tags that match the actual argument.
 - Blog titles should feel concise and spoken, not like category labels. Prefer one crisp shape: an active claim (`Make Internal Tools Cheap to Try`), a concrete object/use case (`Studying with the 11-Inch iPad Air`), or a named-tool contrast (`Codex for Site Edits, Sora for Visual Sketches`). Avoid `Why...` or `Using...` title forms when they add ceremony without adding meaning.
 - When a title feels flat, look for stacked softeners or abstractions such as `rough`, `workflow`, `small`, `ideas`, `fit`, or `tools`. Keep the useful constraint and cut the vague scaffolding.
+- If the user states the main takeaway, preserve that mechanism in the title, excerpt, section path, and ending. Do not replace it with an adjacent generic lesson such as knowing when to stop, feeling productive, or treating a metric as an operating signal.
+- For AI-tool reflections, keep concrete harness terms visible when they are the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token. Do not smooth these into broader productivity language.
+- If the user says a title or heading style feels weird, switch to literal mechanism-first labels. Avoid clever or essayistic frames such as `What X Buy Me`, `The X Is the Point`, lever metaphors, or title-shaped transformations unless the user explicitly asks for that style.
 - For blog index and section labels, use plain labels unless the page has already earned a metaphor. Avoid one-off workshop, workbench, journey, lab, or craft metaphors in headings and intros; they tend to feel forced against the site's otherwise literal voice.
 - For learning notes and book reviews, do not overuse `I learned`, `I realized`, `I discovered`, or similar beginner-coded framing. Present the post as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism while preserving honest limits.
 - In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
 - Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow/textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
 - Do not add internal links or prose references from a dated blog entry to later-dated blog entries unless also updating the entry's `updated` date to reflect an intentional retrospective edit.
 - For personal reflections and lifestyle posts, open from concrete lived details before interpretation. Avoid polished thesis scaffolding, rhetorical contrast templates, and decorative atmosphere labels unless the user explicitly asks for a more essayistic style.
+- Do not start reflective posts with a comparison, metric, or time jump before naming the actual subject. A reader should know the object, workflow, place, or situation in the first sentence before seeing a line like `Compared with...`.
 - If the user corrects tone more than once, stop making local sentence swaps. Reread the whole section, name the repeated pattern, and revise from the user-provided facts outward.
 - Avoid draft-scaffolding phrases such as `the third thread`, `interesting middle ground`, or similar meta-organizing language when the actual point can be stated plainly.
 - Avoid rhetorical contrast templates like `it is one thing ... it is another ...` unless the user explicitly wants a more essayistic style.

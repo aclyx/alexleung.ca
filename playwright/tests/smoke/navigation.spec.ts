@@ -52,7 +52,7 @@ test("home page renders the hero content", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: "Alex Leung" })
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "What you'll find here" })
+    page.getByRole("heading", { name: "Writing, Notes, and Tools" })
   ).toBeVisible();
 });
 

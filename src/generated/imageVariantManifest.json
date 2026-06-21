@@ -75,6 +75,20 @@
         }
       }
     },
+    "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
     "/assets/blog/camping-indoors-in-san-francisco/cover.webp": {
       "variants": {
         "card": {
@@ -188,6 +202,35 @@
           "path": "/assets/blog/everyone-is-a-builder/cover-hero-sm.webp",
           "width": 640,
           "height": 427
+        }
+      }
+    },
+    "/assets/blog/farming-expensive-coding-agent-sessions/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card.webp",
+          "width": 768,
+          "height": 432
+        },
+        "card-md": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card-md.webp",
+          "width": 640,
+          "height": 360
+        },
+        "card-sm": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card-sm.webp",
+          "width": 480,
+          "height": 270
+        },
+        "hero": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-hero.webp",
+          "width": 1280,
+          "height": 720
+        },
+        "hero-sm": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-hero-sm.webp",
+          "width": 640,
+          "height": 360
         }
       }
     },

@@ -1,7 +1,8 @@
 ---
-title: "Inspectable Browser Tools Built with Coding Agents"
+title: "Coding Agents for Inspectable Browser Tools"
 date: "2026-04-10"
-excerpt: "Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me inspectable ways to revisit technical models."
+updated: "2026-06-15"
+excerpt: "Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me concrete ways to inspect older technical models."
 coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png"
 coverAlt: "Illustration of Alex working across screens showing event loop, control, and fractal visualizations"
 tags:
@@ -20,7 +21,7 @@ These were useful test cases because they are small enough to live entirely on t
 
 ## Load flow in the browser
 
-Earlier in my career, I was more drawn to electrical power engineering than to software. I was especially fascinated by power system analysis tools like PSS/E. The core problem itself was interesting: solve for voltages, phase angles, and power flows in a nonlinear system. Real models could also get very large, up to millions of nodes, so I carried the impression that the solvers themselves were heavy, specialized systems.
+Earlier in my career, I was more drawn to electrical power engineering than to software. I was especially fascinated by power system analysis tools like PSS/E. The core problem itself was interesting: solve for voltages, phase angles, and power flows in a nonlinear system. Real utility models could be much larger than the IEEE reference cases I was using, so I carried the impression that the solvers themselves were heavy, specialized systems.
 
 That was part of what made building [Load Flow](/experimental/load-flow/) interesting. I liked the idea of implementing standard IEEE reference cases directly in the browser and seeing how far I could get in a browser-based version rather than a dedicated desktop application. Instead of treating load flow as something that only lived inside heavyweight desktop tooling, I could look at the network, change inputs, run the solver, and inspect the outputs in one place.
 
@@ -40,6 +41,6 @@ The current implementation still has a practical precision ceiling: if I zoom to
 
 The tools work best when they make a model visible instead of leaving it at the level of equations or static notes. The [Learning Dynamics Lab](/experimental/learning-dynamics/) does that for optimizer behavior. The [Event Loop Visualizer](/experimental/event-loop/) fits the same pattern. Queuing `Promise.then(...)` beside `setTimeout(..., 0)` and stepping the runtime forward makes the ordering easier to inspect: the microtask queue drains before the next task starts.
 
-That is also where the coding agent has been most useful. It is good at helping me get started, scaffolding the UI, and accelerating implementation. It can also explain concepts reasonably well. But a tool still teaches me something different. A chatbot is turn-based and less effective for sustained exploration. A tool gives me something inspectable. If the behavior looks wrong, I can inspect the code directly instead of stopping at the explanation.
+That is also where the coding agent has been most useful. It helped me get started, scaffold the UI, and move through implementation faster. But the useful artifact is the tool, not the transcript. The tool lets me inspect behavior directly. If the behavior looks wrong, I can change the input, rerun the model, or inspect the code instead of stopping at an explanation.
 
-For now, the pattern that has felt most useful to me is simpler: use the agent to help build a small tool, then test my understanding by pushing on the model directly.
+The pattern I want to keep is simple: use the agent to help build a small tool, then test my understanding by pushing on the model directly.

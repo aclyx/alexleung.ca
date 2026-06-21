@@ -7,27 +7,32 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  buildExperimentBreadcrumbItems,
+  getExperimentById,
+  getExperimentMetadataImage,
+} from "@/constants/experiments";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 import { PidSimulatorWorkspace } from "./_components/PidSimulatorWorkspace";
 
-const title = "PID Controller Simulator | Alex Leung";
-const description =
-  "Fixed-step PID simulation for trying gains and seeing rise time, overshoot, oscillation, and settling behavior.";
-const path = "/experimental/pid-controller/";
+const experiment = getExperimentById("pid-controller");
+const title = experiment.title;
+const description = experiment.description;
+const path = experiment.path;
 
 export const metadata: Metadata = buildPageMetadata({
   title,
   description,
   path,
+  images: [getExperimentMetadataImage(experiment)],
 });
 
 export default function PidControllerPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("PID Controller", path)}
+        items={buildExperimentBreadcrumbItems(experiment.pageTitle, path)}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
@@ -37,7 +42,7 @@ export default function PidControllerPage() {
         })}
       />
 
-      <PageShell title="PID Controller" titleId="pid-controller">
+      <PageShell title={experiment.pageTitle} titleId="pid-controller">
         <ResponsiveContainer element="section" className="space-y-6">
           <PidSimulatorWorkspace />
         </ResponsiveContainer>

@@ -13,10 +13,11 @@ import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildProfilePageSchema } from "@/lib/seo";
 
 import { Interests } from "./_components/Interests";
+import { PersonalPhotos } from "./_components/PersonalPhotos";
 
-const title = "About Alex Leung | Software Engineer and Occasional Writer";
+const title = "About Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung's background across embedded systems, distributed systems, product engineering, AI product development, and writing about software.";
+  "Alex Leung is a software engineer and writer in San Francisco with experience across embedded systems, distributed systems, product engineering, and AI product development.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -58,6 +59,7 @@ export default function AboutPage() {
       <PageShell title="About" titleId="about">
         <div className="space-y-12 md:space-y-14">
           <Journey />
+          <PersonalPhotos />
           <Interests />
           <Credentials />
         </div>
