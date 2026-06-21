@@ -7,7 +7,10 @@ describe("PidControllerPage", () => {
     render(<PidControllerPage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "PID Controller" })
+      screen.getByRole("heading", {
+        level: 1,
+        name: "PID Controller Simulator",
+      })
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {

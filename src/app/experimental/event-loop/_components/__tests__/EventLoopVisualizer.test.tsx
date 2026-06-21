@@ -14,6 +14,20 @@ describe("EventLoopVisualizer", () => {
     );
   });
 
+  it("labels completed stack frames without impossible next-op counts", () => {
+    render(<EventLoopVisualizer />);
+
+    const stepButton = screen.getByRole("button", { name: "Step forward" });
+    fireEvent.click(stepButton);
+    fireEvent.click(stepButton);
+    fireEvent.click(stepButton);
+
+    expect(
+      screen.getByText(/source: sync.*complete.*done/i)
+    ).toBeInTheDocument();
+    expect(screen.queryByText(/next op 2\/1/i)).not.toBeInTheDocument();
+  });
+
   it("resets the selected example state", () => {
     render(<EventLoopVisualizer />);
 
