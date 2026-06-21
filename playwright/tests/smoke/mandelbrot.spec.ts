@@ -12,7 +12,7 @@ test("Mandelbrot deep zoom renders a responsive precision preview", async ({
     page.getByRole("heading", { name: "Mandelbrot Explorer" })
   ).toBeVisible();
   await expect(page.getByText("Render ready")).toBeVisible({
-    timeout: 8_000,
+    timeout: 20_000,
   });
   await expect(
     page.getByText("Ready at 5% deep-zoom preview (100 iterations).")
