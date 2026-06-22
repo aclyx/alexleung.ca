@@ -45,6 +45,8 @@ const isBusType = (value: string): value is BusType =>
 const isBranchStatus = (value: string): value is BranchStatus =>
   BRANCH_STATUS_OPTIONS.some((status) => status === value);
 
+const formatBranchFlowValue = (value: number) => value.toFixed(2);
+
 export function LoadFlowWorkspace() {
   const defaultReferenceScenario = getReferenceScenarioById("ieee-14-bus");
   const [editorState, setEditorState] = useState(() =>
@@ -670,31 +672,135 @@ export function LoadFlowWorkspace() {
           {solveResult.diagnostics.message}
         </p>
         {solveResult.buses ? (
-          <div className="mt-3 overflow-auto">
-            <table className="min-w-full text-left text-xs text-gray-200">
-              <thead>
-                <tr>
-                  <th className="pr-3">Bus</th>
-                  <th className="pr-3">|V| (pu)</th>
-                  <th className="pr-3">θ (deg)</th>
-                  <th className="pr-3">P inj (pu)</th>
-                  <th>Q inj (pu)</th>
-                </tr>
-              </thead>
-              <tbody>
-                {solveResult.buses.map((bus) => (
-                  <tr key={bus.busId}>
-                    <td className="pr-3">{bus.busId}</td>
-                    <td className="pr-3">
-                      {bus.voltageMagnitudePu.toFixed(4)}
-                    </td>
-                    <td className="pr-3">{bus.voltageAngleDeg.toFixed(3)}</td>
-                    <td className="pr-3">{bus.pInjectionPu.toFixed(4)}</td>
-                    <td>{bus.qInjectionPu.toFixed(4)}</td>
+          <div className="mt-4">
+            <h4 className="text-sm font-semibold text-gray-100">
+              Bus voltages and injections
+            </h4>
+            <div className="mt-3 overflow-auto rounded-md border border-gray-700">
+              <table className="min-w-full text-left text-xs text-gray-200">
+                <caption className="sr-only">
+                  Bus voltages and injections
+                </caption>
+                <thead className="bg-gray-950/70 text-gray-300">
+                  <tr>
+                    <th className="px-3 py-2">Bus</th>
+                    <th className="px-3 py-2">|V| (pu)</th>
+                    <th className="px-3 py-2">θ (deg)</th>
+                    <th className="px-3 py-2">P inj (pu)</th>
+                    <th className="px-3 py-2">Q inj (pu)</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
+                </thead>
+                <tbody className="divide-y divide-gray-800">
+                  {solveResult.buses.map((bus) => (
+                    <tr key={bus.busId}>
+                      <td className="px-3 py-2 font-medium text-white">
+                        {bus.busId}
+                      </td>
+                      <td className="px-3 py-2 tabular-nums">
+                        {bus.voltageMagnitudePu.toFixed(4)}
+                      </td>
+                      <td className="px-3 py-2 tabular-nums">
+                        {bus.voltageAngleDeg.toFixed(3)}
+                      </td>
+                      <td className="px-3 py-2 tabular-nums">
+                        {bus.pInjectionPu.toFixed(4)}
+                      </td>
+                      <td className="px-3 py-2 tabular-nums">
+                        {bus.qInjectionPu.toFixed(4)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        ) : null}
+        {solveResult.branchFlows?.length ? (
+          <div className="mt-5">
+            <h4 className="text-sm font-semibold text-gray-100">
+              Branch flows and losses
+            </h4>
+            <p className="mt-1 text-xs text-gray-400">
+              Positive direction follows each configured from-bus → to-bus path;
+              reverse columns show the solved receiving-end flow.
+            </p>
+            <div className="mt-3 overflow-auto rounded-md border border-gray-700">
+              <table className="min-w-full text-left text-xs text-gray-200">
+                <caption className="sr-only">Branch flows and losses</caption>
+                <thead className="text-gray-300">
+                  <tr>
+                    <th
+                      rowSpan={2}
+                      className="bg-gray-950/70 px-3 py-2 align-bottom"
+                    >
+                      Branch
+                    </th>
+                    <th
+                      rowSpan={2}
+                      className="bg-gray-950/70 px-3 py-2 align-bottom"
+                    >
+                      Path
+                    </th>
+                    <th
+                      colSpan={2}
+                      className="bg-gray-950/70 px-3 py-2 text-center"
+                    >
+                      From → To
+                    </th>
+                    <th
+                      colSpan={2}
+                      className="bg-gray-950/70 px-3 py-2 text-center"
+                    >
+                      To → From
+                    </th>
+                    <th
+                      colSpan={2}
+                      className="bg-gray-950/70 px-3 py-2 text-center"
+                    >
+                      Loss
+                    </th>
+                  </tr>
+                  <tr className="bg-gray-950/70 text-gray-300">
+                    <th className="px-3 py-2 text-right">MW</th>
+                    <th className="px-3 py-2 text-right">MVar</th>
+                    <th className="px-3 py-2 text-right">MW</th>
+                    <th className="px-3 py-2 text-right">MVar</th>
+                    <th className="px-3 py-2 text-right">MW</th>
+                    <th className="px-3 py-2 text-right">MVar</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-800">
+                  {solveResult.branchFlows.map((branchFlow) => (
+                    <tr key={branchFlow.branchId}>
+                      <td className="whitespace-nowrap px-3 py-2 font-medium text-white">
+                        {branchFlow.branchId}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-2 text-gray-300">
+                        {branchFlow.fromBusId} → {branchFlow.toBusId}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {formatBranchFlowValue(branchFlow.pFromToMW)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {formatBranchFlowValue(branchFlow.qFromToMVar)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {formatBranchFlowValue(branchFlow.pToFromMW)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums">
+                        {formatBranchFlowValue(branchFlow.qToFromMVar)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-emerald-100">
+                        {formatBranchFlowValue(branchFlow.pLossMW)}
+                      </td>
+                      <td className="px-3 py-2 text-right tabular-nums text-emerald-100">
+                        {formatBranchFlowValue(branchFlow.qLossMVar)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
           </div>
         ) : null}
       </div>
