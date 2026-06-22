@@ -13,6 +13,7 @@ import {
 } from "@/features/mandelbrot/mandelbrot";
 import { colorEscapeResult } from "@/features/mandelbrot/palettes";
 import {
+  EscapeResult,
   RenderBackend,
   RenderBackendPreference,
   RenderRequest,
@@ -25,11 +26,30 @@ import {
 
 const DECIMAL_ROWS_PER_CHUNK = 1;
 const NUMBER_ROWS_PER_CHUNK = 20;
+const PERTURBATION_TILE_SIZE = 160;
 
 type RenderExecutionResult = {
   completed: boolean;
   backend: RenderBackend;
   gpuFallbackReason?: string;
+};
+
+type DecimalCoordinate = RenderRequest["viewport"]["centerX"];
+type PerturbationReferenceOrbit = ReturnType<
+  typeof createPerturbationReferenceOrbit
+>;
+
+type PerturbationTileReference = {
+  deltaXStartNumber: number;
+  deltaYStartNumber: number;
+  orbit: PerturbationReferenceOrbit;
+  startX: number;
+  startY: number;
+};
+
+type PerturbationTileGrid = {
+  tileSize: number;
+  tiles: PerturbationTileReference[][];
 };
 
 export function shouldAttemptWebGpu(
@@ -59,6 +79,202 @@ function nextFrame(): Promise<void> {
 
     setTimeout(resolve, 0);
   });
+}
+
+function mapPixelCenterFromGrid(
+  left: DecimalCoordinate,
+  top: DecimalCoordinate,
+  stepX: DecimalCoordinate,
+  stepY: DecimalCoordinate,
+  x: number,
+  y: number
+) {
+  return {
+    real: left.add(stepX.mul(x + 0.5)),
+    imaginary: top.sub(stepY.mul(y + 0.5)),
+  };
+}
+
+function tileReferenceCandidates(
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number
+) {
+  const maxX = endX - 1;
+  const maxY = endY - 1;
+  const centerX = Math.floor((startX + maxX) / 2);
+  const centerY = Math.floor((startY + maxY) / 2);
+  const candidates = [
+    { x: centerX, y: centerY },
+    { x: startX, y: startY },
+    { x: maxX, y: startY },
+    { x: startX, y: maxY },
+    { x: maxX, y: maxY },
+  ];
+  const seen = new Set<string>();
+
+  return candidates.filter((candidate) => {
+    const key = `${candidate.x}:${candidate.y}`;
+
+    if (seen.has(key)) {
+      return false;
+    }
+
+    seen.add(key);
+    return true;
+  });
+}
+
+function selectPerturbationReference(
+  left: DecimalCoordinate,
+  top: DecimalCoordinate,
+  stepX: DecimalCoordinate,
+  stepY: DecimalCoordinate,
+  startX: number,
+  startY: number,
+  endX: number,
+  endY: number,
+  maxIterations: number
+) {
+  let best: {
+    point: ReturnType<typeof mapPixelCenterFromGrid>;
+    orbit: PerturbationReferenceOrbit;
+    score: number;
+  } | null = null;
+
+  for (const candidate of tileReferenceCandidates(startX, startY, endX, endY)) {
+    const point = mapPixelCenterFromGrid(
+      left,
+      top,
+      stepX,
+      stepY,
+      candidate.x,
+      candidate.y
+    );
+    const orbit = createPerturbationReferenceOrbit(
+      point.real,
+      point.imaginary,
+      maxIterations
+    );
+    const score = orbit.usable ? orbit.points.length - 1 : -1;
+
+    if (!best || score > best.score) {
+      best = {
+        point,
+        orbit,
+        score,
+      };
+    }
+
+    if (orbit.usable && orbit.escapedAt === null) {
+      break;
+    }
+  }
+
+  return best;
+}
+
+async function createPerturbationTileGrid({
+  left,
+  top,
+  stepX,
+  stepY,
+  safeWidth,
+  safeHeight,
+  maxIterations,
+  signal,
+}: {
+  left: DecimalCoordinate;
+  top: DecimalCoordinate;
+  stepX: DecimalCoordinate;
+  stepY: DecimalCoordinate;
+  safeWidth: number;
+  safeHeight: number;
+  maxIterations: number;
+  signal?: AbortSignal;
+}): Promise<PerturbationTileGrid | null> {
+  const tiles: PerturbationTileReference[][] = [];
+
+  for (let startY = 0; startY < safeHeight; startY += PERTURBATION_TILE_SIZE) {
+    if (signal?.aborted) {
+      return null;
+    }
+
+    const endY = Math.min(startY + PERTURBATION_TILE_SIZE, safeHeight);
+    const tileRow: PerturbationTileReference[] = [];
+
+    for (let startX = 0; startX < safeWidth; startX += PERTURBATION_TILE_SIZE) {
+      if (signal?.aborted) {
+        return null;
+      }
+
+      const endX = Math.min(startX + PERTURBATION_TILE_SIZE, safeWidth);
+      const reference = selectPerturbationReference(
+        left,
+        top,
+        stepX,
+        stepY,
+        startX,
+        startY,
+        endX,
+        endY,
+        maxIterations
+      );
+
+      if (!reference) {
+        return null;
+      }
+
+      const firstPixel = mapPixelCenterFromGrid(
+        left,
+        top,
+        stepX,
+        stepY,
+        startX,
+        startY
+      );
+      const deltaXStartNumber = firstPixel.real
+        .sub(reference.point.real)
+        .toNumber();
+      const deltaYStartNumber = firstPixel.imaginary
+        .sub(reference.point.imaginary)
+        .toNumber();
+
+      if (
+        !Number.isFinite(deltaXStartNumber) ||
+        !Number.isFinite(deltaYStartNumber)
+      ) {
+        return null;
+      }
+
+      tileRow.push({
+        deltaXStartNumber,
+        deltaYStartNumber,
+        orbit: reference.orbit,
+        startX,
+        startY,
+      });
+    }
+
+    tiles.push(tileRow);
+    await nextFrame();
+  }
+
+  return {
+    tileSize: PERTURBATION_TILE_SIZE,
+    tiles,
+  };
+}
+
+function perturbationTileForPixel(
+  tileGrid: PerturbationTileGrid,
+  x: number,
+  y: number
+) {
+  return tileGrid.tiles[Math.floor(y / tileGrid.tileSize)]?.[
+    Math.floor(x / tileGrid.tileSize)
+  ];
 }
 
 async function renderMandelbrot({
@@ -102,12 +318,17 @@ async function renderMandelbrot({
     Number.isFinite(stepYNumber) &&
     stepXNumber > 0 &&
     stepYNumber > 0;
-  const perturbationReferenceOrbit = usePerturbationIteration
-    ? createPerturbationReferenceOrbit(
-        viewport.centerX,
-        viewport.centerY,
-        settings.maxIterations
-      )
+  const perturbationTileGrid = usePerturbationIteration
+    ? await createPerturbationTileGrid({
+        left,
+        top,
+        stepX,
+        stepY,
+        safeWidth,
+        safeHeight,
+        maxIterations: settings.maxIterations,
+        signal,
+      })
     : null;
   let row = 0;
 
@@ -131,27 +352,31 @@ async function renderMandelbrot({
           return false;
         }
 
-        const result =
-          usePerturbationIteration && perturbationReferenceOrbit?.usable
+        let result: EscapeResult;
+
+        if (usePerturbationIteration && perturbationTileGrid) {
+          const tile = perturbationTileForPixel(perturbationTileGrid, x, y);
+          const perturbationResult = tile
             ? iterateMandelbrotPerturbation(
-                deltaXStartNumber + stepXNumber * x,
-                deltaYStartNumber - stepYNumber * y,
-                perturbationReferenceOrbit,
+                tile.deltaXStartNumber + stepXNumber * (x - tile.startX),
+                tile.deltaYStartNumber - stepYNumber * (y - tile.startY),
+                tile.orbit,
                 settings.maxIterations
               )
-            : useNumberIteration
-              ? iterateMandelbrotNumber(
-                  leftNumber + stepXNumber * (x + 0.5),
-                  topNumber - stepYNumber * (y + 0.5),
-                  settings.maxIterations
-                )
-              : renderDecimalPixel(
-                  viewport,
-                  size,
-                  x,
-                  y,
-                  settings.maxIterations
-                );
+            : null;
+
+          result =
+            perturbationResult ??
+            renderDecimalPixel(viewport, size, x, y, settings.maxIterations);
+        } else {
+          result = useNumberIteration
+            ? iterateMandelbrotNumber(
+                leftNumber + stepXNumber * (x + 0.5),
+                topNumber - stepYNumber * (y + 0.5),
+                settings.maxIterations
+              )
+            : renderDecimalPixel(viewport, size, x, y, settings.maxIterations);
+        }
         const [red, green, blue, alpha] = colorEscapeResult(
           result,
           settings.maxIterations,

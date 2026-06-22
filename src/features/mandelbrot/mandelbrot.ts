@@ -14,7 +14,10 @@ type PerturbationOrbitPoint = {
 };
 
 type PerturbationReferenceOrbit = {
+  referenceCx: number;
+  referenceCy: number;
   points: PerturbationOrbitPoint[];
+  escapedAt: number | null;
   usable: boolean;
 };
 
@@ -57,6 +60,48 @@ function escapedResultNumber(
     escaped: true,
     iterations,
     smoothIteration: smoothEscapeValueNumber(iterations, magnitudeSquared),
+  };
+}
+
+function continueMandelbrotNumber(
+  cx: number,
+  cy: number,
+  zx: number,
+  zy: number,
+  startIteration: number,
+  maxIterations: number
+): EscapeResult {
+  let currentZx = zx;
+  let currentZy = zy;
+
+  for (
+    let iteration = startIteration;
+    iteration < maxIterations;
+    iteration += 1
+  ) {
+    const zxSquared = currentZx * currentZx;
+    const zySquared = currentZy * currentZy;
+    const nextZy = 2 * currentZx * currentZy + cy;
+    const nextZx = zxSquared - zySquared + cx;
+
+    currentZx = nextZx;
+    currentZy = nextZy;
+
+    const magnitudeSquared = currentZx * currentZx + currentZy * currentZy;
+
+    if (!Number.isFinite(magnitudeSquared)) {
+      return escapedResultNumber(iteration + 1, Number.MAX_VALUE);
+    }
+
+    if (magnitudeSquared > ESCAPE_RADIUS_SQUARED_NUMBER) {
+      return escapedResultNumber(iteration + 1, magnitudeSquared);
+    }
+  }
+
+  return {
+    escaped: false,
+    iterations: maxIterations,
+    smoothIteration: maxIterations,
   };
 }
 
@@ -131,9 +176,21 @@ export function createPerturbationReferenceOrbit(
   cy: Decimal,
   maxIterations: number
 ): PerturbationReferenceOrbit {
+  const referenceCx = cx.toNumber();
+  const referenceCy = cy.toNumber();
   let zx = new Decimal(0);
   let zy = new Decimal(0);
   const points: PerturbationOrbitPoint[] = [{ real: 0, imaginary: 0 }];
+
+  if (!Number.isFinite(referenceCx) || !Number.isFinite(referenceCy)) {
+    return {
+      escapedAt: null,
+      points,
+      referenceCx,
+      referenceCy,
+      usable: false,
+    };
+  }
 
   for (let iteration = 0; iteration < maxIterations; iteration += 1) {
     const zxSquared = zx.mul(zx);
@@ -145,7 +202,10 @@ export function createPerturbationReferenceOrbit(
 
     if (!Number.isFinite(real) || !Number.isFinite(imaginary)) {
       return {
+        escapedAt: null,
         points,
+        referenceCx,
+        referenceCy,
         usable: false,
       };
     }
@@ -158,14 +218,20 @@ export function createPerturbationReferenceOrbit(
 
     if (magnitudeSquared.gt(ESCAPE_RADIUS_SQUARED)) {
       return {
+        escapedAt: iteration + 1,
         points,
+        referenceCx,
+        referenceCy,
         usable: true,
       };
     }
   }
 
   return {
+    escapedAt: null,
     points,
+    referenceCx,
+    referenceCy,
     usable: true,
   };
 }
@@ -186,6 +252,8 @@ export function iterateMandelbrotPerturbation(
 
   let deltaZx = 0;
   let deltaZy = 0;
+  let zx = 0;
+  let zy = 0;
   const iterationLimit = Math.min(
     maxIterations,
     referenceOrbit.points.length - 1
@@ -209,8 +277,9 @@ export function iterateMandelbrotPerturbation(
     deltaZx = nextDeltaZx;
     deltaZy = nextDeltaZy;
 
-    const zx = referenceNextZ.real + deltaZx;
-    const zy = referenceNextZ.imaginary + deltaZy;
+    zx = referenceNextZ.real + deltaZx;
+    zy = referenceNextZ.imaginary + deltaZy;
+
     const magnitudeSquared = zx * zx + zy * zy;
 
     if (!Number.isFinite(magnitudeSquared)) {
@@ -220,6 +289,17 @@ export function iterateMandelbrotPerturbation(
     if (magnitudeSquared > ESCAPE_RADIUS_SQUARED_NUMBER) {
       return escapedResultNumber(iteration + 1, magnitudeSquared);
     }
+  }
+
+  if (iterationLimit < maxIterations) {
+    return continueMandelbrotNumber(
+      referenceOrbit.referenceCx + deltaCx,
+      referenceOrbit.referenceCy + deltaCy,
+      zx,
+      zy,
+      iterationLimit,
+      maxIterations
+    );
   }
 
   return {

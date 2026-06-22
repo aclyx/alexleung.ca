@@ -71,8 +71,8 @@ describe("mandelbrot escape-time logic", () => {
   });
 
   it("matches the decimal path for tiny perturbations around a reference orbit", () => {
-    const centerX = new Decimal("-0.75");
-    const centerY = new Decimal("0.1");
+    const centerX = new Decimal("-0.743643887037151");
+    const centerY = new Decimal("0.13182590420533");
     const width = new Decimal("1e-13");
     const height = new Decimal("6.25e-14");
     const size = { width: 9, height: 5 };
@@ -123,6 +123,24 @@ describe("mandelbrot escape-time logic", () => {
         );
       }
     }
+  });
+
+  it("continues iterating when a pixel outlives its reference orbit", () => {
+    const orbit = createPerturbationReferenceOrbit(
+      new Decimal("0.5"),
+      new Decimal("0.5"),
+      64
+    );
+    const originFromEscapingReference = iterateMandelbrotPerturbation(
+      -0.5,
+      -0.5,
+      orbit,
+      64
+    );
+
+    expect(orbit.escapedAt).toBeLessThan(64);
+    expect(originFromEscapingReference.escaped).toBe(false);
+    expect(originFromEscapingReference.iterations).toBe(64);
   });
 
   it("switches to the decimal escape path only once zoom depth is small enough", () => {

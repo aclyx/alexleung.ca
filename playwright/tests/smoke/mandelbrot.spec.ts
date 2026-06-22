@@ -1,11 +1,58 @@
+import type { Page } from "@playwright/test";
+
 import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
 
 const deepZoomPath =
   "/experimental/mandelbrot/?cx=-0.743643887045151&cy=0.13182590421333&w=1e-13&iter=2000&quality=1";
 
+async function sampledMandelbrotColorCount(page: Page) {
+  return page
+    .getByLabel("Mandelbrot set rendering canvas")
+    .evaluate((canvas) => {
+      if (!(canvas instanceof HTMLCanvasElement)) {
+        return 0;
+      }
+
+      const context = canvas.getContext("2d");
+
+      if (!context || canvas.width === 0 || canvas.height === 0) {
+        return 0;
+      }
+
+      const colors = new Set<string>();
+      const columns = 32;
+      const rows = 16;
+
+      for (let y = 0; y < rows; y += 1) {
+        for (let x = 0; x < columns; x += 1) {
+          const pixelX = Math.min(
+            canvas.width - 1,
+            Math.floor(((x + 0.5) * canvas.width) / columns)
+          );
+          const pixelY = Math.min(
+            canvas.height - 1,
+            Math.floor(((y + 0.5) * canvas.height) / rows)
+          );
+          const [red, green, blue, alpha] = context.getImageData(
+            pixelX,
+            pixelY,
+            1,
+            1
+          ).data;
+
+          colors.add(`${red},${green},${blue},${alpha}`);
+        }
+      }
+
+      return colors.size;
+    });
+}
+
 test("Mandelbrot deep zoom renders a responsive precision preview", async ({
   page,
 }) => {
+  test.setTimeout(60_000);
+
   await gotoAndStabilize(page, deepZoomPath);
 
   await expect(
@@ -23,47 +70,39 @@ test("Mandelbrot deep zoom renders a responsive precision preview", async ({
   await expect(page.getByTestId("mandelbrot-width")).toHaveText(
     "0.0000000000001"
   );
-  const sampledColorCount = await page
-    .getByLabel("Mandelbrot set rendering canvas")
-    .evaluate((canvas) => {
-      if (!(canvas instanceof HTMLCanvasElement)) {
-        return 0;
-      }
+  const sampledColorCount = await sampledMandelbrotColorCount(page);
 
-      const context = canvas.getContext("2d");
+  expect(sampledColorCount).toBeGreaterThan(20);
 
-      if (!context || canvas.width === 0 || canvas.height === 0) {
-        return 0;
-      }
+  const canvas = page.getByLabel("Mandelbrot set rendering canvas");
+  const canvasBox = await canvas.boundingBox();
 
-      const colors = new Set<string>();
-      const sampleFractions = [0.2, 0.4, 0.6, 0.8];
+  expect(canvasBox).not.toBeNull();
 
-      for (const yFraction of sampleFractions) {
-        for (const xFraction of sampleFractions) {
-          const x = Math.min(
-            canvas.width - 1,
-            Math.max(0, Math.floor(canvas.width * xFraction))
-          );
-          const y = Math.min(
-            canvas.height - 1,
-            Math.max(0, Math.floor(canvas.height * yFraction))
-          );
-          const [red, green, blue, alpha] = context.getImageData(
-            x,
-            y,
-            1,
-            1
-          ).data;
+  if (!canvasBox) {
+    return;
+  }
 
-          colors.add(`${red},${green},${blue},${alpha}`);
-        }
-      }
+  await page.mouse.click(
+    canvasBox.x + canvasBox.width / 2,
+    canvasBox.y + canvasBox.height / 2
+  );
+  await expect(page.getByTestId("mandelbrot-width")).toHaveText(
+    "0.00000000000005"
+  );
+  await page
+    .getByText("Rendering perturbation deep-zoom frame...")
+    .waitFor({ state: "visible", timeout: 5_000 })
+    .catch(() => undefined);
+  await expect(
+    page.getByText(
+      "Ready at 100% perturbation deep-zoom render (2000 iterations)."
+    )
+  ).toBeVisible({
+    timeout: 20_000,
+  });
 
-      return colors.size;
-    });
-
-  expect(sampledColorCount).toBeGreaterThan(1);
+  expect(await sampledMandelbrotColorCount(page)).toBeGreaterThan(20);
 
   const plotControls = page.getByText("Plot controls").locator("xpath=..");
   const zoomButton = page.getByRole("button", { name: "Zoom in" }).first();
