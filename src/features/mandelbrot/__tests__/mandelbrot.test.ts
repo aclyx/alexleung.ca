@@ -160,6 +160,7 @@ describe("mandelbrot escape-time logic", () => {
       orbit,
       64,
       () => ({
+        kind: "number",
         cx: 0,
         cy: 0,
       })
@@ -168,6 +169,46 @@ describe("mandelbrot escape-time logic", () => {
     expect(originFromEscapingReference).not.toBeNull();
     expect(originFromEscapingReference?.escaped).toBe(false);
     expect(originFromEscapingReference?.iterations).toBe(64);
+  });
+
+  it("can continue an escaped reference with an exact Decimal coordinate", () => {
+    const orbit = createPerturbationReferenceOrbit(
+      new Decimal("0.5"),
+      new Decimal("0.5"),
+      64
+    );
+    const originFromEscapingReference = iterateMandelbrotPerturbation(
+      -0.5,
+      -0.5,
+      orbit,
+      64,
+      () => ({
+        kind: "decimal",
+        cx: new Decimal(0),
+        cy: new Decimal(0),
+      })
+    );
+
+    expect(originFromEscapingReference).not.toBeNull();
+    expect(originFromEscapingReference?.escaped).toBe(false);
+    expect(originFromEscapingReference?.iterations).toBe(64);
+  });
+
+  it("falls back when escaped reference continuation has no safe numeric point", () => {
+    const orbit = createPerturbationReferenceOrbit(
+      new Decimal("0.5"),
+      new Decimal("0.5"),
+      64
+    );
+    const originFromEscapingReference = iterateMandelbrotPerturbation(
+      -0.5,
+      -0.5,
+      orbit,
+      64,
+      () => null
+    );
+
+    expect(originFromEscapingReference).toBeNull();
   });
 
   it("falls back when the reference orbit is unusable", () => {

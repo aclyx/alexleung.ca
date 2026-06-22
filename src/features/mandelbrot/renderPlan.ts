@@ -29,6 +29,8 @@ const PERTURBATION_ITERATIONS_PER_MAGNITUDE = 100;
 const PERTURBATION_ITERATION_STEP = 25;
 const PERTURBATION_MAX_ITERATIONS = 12000;
 const PERTURBATION_AUTO_ITERATION_SCALE = 0.5;
+const EXTREME_PERTURBATION_EXPONENT = -30;
+const EXTREME_PERTURBATION_AUTO_ITERATION_SCALE = 0.35;
 
 function widthExponent(width: PreciseViewport["width"]): number {
   const [, exponentText = "0"] = width.toExponential().split("e");
@@ -58,13 +60,18 @@ export function createMandelbrotRenderPlan(
   settings: MandelbrotSettings
 ): MandelbrotRenderPlan {
   if (shouldUsePerturbationIteration(viewport.width)) {
+    const exponent = widthExponent(viewport.width);
+    const autoIterationScale =
+      exponent <= EXTREME_PERTURBATION_EXPONENT
+        ? EXTREME_PERTURBATION_AUTO_ITERATION_SCALE
+        : PERTURBATION_AUTO_ITERATION_SCALE;
     const maxIterations = Math.max(
       settings.maxIterations,
       recommendedPerturbationIterations(viewport.width)
     );
     const scale =
       maxIterations > settings.maxIterations
-        ? Math.min(settings.resolutionScale, PERTURBATION_AUTO_ITERATION_SCALE)
+        ? Math.min(settings.resolutionScale, autoIterationScale)
         : settings.resolutionScale;
     const effectiveSettings =
       maxIterations === settings.maxIterations

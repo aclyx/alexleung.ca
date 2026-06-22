@@ -8,6 +8,7 @@ import {
   iterateMandelbrot,
   iterateMandelbrotNumber,
   iterateMandelbrotPerturbation,
+  PerturbationContinuationPoint,
   shouldUseNumberIteration,
   shouldUsePerturbationIteration,
 } from "@/features/mandelbrot/mandelbrot";
@@ -29,6 +30,8 @@ const NUMBER_ROWS_PER_CHUNK = 20;
 const DEFAULT_PERTURBATION_TILE_SIZE = 160;
 const DEEP_PERTURBATION_TILE_SIZE = 32;
 const DEEP_PERTURBATION_TILE_EXPONENT = -24;
+const MAX_SAFE_CONTINUATION_PIXEL_ERROR_RATIO = 0.5;
+const MAX_FAST_CONTINUATION_PIXEL_ERROR_RATIO = 1.5;
 
 type RenderExecutionResult = {
   completed: boolean;
@@ -290,6 +293,105 @@ function perturbationTileForPixel(
   ];
 }
 
+function toPixelCoordinateNumber(
+  value: DecimalCoordinate,
+  pixelStep: DecimalCoordinate,
+  maxPixelErrorRatio: number
+): number | null {
+  const coordinate = value.toNumber();
+
+  if (!Number.isFinite(coordinate) || pixelStep.lte(0)) {
+    return null;
+  }
+
+  const roundingError = value.sub(precise(coordinate)).abs();
+  const maxAllowedError = pixelStep.abs().mul(maxPixelErrorRatio);
+
+  return roundingError.lte(maxAllowedError) ? coordinate : null;
+}
+
+export function toSafePixelCoordinateNumber(
+  value: DecimalCoordinate,
+  pixelStep: DecimalCoordinate
+): number | null {
+  return toPixelCoordinateNumber(
+    value,
+    pixelStep,
+    MAX_SAFE_CONTINUATION_PIXEL_ERROR_RATIO
+  );
+}
+
+function toFastPixelCoordinateNumber(
+  value: DecimalCoordinate,
+  pixelStep: DecimalCoordinate
+): number | null {
+  return toPixelCoordinateNumber(
+    value,
+    pixelStep,
+    MAX_FAST_CONTINUATION_PIXEL_ERROR_RATIO
+  );
+}
+
+function numberContinuationPoint(
+  cx: number,
+  cy: number
+): PerturbationContinuationPoint {
+  return {
+    kind: "number",
+    cx,
+    cy,
+  };
+}
+
+function continuationPointForPixel(
+  left: DecimalCoordinate,
+  top: DecimalCoordinate,
+  stepX: DecimalCoordinate,
+  stepY: DecimalCoordinate,
+  x: number,
+  y: number
+): PerturbationContinuationPoint {
+  const point = mapPixelCenterFromGrid(left, top, stepX, stepY, x, y);
+  const cx = toSafePixelCoordinateNumber(point.real, stepX);
+  const cy = toSafePixelCoordinateNumber(point.imaginary, stepY);
+
+  if (cx !== null && cy !== null) {
+    return numberContinuationPoint(cx, cy);
+  }
+
+  return {
+    kind: "decimal",
+    cx: point.real,
+    cy: point.imaginary,
+  };
+}
+
+function canUseFastNumberContinuation(
+  left: DecimalCoordinate,
+  top: DecimalCoordinate,
+  stepX: DecimalCoordinate,
+  stepY: DecimalCoordinate,
+  safeWidth: number,
+  safeHeight: number
+): boolean {
+  const sampleXs = [0, Math.floor(safeWidth / 2), safeWidth - 1];
+  const sampleYs = [0, Math.floor(safeHeight / 2), safeHeight - 1];
+
+  return sampleXs.every((x) => {
+    const real = left.add(stepX.mul(x + 0.5));
+    const cx = toFastPixelCoordinateNumber(real, stepX);
+
+    return (
+      cx !== null &&
+      sampleYs.every((y) => {
+        const imaginary = top.sub(stepY.mul(y + 0.5));
+
+        return toFastPixelCoordinateNumber(imaginary, stepY) !== null;
+      })
+    );
+  });
+}
+
 async function renderMandelbrot({
   viewport,
   size,
@@ -331,6 +433,16 @@ async function renderMandelbrot({
     Number.isFinite(stepYNumber) &&
     stepXNumber > 0 &&
     stepYNumber > 0;
+  const useFastNumberContinuation =
+    usePerturbationIteration &&
+    canUseFastNumberContinuation(
+      left,
+      top,
+      stepX,
+      stepY,
+      safeWidth,
+      safeHeight
+    );
   const perturbationTileSize = perturbationTileSizeForWidth(viewport.width);
   const perturbationTileGrid = usePerturbationIteration
     ? await createPerturbationTileGrid({
@@ -377,10 +489,13 @@ async function renderMandelbrot({
                 tile.deltaYStartNumber - stepYNumber * (y - tile.startY),
                 tile.orbit,
                 settings.maxIterations,
-                () => ({
-                  cx: leftNumber + stepXNumber * (x + 0.5),
-                  cy: topNumber - stepYNumber * (y + 0.5),
-                })
+                () =>
+                  useFastNumberContinuation
+                    ? numberContinuationPoint(
+                        leftNumber + stepXNumber * (x + 0.5),
+                        topNumber - stepYNumber * (y + 0.5)
+                      )
+                    : continuationPointForPixel(left, top, stepX, stepY, x, y)
               )
             : null;
 

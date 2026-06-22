@@ -143,7 +143,7 @@ test("Mandelbrot 1e32x zoom keeps visible detail", async ({
 
   await expect(
     page.getByText(
-      "Ready at 50% perturbation deep-zoom render (3800 iterations)."
+      "Ready at 35% perturbation deep-zoom render (3800 iterations)."
     )
   ).toBeVisible({
     timeout: 45_000,

@@ -19,10 +19,20 @@ type PerturbationReferenceOrbit = {
   usable: boolean;
 };
 
-type PerturbationContinuationPoint = {
-  cx: number;
-  cy: number;
-};
+export type PerturbationContinuationPoint =
+  | {
+      kind: "number";
+      cx: number;
+      cy: number;
+    }
+  | {
+      kind: "decimal";
+      cx: Decimal;
+      cy: Decimal;
+    };
+
+type PerturbationContinuationPointGetter =
+  () => PerturbationContinuationPoint | null;
 
 function smoothEscapeValue(
   iterations: number,
@@ -97,6 +107,48 @@ function continueMandelbrotNumber(
 
     if (magnitudeSquared > ESCAPE_RADIUS_SQUARED_NUMBER) {
       return escapedResultNumber(iteration + 1, magnitudeSquared);
+    }
+  }
+
+  return {
+    escaped: false,
+    iterations: maxIterations,
+    smoothIteration: maxIterations,
+  };
+}
+
+function continueMandelbrotDecimal(
+  cx: Decimal,
+  cy: Decimal,
+  zx: number,
+  zy: number,
+  startIteration: number,
+  maxIterations: number
+): EscapeResult {
+  let currentZx = new Decimal(zx);
+  let currentZy = new Decimal(zy);
+  let magnitudeSquared = currentZx.mul(currentZx).add(currentZy.mul(currentZy));
+
+  for (
+    let iteration = startIteration;
+    iteration < maxIterations;
+    iteration += 1
+  ) {
+    const zxSquared = currentZx.mul(currentZx);
+    const zySquared = currentZy.mul(currentZy);
+    const nextZy = currentZx.mul(currentZy).mul(2).add(cy);
+    const nextZx = zxSquared.sub(zySquared).add(cx);
+
+    currentZx = nextZx;
+    currentZy = nextZy;
+    magnitudeSquared = currentZx.mul(currentZx).add(currentZy.mul(currentZy));
+
+    if (magnitudeSquared.gt(ESCAPE_RADIUS_SQUARED)) {
+      return {
+        escaped: true,
+        iterations: iteration + 1,
+        smoothIteration: smoothEscapeValue(iteration + 1, magnitudeSquared),
+      };
     }
   }
 
@@ -225,7 +277,7 @@ export function iterateMandelbrotPerturbation(
   deltaCy: number,
   referenceOrbit: PerturbationReferenceOrbit,
   maxIterations: number,
-  getContinuationPoint?: () => PerturbationContinuationPoint
+  getContinuationPoint?: PerturbationContinuationPointGetter
 ): EscapeResult | null {
   if (!referenceOrbit.usable || referenceOrbit.points.length < 2) {
     return null;
@@ -275,7 +327,11 @@ export function iterateMandelbrotPerturbation(
   if (iterationLimit < maxIterations) {
     const continuationPoint = getContinuationPoint?.();
 
-    return continuationPoint
+    if (!continuationPoint) {
+      return null;
+    }
+
+    return continuationPoint.kind === "number"
       ? continueMandelbrotNumber(
           continuationPoint.cx,
           continuationPoint.cy,
@@ -284,7 +340,14 @@ export function iterateMandelbrotPerturbation(
           iterationLimit,
           maxIterations
         )
-      : null;
+      : continueMandelbrotDecimal(
+          continuationPoint.cx,
+          continuationPoint.cy,
+          zx,
+          zy,
+          iterationLimit,
+          maxIterations
+        );
   }
 
   return {
