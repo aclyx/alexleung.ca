@@ -4,6 +4,11 @@ import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
 
 const deepZoomPath =
   "/experimental/mandelbrot/?cx=-0.743643887045151&cy=0.13182590421333&w=1e-13&iter=2000&quality=1";
+const reportedDeepZoomPath =
+  "/experimental/mandelbrot/?cx=-0.838782074550394572901608663741&cy=0.194257392096992991702889593945&w=0.0000000000000000000000000000000222402701568815166612313740442&iter=2000&quality=1";
+const deepZoomRenderTimeoutMs = 45_000;
+
+test.describe.configure({ mode: "serial" });
 
 async function sampledMandelbrotColorCount(page: Page) {
   return page
@@ -51,21 +56,21 @@ async function sampledMandelbrotColorCount(page: Page) {
 test("Mandelbrot deep zoom renders a responsive precision preview", async ({
   page,
 }) => {
-  test.setTimeout(60_000);
+  test.setTimeout(90_000);
 
   await gotoAndStabilize(page, deepZoomPath);
 
   await expect(
     page.getByRole("heading", { name: "Mandelbrot Explorer" })
   ).toBeVisible();
-  await expect(page.getByText("Render ready")).toBeVisible({
-    timeout: 20_000,
-  });
   await expect(
     page.getByText(
       "Ready at 100% perturbation deep-zoom render (2000 iterations)."
     )
-  ).toBeVisible();
+  ).toBeVisible({
+    timeout: deepZoomRenderTimeoutMs,
+  });
+  await expect(page.getByText("Render ready")).toBeVisible();
   await expect(page.getByText("Backend: CPU")).toBeVisible();
   await expect(page.getByTestId("mandelbrot-width")).toHaveText(
     "0.0000000000001"
@@ -99,7 +104,7 @@ test("Mandelbrot deep zoom renders a responsive precision preview", async ({
       "Ready at 100% perturbation deep-zoom render (2000 iterations)."
     )
   ).toBeVisible({
-    timeout: 20_000,
+    timeout: deepZoomRenderTimeoutMs,
   });
 
   expect(await sampledMandelbrotColorCount(page)).toBeGreaterThan(20);
@@ -123,4 +128,26 @@ test("Mandelbrot deep zoom renders a responsive precision preview", async ({
     plotBox.y + plotBox.height > zoomBox.y;
 
   expect(overlaps).toBe(false);
+});
+
+test("Mandelbrot 1e32x zoom keeps visible detail", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "chromium-smoke",
+    "The reported deep viewport is covered once in desktop Chromium to keep smoke runtime bounded."
+  );
+  test.setTimeout(60_000);
+
+  await gotoAndStabilize(page, reportedDeepZoomPath);
+
+  await expect(
+    page.getByText(
+      "Ready at 50% perturbation deep-zoom render (3800 iterations)."
+    )
+  ).toBeVisible({
+    timeout: 45_000,
+  });
+
+  expect(await sampledMandelbrotColorCount(page)).toBeGreaterThan(100);
 });

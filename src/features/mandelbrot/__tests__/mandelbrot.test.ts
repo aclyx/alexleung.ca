@@ -113,6 +113,12 @@ describe("mandelbrot escape-time logic", () => {
         maxIterations
       );
 
+      expect(perturbationResult).not.toBeNull();
+
+      if (!perturbationResult) {
+        continue;
+      }
+
       expect(perturbationResult.escaped).toBe(decimalResult.escaped);
       expect(perturbationResult.iterations).toBe(decimalResult.iterations);
 
@@ -125,7 +131,7 @@ describe("mandelbrot escape-time logic", () => {
     }
   });
 
-  it("continues iterating when a pixel outlives its reference orbit", () => {
+  it("falls back when a pixel outlives its reference orbit", () => {
     const orbit = createPerturbationReferenceOrbit(
       new Decimal("0.5"),
       new Decimal("0.5"),
@@ -139,8 +145,41 @@ describe("mandelbrot escape-time logic", () => {
     );
 
     expect(orbit.escapedAt).toBeLessThan(64);
-    expect(originFromEscapingReference.escaped).toBe(false);
-    expect(originFromEscapingReference.iterations).toBe(64);
+    expect(originFromEscapingReference).toBeNull();
+  });
+
+  it("can continue an escaped reference from the perturbation state", () => {
+    const orbit = createPerturbationReferenceOrbit(
+      new Decimal("0.5"),
+      new Decimal("0.5"),
+      64
+    );
+    const originFromEscapingReference = iterateMandelbrotPerturbation(
+      -0.5,
+      -0.5,
+      orbit,
+      64,
+      () => ({
+        cx: 0,
+        cy: 0,
+      })
+    );
+
+    expect(originFromEscapingReference).not.toBeNull();
+    expect(originFromEscapingReference?.escaped).toBe(false);
+    expect(originFromEscapingReference?.iterations).toBe(64);
+  });
+
+  it("falls back when the reference orbit is unusable", () => {
+    const orbit = createPerturbationReferenceOrbit(
+      new Decimal("1e309"),
+      new Decimal("0"),
+      64
+    );
+    const result = iterateMandelbrotPerturbation(0, 0, orbit, 64);
+
+    expect(orbit.usable).toBe(false);
+    expect(result).toBeNull();
   });
 
   it("switches to the decimal escape path only once zoom depth is small enough", () => {

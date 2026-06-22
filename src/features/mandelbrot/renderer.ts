@@ -26,7 +26,9 @@ import {
 
 const DECIMAL_ROWS_PER_CHUNK = 1;
 const NUMBER_ROWS_PER_CHUNK = 20;
-const PERTURBATION_TILE_SIZE = 160;
+const DEFAULT_PERTURBATION_TILE_SIZE = 160;
+const DEEP_PERTURBATION_TILE_SIZE = 32;
+const DEEP_PERTURBATION_TILE_EXPONENT = -24;
 
 type RenderExecutionResult = {
   completed: boolean;
@@ -79,6 +81,15 @@ function nextFrame(): Promise<void> {
 
     setTimeout(resolve, 0);
   });
+}
+
+function perturbationTileSizeForWidth(width: DecimalCoordinate): number {
+  const [, exponentText = "0"] = width.toExponential().split("e");
+  const exponent = Number.parseInt(exponentText, 10);
+
+  return exponent <= DEEP_PERTURBATION_TILE_EXPONENT
+    ? DEEP_PERTURBATION_TILE_SIZE
+    : DEFAULT_PERTURBATION_TILE_SIZE;
 }
 
 function mapPixelCenterFromGrid(
@@ -183,6 +194,7 @@ async function createPerturbationTileGrid({
   safeWidth,
   safeHeight,
   maxIterations,
+  tileSize,
   signal,
 }: {
   left: DecimalCoordinate;
@@ -192,24 +204,25 @@ async function createPerturbationTileGrid({
   safeWidth: number;
   safeHeight: number;
   maxIterations: number;
+  tileSize: number;
   signal?: AbortSignal;
 }): Promise<PerturbationTileGrid | null> {
   const tiles: PerturbationTileReference[][] = [];
 
-  for (let startY = 0; startY < safeHeight; startY += PERTURBATION_TILE_SIZE) {
+  for (let startY = 0; startY < safeHeight; startY += tileSize) {
     if (signal?.aborted) {
       return null;
     }
 
-    const endY = Math.min(startY + PERTURBATION_TILE_SIZE, safeHeight);
+    const endY = Math.min(startY + tileSize, safeHeight);
     const tileRow: PerturbationTileReference[] = [];
 
-    for (let startX = 0; startX < safeWidth; startX += PERTURBATION_TILE_SIZE) {
+    for (let startX = 0; startX < safeWidth; startX += tileSize) {
       if (signal?.aborted) {
         return null;
       }
 
-      const endX = Math.min(startX + PERTURBATION_TILE_SIZE, safeWidth);
+      const endX = Math.min(startX + tileSize, safeWidth);
       const reference = selectPerturbationReference(
         left,
         top,
@@ -262,7 +275,7 @@ async function createPerturbationTileGrid({
   }
 
   return {
-    tileSize: PERTURBATION_TILE_SIZE,
+    tileSize,
     tiles,
   };
 }
@@ -318,6 +331,7 @@ async function renderMandelbrot({
     Number.isFinite(stepYNumber) &&
     stepXNumber > 0 &&
     stepYNumber > 0;
+  const perturbationTileSize = perturbationTileSizeForWidth(viewport.width);
   const perturbationTileGrid = usePerturbationIteration
     ? await createPerturbationTileGrid({
         left,
@@ -327,6 +341,7 @@ async function renderMandelbrot({
         safeWidth,
         safeHeight,
         maxIterations: settings.maxIterations,
+        tileSize: perturbationTileSize,
         signal,
       })
     : null;
@@ -361,7 +376,11 @@ async function renderMandelbrot({
                 tile.deltaXStartNumber + stepXNumber * (x - tile.startX),
                 tile.deltaYStartNumber - stepYNumber * (y - tile.startY),
                 tile.orbit,
-                settings.maxIterations
+                settings.maxIterations,
+                () => ({
+                  cx: leftNumber + stepXNumber * (x + 0.5),
+                  cy: topNumber - stepYNumber * (y + 0.5),
+                })
               )
             : null;
 
