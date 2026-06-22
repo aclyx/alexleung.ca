@@ -65,7 +65,7 @@ describe("createMandelbrotRenderPlan", () => {
     );
   });
 
-  it("preserves lower user quality and iteration budgets for perturbation renders", () => {
+  it("raises low iteration budgets for deeper perturbation renders", () => {
     const settings = {
       ...defaultSettings,
       maxIterations: 80,
@@ -73,10 +73,25 @@ describe("createMandelbrotRenderPlan", () => {
     };
     const plan = createMandelbrotRenderPlan(createViewport("1e-80"), settings);
 
-    expect(plan.passes[0]?.scale).toBe(0.5);
-    expect(plan.passes[0]?.settings.maxIterations).toBe(80);
+    expect(plan.passes[0]?.scale).toBe(0.35);
+    expect(plan.passes[0]?.settings.maxIterations).toBe(8600);
     expect(plan.completionMessage).toBe(
-      "Ready at 50% perturbation deep-zoom render (80 iterations)."
+      "Ready at 35% perturbation deep-zoom render (8600 iterations)."
+    );
+  });
+
+  it("uses a responsive scale and enough iterations for a 1e32x perturbation viewport", () => {
+    const plan = createMandelbrotRenderPlan(
+      createViewport(
+        "0.0000000000000000000000000000000222402701568815166612313740442"
+      ),
+      defaultSettings
+    );
+
+    expect(plan.passes[0]?.scale).toBe(0.35);
+    expect(plan.passes[0]?.settings.maxIterations).toBe(3800);
+    expect(plan.completionMessage).toBe(
+      "Ready at 35% perturbation deep-zoom render (3800 iterations)."
     );
   });
 

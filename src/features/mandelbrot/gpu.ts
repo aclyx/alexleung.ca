@@ -191,6 +191,8 @@ type WebGpuAvailability = {
   reason?: string;
 };
 
+const WEBGPU_DETECTION_TIMEOUT_MS = 1500;
+
 type WebGpuRenderResult = {
   completed: boolean;
   rendered: boolean;
@@ -739,12 +741,23 @@ export async function detectWebGpuAvailability(): Promise<WebGpuAvailability> {
     };
   }
 
-  const adapter = await gpu.requestAdapter();
+  let timedOut = false;
+  const adapter = await Promise.race([
+    gpu.requestAdapter(),
+    new Promise<null>((resolve) => {
+      setTimeout(() => {
+        timedOut = true;
+        resolve(null);
+      }, WEBGPU_DETECTION_TIMEOUT_MS);
+    }),
+  ]);
 
   if (!adapter) {
     return {
       isAvailable: false,
-      reason: "No compatible WebGPU adapter was found.",
+      reason: timedOut
+        ? "WebGPU adapter detection timed out."
+        : "No compatible WebGPU adapter was found.",
     };
   }
 

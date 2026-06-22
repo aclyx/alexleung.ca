@@ -1,7 +1,8 @@
 "use client";
 
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
+import { calculateViewportFramePlacement } from "@/features/mandelbrot/framePreview";
 import {
   renderMandelbrotWithStrategy,
   shouldAttemptWebGpu,
@@ -13,6 +14,7 @@ import {
   PreciseViewport,
   RenderBackend,
 } from "@/features/mandelbrot/types";
+import { cloneViewport } from "@/features/mandelbrot/viewport";
 
 type RenderPhase = "idle" | "preview" | "refining" | "ready" | "error";
 
@@ -29,6 +31,12 @@ type UseMandelbrotRenderInput = {
   viewport: PreciseViewport;
   settings: MandelbrotSettings;
   size: PixelSize;
+};
+
+type CompletedFrame = {
+  canvas: HTMLCanvasElement;
+  size: PixelSize;
+  viewport: PreciseViewport;
 };
 
 function renderSizeForScale(size: PixelSize, scale: number): PixelSize {
@@ -51,6 +59,7 @@ export function useMandelbrotRender({
     message: "Waiting for canvas size.",
     backend: "cpu",
   });
+  const completedFrameRef = useRef<CompletedFrame | null>(null);
 
   useEffect(() => {
     const canvas = cpuCanvasRef.current;
@@ -77,60 +86,74 @@ export function useMandelbrotRender({
     const renderingCanvas = canvas;
     const renderingContext = context;
     const renderingGpuCanvas = gpuCanvas;
+    const previousFrame = completedFrameRef.current;
 
     let isMounted = true;
 
+    function storeCompletedFrame() {
+      const completedCanvas = document.createElement("canvas");
+
+      completedCanvas.width = size.width;
+      completedCanvas.height = size.height;
+
+      const completedContext = completedCanvas.getContext("2d");
+
+      if (!completedContext) {
+        completedFrameRef.current = null;
+        return;
+      }
+
+      completedContext.clearRect(0, 0, size.width, size.height);
+      completedContext.drawImage(
+        renderingGpuCanvas,
+        0,
+        0,
+        size.width,
+        size.height
+      );
+      completedContext.drawImage(
+        renderingCanvas,
+        0,
+        0,
+        size.width,
+        size.height
+      );
+      completedFrameRef.current = {
+        canvas: completedCanvas,
+        size: { ...size },
+        viewport: cloneViewport(viewport),
+      };
+    }
+
     async function runRender() {
       let activeBackend: RenderBackend = "cpu";
-      const previousFrame =
-        (renderingCanvas.width > 0 && renderingCanvas.height > 0) ||
-        (renderingGpuCanvas.width > 0 && renderingGpuCanvas.height > 0)
-          ? document.createElement("canvas")
-          : null;
-
-      if (previousFrame) {
-        previousFrame.width = Math.max(
-          renderingCanvas.width,
-          renderingGpuCanvas.width
-        );
-        previousFrame.height = Math.max(
-          renderingCanvas.height,
-          renderingGpuCanvas.height
-        );
-        const previousFrameContext = previousFrame.getContext("2d");
-
-        previousFrameContext?.drawImage(
-          renderingGpuCanvas,
-          0,
-          0,
-          previousFrame.width,
-          previousFrame.height
-        );
-        previousFrameContext?.drawImage(
-          renderingCanvas,
-          0,
-          0,
-          previousFrame.width,
-          previousFrame.height
-        );
-      }
 
       renderingCanvas.width = size.width;
       renderingCanvas.height = size.height;
       renderingGpuCanvas.width = size.width;
       renderingGpuCanvas.height = size.height;
 
+      renderingContext.fillStyle = "#030712";
+      renderingContext.fillRect(0, 0, size.width, size.height);
+
       if (previousFrame) {
-        renderingContext.drawImage(
-          previousFrame,
-          0,
-          0,
-          size.width,
-          size.height
-        );
-      } else {
-        renderingContext.fillStyle = "#030712";
-        renderingContext.fillRect(0, 0, size.width, size.height);
+        const placement = calculateViewportFramePlacement({
+          sourceSize: previousFrame.size,
+          sourceViewport: previousFrame.viewport,
+          targetSize: size,
+          targetViewport: viewport,
+        });
+
+        if (placement) {
+          renderingContext.imageSmoothingEnabled = true;
+          renderingContext.drawImage(
+            previousFrame.canvas,
+            placement.x,
+            placement.y,
+            placement.width,
+            placement.height
+          );
+        }
       }
 
       for (const renderPass of renderPlan.passes) {
@@ -218,6 +241,7 @@ export function useMandelbrotRender({
       }
 
       if (isMounted) {
+        storeCompletedFrame();
         setRenderState({
           phase: "ready",
           progress: 1,
