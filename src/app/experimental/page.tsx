@@ -48,11 +48,10 @@ export default function ExperimentsPage() {
         <ResponsiveContainer variant="wide" className="space-y-8">
           <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
             <p className="text-body text-gray-300 md:text-center">
-              These are browser tools for inspecting technical behavior
-              directly: event-loop ordering, optimizer dynamics, AC load flow,
-              Mandelbrot zooming, and PID response. They are static, client-side
-              pages with controls, visuals, and enough state to learn from the
-              behavior itself.
+              These open experiments inspect technical behavior directly:
+              event-loop ordering, optimizer dynamics, AC load flow, Mandelbrot
+              zooming, and PID response. Each one keeps the controls, visuals,
+              and state close enough to learn from the behavior itself.
             </p>
           </div>
 

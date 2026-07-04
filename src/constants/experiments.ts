@@ -23,7 +23,7 @@ type ExperimentsHub = Pick<
 
 export const EXPERIMENTS_HUB: ExperimentsHub = {
   description:
-    "Small browser tools for exploring systems, control loops, numerical methods, and runtime behavior.",
+    "Open experiments for exploring systems, control loops, numerical methods, and runtime behavior.",
   path: "/experimental/",
   title: "Experiments | Alex Leung",
   pageTitle: "Experiments",
@@ -71,7 +71,7 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
     path: "/experimental/event-loop/",
     thumbnail: {
       src: "/assets/experimental/event-loop.webp",
-      alt: "Abstract event loop queues and execution paths",
+      alt: "Screenshot of Event Loop Visualizer controls and execution state",
     },
     lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
   },
@@ -81,11 +81,11 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
     pageTitle: "Learning Dynamics Lab",
     title: "Learning Dynamics Lab | Alex Leung",
     description:
-      "A client-side optimizer visualizer for comparing SGD, Momentum, RMSProp, and Adam on simple 2D loss surfaces.",
+      "An optimizer visualizer for comparing SGD, Momentum, RMSProp, and Adam on simple 2D loss surfaces.",
     path: "/experimental/learning-dynamics/",
     thumbnail: {
       src: "/assets/experimental/learning-dynamics.webp",
-      alt: "Optimizer paths converging across a contour surface",
+      alt: "Screenshot of Learning Dynamics Lab simulation controls",
     },
     lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
   },
@@ -95,11 +95,11 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
     pageTitle: "Load Flow",
     title: "Load Flow | Alex Leung",
     description:
-      "A browser AC load flow workspace for editing one-line models and solving bus voltages and branch flows.",
+      "An AC load flow workspace for editing one-line models and solving bus voltages and branch flows.",
     path: "/experimental/load-flow/",
     thumbnail: {
       src: "/assets/experimental/load-flow.webp",
-      alt: "Abstract power grid one-line diagram with flow traces",
+      alt: "Screenshot of Load Flow reference scenarios and one-line diagram",
     },
     lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
   },
@@ -109,11 +109,11 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
     pageTitle: "Mandelbrot Explorer",
     title: "Mandelbrot Explorer | Alex Leung",
     description:
-      "An in-browser Mandelbrot explorer with arbitrary-precision viewport math, progressive rendering, and shareable zoom state.",
+      "A Mandelbrot explorer with arbitrary-precision viewport math, progressive rendering, and shareable zoom state.",
     path: "/experimental/mandelbrot/",
     thumbnail: {
       src: "/assets/experimental/mandelbrot.webp",
-      alt: "Fractal zoom detail with a highlighted viewport",
+      alt: "Screenshot of Mandelbrot Explorer plot controls and fractal view",
     },
     lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
   },
@@ -127,7 +127,7 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
     path: "/experimental/pid-controller/",
     thumbnail: {
       src: "/assets/experimental/pid-controller.webp",
-      alt: "Control loop and damped response curves",
+      alt: "Screenshot of PID Controller Simulator response curves",
     },
     lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
   },

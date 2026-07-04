@@ -6,11 +6,12 @@ import { surfaceClassNames } from "@/components/Surface";
 export function SocialMediaList() {
   return (
     <ResponsiveContainer element="section">
-      <Subtitle title="Connect" id="social" />
+      <Subtitle title="Professional Links" id="professional-links" />
       <SocialLinkList
         analyticsPlacement="contact_page"
-        className="mt-8 flex flex-wrap justify-center gap-6"
+        className="mt-8 flex flex-wrap justify-center gap-4"
         itemClassName="list-none"
+        linkIds={[1, 2]}
         linkClassName={surfaceClassNames({
           interactive: true,
           className: "flex items-center gap-3 px-6 py-4",

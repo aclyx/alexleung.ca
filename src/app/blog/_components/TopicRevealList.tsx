@@ -14,10 +14,16 @@ export type TopicLink = {
 };
 
 type TopicRevealListProps = {
+  heading?: string;
+  listId?: string;
   topics: TopicLink[];
 };
 
-export function TopicRevealList({ topics }: TopicRevealListProps) {
+export function TopicRevealList({
+  heading = "Topics",
+  listId = "blog-topic-list",
+  topics,
+}: TopicRevealListProps) {
   const initialVisibleCount = Math.min(
     INITIAL_VISIBLE_TOPIC_COUNT,
     topics.length
@@ -34,12 +40,9 @@ export function TopicRevealList({ topics }: TopicRevealListProps) {
   return (
     <div>
       <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
-        Topics
+        {heading}
       </h3>
-      <div
-        id="blog-topic-list"
-        className="flex flex-wrap gap-2 md:justify-center"
-      >
+      <div id={listId} className="flex flex-wrap gap-2 md:justify-center">
         {visibleTopics.map((topic) => (
           <Tag key={topic.href} href={topic.href}>
             {topic.name}
@@ -48,7 +51,7 @@ export function TopicRevealList({ topics }: TopicRevealListProps) {
         {hiddenCount > 0 ? (
           <button
             type="button"
-            aria-controls="blog-topic-list"
+            aria-controls={listId}
             className={chipClassName(
               "border-gray-500/50 bg-slate-950/30 text-gray-200 transition-colors hover:border-accent-secondary hover:bg-accent-secondary/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
             )}

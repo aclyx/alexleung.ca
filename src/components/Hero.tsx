@@ -1,6 +1,12 @@
-import { HiOutlineArrowRight, HiOutlineUser } from "react-icons/hi";
+import { HiOutlineArrowRight, HiOutlineMail } from "react-icons/hi";
 
 import { CTAButton } from "./CTAButton";
+
+const proofPoints = [
+  "Currently at OpenAI",
+  "Previously Google, Cash App, Jetson",
+  "P.Eng. since 2017",
+];
 
 export function Hero() {
   return (
@@ -20,19 +26,30 @@ export function Hero() {
           <h2 className="text-hero-description">
             Software Engineer and Writer.
           </h2>
-          <p className="mt-3 text-sm italic text-gray-200 md:text-gray-300">
-            I build software, write notes, and make browser tools for
-            understanding systems and AI.
+          <p className="mt-3 text-sm text-gray-200 md:text-gray-300">
+            I build AI product surfaces and reliable software systems, then
+            write down what I learn.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
-            <CTAButton href="/blog/">
+            <CTAButton href="/contact/">
+              <HiOutlineMail className="text-lg" /> Contact Alex
+            </CTAButton>
+            <CTAButton href="/blog/" variant="secondary">
               Read writing <HiOutlineArrowRight className="text-lg" />
             </CTAButton>
-            <CTAButton href="/about/" variant="secondary">
-              <HiOutlineUser className="text-lg" /> About
-            </CTAButton>
           </div>
+
+          <ul className="mt-6 flex flex-wrap gap-2 text-sm text-gray-200">
+            {proofPoints.map((point) => (
+              <li
+                key={point}
+                className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5"
+              >
+                {point}
+              </li>
+            ))}
+          </ul>
 
           <div className="mt-10">
             <section
@@ -43,12 +60,12 @@ export function Hero() {
                 id="positioning-heading"
                 className="text-heading font-semibold"
               >
-                Writing, Notes, and Tools
+                Writing and Open Experiments
               </h2>
               <p className="text-body mt-4 text-gray-200">
                 I keep essays, technical notes, and project writeups here:
                 software systems, AI product development, deep learning, and
-                browser tools.
+                open experiments.
               </p>
               <p className="text-body mt-3 text-gray-200">
                 Most pieces start from a concrete thing I tried: an

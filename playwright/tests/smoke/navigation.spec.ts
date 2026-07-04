@@ -52,7 +52,10 @@ test("home page renders the hero content", async ({ page }) => {
     page.getByRole("heading", { level: 1, name: "Alex Leung" })
   ).toBeVisible();
   await expect(
-    page.getByRole("heading", { name: "Writing, Notes, and Tools" })
+    page.getByRole("link", { name: "Contact Alex" })
+  ).toHaveAttribute("href", "/contact/");
+  await expect(
+    page.getByRole("heading", { name: "Writing and Open Experiments" })
   ).toBeVisible();
 });
 

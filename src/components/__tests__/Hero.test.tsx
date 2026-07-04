@@ -22,27 +22,27 @@ describe("Hero", () => {
 
     expect(
       screen.getByText(
-        /I build software, write notes, and make browser tools for understanding systems and AI\./i
+        /I build AI product surfaces and reliable software systems, then write down what I learn\./i
       )
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: /Writing, Notes, and Tools/i,
+        name: /Writing and Open Experiments/i,
       })
     ).toBeInTheDocument();
   });
 
-  it("should render blog and about CTA links", () => {
+  it("should render contact and writing CTA links", () => {
     render(<Hero />);
 
+    expect(screen.getByRole("link", { name: /contact alex/i })).toHaveAttribute(
+      "href",
+      "/contact"
+    );
     expect(screen.getByRole("link", { name: /read writing/i })).toHaveAttribute(
       "href",
       "/blog"
-    );
-    expect(screen.getByRole("link", { name: /about/i })).toHaveAttribute(
-      "href",
-      "/about"
     );
   });
 
