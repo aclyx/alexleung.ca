@@ -449,6 +449,161 @@
           "height": 427
         }
       }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-amphitheater-overlook.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-amphitheater-overlook-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-amphitheater-overlook-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-hoodoo-columns.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-columns-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-columns-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-hoodoo-wall.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-wall-content.webp",
+          "width": 1024,
+          "height": 512
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-wall-content-sm.webp",
+          "width": 640,
+          "height": 320
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-hoodoos-clouds.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoos-clouds-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoos-clouds-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-card.webp",
+          "width": 768,
+          "height": 384
+        },
+        "card-md": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-card-md.webp",
+          "width": 640,
+          "height": 320
+        },
+        "card-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-card-sm.webp",
+          "width": 480,
+          "height": 240
+        },
+        "hero": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-hero.webp",
+          "width": 1280,
+          "height": 640
+        },
+        "hero-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-hero-sm.webp",
+          "width": 640,
+          "height": 320
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/lower-calf-creek.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/lower-calf-creek-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/lower-calf-creek-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/mossy-cave.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/mossy-cave-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/mossy-cave-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/ofland-airstream.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/ofland-airstream-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/ofland-airstream-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/zion-watchman.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/zion-watchman-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/zion-watchman-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
     }
   }
 }
