@@ -12,6 +12,7 @@ type FollowItSubscribeFormProps = {
   className?: string;
   title?: string;
   description?: string;
+  note?: string;
   placeholder?: string;
   buttonLabel?: string;
   action?: string;
@@ -21,7 +22,8 @@ type FollowItSubscribeFormProps = {
 export function FollowItSubscribeForm({
   className = "",
   title = "Get new posts by email",
-  description = "Subscribe for occasional updates when I publish something new.",
+  description = "Occasional updates when I publish something new.",
+  note = "No spam. Follow.it handles delivery and unsubscribe links.",
   placeholder = "Enter your email",
   buttonLabel = "Subscribe",
   action = DEFAULT_FOLLOW_IT_ACTION,
@@ -83,6 +85,7 @@ export function FollowItSubscribeForm({
           {isSubmitting ? "Subscribing..." : buttonLabel}
         </button>
       </form>
+      {note ? <p className="mt-3 text-xs text-gray-400">{note}</p> : null}
     </section>
   );
 }

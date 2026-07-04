@@ -79,7 +79,7 @@ export function EventLoopVisualizer() {
             </label>
             <select
               id="example"
-              className="mt-2 w-full rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100"
+              className="mt-2 min-h-11 w-full rounded-md border border-gray-600 bg-gray-900 px-3 py-2 text-sm text-gray-100"
               value={selectedExampleId}
               onChange={(event) => {
                 trackEventLoopInteraction("change_example", {

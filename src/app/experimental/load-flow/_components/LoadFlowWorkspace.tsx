@@ -29,6 +29,10 @@ const BRANCH_STATUS_OPTIONS: readonly BranchStatus[] = [
   "IN_SERVICE",
   "OUT_OF_SERVICE",
 ];
+const workspaceButtonClassName =
+  "inline-flex min-h-11 items-center justify-center rounded-md border px-3 py-2 text-sm transition-colors";
+const propertyFieldClassName =
+  "mt-1 min-h-11 w-full rounded border border-gray-600 bg-gray-950 px-3 py-2";
 
 const parseFiniteNumber = (value: string): number | null => {
   if (value.trim() === "") {
@@ -158,7 +162,7 @@ export function LoadFlowWorkspace() {
         <div className="mt-3 flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
+            className={`${workspaceButtonClassName} border-emerald-500 text-emerald-100 hover:bg-emerald-900/50`}
             onClick={() => {
               trackLoadFlowInteraction("reset_editor_model");
               setSelectedReferenceScenarioId(null);
@@ -171,7 +175,7 @@ export function LoadFlowWorkspace() {
             <button
               key={scenario.id}
               type="button"
-              className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
+              className={`${workspaceButtonClassName} border-emerald-500 text-emerald-100 hover:bg-emerald-900/50`}
               onClick={() => {
                 trackLoadFlowInteraction("load_reference_case", {
                   scenario_id: scenario.id,
@@ -188,7 +192,7 @@ export function LoadFlowWorkspace() {
           {selectedReferenceScenario ? (
             <button
               type="button"
-              className="rounded-md border border-emerald-400 bg-emerald-900/30 px-3 py-2 text-sm text-emerald-50 hover:bg-emerald-900/50"
+              className={`${workspaceButtonClassName} border-emerald-400 bg-emerald-900/30 text-emerald-50 hover:bg-emerald-900/50`}
               onClick={resetActiveReferenceCase}
             >
               Reset active reference case
@@ -243,7 +247,7 @@ export function LoadFlowWorkspace() {
           </p>
           <button
             type="button"
-            className="mt-3 rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
+            className={`${workspaceButtonClassName} mt-3 border-gray-500 text-white hover:bg-gray-800`}
             onClick={() => {
               trackLoadFlowInteraction("add_bus");
               setEditorState((prev) => addBus(prev));
@@ -253,7 +257,7 @@ export function LoadFlowWorkspace() {
           </button>
           <button
             type="button"
-            className="ml-2 mt-3 rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
+            className={`${workspaceButtonClassName} ml-2 mt-3 border-gray-500 text-white hover:bg-gray-800`}
             onClick={() => {
               trackLoadFlowInteraction("auto_layout");
               setEditorState((prev) => autoLayoutBuses(prev));
@@ -268,7 +272,7 @@ export function LoadFlowWorkspace() {
             ) : (
               <button
                 type="button"
-                className="rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
+                className={`${workspaceButtonClassName} border-gray-500 text-white hover:bg-gray-800`}
                 onClick={() => {
                   const [fromBusId, toBusId] = editorState.busOrder;
                   trackLoadFlowInteraction("add_branch");
@@ -293,7 +297,7 @@ export function LoadFlowWorkspace() {
                 <button
                   key={bus.id}
                   type="button"
-                  className={`block w-full rounded-md border px-3 py-2 text-left transition ${
+                  className={`block min-h-11 w-full rounded-md border px-3 py-2 text-left transition ${
                     isSelected
                       ? "border-emerald-300 bg-emerald-900/40 text-emerald-100"
                       : "border-gray-600 hover:bg-gray-800"
@@ -319,7 +323,7 @@ export function LoadFlowWorkspace() {
                 <button
                   key={branch.id}
                   type="button"
-                  className={`block w-full rounded-md border px-3 py-2 text-left transition ${
+                  className={`block min-h-11 w-full rounded-md border px-3 py-2 text-left transition ${
                     isSelected
                       ? "border-emerald-300 bg-emerald-900/40 text-emerald-100"
                       : "border-blue-800 text-blue-200 hover:bg-gray-800"
@@ -348,7 +352,7 @@ export function LoadFlowWorkspace() {
                 <span>Name</span>
                 <input
                   value={selectedBus.name}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) =>
                     setEditorState((prev) =>
                       updateBus(prev, selectedBus.id, {
@@ -363,7 +367,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBus.baseKV}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     const parsedBaseKV = parseFiniteNumber(event.target.value);
                     if (parsedBaseKV === null) {
@@ -384,7 +388,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBus.voltageMagnitudeSetpoint ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     if (event.target.value.trim() === "") {
                       setEditorState((prev) =>
@@ -415,7 +419,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBus.voltageAngleSetpointDeg ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     if (event.target.value.trim() === "") {
                       setEditorState((prev) =>
@@ -446,7 +450,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBus.voltageMagnitudeMin ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     if (event.target.value.trim() === "") {
                       setEditorState((prev) =>
@@ -477,7 +481,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBus.voltageMagnitudeMax ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     if (event.target.value.trim() === "") {
                       setEditorState((prev) =>
@@ -507,7 +511,7 @@ export function LoadFlowWorkspace() {
                 <span>Type</span>
                 <select
                   value={selectedBus.type}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     const nextType = event.target.value;
                     if (!isBusType(nextType)) {
@@ -538,7 +542,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBranch.r}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     const parsedResistance = parseFiniteNumber(
                       event.target.value
@@ -560,7 +564,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBranch.x}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     const parsedReactance = parseFiniteNumber(
                       event.target.value
@@ -582,7 +586,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBranch.bHalf}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     const parsedBHalf = parseFiniteNumber(event.target.value);
                     if (parsedBHalf === null) {
@@ -602,7 +606,7 @@ export function LoadFlowWorkspace() {
                 <input
                   type="number"
                   value={selectedBranch.thermalLimitMVA ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     if (event.target.value.trim() === "") {
                       setEditorState((prev) =>
@@ -632,7 +636,7 @@ export function LoadFlowWorkspace() {
                 <span>Status</span>
                 <select
                   value={selectedBranch.status ?? "IN_SERVICE"}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
+                  className={propertyFieldClassName}
                   onChange={(event) => {
                     const nextStatus = event.target.value;
                     if (!isBranchStatus(nextStatus)) {

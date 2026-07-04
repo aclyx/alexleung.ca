@@ -450,7 +450,7 @@ export function MandelbrotCanvas({
         <div className="pointer-events-auto flex flex-wrap gap-2">
           <button
             type="button"
-            className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
             onClick={() => {
               cancelPendingWheelCommit();
               onZoomIn();
@@ -460,7 +460,7 @@ export function MandelbrotCanvas({
           </button>
           <button
             type="button"
-            className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
             onClick={() => {
               cancelPendingWheelCommit();
               onZoomOut();
@@ -470,7 +470,7 @@ export function MandelbrotCanvas({
           </button>
           <button
             type="button"
-            className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
+            className="inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
             onClick={() => {
               cancelPendingWheelCommit();
               onReset();

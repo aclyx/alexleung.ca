@@ -66,7 +66,7 @@ const SliderRow = ({
       min={min}
       max={max}
       step={step}
-      className="w-full"
+      className="min-h-11 w-full"
       aria-label={label}
       onChange={(event) => handleNumericChange(event, onChange)}
     />
@@ -102,7 +102,7 @@ export function PidControls({
         </label>
         <select
           id="pid-preset"
-          className="text-body mt-1 w-full rounded-md border border-gray-600 bg-gray-900 p-2 text-gray-100"
+          className="text-body mt-1 min-h-11 w-full rounded-md border border-gray-600 bg-gray-900 p-2 text-gray-100"
           value={activePresetId}
           onChange={(event) => onPresetChange(event.target.value)}
         >
@@ -178,14 +178,14 @@ export function PidControls({
       <div className="flex flex-wrap gap-2">
         <button
           type="button"
-          className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
+          className="inline-flex min-h-11 items-center justify-center rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
           onClick={onToggleRunning}
         >
           {isRunning ? "Pause" : hasReachedMaxTime ? "Replay" : "Play"}
         </button>
         <button
           type="button"
-          className="rounded-md border border-gray-500 px-3 py-2 text-sm text-gray-100 hover:bg-gray-800"
+          className="inline-flex min-h-11 items-center justify-center rounded-md border border-gray-500 px-3 py-2 text-sm text-gray-100 hover:bg-gray-800"
           onClick={onReset}
         >
           Reset simulation

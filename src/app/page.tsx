@@ -1,20 +1,23 @@
+import { HiOutlineArrowRight } from "react-icons/hi";
 import { JsonLd } from "react-schemaorg";
 
 import { Metadata } from "next";
+import Link from "next/link";
 
 import type { WebPage } from "schema-dts";
 
 import { Hero } from "@/components/Hero";
 import { LatestWritingSection } from "@/components/LatestWritingSection";
-import { PhotoGrid, type PhotoGridItem } from "@/components/PhotoGrid";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { SectionBlock } from "@/components/SectionBlock";
+import { Surface } from "@/components/Surface";
+import { EXPERIMENTS } from "@/constants/experiments";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildHomePageSchema, buildPageMetadata } from "@/lib/seo";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and browser experiments.";
+  "Alex Leung is a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and open experiments.";
 const path = "/";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -31,37 +34,55 @@ export const metadata: Metadata = buildPageMetadata({
   ],
 });
 
-const recentPhotos: readonly PhotoGridItem[] = [
-  {
-    src: "/assets/site-photos/lake-louise-reflection.webp",
-    alt: "Lake Louise at sunrise with mountains reflected on the water",
-    caption: "Lake Louise",
-    width: 1400,
-    height: 1867,
-    aspectClassName: "aspect-[4/3]",
-    imageClassName: "object-center",
-  },
-  {
-    src: "/assets/site-photos/twin-peaks-view.webp",
-    alt: "San Francisco skyline viewed from Twin Peaks on a clear afternoon",
-    caption: "Twin Peaks",
-    width: 1400,
-    height: 1050,
-  },
-  {
-    src: "/assets/site-photos/chengdu-street.webp",
-    alt: "Street-side restaurant scene in Chengdu at night",
-    caption: "Chengdu",
-    width: 1400,
-    height: 1050,
-  },
-];
+const featuredExperiments = EXPERIMENTS.slice(0, 3);
 
-function RecentPhotosSection() {
+function OpenExperimentsSection() {
   return (
     <ResponsiveContainer element="section" className="pb-12 md:pb-14">
-      <SectionBlock title="Recent Photos" titleId="recent-photos" spacing="lg">
-        <PhotoGrid photos={recentPhotos} />
+      <SectionBlock
+        title="Open Experiments"
+        titleId="open-experiments"
+        spacing="lg"
+      >
+        <div className="grid gap-4 md:grid-cols-3">
+          {featuredExperiments.map((experiment) => (
+            <Link
+              key={experiment.id}
+              href={experiment.path}
+              className="group block h-full"
+            >
+              <Surface
+                className="flex h-full flex-col justify-between p-4 md:p-5"
+                interactive
+              >
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wide text-accent-secondary-soft">
+                    {experiment.kind}
+                  </p>
+                  <h3 className="text-heading-sm mt-3 font-semibold text-white transition-colors group-hover:text-accent-link">
+                    {experiment.pageTitle}
+                  </h3>
+                  <p className="text-body-sm mt-3 text-gray-300">
+                    {experiment.description}
+                  </p>
+                </div>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-accent-link transition-colors group-hover:text-accent-link-hover">
+                  Open experiment
+                  <HiOutlineArrowRight aria-hidden="true" className="text-lg" />
+                </span>
+              </Surface>
+            </Link>
+          ))}
+        </div>
+        <div>
+          <Link
+            href="/experimental/"
+            className="text-body -ml-3 inline-flex min-h-11 items-center gap-2 rounded-md px-3 font-semibold text-accent-link transition-colors hover:text-accent-link-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+          >
+            See all experiments
+            <HiOutlineArrowRight aria-hidden="true" className="text-lg" />
+          </Link>
+        </div>
       </SectionBlock>
     </ResponsiveContainer>
   );
@@ -83,8 +104,8 @@ export default function Page() {
         })}
       />
       <Hero />
-      <RecentPhotosSection />
       <LatestWritingSection posts={latestPosts} />
+      <OpenExperimentsSection />
     </>
   );
 }

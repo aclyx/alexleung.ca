@@ -30,8 +30,33 @@ import {
 
 const title = "Blog | Alex Leung";
 const description =
-  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and browser experiments.";
+  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and open experiments.";
 const path = "/blog";
+
+function SeriesLinks({
+  seriesSummaries,
+}: {
+  seriesSummaries: ReturnType<typeof getSeriesSummaries>;
+}) {
+  if (seriesSummaries.length === 0) {
+    return null;
+  }
+
+  return (
+    <div>
+      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
+        Series
+      </h3>
+      <div className="flex flex-wrap gap-2 md:justify-center">
+        {seriesSummaries.map((series) => (
+          <Tag key={series.name} href={`/blog/${series.firstPost.slug}/`}>
+            {series.name}
+          </Tag>
+        ))}
+      </div>
+    </div>
+  );
+}
 
 export function generateMetadata(): Metadata {
   const firstCoverPost = getAllPosts(["coverImage", "coverAlt", "title"]).find(
@@ -83,35 +108,34 @@ export default function BlogIndex() {
 
   return (
     <>
-      <PageShell title="Blog">
-        <ResponsiveContainer variant="wide" className="space-y-8">
+      <PageShell>
+        <ResponsiveContainer variant="wide" className="space-y-6 md:space-y-8">
           <section
             aria-label="Blog overview"
-            className="mx-auto max-w-5xl space-y-4 text-left md:text-center"
+            className="mx-auto max-w-5xl space-y-3 pt-6 text-left md:pt-8 md:text-center"
           >
+            <h1 className="text-3xl font-semibold tracking-wide text-white md:text-5xl">
+              Blog
+            </h1>
             <p className="mx-auto max-w-2xl text-body text-gray-200">
               Software systems, AI tools, books, and experiments.
             </p>
-            <div className="space-y-3">
+            <div className="hidden space-y-2 md:block md:space-y-3">
               <TopicRevealList topics={topics} />
-              {seriesSummaries.length > 0 ? (
-                <div>
-                  <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
-                    Series
-                  </h3>
-                  <div className="flex flex-wrap gap-2 md:justify-center">
-                    {seriesSummaries.map((series) => (
-                      <Tag
-                        key={series.name}
-                        href={`/blog/${series.firstPost.slug}/`}
-                      >
-                        {series.name}
-                      </Tag>
-                    ))}
-                  </div>
-                </div>
-              ) : null}
+              <SeriesLinks seriesSummaries={seriesSummaries} />
             </div>
+            <details className="rounded-lg border border-white/10 bg-slate-950/60 text-left md:hidden">
+              <summary className="min-h-11 cursor-pointer px-4 py-3 text-sm font-semibold text-gray-100">
+                Browse topics and series
+              </summary>
+              <div className="space-y-4 border-t border-white/10 px-4 py-4">
+                <TopicRevealList
+                  listId="blog-topic-list-mobile"
+                  topics={topics}
+                />
+                <SeriesLinks seriesSummaries={seriesSummaries} />
+              </div>
+            </details>
           </section>
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
             {firstPost ? (
@@ -119,6 +143,7 @@ export default function BlogIndex() {
                 key={firstPost.slug}
                 post={firstPost}
                 coverPriority
+                compactOnMobile
               />
             ) : null}
             {remainingPosts.map((post) => (
