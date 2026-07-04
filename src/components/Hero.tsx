@@ -2,12 +2,6 @@ import { HiOutlineArrowRight, HiOutlineMail } from "react-icons/hi";
 
 import { CTAButton } from "./CTAButton";
 
-const proofPoints = [
-  "Currently at OpenAI",
-  "Previously Google, Cash App, Jetson",
-  "P.Eng. since 2017",
-];
-
 export function Hero() {
   return (
     <section
@@ -39,17 +33,6 @@ export function Hero() {
               Read writing <HiOutlineArrowRight className="text-lg" />
             </CTAButton>
           </div>
-
-          <ul className="mt-6 flex flex-wrap gap-2 text-sm text-gray-200">
-            {proofPoints.map((point) => (
-              <li
-                key={point}
-                className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5"
-              >
-                {point}
-              </li>
-            ))}
-          </ul>
 
           <div className="mt-10">
             <section
