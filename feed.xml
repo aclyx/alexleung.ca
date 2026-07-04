@@ -39,7 +39,7 @@
             <link>https://alexleung.ca/blog/small-interactive-tools-with-a-coding-agent/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/small-interactive-tools-with-a-coding-agent/</guid>
             <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me concrete ways to inspect older technical models.]]></description>
+            <description><![CDATA[Building frontend-only tools for load flow and Mandelbrot zooming gave me concrete ways to inspect older technical models.]]></description>
             <category>AI</category>
             <category>Developer Workflow</category>
             <category>Reflection</category>
