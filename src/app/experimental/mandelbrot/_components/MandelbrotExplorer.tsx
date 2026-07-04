@@ -90,7 +90,9 @@ const COLORING_MODE_OPTIONS: ReadonlyArray<{
 const sectionTitleClass = "text-heading-sm text-white";
 const metaValueClass = "break-all text-sm text-cyan-100";
 const toolbarButtonClass =
-  "rounded-md border border-white/15 px-3 py-2 text-sm text-white transition hover:border-cyan-300 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-40";
+  "inline-flex min-h-11 items-center justify-center rounded-md border border-white/15 px-3 py-2 text-sm text-white transition hover:border-cyan-300 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-40";
+const settingsControlClass =
+  "mt-1 min-h-11 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white";
 const EXPERIMENT_ID = "mandelbrot_explorer";
 
 function isRenderBackendPreference(
@@ -389,7 +391,7 @@ export function MandelbrotExplorer() {
                         renderBackendPreference,
                       }));
                     }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
+                    className={settingsControlClass}
                   >
                     {BACKEND_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -410,7 +412,7 @@ export function MandelbrotExplorer() {
                       trackMandelbrotInteraction("change_max_iterations");
                       handleIterationsChange(event.target.value);
                     }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
+                    className={settingsControlClass}
                   />
                 </label>
                 <label className="text-sm text-gray-200">
@@ -432,7 +434,7 @@ export function MandelbrotExplorer() {
                         paletteId,
                       }));
                     }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
+                    className={settingsControlClass}
                   >
                     {PALETTE_OPTIONS.map((option) => (
                       <option key={option.id} value={option.id}>
@@ -460,7 +462,7 @@ export function MandelbrotExplorer() {
                         coloringMode,
                       }));
                     }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
+                    className={settingsControlClass}
                   >
                     {COLORING_MODE_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -477,7 +479,7 @@ export function MandelbrotExplorer() {
                       trackMandelbrotInteraction("change_render_quality");
                       handleResolutionScaleChange(event.target.value);
                     }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
+                    className={settingsControlClass}
                   >
                     {QUALITY_OPTIONS.map((option) => (
                       <option key={option.value} value={option.value}>

@@ -437,7 +437,7 @@ export function SingleLineDiagram({
             <button
               type="button"
               onClick={handleZoomOut}
-              className="rounded border border-slate-600 px-2 py-1 text-xs text-slate-200 hover:border-emerald-300 hover:text-white"
+              className="inline-flex size-11 items-center justify-center rounded border border-slate-600 text-sm text-slate-200 hover:border-emerald-300 hover:text-white"
               aria-label="Zoom out"
             >
               −
@@ -445,7 +445,7 @@ export function SingleLineDiagram({
             <button
               type="button"
               onClick={handleZoomIn}
-              className="rounded border border-slate-600 px-2 py-1 text-xs text-slate-200 hover:border-emerald-300 hover:text-white"
+              className="inline-flex size-11 items-center justify-center rounded border border-slate-600 text-sm text-slate-200 hover:border-emerald-300 hover:text-white"
               aria-label="Zoom in"
             >
               +

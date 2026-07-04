@@ -14,6 +14,9 @@ const SPEED_OPTIONS = [
   { label: "Fast", value: 300 },
 ];
 
+const controlButtonClassName =
+  "inline-flex min-h-11 items-center justify-center rounded-md border px-3 py-2 text-sm transition-colors";
+
 export function VisualizerControls({
   isPlaying,
   isComplete,
@@ -31,7 +34,7 @@ export function VisualizerControls({
       <div className="mt-3 flex flex-wrap gap-2">
         <button
           type="button"
-          className="rounded-md border border-sky-500 px-3 py-2 text-sm text-sky-100 hover:bg-sky-900/50 disabled:opacity-40"
+          className={`${controlButtonClassName} border-sky-500 text-sky-100 hover:bg-sky-900/50 disabled:opacity-40`}
           onClick={onPlayPause}
           disabled={isComplete}
         >
@@ -39,7 +42,7 @@ export function VisualizerControls({
         </button>
         <button
           type="button"
-          className="rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800 disabled:opacity-40"
+          className={`${controlButtonClassName} border-gray-500 text-white hover:bg-gray-800 disabled:opacity-40`}
           onClick={onStep}
           disabled={isComplete}
         >
@@ -47,7 +50,7 @@ export function VisualizerControls({
         </button>
         <button
           type="button"
-          className="rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
+          className={`${controlButtonClassName} border-gray-500 text-white hover:bg-gray-800`}
           onClick={onReset}
         >
           Reset
@@ -63,7 +66,7 @@ export function VisualizerControls({
             <button
               key={option.value}
               type="button"
-              className={`rounded-md border px-3 py-1.5 text-xs ${
+              className={`inline-flex min-h-11 items-center justify-center rounded-md border px-3 py-2 text-sm transition-colors ${
                 speedMs === option.value
                   ? "border-emerald-400 bg-emerald-900/30 text-emerald-100"
                   : "border-gray-600 text-gray-200 hover:bg-gray-800"

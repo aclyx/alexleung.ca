@@ -63,6 +63,11 @@ const OPTIMIZER_EXPLANATIONS: Record<OptimizerId, string> = {
   adam: "Adam combines momentum with per-coordinate scaling. It usually settles quickly on these toy surfaces and makes adaptive behavior easy to compare.",
 };
 
+const controlFieldClassName =
+  "min-h-11 rounded-md border border-white/12 bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition-colors focus:border-cyan-300";
+const controlButtonClassName =
+  "inline-flex min-h-11 items-center justify-center rounded-md border px-4 py-2 text-sm font-medium transition-colors";
+
 type NumberInputProps = {
   label: string;
   value: number;
@@ -78,7 +83,7 @@ function NumberInput({ label, value, step, onChange }: NumberInputProps) {
         type="number"
         value={value}
         step={step}
-        className="rounded-md border border-white/12 bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition-colors focus:border-cyan-300"
+        className={controlFieldClassName}
         onChange={(event) => onChange(Number(event.target.value))}
       />
     </label>
@@ -224,7 +229,7 @@ export function LearningDynamicsLab() {
                 <span>Loss surface</span>
                 <select
                   value={surfaceId}
-                  className="rounded-md border border-white/12 bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition-colors focus:border-cyan-300"
+                  className={controlFieldClassName}
                   onChange={(event) => {
                     const nextSurfaceId = event.target.value;
 
@@ -272,7 +277,7 @@ export function LearningDynamicsLab() {
               <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
-                  className="rounded-md border border-cyan-400/50 bg-cyan-500/10 px-4 py-2 text-sm font-medium text-cyan-100 transition-colors hover:bg-cyan-500/20"
+                  className={`${controlButtonClassName} border-cyan-400/50 bg-cyan-500/10 text-cyan-100 hover:bg-cyan-500/20`}
                   onClick={() => {
                     trackLearningDynamicsInteraction(
                       isPlaying ? "pause" : "play"
@@ -284,7 +289,7 @@ export function LearningDynamicsLab() {
                 </button>
                 <button
                   type="button"
-                  className="rounded-md border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                  className={`${controlButtonClassName} border-white/15 bg-white/5 text-white hover:bg-white/10`}
                   onClick={() => {
                     trackLearningDynamicsInteraction("single_step");
                     setIsPlaying(false);
@@ -295,7 +300,7 @@ export function LearningDynamicsLab() {
                 </button>
                 <button
                   type="button"
-                  className="rounded-md border border-white/15 bg-white/5 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/10"
+                  className={`${controlButtonClassName} border-white/15 bg-white/5 text-white hover:bg-white/10`}
                   onClick={() => {
                     trackLearningDynamicsInteraction("reset");
                     resetRuns();

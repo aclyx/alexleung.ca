@@ -16,6 +16,9 @@ function isOptimizerId(value: string): value is OptimizerId {
   return OPTIMIZER_OPTIONS.some((option) => option.id === value);
 }
 
+const fieldClassName =
+  "min-h-11 rounded-md border border-white/12 bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition-colors focus:border-cyan-300";
+
 type RunSettingsCardProps = {
   config: RunConfig;
   onChange: (patch: Partial<RunConfig>) => void;
@@ -47,7 +50,7 @@ function NumberField({
         min={min}
         max={max}
         step={step}
-        className="rounded-md border border-white/12 bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition-colors focus:border-cyan-300"
+        className={fieldClassName}
         onChange={(event) => onChange(Number(event.target.value))}
       />
     </label>
@@ -71,9 +74,10 @@ export function RunSettingsCard({ config, onChange }: RunSettingsCardProps) {
             </p>
           </div>
         </div>
-        <label className="flex items-center gap-2 text-sm text-slate-200">
+        <label className="flex min-h-11 items-center gap-2 text-sm text-slate-200">
           <input
             type="checkbox"
+            className="size-5"
             checked={config.enabled}
             onChange={(event) => onChange({ enabled: event.target.checked })}
           />
@@ -86,7 +90,7 @@ export function RunSettingsCard({ config, onChange }: RunSettingsCardProps) {
           <span>{config.label} optimizer</span>
           <select
             value={config.optimizerId}
-            className="rounded-md border border-white/12 bg-slate-950/80 px-3 py-2 text-sm text-white outline-none transition-colors focus:border-cyan-300"
+            className={fieldClassName}
             onChange={(event) => {
               const optimizerId = event.target.value;
 

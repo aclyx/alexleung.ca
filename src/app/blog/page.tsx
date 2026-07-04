@@ -83,16 +83,19 @@ export default function BlogIndex() {
 
   return (
     <>
-      <PageShell title="Blog">
-        <ResponsiveContainer variant="wide" className="space-y-8">
+      <PageShell>
+        <ResponsiveContainer variant="wide" className="space-y-6 md:space-y-8">
           <section
             aria-label="Blog overview"
-            className="mx-auto max-w-5xl space-y-4 text-left md:text-center"
+            className="mx-auto max-w-5xl space-y-3 pt-6 text-left md:pt-8 md:text-center"
           >
+            <h1 className="text-3xl font-semibold tracking-wide text-white md:text-5xl">
+              Blog
+            </h1>
             <p className="mx-auto max-w-2xl text-body text-gray-200">
               Software systems, AI tools, books, and experiments.
             </p>
-            <div className="space-y-3">
+            <div className="space-y-2 md:space-y-3">
               <TopicRevealList topics={topics} />
               {seriesSummaries.length > 0 ? (
                 <div>
@@ -119,6 +122,7 @@ export default function BlogIndex() {
                 key={firstPost.slug}
                 post={firstPost}
                 coverPriority
+                compactOnMobile
               />
             ) : null}
             {remainingPosts.map((post) => (
