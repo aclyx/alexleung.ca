@@ -48,7 +48,7 @@ export default function LoadFlowPage() {
             This workspace uses a Newton-Raphson AC load flow engine with
             reference scenarios, bus-voltage results, and branch-flow outputs.
             You can start from a standard benchmark case or build and tune a
-            custom one-line model directly in the browser.
+            custom one-line model directly on the page.
           </p>
           <LoadFlowWorkspace />
         </ResponsiveContainer>

@@ -9,6 +9,7 @@ type SocialLinkListProps = {
   linkClassName?: string;
   labelClassName?: string;
   iconClassName?: string;
+  linkIds?: readonly number[];
   rel?: string;
   showLabel?: boolean;
   analyticsPlacement?: string;
@@ -22,13 +23,18 @@ export function SocialLinkList({
   linkClassName,
   labelClassName,
   iconClassName,
+  linkIds,
   rel = "me noopener",
   showLabel = false,
   labelFormatter = (label) => label,
 }: SocialLinkListProps) {
+  const links = linkIds
+    ? data.filter((link) => linkIds.includes(link.id))
+    : data;
+
   return (
     <ul className={className}>
-      {data.map((link) => (
+      {links.map((link) => (
         <li key={link.id} className={itemClassName}>
           <TrackedSocialLink
             href={link.url}
