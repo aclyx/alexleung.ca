@@ -7,8 +7,10 @@ import {
 import {
   renderMandelbrotWithStrategy,
   shouldAttemptWebGpu,
+  toSafePixelCoordinateNumber,
 } from "@/features/mandelbrot/renderer";
 import { RenderRequest } from "@/features/mandelbrot/types";
+import { configurePrecisionForWidth } from "@/features/mandelbrot/viewport";
 
 jest.mock("@/features/mandelbrot/gpu", () => ({
   ...jest.requireActual("@/features/mandelbrot/gpu"),
@@ -183,5 +185,26 @@ describe("renderMandelbrotWithStrategy", () => {
     expect(result.completed).toBe(true);
     expect(mockedDetectWebGpuAvailability).toHaveBeenCalled();
     expect(mockedRenderMandelbrotWithWebGpu).toHaveBeenCalledWith(request);
+  });
+});
+
+describe("toSafePixelCoordinateNumber", () => {
+  it("keeps continuation coordinates when numeric rounding is small relative to the pixel step", () => {
+    const step = new Decimal("1e-6");
+
+    configurePrecisionForWidth(step);
+
+    expect(toSafePixelCoordinateNumber(new Decimal("0.125"), step)).toBe(0.125);
+  });
+
+  it("rejects continuation coordinates when numeric rounding swamps the pixel step", () => {
+    const step = new Decimal("1e-32");
+    const coordinate = new Decimal("-0.838782074550394572901608663741").add(
+      step
+    );
+
+    configurePrecisionForWidth(step);
+
+    expect(toSafePixelCoordinateNumber(coordinate, step)).toBeNull();
   });
 });
