@@ -22,15 +22,16 @@ describe("Hero", () => {
 
     expect(
       screen.getByText(
-        /I build AI product surfaces and reliable software systems, then write down what I learn\./i
+        /I build AI product surfaces and reliable software systems\. I share some of my thoughts here\./i
       )
     ).toBeInTheDocument();
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: /Writing and Open Experiments/i,
+        name: /^Writing$/i,
       })
     ).toBeInTheDocument();
+    expect(screen.queryByText(/Most pieces start/i)).not.toBeInTheDocument();
   });
 
   it("should render contact and writing CTA links", () => {

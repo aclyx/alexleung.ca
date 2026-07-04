@@ -23,7 +23,7 @@ type ExperimentsHub = Pick<
 
 export const EXPERIMENTS_HUB: ExperimentsHub = {
   description:
-    "Open experiments for exploring systems, control loops, numerical methods, and runtime behavior.",
+    "Open experiments for exploring power systems, fractals, and control loops.",
   path: "/experimental/",
   title: "Experiments | Alex Leung",
   pageTitle: "Experiments",
@@ -61,34 +61,6 @@ export function getExperimentMetadataImage(experiment: ExperimentEntry) {
 }
 
 export const EXPERIMENTS: readonly ExperimentEntry[] = [
-  {
-    id: "event-loop",
-    kind: "Runtime",
-    pageTitle: "Event Loop Visualizer",
-    title: "Event Loop Visualizer | Alex Leung",
-    description:
-      "A small event loop visualizer for call stack, microtasks, tasks, timers, and execution order.",
-    path: "/experimental/event-loop/",
-    thumbnail: {
-      src: "/assets/experimental/event-loop.webp",
-      alt: "Screenshot of Event Loop Visualizer controls and execution state",
-    },
-    lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
-  },
-  {
-    id: "learning-dynamics",
-    kind: "Optimization",
-    pageTitle: "Learning Dynamics Lab",
-    title: "Learning Dynamics Lab | Alex Leung",
-    description:
-      "An optimizer visualizer for comparing SGD, Momentum, RMSProp, and Adam on simple 2D loss surfaces.",
-    path: "/experimental/learning-dynamics/",
-    thumbnail: {
-      src: "/assets/experimental/learning-dynamics.webp",
-      alt: "Screenshot of Learning Dynamics Lab simulation controls",
-    },
-    lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
-  },
   {
     id: "load-flow",
     kind: "Power Systems",

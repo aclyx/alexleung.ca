@@ -29,7 +29,7 @@ const personalPhotos: readonly PhotoGridItem[] = [
 export function PersonalPhotos() {
   return (
     <ResponsiveContainer element="section">
-      <SectionBlock title="Outside Work" titleId="outside-work" spacing="lg">
+      <SectionBlock title="A Few Photos" titleId="photos" spacing="lg">
         <PhotoGrid photos={personalPhotos} className="items-start" />
       </SectionBlock>
     </ResponsiveContainer>

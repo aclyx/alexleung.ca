@@ -16,11 +16,8 @@ describe("ExperimentsPage", () => {
       screen.getByRole("heading", { level: 1, name: "Experiments" })
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("link", { name: /event loop visualizer/i })
-    ).toHaveAttribute(
-      "href",
-      expect.stringMatching(/^\/experimental\/event-loop\/?$/)
-    );
+      screen.queryByRole("link", { name: /event loop visualizer/i })
+    ).not.toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /pid controller simulator/i })
     ).toHaveAttribute(

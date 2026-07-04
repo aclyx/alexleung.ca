@@ -18,7 +18,6 @@ This folder contains maintainer-facing documentation that supports implementatio
 
 | File                               | Purpose                                                     | Update cadence                                              |
 | ---------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| `event-loop-visualizer.md`         | Event loop visualizer model notes and simplifications       | When the model, scheduler, or examples change materially    |
 | `pid-controller-simulator.md`      | PID simulator architecture, math model, and extension notes | When simulator model, presets, or stepping behavior changes |
 | `load-flow-implementation-plan.md` | Load-flow implementation status and remaining work          | When load-flow routing, solver scope, or UI scope changes   |
 

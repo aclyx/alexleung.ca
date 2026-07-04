@@ -2,9 +2,9 @@
 title: "Coding Agents for Inspectable Browser Tools"
 date: "2026-04-10"
 updated: "2026-06-15"
-excerpt: "Building frontend-only tools for load flow, Mandelbrot zooming, optimizer behavior, and event-loop ordering gave me concrete ways to inspect older technical models."
+excerpt: "Building frontend-only tools for load flow and Mandelbrot zooming gave me concrete ways to inspect older technical models."
 coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png"
-coverAlt: "Illustration of Alex working across screens showing event loop, control, and fractal visualizations"
+coverAlt: "Illustration of Alex working across screens showing technical tool visualizations"
 tags:
   - "AI"
   - "Developer Workflow"
@@ -15,7 +15,7 @@ seriesOrder: 4
 
 I started building a small set of frontend-only interactive tools mostly out of curiosity. I wanted to see how coding agents would handle more involved static web applications without server-side components.
 
-So far, that set includes a [load flow tool](/experimental/load-flow/), an [event loop visualizer](/experimental/event-loop/), a [learning dynamics lab](/experimental/learning-dynamics/), and a [Mandelbrot explorer](/experimental/mandelbrot/).
+So far, that set includes a [load flow tool](/experimental/load-flow/) and a [Mandelbrot explorer](/experimental/mandelbrot/).
 
 These were useful test cases because they are small enough to live entirely on the client side in a Next.js app, but they still involve interaction, visualization, timing, feedback, state, and sometimes numerical precision. The logic needs to live in the client. They also gave me a compact way to make older technical models inspectable again.
 
@@ -39,7 +39,7 @@ The current implementation still has a practical precision ceiling: if I zoom to
 
 ## Inspectable models
 
-The tools work best when they make a model visible instead of leaving it at the level of equations or static notes. The [Learning Dynamics Lab](/experimental/learning-dynamics/) does that for optimizer behavior. The [Event Loop Visualizer](/experimental/event-loop/) fits the same pattern. Queuing `Promise.then(...)` beside `setTimeout(..., 0)` and stepping the runtime forward makes the ordering easier to inspect: the microtask queue drains before the next task starts.
+The tools work best when they make a model visible instead of leaving it at the level of equations or static notes. Load flow is easier to reason about when I can change a bus input and inspect the voltage and branch-flow results directly. Mandelbrot zooming has the same quality: the tool lets me push on precision, rendering time, and viewport state instead of stopping at a static explanation.
 
 That is also where the coding agent has been most useful. It helped me get started, scaffold the UI, and move through implementation faster. But the useful artifact is the tool, not the transcript. The tool lets me inspect behavior directly. If the behavior looks wrong, I can change the input, rerun the model, or inspect the code instead of stopping at an explanation.
 
