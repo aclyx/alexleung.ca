@@ -153,6 +153,8 @@ GitHub Actions runs Playwright through the same Compose services used locally:
 
 The post-deploy live job waits for `https://alexleung.ca/deploy-meta.json` to serve the current `GITHUB_SHA` before running `PLAYWRIGHT_BASE_URL=https://alexleung.ca` through the same Dockerized smoke service. This marker is emitted as part of `yarn build`, which prevents the live smoke suite from validating a stale Pages deployment that still returns `200` while the new revision is propagating.
 
+The Compose services pass the runner's `CI` environment value into the Playwright container, so `playwright.config.ts` applies CI-only guardrails such as `forbidOnly` and retries for transient browser failures. Local runs leave `CI` empty and keep the faster no-retry behavior.
+
 Relevant workflows:
 
 - `.github/workflows/pr-checks.yml`

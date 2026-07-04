@@ -4,6 +4,7 @@ x-playwright-base: &playwright-base
   init: true
   ipc: host
   environment:
+    CI: ${CI:-}
     TZ: UTC
     LANG: C.UTF-8
     HOME: /tmp/pw-home
