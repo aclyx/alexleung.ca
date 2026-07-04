@@ -21,8 +21,8 @@ export function Hero() {
             Software Engineer and Writer.
           </h2>
           <p className="mt-3 text-sm text-gray-200 md:text-gray-300">
-            I build AI product surfaces and reliable software systems, then
-            write down what I learn.
+            I build AI product surfaces and reliable software systems. I share
+            some of my thoughts here.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
@@ -43,17 +43,12 @@ export function Hero() {
                 id="positioning-heading"
                 className="text-heading font-semibold"
               >
-                Writing and Open Experiments
+                Writing
               </h2>
               <p className="text-body mt-4 text-gray-200">
                 I keep essays, technical notes, and project writeups here:
-                software systems, AI product development, deep learning, and
-                open experiments.
-              </p>
-              <p className="text-body mt-3 text-gray-200">
-                Most pieces start from a concrete thing I tried: an
-                implementation detail, a reading note, a tool behavior, or a
-                product or system trade-off.
+                software systems, AI product development, and personal
+                reflections.
               </p>
             </section>
           </div>

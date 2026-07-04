@@ -156,14 +156,6 @@ yarn test src/features/mandelbrot/__tests__/viewport.test.ts \
   src/app/experimental/mandelbrot/_components/__tests__/MandelbrotExplorer.test.tsx
 ```
 
-## Learning Dynamics Lab
-
-- Route: `src/app/experimental/learning-dynamics/page.tsx`
-- Client workspace: `src/app/experimental/learning-dynamics/_components/`
-- Pure math and simulation logic: `src/features/optimizer-lab/`
-
-The optimizer visualizer keeps the numerical pieces independent from React. Each loss surface exposes a pure `evaluate` and `gradient` function, each optimizer is modeled as a pure step function, and the client workspace only coordinates controls, playback, and SVG rendering. To verify the feature locally, run `yarn test`, `yarn lint`, `yarn typecheck`, and `yarn build`, plus the existing Playwright smoke and visual suites.
-
 ## Documentation Map
 
 - [`docs/README.md`](./docs/README.md) — docs directory guide and document inventory
@@ -172,7 +164,6 @@ The optimizer visualizer keeps the numerical pieces independent from React. Each
 - [`docs/codespaces.md`](./docs/codespaces.md) — Codespaces Lighthouse troubleshooting
 - [`docs/playwright-testing-design.md`](./docs/playwright-testing-design.md) — Playwright smoke, visual, host-mode, and CI workflow
 - [`docs/typography-audit.md`](./docs/typography-audit.md) — typography audit history and current prose guardrails
-- [`docs/event-loop-visualizer.md`](./docs/event-loop-visualizer.md) — event loop visualizer model notes
 - [`docs/pid-controller-simulator.md`](./docs/pid-controller-simulator.md) — PID simulator architecture notes
 - [`docs/load-flow-implementation-plan.md`](./docs/load-flow-implementation-plan.md) — load-flow implementation status and remaining slices
 - [`docs/industrial-ee-browser-utilities-plan.md`](./docs/industrial-ee-browser-utilities-plan.md) — parked planning reference for possible future engineering utilities

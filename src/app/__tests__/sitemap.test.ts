@@ -63,12 +63,12 @@ describe("sitemap", () => {
     const entries = sitemap();
     expect(
       entries.some((entry) => entry.url.includes("/experimental/event-loop/"))
-    ).toBe(true);
+    ).toBe(false);
     expect(
       entries.some((entry) =>
         entry.url.includes("/experimental/learning-dynamics/")
       )
-    ).toBe(true);
+    ).toBe(false);
   });
 
   it("uses the freshest post update as the homepage lastModified value", () => {

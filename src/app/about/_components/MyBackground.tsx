@@ -1,7 +1,8 @@
+import type { ReactNode } from "react";
+
 import Link from "next/link";
 
 import ExternalLink from "@/components/ExternalLink";
-import { IconTextRow } from "@/components/IconTextRow";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { ResponsiveImage } from "@/components/ResponsiveImage";
 import { SectionBlock } from "@/components/SectionBlock";
@@ -10,6 +11,20 @@ import {
   getStaticImageSourceSet,
 } from "@/lib/localImageMetadata";
 
+type AboutNoteProps = {
+  title: string;
+  children: ReactNode;
+};
+
+function AboutNote({ title, children }: AboutNoteProps) {
+  return (
+    <section className="space-y-3">
+      <h3 className="text-heading-sm font-semibold text-white">{title}</h3>
+      <div className="space-y-3 leading-relaxed text-gray-200">{children}</div>
+    </section>
+  );
+}
+
 export function Journey() {
   const aboutPortraitSrcSet = getStaticImageSourceSet("aboutPortrait");
   const aboutPortraitFallback = getStaticImageFallback("aboutPortrait");
@@ -17,29 +32,29 @@ export function Journey() {
   return (
     <ResponsiveContainer element="section">
       <SectionBlock title="Background" titleId="background" spacing="lg">
-        <div className="md:grid md:grid-cols-[3fr_2fr] md:gap-x-16 md:pt-8">
-          <div className="text-body mb-8 space-y-6 text-left">
-            <IconTextRow icon="👋" title="Currently">
+        <div className="md:grid md:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] md:items-start md:gap-x-16 md:pt-8">
+          <div className="text-body mb-8 space-y-7 text-left">
+            <AboutNote title="Current Work">
               <p>
-                Hi, I&apos;m Alex, a software engineer based in San Francisco. I
-                work at{" "}
+                Hi, I&apos;m Alex. I&apos;m a software engineer in San
+                Francisco, currently working at{" "}
                 <ExternalLink href="https://openai.com/">OpenAI</ExternalLink>.
               </p>
               <p>
-                For a more current snapshot of what I&apos;m focused on, I keep
-                a short{" "}
+                I keep a short{" "}
                 <Link
                   href="/now/"
                   className="text-accent-link transition-colors hover:text-accent-link-hover"
                 >
                   Now page
-                </Link>
-                .
+                </Link>{" "}
+                for the things I&apos;m focused on right now.
               </p>
+            </AboutNote>
+
+            <AboutNote title="Previous Work">
               <p>
-                My background spans embedded systems, distributed systems, and
-                full-stack product engineering, with previous work across home
-                electrification at{" "}
+                Before OpenAI, I worked on home electrification at{" "}
                 <ExternalLink href="https://jetsonhome.com">
                   Jetson
                 </ExternalLink>
@@ -50,44 +65,31 @@ export function Journey() {
                 , and consumer finance at{" "}
                 <ExternalLink href="https://cash.app/">Cash App</ExternalLink>.
               </p>
-            </IconTextRow>
+              <p>
+                That work has crossed embedded systems, distributed systems,
+                backend infrastructure, and full-stack product surfaces.
+              </p>
+            </AboutNote>
 
-            <IconTextRow icon="🛠️" title="Building Style">
+            <AboutNote title="How I Work">
               <p>
-                I&apos;m drawn to software products and systems that feel simple
-                to use.
+                I usually work near the boundary between product behavior and
+                the systems underneath it: turning rough ideas into usable
+                flows, keeping state understandable, and making the reliable
+                path feel simple.
               </p>
               <p>
-                That often means working across boundaries: product definition,
-                backend systems, data flows, infrastructure, frontend surfaces,
-                and the engineering details that make the experience reliable.
+                I&apos;m especially interested in AI product development:
+                shaping useful behavior, evaluating agent workflows, and keeping
+                careful review in the loop.
               </p>
-            </IconTextRow>
+            </AboutNote>
 
-            <IconTextRow icon="🧩" title="Problem Shape">
+            <AboutNote title="Writing">
               <p>
-                I&apos;m especially interested in problems where the shape is
-                still being figured out: early ideas, product inflection points,
-                and systems that need to grow without becoming harder to reason
-                about.
-              </p>
-              <p>
-                Lately, I&apos;ve been especially interested in AI product
-                development: shaping useful product behavior, evaluating agent
-                workflows, and keeping careful review in the loop.
-              </p>
-              <p>
-                I&apos;m usually happiest in work where there are several
-                plausible paths forward, and progress depends on taste,
-                iteration, and good feedback.
-              </p>
-            </IconTextRow>
-
-            <IconTextRow icon="✍️" title="Writing and Outside Work">
-              <p>
-                I write notes on software, AI tools, and learning from small
-                projects. If you want a better sense of how I think, start with
-                my{" "}
+                I share my thoughts on software, AI tools, deep learning, and
+                small browser-based tools here. For a better sense of how I
+                think, start with my{" "}
                 <Link
                   href="/blog/"
                   className="text-accent-link transition-colors hover:text-accent-link-hover"
@@ -104,13 +106,13 @@ export function Journey() {
                 .
               </p>
               <p>
-                Outside of work, I spend time playing tennis, reading, hiking,
-                rock climbing, and spending time with my cats.
+                Away from the desk, I spend time reading, playing tennis,
+                hiking, climbing, and hanging out with my cats.
               </p>
-            </IconTextRow>
+            </AboutNote>
           </div>
 
-          <div className="flex flex-col gap-4 md:gap-6">
+          <div className="md:sticky md:top-[calc(var(--header-height)+2rem)]">
             <ResponsiveImage
               src={aboutPortraitFallback.path}
               srcSet={aboutPortraitSrcSet}
@@ -118,23 +120,11 @@ export function Journey() {
               width={aboutPortraitFallback.width}
               height={aboutPortraitFallback.height}
               sizes="(min-width: 1024px) 28vw, (min-width: 768px) 36vw, 88vw"
+              className="aspect-[4/3] w-full rounded-lg border border-white/10 object-cover"
               loading="lazy"
               fetchPriority="low"
               decoding="async"
             />
-            <div className="overflow-hidden rounded-lg border border-white/10 bg-slate-950/65">
-              <img
-                src="/assets/alex_vibing.webp"
-                alt="Alex Leung seated indoors near a desk and wall notes"
-                width={1536}
-                height={1024}
-                sizes="(min-width: 1024px) 28vw, (min-width: 768px) 36vw, 88vw"
-                loading="lazy"
-                fetchPriority="low"
-                decoding="async"
-                className="aspect-[3/2] w-full object-cover"
-              />
-            </div>
           </div>
         </div>
       </SectionBlock>
