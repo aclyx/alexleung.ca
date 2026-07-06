@@ -95,7 +95,7 @@ export function PidControls({
   onReset,
 }: PidControlsProps) {
   return (
-    <section className="space-y-4 rounded-lg border border-gray-700 bg-black/40 p-4">
+    <section className="space-y-4 rounded-lg border border-gray-700 bg-black/65 p-4">
       <div>
         <label htmlFor="pid-preset" className="text-body-sm text-gray-200">
           Preset response

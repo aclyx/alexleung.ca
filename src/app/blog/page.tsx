@@ -137,17 +137,18 @@ export default function BlogIndex() {
               </div>
             </details>
           </section>
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-8 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             {firstPost ? (
               <BlogPostCard
                 key={firstPost.slug}
                 post={firstPost}
                 coverPriority
                 compactOnMobile
+                dense
               />
             ) : null}
             {remainingPosts.map((post) => (
-              <BlogPostCard key={post.slug} post={post} compactOnMobile />
+              <BlogPostCard key={post.slug} post={post} compactOnMobile dense />
             ))}
           </div>
           <FollowItSubscribeForm

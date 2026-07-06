@@ -6,7 +6,7 @@ export function Hero() {
   return (
     <section
       id="home"
-      className="flex flex-grow items-center justify-center pb-12 pt-[calc(var(--header-height)+1.5rem)] md:pb-12 md:pt-[calc(var(--header-height)+3rem)]"
+      className="flex items-center justify-center pb-8 pt-[calc(var(--header-height)+1.5rem)] md:pb-10 md:pt-[calc(var(--header-height)+2.5rem)]"
     >
       <div className="section-center">
         <div className="mx-auto max-w-3xl">
@@ -32,25 +32,6 @@ export function Hero() {
             <CTAButton href="/blog/" variant="secondary">
               Read writing <HiOutlineArrowRight className="text-lg" />
             </CTAButton>
-          </div>
-
-          <div className="mt-10">
-            <section
-              aria-labelledby="positioning-heading"
-              className="surface-static p-5 md:p-6"
-            >
-              <h2
-                id="positioning-heading"
-                className="text-heading font-semibold"
-              >
-                Writing
-              </h2>
-              <p className="text-body mt-4 text-gray-200">
-                I keep essays, technical notes, and project writeups here:
-                software systems, AI product development, and personal
-                reflections.
-              </p>
-            </section>
           </div>
         </div>
       </div>

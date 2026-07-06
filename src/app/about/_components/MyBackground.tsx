@@ -32,8 +32,8 @@ export function Journey() {
   return (
     <ResponsiveContainer element="section">
       <SectionBlock title="Background" titleId="background" spacing="lg">
-        <div className="md:grid md:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] md:items-start md:gap-x-16 md:pt-8">
-          <div className="text-body mb-8 space-y-7 text-left">
+        <div className="grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(18rem,24rem)] md:items-start md:gap-x-16 md:pt-8">
+          <div className="text-body order-2 space-y-7 text-left md:order-1">
             <AboutNote title="Current Work">
               <p>
                 Hi, I&apos;m Alex. I&apos;m a software engineer in San
@@ -112,7 +112,7 @@ export function Journey() {
             </AboutNote>
           </div>
 
-          <div className="md:sticky md:top-[calc(var(--header-height)+2rem)]">
+          <div className="order-1 md:sticky md:top-[calc(var(--header-height)+2rem)] md:order-2">
             <ResponsiveImage
               src={aboutPortraitFallback.path}
               srcSet={aboutPortraitSrcSet}

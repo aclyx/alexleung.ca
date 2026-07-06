@@ -146,7 +146,7 @@ export function LoadFlowWorkspace() {
   };
 
   return (
-    <section className="rounded-xl border border-gray-700 bg-gray-900/60 p-6 shadow-sm">
+    <section className="rounded-xl border border-gray-600 bg-slate-950/85 p-6 shadow-sm">
       <h2 className="text-heading-sm text-white">Workspace</h2>
       <p className="text-body mt-2 text-gray-300">
         Build a one-line model, run an AC load flow solve, and inspect voltage

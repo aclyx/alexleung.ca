@@ -83,6 +83,15 @@
     @apply max-w-content mx-auto w-[90vw];
   }
 
+  .page-shell {
+    background: linear-gradient(
+      180deg,
+      rgba(2, 6, 23, 0.5) 0%,
+      rgba(2, 6, 23, 0.7) 42%,
+      rgba(2, 6, 23, 0.88) 100%
+    );
+  }
+
   @media screen and (min-width: 992px) {
     .section-center {
       @apply w-[70vw];
@@ -174,7 +183,7 @@
   }
 
   .text-hero-title {
-    @apply text-4xl md:text-7xl lg:text-8xl;
+    @apply text-4xl md:text-6xl lg:text-7xl;
   }
 
   .text-hero-description {
