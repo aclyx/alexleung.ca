@@ -67,29 +67,29 @@ export function Journey() {
               </p>
               <p>
                 That work has crossed embedded systems, distributed systems,
-                backend infrastructure, and full-stack product surfaces.
+                backend infrastructure, and full-stack product work.
               </p>
             </AboutNote>
 
             <AboutNote title="How I Work">
               <p>
-                I usually work near the boundary between product behavior and
-                the systems underneath it: turning rough ideas into usable
-                flows, keeping state understandable, and making the reliable
-                path feel simple.
+                I like starting from real-world problems that still need to be
+                shaped: understanding the constraint, deciding what is worth
+                solving, and finding a technical path that can hold up in
+                practice.
               </p>
               <p>
-                I&apos;m especially interested in AI product development:
-                shaping useful behavior, evaluating agent workflows, and keeping
-                careful review in the loop.
+                I try to make the reasoning visible as the work develops,
+                especially the trade-offs, risks, and evidence that should
+                change the plan.
               </p>
             </AboutNote>
 
             <AboutNote title="Writing">
               <p>
-                I share my thoughts on software, AI tools, deep learning, and
-                small browser-based tools here. For a better sense of how I
-                think, start with my{" "}
+                I write about software systems, AI tools, deep learning, and
+                personal experiments here. For a better sense of how I think
+                through technical work, start with my{" "}
                 <Link
                   href="/blog/"
                   className="text-accent-link transition-colors hover:text-accent-link-hover"
