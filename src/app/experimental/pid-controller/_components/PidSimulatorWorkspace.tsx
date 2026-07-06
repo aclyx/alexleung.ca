@@ -227,7 +227,7 @@ export function PidSimulatorWorkspace() {
   };
 
   return (
-    <section className="space-y-6 rounded-xl border border-gray-700 bg-gray-900/60 p-6 shadow-sm">
+    <section className="space-y-6 rounded-xl border border-gray-600 bg-slate-950/85 p-6 shadow-sm">
       <div>
         <h2 className="text-heading-sm text-white">PID Controller Simulator</h2>
         <p className="text-body mt-2 text-gray-300">
@@ -328,7 +328,7 @@ export function PidSimulatorWorkspace() {
         />
       </div>
 
-      <section className="grid gap-3 rounded-lg border border-gray-700 bg-black/40 p-4 text-sm md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-3 rounded-lg border border-gray-700 bg-black/65 p-4 text-sm md:grid-cols-2 xl:grid-cols-4">
         <div>
           <p className="text-gray-400">Rise time (10%→90%)</p>
           <p className="text-lg text-white">

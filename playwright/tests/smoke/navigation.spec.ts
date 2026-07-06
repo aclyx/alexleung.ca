@@ -55,8 +55,8 @@ test("home page renders the hero content", async ({ page }) => {
     page.getByRole("link", { name: "Contact Alex" })
   ).toHaveAttribute("href", "/contact/");
   await expect(
-    page.getByRole("heading", { name: "Writing", exact: true })
-  ).toBeVisible();
+    page.getByRole("link", { name: "Read writing" })
+  ).toHaveAttribute("href", "/blog/");
 });
 
 test("primary navigation routes render expected page headings", async ({

@@ -16,7 +16,7 @@ export function PageShell({
   className = "",
 }: PageShellProps) {
   return (
-    <div className={`py-[var(--header-height)] ${className}`.trim()}>
+    <div className={`page-shell py-[var(--header-height)] ${className}`.trim()}>
       {title ? <Title title={title} id={titleId} /> : null}
       {children}
     </div>

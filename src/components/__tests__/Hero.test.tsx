@@ -17,7 +17,7 @@ describe("Hero", () => {
     ).toBeInTheDocument();
   });
 
-  it("should render friendly supporting copy", () => {
+  it("should render friendly supporting copy without an extra positioning panel", () => {
     render(<Hero />);
 
     expect(
@@ -26,11 +26,11 @@ describe("Hero", () => {
       )
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("heading", {
+      screen.queryByRole("heading", {
         level: 2,
         name: /^Writing$/i,
       })
-    ).toBeInTheDocument();
+    ).not.toBeInTheDocument();
     expect(screen.queryByText(/Most pieces start/i)).not.toBeInTheDocument();
   });
 

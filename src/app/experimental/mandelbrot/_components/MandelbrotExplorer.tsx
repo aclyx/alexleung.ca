@@ -48,7 +48,7 @@ const DEFAULT_CANVAS_SIZE: PixelSize = {
 
 const DEFAULT_GPU_SETTINGS: MandelbrotSettings = {
   maxIterations: 2000,
-  paletteId: "oceanic",
+  paletteId: "ember",
   coloringMode: "smooth",
   resolutionScale: 1,
   renderBackendPreference: "auto",
@@ -56,7 +56,7 @@ const DEFAULT_GPU_SETTINGS: MandelbrotSettings = {
 
 const DEFAULT_CPU_SETTINGS: MandelbrotSettings = {
   maxIterations: 180,
-  paletteId: "oceanic",
+  paletteId: "ember",
   coloringMode: "smooth",
   resolutionScale: 0.5,
   renderBackendPreference: "auto",

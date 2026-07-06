@@ -403,7 +403,7 @@ export function MandelbrotCanvas({
   return (
     <div
       ref={containerRef}
-      className="relative min-h-[24rem] overflow-hidden rounded-xl border border-cyan-500/20 bg-slate-950 shadow-[0_24px_80px_rgba(8,145,178,0.18)]"
+      className="relative min-h-[24rem] overflow-hidden rounded-xl border border-cyan-300/30 bg-black shadow-[0_20px_60px_rgba(8,145,178,0.16)]"
     >
       <div className="absolute inset-0 z-0">
         <canvas
@@ -427,7 +427,7 @@ export function MandelbrotCanvas({
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.08),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.035),transparent_55%)]" />
 
       {selectionRect ? (
         <div

@@ -10,6 +10,7 @@ type CoverImageProps = {
   imageClassName?: string;
   fallbackLabel?: string;
   compactOnMobile?: boolean;
+  thumbnail?: boolean;
   priority?: boolean;
 };
 
@@ -23,13 +24,16 @@ export function CoverImage({
   imageClassName = "",
   fallbackLabel = "No cover image available",
   compactOnMobile = false,
+  thumbnail = false,
   priority = false,
 }: CoverImageProps) {
   const wrapperClassName =
     variant === "card"
-      ? compactOnMobile
-        ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-800 md:h-52 md:w-full md:rounded-lg"
-        : "h-52 w-full overflow-hidden rounded-lg bg-gray-800"
+      ? thumbnail
+        ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-800 md:h-24 md:w-36"
+        : compactOnMobile
+          ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-800 md:h-52 md:w-full md:rounded-lg"
+          : "h-52 w-full overflow-hidden rounded-lg bg-gray-800"
       : "overflow-hidden rounded-lg bg-gray-800";
 
   const basePictureClassName =
@@ -37,9 +41,11 @@ export function CoverImage({
 
   const baseImageClassName =
     variant === "card"
-      ? compactOnMobile
-        ? "h-full w-full object-cover object-center md:object-contain"
-        : "h-full w-full object-contain object-center"
+      ? thumbnail
+        ? "h-full w-full object-cover object-center"
+        : compactOnMobile
+          ? "h-full w-full object-cover object-center md:object-contain"
+          : "h-full w-full object-contain object-center"
       : "aspect-[2/1] w-full object-contain object-center shadow-sm";
 
   if (!src) {

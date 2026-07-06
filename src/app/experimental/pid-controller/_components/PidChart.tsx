@@ -34,7 +34,7 @@ const toPath = (
 export function PidChart({ samples }: PidChartProps) {
   if (samples.length < 2) {
     return (
-      <figure className="rounded-lg border border-gray-700 bg-black/40 p-3">
+      <figure className="rounded-lg border border-gray-700 bg-black/65 p-3">
         <figcaption
           className="text-body-sm mb-3 text-gray-200"
           role="img"
@@ -119,7 +119,7 @@ export function PidChart({ samples }: PidChartProps) {
   ];
 
   return (
-    <figure className="rounded-lg border border-gray-700 bg-black/40 p-3">
+    <figure className="rounded-lg border border-gray-700 bg-black/65 p-3">
       <figcaption className="text-body-sm mb-3 text-gray-200">
         Response over time (fixed-step simulation)
       </figcaption>
@@ -161,9 +161,9 @@ export function PidChart({ samples }: PidChartProps) {
         {legendItems.map((item) => (
           <div
             key={item.label}
-            className="flex items-center justify-between gap-3 rounded-md border border-gray-800 bg-gray-950/60 px-3 py-2"
+            className="rounded-md border border-gray-800 bg-gray-950/60 px-3 py-2"
           >
-            <div className="flex min-w-0 items-center gap-2">
+            <div className="flex items-center gap-2">
               <svg
                 width={LEGEND_SWATCH_WIDTH}
                 height={LEGEND_SWATCH_HEIGHT}
@@ -182,9 +182,9 @@ export function PidChart({ samples }: PidChartProps) {
                   strokeLinecap="round"
                 />
               </svg>
-              <span className="text-body-sm truncate">{item.label}</span>
+              <span className="text-body-sm leading-snug">{item.label}</span>
             </div>
-            <span className="text-body-sm shrink-0 font-mono text-gray-100">
+            <span className="mt-1 block pl-9 text-body-sm font-mono text-gray-100">
               {item.value.toFixed(2)}
             </span>
           </div>
