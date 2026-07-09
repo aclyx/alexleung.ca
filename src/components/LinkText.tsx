@@ -9,13 +9,13 @@ type LinkTextProps = {
   external?: boolean;
 };
 
-const defaultClassName =
+const inlineLinkClassName =
   "text-accent-link underline decoration-accent-link/50 transition-colors hover:text-accent-link-hover hover:decoration-accent-link-hover";
 
 export function LinkText({
   href,
   children,
-  className = defaultClassName,
+  className = inlineLinkClassName,
   external = false,
 }: LinkTextProps) {
   if (external) {

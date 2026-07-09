@@ -20,4 +20,13 @@ describe("LinkText", () => {
 
     expect(screen.getByText("Blog")).toHaveAttribute("href", "/blog");
   });
+
+  it("uses the shared inline link treatment by default", () => {
+    render(<LinkText href="/blog">Blog</LinkText>);
+
+    const link = screen.getByText("Blog");
+    expect(link).toHaveClass("text-accent-link");
+    expect(link).toHaveClass("underline");
+    expect(link).toHaveClass("decoration-accent-link/50");
+  });
 });
