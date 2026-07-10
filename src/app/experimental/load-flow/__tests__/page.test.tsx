@@ -7,7 +7,7 @@ describe("LoadFlowPage", () => {
     render(<LoadFlowPage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "Load Flow" })
+      screen.getByRole("heading", { level: 1, name: "AC Load Flow Solver" })
     ).toBeInTheDocument();
     expect(screen.getByText("Workspace")).toBeInTheDocument();
     expect(
