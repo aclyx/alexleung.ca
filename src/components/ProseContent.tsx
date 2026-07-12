@@ -10,7 +10,7 @@ type ProseContentProps = {
 };
 
 const proseBaseClasses =
-  "prose prose-invert max-w-none prose-headings:text-white prose-p:text-gray-300 prose-a:text-accent-link prose-a:no-underline hover:prose-a:text-accent-link-hover hover:prose-a:underline prose-strong:text-white prose-pre:border prose-pre:border-white/10 prose-pre:bg-black/50";
+  "prose prose-invert max-w-none prose-headings:text-white prose-p:text-gray-300 prose-a:text-accent-link prose-a:underline prose-a:decoration-accent-link/50 prose-a:transition-colors hover:prose-a:text-accent-link-hover hover:prose-a:decoration-accent-link-hover prose-strong:text-white prose-pre:border prose-pre:border-white/10 prose-pre:bg-black/50";
 
 const proseSizeClasses: Record<ProseSize, string> = {
   sm: "prose-sm md:prose-sm",

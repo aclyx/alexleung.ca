@@ -1,8 +1,7 @@
 import type { ReactNode } from "react";
 
-import Link from "next/link";
-
 import ExternalLink from "@/components/ExternalLink";
+import { LinkText } from "@/components/LinkText";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { ResponsiveImage } from "@/components/ResponsiveImage";
 import { SectionBlock } from "@/components/SectionBlock";
@@ -41,14 +40,8 @@ export function Journey() {
                 <ExternalLink href="https://openai.com/">OpenAI</ExternalLink>.
               </p>
               <p>
-                I keep a short{" "}
-                <Link
-                  href="/now/"
-                  className="text-accent-link transition-colors hover:text-accent-link-hover"
-                >
-                  Now page
-                </Link>{" "}
-                for the things I&apos;m focused on right now.
+                I keep a short <LinkText href="/now/">Now page</LinkText>, with
+                notes on what I&apos;m focused on right now.
               </p>
             </AboutNote>
 
@@ -90,20 +83,8 @@ export function Journey() {
                 I write about software systems, AI tools, deep learning, and
                 personal experiments here. For a better sense of how I think
                 through technical work, start with my{" "}
-                <Link
-                  href="/blog/"
-                  className="text-accent-link transition-colors hover:text-accent-link-hover"
-                >
-                  recent writing
-                </Link>{" "}
-                or{" "}
-                <Link
-                  href="/contact/"
-                  className="text-accent-link transition-colors hover:text-accent-link-hover"
-                >
-                  get in touch here
-                </Link>
-                .
+                <LinkText href="/blog/">recent writing</LinkText>, or{" "}
+                <LinkText href="/contact/">get in touch here</LinkText>.
               </p>
               <p>
                 Away from the desk, I spend time reading, playing tennis,
