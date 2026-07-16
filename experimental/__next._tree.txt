@@ -4,4 +4,4 @@
 :HL["/assets/experimental/load-flow.webp","image",{"fetchPriority":"high"}]
 :HL["/assets/experimental/mandelbrot.webp","image",{"fetchPriority":"high"}]
 :HL["/assets/experimental/pid-controller.webp","image",{"fetchPriority":"high"}]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"experimental","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"II__QDB7q5_bjojRMWCUv"}
+0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"experimental","param":null,"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}},"staleTime":300,"buildId":"CzAm2JttecM1mk6kBjav-"}
