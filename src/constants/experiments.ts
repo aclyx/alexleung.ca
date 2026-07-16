@@ -13,6 +13,7 @@ type ExperimentEntry = {
 };
 
 const EXPERIMENT_LAST_MODIFIED_ISO = "2026-04-20";
+const LOAD_FLOW_LAST_MODIFIED_ISO = "2026-07-10";
 const EXPERIMENT_THUMBNAIL_WIDTH = 960;
 const EXPERIMENT_THUMBNAIL_HEIGHT = 540;
 
@@ -64,16 +65,16 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
   {
     id: "load-flow",
     kind: "Power Systems",
-    pageTitle: "Load Flow",
-    title: "Load Flow | Alex Leung",
+    pageTitle: "AC Load Flow Solver",
+    title: "AC Load Flow Solver | Alex Leung",
     description:
-      "An AC load flow workspace for editing one-line models and solving bus voltages and branch flows.",
+      "An interactive AC load flow solver for editing one-line models and inspecting bus voltages and branch flows.",
     path: "/experimental/load-flow/",
     thumbnail: {
       src: "/assets/experimental/load-flow.webp",
       alt: "Screenshot of Load Flow reference scenarios and one-line diagram",
     },
-    lastModified: EXPERIMENT_LAST_MODIFIED_ISO,
+    lastModified: LOAD_FLOW_LAST_MODIFIED_ISO,
   },
   {
     id: "mandelbrot",

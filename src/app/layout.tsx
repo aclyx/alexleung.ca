@@ -4,9 +4,10 @@ import { JsonLd } from "react-schemaorg";
 import type { Metadata, Viewport } from "next";
 import { Lato } from "next/font/google";
 
+import { GoogleAnalytics } from "@next/third-parties/google";
+
 import { AppBackground } from "@/components/AppBackground";
 import Footer from "@/components/Footer";
-import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import Header from "@/components/Header";
 import { SiteLinkAnalytics } from "@/components/SiteLinkAnalytics";
 import { BASE_URL } from "@/constants";
@@ -103,7 +104,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <JsonLd item={buildWebsiteSchema({ description })} />
         <JsonLd item={buildSiteNavigationSchema()} />
         {googleAnalyticsId ? (
-          <GoogleAnalytics measurementId={googleAnalyticsId} />
+          <GoogleAnalytics gaId={googleAnalyticsId} />
         ) : null}
       </body>
     </html>
