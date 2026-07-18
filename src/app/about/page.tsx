@@ -12,8 +12,8 @@ import { PageShell } from "@/components/PageShell";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildProfilePageSchema } from "@/lib/seo";
 
-import { Interests } from "./_components/Interests";
 import { PersonalPhotos } from "./_components/PersonalPhotos";
+import { PreviousWork } from "./_components/PreviousWork";
 
 const title = "About Alex Leung | Software Engineer and Writer";
 const description =
@@ -59,7 +59,7 @@ export default function AboutPage() {
       <PageShell title="About" titleId="about">
         <div className="space-y-12 md:space-y-14">
           <Journey />
-          <Interests />
+          <PreviousWork />
           <Credentials />
           <PersonalPhotos />
         </div>

@@ -45,36 +45,16 @@ export function Journey() {
               </p>
             </AboutNote>
 
-            <AboutNote title="Previous Work">
-              <p>
-                Before OpenAI, I worked on home electrification at{" "}
-                <ExternalLink href="https://jetsonhome.com">
-                  Jetson
-                </ExternalLink>
-                , AR/AI glasses at{" "}
-                <ExternalLink href="https://arvr.google.com/">
-                  Google
-                </ExternalLink>
-                , and consumer finance at{" "}
-                <ExternalLink href="https://cash.app/">Cash App</ExternalLink>.
-              </p>
-              <p>
-                That work has crossed embedded systems, distributed systems,
-                backend infrastructure, and full-stack product work.
-              </p>
-            </AboutNote>
-
             <AboutNote title="How I Work">
               <p>
-                I like starting from real-world problems that still need to be
-                shaped: understanding the constraint, deciding what is worth
-                solving, and finding a technical path that can hold up in
-                practice.
+                I often work on projects where the product and system boundaries
+                are still moving. I make the constraints and failure modes
+                explicit, help choose a direction, and work through the
+                implementation with the team.
               </p>
               <p>
-                I try to make the reasoning visible as the work develops,
-                especially the trade-offs, risks, and evidence that should
-                change the plan.
+                Along the way, I write down decisions, clarify interfaces, and
+                build tools that make the system easier to change.
               </p>
             </AboutNote>
 
