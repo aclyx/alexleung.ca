@@ -17,7 +17,7 @@ import { PreviousWork } from "./_components/PreviousWork";
 
 const title = "About Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer and writer in San Francisco with experience across embedded systems, distributed systems, product engineering, and AI product development.";
+  "Learn about Alex Leung's software engineering work at OpenAI, Google, Cash App, and Jetson, plus writing on AI product development and software systems.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -56,7 +56,7 @@ export default function AboutPage() {
         })}
       />
 
-      <PageShell title="About" titleId="about">
+      <PageShell title="About Alex Leung" titleId="about">
         <div className="space-y-12 md:space-y-14">
           <Journey />
           <PreviousWork />
