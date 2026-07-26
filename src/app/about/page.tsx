@@ -17,7 +17,7 @@ import { PreviousWork } from "./_components/PreviousWork";
 
 const title = "About Alex Leung | Software Engineer and Writer";
 const description =
-  "Learn about Alex Leung's software engineering work at OpenAI, Google, Cash App, and Jetson, plus writing on AI product development and software systems.";
+  "Learn about Alex Leung's software engineering work across AI products, embedded systems, infrastructure, and customer-facing systems, plus writing on software and deep learning.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({
