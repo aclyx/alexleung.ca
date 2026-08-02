@@ -16,9 +16,20 @@ import { SectionBlock } from "@/components/SectionBlock";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
-import { NowStatePostcard } from "./_components/NowStatePostcard";
 import { SanFranciscoPhotos } from "./_components/SanFranciscoPhotos";
-import { NOW_PAGE_LAST_UPDATED_DISPLAY } from "./constants";
+
+export const NOW_PAGE_LAST_UPDATED_ISO = "2026-06-14";
+
+const nowPageLastUpdatedDate = new Date(
+  `${NOW_PAGE_LAST_UPDATED_ISO}T00:00:00Z`
+);
+
+export const NOW_PAGE_LAST_UPDATED_DISPLAY = new Intl.DateTimeFormat("en-US", {
+  month: "long",
+  day: "numeric",
+  year: "numeric",
+  timeZone: "UTC",
+}).format(nowPageLastUpdatedDate);
 
 const title = "Now | Alex Leung";
 const description =
@@ -29,14 +40,6 @@ export const metadata: Metadata = buildPageMetadata({
   title,
   description,
   path,
-  images: [
-    {
-      url: "/assets/now/state-postcard.webp",
-      width: 1536,
-      height: 1024,
-      alt: "Generated snapshot of Alex Leung's current focus in San Francisco",
-    },
-  ],
 });
 
 export default function NowPage() {
@@ -86,8 +89,6 @@ export default function NowPage() {
                   errands.
                 </p>
               </IconTextRow>
-
-              <NowStatePostcard />
 
               <SanFranciscoPhotos />
 

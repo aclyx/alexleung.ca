@@ -604,25 +604,6 @@
           "height": 854
         }
       }
-    },
-    "/assets/now/state-postcard.webp": {
-      "variants": {
-        "lg": {
-          "path": "/assets/now/state-postcard-lg.webp",
-          "width": 1280,
-          "height": 854
-        },
-        "md": {
-          "path": "/assets/now/state-postcard-md.webp",
-          "width": 1024,
-          "height": 683
-        },
-        "sm": {
-          "path": "/assets/now/state-postcard-sm.webp",
-          "width": 640,
-          "height": 427
-        }
-      }
     }
   }
 }
