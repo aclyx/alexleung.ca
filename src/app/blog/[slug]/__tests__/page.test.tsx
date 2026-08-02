@@ -1,6 +1,6 @@
 import { render, screen } from "@testing-library/react";
 
-import Post, { generateMetadata } from "../page";
+import Post from "../page";
 
 jest.mock("next/link", () => {
   return function MockLink({
@@ -52,29 +52,6 @@ jest.mock("@/lib/blogApi", () => ({
 }));
 
 describe("Blog post page", () => {
-  it("uses the generated social card in post metadata", async () => {
-    const metadata = await generateMetadata({
-      params: Promise.resolve({ slug: "cover-alt-hero" }),
-    });
-
-    expect(metadata.openGraph?.images).toEqual([
-      {
-        url: "https://alexleung.ca/assets/social-cards/blog/cover-alt-hero.webp",
-        alt: "Social card for Cover Alt Hero",
-        width: 1200,
-        height: 630,
-      },
-    ]);
-    expect(metadata.twitter?.images).toEqual([
-      {
-        url: "https://alexleung.ca/assets/social-cards/blog/cover-alt-hero.webp",
-        alt: "Social card for Cover Alt Hero",
-        width: 1200,
-        height: 630,
-      },
-    ]);
-  });
-
   it("uses custom cover alt text for the hero image", async () => {
     const view = await Post({
       params: Promise.resolve({ slug: "cover-alt-hero" }),

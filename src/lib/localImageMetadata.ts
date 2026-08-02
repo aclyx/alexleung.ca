@@ -17,11 +17,6 @@ const staticImageProfiles = {
     orderedVariants: ["mobile", "tablet", "desktop"],
     fallbackVariant: "tablet",
   },
-  nowStatePostcard: {
-    source: "/assets/now/state-postcard.webp",
-    orderedVariants: ["sm", "md", "lg"],
-    fallbackVariant: "md",
-  },
 } satisfies Record<string, StaticImageProfile>;
 
 type StaticImageProfileName = keyof typeof staticImageProfiles;

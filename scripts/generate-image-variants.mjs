@@ -109,26 +109,6 @@ const staticAssetVariants = [
       },
     ],
   },
-  {
-    source: "/assets/now/state-postcard.webp",
-    variants: [
-      {
-        name: "sm",
-        width: process.env.NOW_POSTCARD_SM_WIDTH || "640",
-        quality: process.env.NOW_POSTCARD_SM_QUALITY || "68",
-      },
-      {
-        name: "md",
-        width: process.env.NOW_POSTCARD_MD_WIDTH || "1024",
-        quality: process.env.NOW_POSTCARD_MD_QUALITY || "72",
-      },
-      {
-        name: "lg",
-        width: process.env.NOW_POSTCARD_LG_WIDTH || "1280",
-        quality: process.env.NOW_POSTCARD_LG_QUALITY || "75",
-      },
-    ],
-  },
 ];
 
 function readUint24LE(buffer, offset) {

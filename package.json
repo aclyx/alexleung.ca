@@ -7,10 +7,8 @@
   "scripts": {
     "dev": "NODE_OPTIONS=\"${NODE_OPTIONS:+$NODE_OPTIONS }--use-system-ca\" next dev",
     "prepare": "git config core.hooksPath .githooks || true",
-    "image:variants": "node scripts/generate-image-variants.mjs && yarn social:cards",
-    "image:variants:stage": "node scripts/generate-image-variants.mjs --staged --stage-generated && yarn social:cards:stage",
-    "social:cards": "node scripts/generate-social-cards.mjs",
-    "social:cards:stage": "node scripts/generate-social-cards.mjs --staged --stage-generated",
+    "image:variants": "node scripts/generate-image-variants.mjs",
+    "image:variants:stage": "node scripts/generate-image-variants.mjs --staged --stage-generated",
     "prebuild": "yarn image:variants",
     "build": "next build && yarn build:deploy-marker",
     "build:prod": "NEXT_PUBLIC_ENABLE_ANALYTICS=true yarn build",
@@ -84,7 +82,6 @@
     "remark-math": "^6.0.0",
     "remark-rehype": "^11.1.2",
     "schema-dts": "^2.0.0",
-    "sharp": "0.34.5",
     "shiki": "^4.0.2",
     "tailwindcss": "^4.2.4",
     "typescript": "^6.0.3"
