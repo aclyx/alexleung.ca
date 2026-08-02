@@ -1,6 +1,6 @@
 import { MetadataRoute } from "next";
 
-import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
+import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/constants";
 import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
