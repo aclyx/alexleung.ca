@@ -1,6 +1,11 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
+
+import { getReferenceScenarioById } from "@/features/load-flow/solver/referenceScenarios";
+import { runLoadFlow } from "@/features/load-flow/solver/runLoadFlow";
 
 import { LoadFlowWorkspace } from "../LoadFlowWorkspace";
+
+const formatBranchFlowValue = (value: number) => value.toFixed(2);
 
 describe("LoadFlowWorkspace", () => {
   it("loads IEEE 14-Bus by default", () => {
@@ -23,6 +28,57 @@ describe("LoadFlowWorkspace", () => {
     ).toBeInTheDocument();
     expect(screen.getByText(/Grid • SLACK • 230 kV/i)).toBeInTheDocument();
     expect(screen.getByText(/\"id\": \"load-1\"/i)).toBeInTheDocument();
+  });
+
+  it("shows branch MW, MVar, and loss results from the solver output", () => {
+    const scenario = getReferenceScenarioById("two-bus-radial");
+    expect(scenario).toBeDefined();
+
+    const branchFlow = runLoadFlow(scenario!.loadFlowCase).branchFlows?.[0];
+    expect(branchFlow).toBeDefined();
+
+    render(<LoadFlowWorkspace />);
+
+    fireEvent.click(screen.getByRole("button", { name: "2-Bus Radial" }));
+
+    const branchFlowTable = screen.getByRole("table", {
+      name: /branch flows and losses/i,
+    });
+    const branchFlowTableQueries = within(branchFlowTable);
+
+    expect(
+      branchFlowTableQueries.getByRole("columnheader", { name: "From → To" })
+    ).toBeInTheDocument();
+    expect(
+      branchFlowTableQueries.getByRole("columnheader", { name: "To → From" })
+    ).toBeInTheDocument();
+    expect(
+      branchFlowTableQueries.getByRole("columnheader", { name: "Loss" })
+    ).toBeInTheDocument();
+    expect(
+      branchFlowTableQueries.getAllByRole("columnheader", { name: "MW" })
+    ).toHaveLength(3);
+    expect(
+      branchFlowTableQueries.getAllByRole("columnheader", { name: "MVar" })
+    ).toHaveLength(3);
+    expect(
+      branchFlowTableQueries.getByText(
+        `${branchFlow!.fromBusId} → ${branchFlow!.toBusId}`
+      )
+    ).toBeInTheDocument();
+
+    [
+      branchFlow!.pFromToMW,
+      branchFlow!.qFromToMVar,
+      branchFlow!.pToFromMW,
+      branchFlow!.qToFromMVar,
+      branchFlow!.pLossMW,
+      branchFlow!.qLossMVar,
+    ].forEach((value) => {
+      expect(
+        branchFlowTableQueries.getAllByText(formatBranchFlowValue(value)).length
+      ).toBeGreaterThan(0);
+    });
   });
 
   it("keeps reference-bus setpoints when loading a scenario", () => {
