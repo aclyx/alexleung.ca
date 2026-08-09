@@ -1,8 +1,8 @@
 {
   "id": "https://alexleung.ca/",
   "short_name": "Alex Leung",
-  "name": "Alex Leung - Software Engineer and Writer",
-  "description": "Personal site of Alex Leung, a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and open experiments.",
+  "name": "Alex Leung - Writing and Experiments",
+  "description": "Read Alex Leung's latest writing and open interactive technical experiments.",
   "lang": "en",
   "icons": [
     {
@@ -74,13 +74,25 @@
   "dir": "ltr",
   "theme_color": "#1f2937",
   "background_color": "#ffffff",
-  "categories": ["portfolio", "technology", "professional"],
+  "categories": ["writing", "education", "utilities"],
   "shortcuts": [
     {
-      "name": "About",
-      "short_name": "About",
-      "description": "Alex Leung's background across embedded systems, distributed systems, and product work",
-      "url": "/about/",
+      "name": "Blog",
+      "short_name": "Blog",
+      "description": "Read Alex Leung's essays and notes",
+      "url": "/blog/",
+      "icons": [
+        {
+          "src": "/icon7.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "Experiments",
+      "short_name": "Experiments",
+      "description": "Try interactive tools for power systems, fractals, and control",
+      "url": "/experimental/",
       "icons": [
         {
           "src": "/icon7.png",
@@ -91,20 +103,8 @@
     {
       "name": "What I'm Doing Now",
       "short_name": "Now",
-      "description": "Current notes from Alex on what he is reading, working through, and paying attention to",
+      "description": "See Alex Leung's current reading, goals, and recent interests",
       "url": "/now/",
-      "icons": [
-        {
-          "src": "/icon7.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
-      "name": "Contact",
-      "short_name": "Contact",
-      "description": "Ways to reach Alex or follow new writing",
-      "url": "/contact/",
       "icons": [
         {
           "src": "/icon7.png",
@@ -116,10 +116,10 @@
   "screenshots": [
     {
       "src": "/assets/screenshot.png",
-      "sizes": "3440x1732",
+      "sizes": "1440x900",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Alex Leung - Software Engineer and Writer website"
+      "label": "Alex Leung writing and experiments website"
     }
   ]
 }

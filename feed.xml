@@ -4,8 +4,8 @@
     <channel>
         <title>Alex Leung's Blog</title>
         <link>https://alexleung.ca/blog/</link>
-        <description>Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and open experiments.</description>
-        <lastBuildDate>Sat, 04 Jul 2026 00:00:00 GMT</lastBuildDate>
+        <description>Follow Alex Leung's latest essays on software and AI tools, technical book notes, experiment write-ups, and personal reflections.</description>
+        <lastBuildDate>Sun, 02 Aug 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -68,7 +68,7 @@
             <link>https://alexleung.ca/blog/ipad-air-m3-11-inch-first-impressions/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/ipad-air-m3-11-inch-first-impressions/</guid>
             <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Notes on the 11-inch iPad Air M3 as a lightweight reading, annotation, and remote-workflow setup for studying.]]></description>
+            <description><![CDATA[Notes on the 11-inch M3 iPad Air for reading, handwriting, and remote access without turning it into a laptop replacement.]]></description>
             <category>Review</category>
             <category>Lifestyle</category>
         </item>
@@ -87,7 +87,7 @@
             <link>https://alexleung.ca/blog/everyone-is-a-builder/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/everyone-is-a-builder/</guid>
             <pubDate>Sat, 28 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A conversation with colleagues about lower-friction AI-assisted prototypes for small internal tools.]]></description>
+            <description><![CDATA[AI-assisted prototypes make small workflow ideas cheap to test before they compete for dedicated engineering time.]]></description>
             <category>AI</category>
             <category>Reflection</category>
         </item>
@@ -101,11 +101,11 @@
             <category>Reflection</category>
         </item>
         <item>
-            <title><![CDATA[Representation, Efficiency, and Learnability]]></title>
+            <title><![CDATA[Depth Changes Scaling, Not Just Capacity]]></title>
             <link>https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</guid>
             <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Goodfellow Chapter 6 sharpened how I separate representation, parameter efficiency, and optimization when thinking about deep feedforward networks.]]></description>
+            <description><![CDATA[Chapter 6 separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
         </item>
@@ -132,7 +132,7 @@
             <link>https://alexleung.ca/blog/boring-blog-architecture/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/boring-blog-architecture/</guid>
             <pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[How I added a repo-backed Markdown blog to my static Next.js portfolio without adding a CMS or runtime admin surface.]]></description>
+            <description><![CDATA[How repo-backed Markdown becomes static HTML without a CMS, database, or runtime admin surface.]]></description>
             <category>Next.js</category>
             <category>Architecture</category>
         </item>
