@@ -49,7 +49,11 @@ describe("seo jsonld builders", () => {
       name: "Alex Leung",
       url: "https://alexleung.ca/about/",
       image: "https://alexleung.ca/assets/about_portrait.webp",
+      description:
+        "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance.",
     });
+    expect(profile.description).toBe("About page description");
+    expect(now.mainEntity).toBeUndefined();
   });
 
   it("builds blog collection and item list schemas", () => {
@@ -180,10 +184,8 @@ describe("seo jsonld builders", () => {
     ]);
   });
 
-  it("builds person schema with richer identity metadata", () => {
-    const person = buildPersonSchema({
-      description: "Person description",
-    });
+  it("builds person schema with durable identity metadata", () => {
+    const person = buildPersonSchema();
     expect(typeof person).toBe("object");
     if (typeof person !== "object" || person === null) {
       throw new Error("Expected person schema object");
@@ -201,30 +203,19 @@ describe("seo jsonld builders", () => {
     expect(person.sameAs).toContain("https://ca.linkedin.com/in/aclyx");
     expect(person.sameAs).toContain("https://github.com/aclyx");
     expect(person.sameAs).toContain("https://github.com/aclyx-oai");
-    expect(person.hasOccupation).toMatchObject({
-      "@type": "Occupation",
-      name: "Software Engineer",
-      occupationLocation: {
-        "@type": "City",
-        name: "San Francisco, California, United States",
-      },
-      skills: expect.stringContaining("technical writing"),
-    });
-    expect(person.address).toMatchObject({
-      "@type": "PostalAddress",
-      addressLocality: "San Francisco",
-      addressRegion: "California",
-      addressCountry: "United States",
-    });
-    expect(person.disambiguatingDescription).toBe(
-      "Software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and open experiments."
+    expect(person.hasOccupation).toBeUndefined();
+    expect(person.worksFor).toBeUndefined();
+    expect(person.address).toBeUndefined();
+    expect(person.disambiguatingDescription).toBeUndefined();
+    expect(person.description).toBe(
+      "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance."
     );
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([
-        "AI-Assisted Software Development and Tools",
-        "AI-Assisted Software Workflows",
-        "Backend Architecture and Reliability",
-        "Full-Stack Product Engineering",
+        "Software Engineering",
+        "AI Tools",
+        "Distributed Systems",
+        "Embedded Systems",
       ])
     );
     expect(person.alternateName).toEqual(
@@ -238,11 +229,6 @@ describe("seo jsonld builders", () => {
         "rootpanda",
       ])
     );
-    expect(person.worksFor).toMatchObject({
-      "@type": "Organization",
-      name: "OpenAI",
-      url: "https://openai.com/",
-    });
   });
 
   it("builds blog posting schema with normalized urls and keywords", () => {

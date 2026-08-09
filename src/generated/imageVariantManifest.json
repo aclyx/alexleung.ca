@@ -263,20 +263,6 @@
         }
       }
     },
-    "/assets/blog/from-coder-to-orchestrator/ralph-loop.webp": {
-      "variants": {
-        "content": {
-          "path": "/assets/blog/from-coder-to-orchestrator/ralph-loop-content.webp",
-          "width": 1024,
-          "height": 547
-        },
-        "content-sm": {
-          "path": "/assets/blog/from-coder-to-orchestrator/ralph-loop-content-sm.webp",
-          "width": 640,
-          "height": 342
-        }
-      }
-    },
     "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution.webp": {
       "variants": {
         "content": {
@@ -392,7 +378,7 @@
         }
       }
     },
-    "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png": {
+    "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.webp": {
       "variants": {
         "card": {
           "path": "/assets/blog/small-interactive-tools-with-a-coding-agent/cover-card.webp",

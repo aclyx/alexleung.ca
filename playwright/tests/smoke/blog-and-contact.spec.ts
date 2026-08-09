@@ -40,11 +40,9 @@ test("contact page shows the email CTA and social profile links", async ({
 
   await expect(page.getByText("alex@alexleung.ca")).toBeVisible();
   await expect(
-    main.getByRole("link", { name: "Email Alex", exact: true })
+    main.getByRole("link", { name: "Email me", exact: true })
   ).toHaveAttribute("href", "mailto:alex@alexleung.ca");
-  await expect(
-    page.getByRole("heading", { name: "Follow Writing" })
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribe" })).toBeVisible();
   await expect(
     main.getByRole("link", { name: "LinkedIn Profile", exact: true })
   ).toHaveAttribute("href", "https://www.linkedin.com/in/aclyx");
@@ -53,7 +51,7 @@ test("contact page shows the email CTA and social profile links", async ({
   ).toHaveAttribute("href", "https://www.github.com/aclyx");
   await expect(
     main.getByRole("link", {
-      name: "Corporate GitHub Profile",
+      name: "Work GitHub Profile",
       exact: true,
     })
   ).toHaveCount(0);

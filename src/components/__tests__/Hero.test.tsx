@@ -22,7 +22,7 @@ describe("Hero", () => {
 
     expect(
       screen.getByText(
-        /I build AI product surfaces and reliable software systems\. I share some of my thoughts here\./i
+        /I work on AI products at OpenAI in San Francisco\. I write about software, AI tools, technical books, experiments, and life outside work\./i
       )
     ).toBeInTheDocument();
     expect(
@@ -37,7 +37,7 @@ describe("Hero", () => {
   it("should render contact and writing CTA links", () => {
     render(<Hero />);
 
-    expect(screen.getByRole("link", { name: /contact alex/i })).toHaveAttribute(
+    expect(screen.getByRole("link", { name: /contact me/i })).toHaveAttribute(
       "href",
       "/contact"
     );

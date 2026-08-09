@@ -48,10 +48,9 @@ export default function ExperimentsPage() {
         <ResponsiveContainer variant="wide" className="space-y-8">
           <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
             <p className="text-body text-gray-300 md:text-center">
-              These open experiments inspect technical behavior directly: AC
-              load flow, Mandelbrot zooming, and PID response. Each one keeps
-              the controls, visuals, and state close enough to learn from the
-              behavior itself.
+              Change the inputs and inspect each response: AC load-flow voltages
+              and branch flows, Mandelbrot zooms, or a PID step response. Each
+              experiment keeps its controls beside the resulting view or chart.
             </p>
           </div>
 

@@ -15,7 +15,7 @@ describe("PidControllerPage", () => {
     expect(
       screen.getByRole("heading", {
         level: 2,
-        name: "PID Controller Simulator",
+        name: "Step-response model",
       })
     ).toBeInTheDocument();
     expect(screen.getByText(/u\(t\) = kp·e\(t\)/i)).toBeInTheDocument();

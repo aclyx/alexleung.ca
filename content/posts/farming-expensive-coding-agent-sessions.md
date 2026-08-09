@@ -1,6 +1,7 @@
 ---
 title: "Farming Expensive Coding Agent Sessions"
 date: "2026-06-14"
+updated: "2026-08-02"
 excerpt: "My coding-agent sessions are more expensive now. The useful spend is the part that turns mistakes into better tests, graders, prompts, and checks."
 coverImage: "/assets/blog/farming-expensive-coding-agent-sessions/cover.webp"
 coverAlt: "Illustration of Alex at a desk watching token-like lights flow from a laptop toward data-centre buildings"
@@ -17,7 +18,7 @@ My AI coding workflow is much more token-heavy than it was a year ago. The outpu
 
 The accounting that makes sense to me is not a clean ratio. A costly session is easier to justify when it leaves behind something reusable: a better test, a sharper grader, a clearer prompt, or a note in the harness that makes the next run less likely to miss the same thing.
 
-For me, "farming" is just keeping the useful correction from the expensive session: the thing that should make the next run cheaper, clearer, or more reliable.
+For me, "farming" is keeping the useful correction from an expensive session: the thing that should make the next run cheaper, clearer, or more reliable.
 
 ## What tokens actually measure
 
@@ -29,7 +30,7 @@ That is why I do not want to judge an expensive session only by its final patch.
 
 ## Why sessions got larger
 
-In June 2026, the pricing pages themselves reinforce this. [OpenAI](https://openai.com/api/pricing/) and [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing) both describe current model usage in millions of tokens, with output priced higher than input and cached context priced lower than fresh context. The natural unit is no longer a single prompt. It is a large bundle of context, tool output, revisions, and generated text.
+In June 2026, the pricing pages themselves reinforce this. [OpenAI](https://developers.openai.com/api/docs/models/compare) and [Anthropic](https://platform.claude.com/docs/en/about-claude/pricing) both describe current model usage in millions of tokens, with output priced higher than input and cached context priced lower than fresh context. The natural unit is no longer a single prompt. It is a large bundle of context, tool output, revisions, and generated text.
 
 My sessions now look more like that bundle than a single prompt. I do not treat tokens like a scarce request quota anymore; I ask agents to inspect more files, draft plans, run checks, compare alternatives, and keep going after the first answer.
 

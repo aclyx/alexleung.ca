@@ -8,7 +8,7 @@ Assume the worktree may already contain unrelated user changes. Inspect `git sta
 
 ## Project Overview
 
-Personal portfolio website for Alex Leung. Multi-page static-export site for GitHub Pages deployment. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
+Personal website and writing hub for Alex Leung. Multi-page static-export site for GitHub Pages deployment. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
 
 ## Package Manager
 
@@ -164,7 +164,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Taste and Style Guardrails (Agent Guidance)
 
-- Canonical taste-audit workflow: `.agents/skills/site-taste-audit/SKILL.md`. Blog voice details live in `.agents/skills/blog-post-creator/references/voice-and-structure.md`; keep those files and this summary aligned when preferences change.
+- Canonical workflows: use `.agents/skills/site-taste-audit/SKILL.md` for critique-led taste and tone audits, `.agents/skills/site-copy-editor/SKILL.md` for non-blog site writing, and `.agents/skills/blog-post-creator/SKILL.md` for blog writing. Treat the copy guardrails below as the shared voice baseline; keep skill-specific guidance aligned and limited to its surface-specific needs.
 - Target taste: concrete, understated, utility-minded, and quietly polished. The site should feel calm, aligned, readable, and specific rather than flashy, clever, decorative, or like it is performing sophistication.
 - Prefer direct labels, specific nouns, and visible hierarchy over metaphors, slogans, or abstract framing. If the real thing can be named plainly, name it plainly.
 - Layout should feel balanced and intentional on both mobile and desktop. Avoid compositions that feel artificially constrained to one side, overly boxed-in, or visually uneven across columns and sections.
@@ -178,11 +178,14 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Copy Editing Guardrails (Agent Guidance)
 
-- Target site voice: first-person where appropriate; humble, grounded, and clearly experienced; warm but understated; professional without becoming sterile. Confidence should come from evidence, specific work, and concrete observations rather than self-description or positioning claims.
-- Tone should be thoughtful, understated, concrete, and mildly warm. Prefer clear first-person language and specific descriptions over polished positioning copy.
+- Canonical site voice: calm, direct, technically grounded, and understated. It should feel quietly confident, thoughtful, approachable, warm, curious, and human.
+- Build confidence through clarity, accurate facts, concrete mechanisms, trade-offs, and observed results rather than self-description, promotion, or positioning. Do not confuse understatement with vagueness or humility with hesitation; make supported claims plainly.
+- Match rigor to the subject without becoming sterile. Use first-person experience and human detail where relevant, not as decoration or forced personality.
+- Apply this baseline to all visible and machine-facing writing. Surface-specific length and formality may vary, but the underlying voice should not.
 - Prefer revising existing copy over rewriting from scratch unless the current structure is actively causing clarity or tone problems.
 - Prefer site-representative language over recruiter-optimized phrasing in top-level labels such as homepage headlines, page titles, section names, metadata descriptions, `public/manifest.json`, `public/llms.txt`, RSS/feed text, and JSON-LD descriptions.
 - Treat visible pages and machine-facing summaries as one editorial system: navigation labels, CTA labels, blog titles/excerpts/intros, metadata, RSS/feed text, manifest text, `llms.txt`, and JSON-LD/schema text should feel consistent without becoming copy-pasted.
+- Before finalizing, read the affected surfaces as a whole and remove deviations toward hype, self-promotion, corporate or resume language, sterile formality, keyword stacking, abstract framing, decorative cleverness, generic smoothing, or unnecessary hedging.
 - Preserve warmth and voice before adding positioning language. Avoid recruiter-buzzy or self-promotional filler such as `thought leader`, `world-class`, `high-impact`, `passionate`, `results-driven`, or similar phrasing. Avoid inflated claims or interpretive self-assessments when a simpler factual description will do.
 - Do not force SEO phrases into headings when they fit better in supporting copy or metadata descriptions.
 - Avoid repeating the same positioning claim across hero, section intros, metadata, manifest text, RSS text, `llms.txt`, and JSON-LD. Keep them directionally consistent without making them all identical.

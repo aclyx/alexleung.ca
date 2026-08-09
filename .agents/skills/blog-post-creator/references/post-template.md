@@ -13,7 +13,7 @@ tags:
   - "Tag Two"
 ---
 
-Opening paragraph: establish context and thesis in 2-4 sentences.
+Opening paragraph: orient the reader with the subject and context in 2-4 sentences. Technical pieces may state the thesis early; reflections should begin with the concrete subject, scene, or action before interpretation.
 
 ## Section Heading One
 

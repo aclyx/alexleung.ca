@@ -14,9 +14,11 @@ const WEEKLY: SitemapEntry["changeFrequency"] = "weekly";
 const YEARLY: SitemapEntry["changeFrequency"] = "yearly";
 
 const PAGE_LAST_MODIFIED: Record<string, string> = {
-  about: "2026-02-14",
+  home: "2026-08-02",
+  about: "2026-08-02",
   now: NOW_PAGE_LAST_UPDATED_ISO,
-  contact: "2026-02-14",
+  blog: "2026-08-02",
+  contact: "2026-08-02",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -46,21 +48,25 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const latestPostUpdate =
+  const latestPostUpdateIso =
     posts.length > 0
-      ? new Date(
-          posts
-            .map((post) => post.updated || post.date)
-            .filter((date): date is string => Boolean(date))
-            .sort()
-            .at(-1) || PAGE_LAST_MODIFIED.about
-        )
-      : new Date(PAGE_LAST_MODIFIED.about);
+      ? posts
+          .map((post) => post.updated || post.date)
+          .filter((date): date is string => Boolean(date))
+          .sort()
+          .at(-1) || PAGE_LAST_MODIFIED.blog
+      : PAGE_LAST_MODIFIED.blog;
+  const homeLastModified = new Date(
+    [PAGE_LAST_MODIFIED.home, latestPostUpdateIso].sort().at(-1)!
+  );
+  const blogLastModified = new Date(
+    [PAGE_LAST_MODIFIED.blog, latestPostUpdateIso].sort().at(-1)!
+  );
 
   return [
     {
       url: toCanonical("/"),
-      lastModified: latestPostUpdate,
+      lastModified: homeLastModified,
       changeFrequency: MONTHLY,
       priority: 1,
     },
@@ -78,7 +84,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: toCanonical("/blog"),
-      lastModified: latestPostUpdate,
+      lastModified: blogLastModified,
       changeFrequency: WEEKLY,
       priority: 0.8,
     },

@@ -23,7 +23,7 @@ export function FollowItSubscribeForm({
   className = "",
   title = "Get new posts by email",
   description = "Occasional updates when I publish something new.",
-  note = "No spam. Follow.it handles delivery and unsubscribe links.",
+  note = "Follow.it sends the emails and includes an unsubscribe link.",
   placeholder = "Enter your email",
   buttonLabel = "Subscribe",
   action = DEFAULT_FOLLOW_IT_ACTION,

@@ -1,10 +1,10 @@
 ---
 title: "Coding Agents for Inspectable Browser Tools"
 date: "2026-04-10"
-updated: "2026-06-15"
+updated: "2026-08-02"
 excerpt: "Building frontend-only tools for load flow and Mandelbrot zooming gave me concrete ways to inspect older technical models."
-coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png"
-coverAlt: "Illustration of Alex working across screens showing technical tool visualizations"
+coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.webp"
+coverAlt: "Illustration of Alex using load-flow and Mandelbrot tools across three screens"
 tags:
   - "AI"
   - "Developer Workflow"

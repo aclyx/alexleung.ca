@@ -256,10 +256,10 @@ export function MandelbrotExplorer() {
     >
       <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
         <p className="text-body text-gray-300 md:text-center">
-          This explorer keeps viewport coordinates in arbitrary-precision
-          decimals, then renders the escape-time field asynchronously so we can
-          zoom past ordinary floating-point precision without losing the exact
-          center or scale state.
+          The explorer stores viewport coordinates as arbitrary-precision
+          decimals and renders the escape-time field asynchronously. This
+          preserves the center and scale during zooms beyond ordinary
+          floating-point precision.
         </p>
       </div>
 
