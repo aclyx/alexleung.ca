@@ -156,8 +156,8 @@ export function LoadFlowWorkspace() {
       <div className="mt-4 rounded-lg border border-emerald-700/70 bg-emerald-950/30 p-4">
         <h3 className="font-semibold text-emerald-200">Reference scenarios</h3>
         <p className="mt-1 text-sm text-emerald-100/90">
-          Solve against standard benchmark cases, or switch back to the current
-          editor graph model.
+          Solve standard benchmark cases, or switch back to the case in the
+          editor.
         </p>
         <div className="mt-3 flex flex-wrap gap-2">
           <button
@@ -169,7 +169,7 @@ export function LoadFlowWorkspace() {
               setEditorState(createInitialLoadFlowEditorState());
             }}
           >
-            Reset editor model
+            Reset editor case
           </button>
           {LOAD_FLOW_REFERENCE_SCENARIOS.map((scenario) => (
             <button
@@ -206,7 +206,7 @@ export function LoadFlowWorkspace() {
           </p>
         ) : (
           <p className="mt-2 text-xs text-emerald-100/80">
-            Active solve case: editor graph serialization.
+            Active solve case: current diagram.
           </p>
         )}
       </div>
@@ -241,7 +241,7 @@ export function LoadFlowWorkspace() {
 
       <div className="mt-4 grid gap-4 lg:grid-cols-2">
         <div className="rounded-lg border border-gray-700 p-4">
-          <h3 className="font-semibold text-white">Palette</h3>
+          <h3 className="font-semibold text-white">Build the diagram</h3>
           <p className="mt-1 text-sm text-gray-300">
             Add buses, then connect them with line elements.
           </p>
@@ -263,7 +263,7 @@ export function LoadFlowWorkspace() {
               setEditorState((prev) => autoLayoutBuses(prev));
             }}
           >
-            Auto-layout SLD
+            Arrange diagram
           </button>
 
           <div className="mt-3 space-y-2 text-sm text-gray-200">
@@ -704,7 +704,7 @@ export function LoadFlowWorkspace() {
       </div>
 
       <div className="mt-6 rounded-lg border border-gray-700 p-4">
-        <h3 className="font-semibold text-white">Serialized case preview</h3>
+        <h3 className="font-semibold text-white">Case JSON</h3>
         <pre className="mt-2 overflow-auto text-xs text-gray-300">
           {JSON.stringify(serializedCase, null, 2)}
         </pre>

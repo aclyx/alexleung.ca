@@ -16,13 +16,13 @@ Load references only when needed:
 
 ## Core Voice
 
+- Apply the root `AGENTS.md` baseline: calm, direct, technically grounded, understated, and quietly confident.
 - Write in first person when the post draws on Alex's own experience, judgment, or learning.
-- Keep tone warm, direct, and measured; avoid hype, slogans, and recruiter-style positioning.
-- Show experience through concrete observations, trade-offs, mechanisms, and limits.
+- Build confidence through accurate facts, concrete observations, trade-offs, mechanisms, and limits rather than self-description or positioning. Make supported claims plainly instead of hedging them away.
+- Keep rigorous writing warm, curious, approachable, and human without adding decorative personality.
 - Prefer literal phrasing over abstract framing when the concrete system, UI behavior, or comparison can be named.
-- Apply the root `AGENTS.md` taste profile for any title, intro, excerpt, index copy, or cover prompt: concrete, understated, utility-minded, plain-spoken, and specific.
 - For personal reflections, lead with the lived detail before the interpretation. Do not manufacture thesis energy with polished setup phrases.
-- Let significance emerge from facts and consequences instead of declaring that something "matters" or is "important".
+- State stakes plainly when the evidence supports them; do not use declarations of importance as a substitute for facts and consequences.
 
 ## Hard Constraints
 
@@ -49,7 +49,7 @@ Load references only when needed:
    - Mark assumptions instead of filling gaps with invented detail.
 
 2. Choose the shape.
-   - Open with context and a clear point of view in the first paragraph.
+   - For technical pieces, establish context and a clear point of view early. For reflections, orient the reader with the concrete subject, scene, or action before interpretation.
    - Make the first sentence orient a cold reader by naming the subject, workflow, object, or setting before using a comparison, metric, or time jump.
    - Make the title, excerpt, headings, and ending point at the recorded takeaway, not merely a nearby theme.
    - Use 2-4 `##` sections when structure helps; short reflective pieces may omit headings.
@@ -98,6 +98,7 @@ Load references only when needed:
 ## Final Checks
 
 - Argument is cohesive from opening to close.
+- The draft feels calm, direct, technically grounded, understated, quietly confident, and human rather than sterile or promotional.
 - Paragraph cadence is varied and mostly multi-sentence.
 - Titles, excerpts, headings, and intro copy are specific and modest.
 - No inferred facts, inflated claims, or unsupported practice claims were introduced.

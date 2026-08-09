@@ -229,7 +229,7 @@ export function PidSimulatorWorkspace() {
   return (
     <section className="space-y-6 rounded-xl border border-gray-600 bg-slate-950/85 p-6 shadow-sm">
       <div>
-        <h2 className="text-heading-sm text-white">PID Controller Simulator</h2>
+        <h2 className="text-heading-sm text-white">Step-response model</h2>
         <p className="text-body mt-2 text-gray-300">
           This model uses a first-order plant and a deterministic fixed timestep
           of {FIXED_DT_SECONDS.toFixed(4)}s. The PID control law is u(t) =

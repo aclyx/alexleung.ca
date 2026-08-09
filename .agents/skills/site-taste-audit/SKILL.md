@@ -10,6 +10,7 @@ description: Review alexleung.ca for style, tone, typography, color, visual asse
 Use this profile as the governing taste model:
 
 - Concrete, understated, utility-minded, and quietly polished.
+- Writing should feel calm, direct, technically grounded, and quietly confident. Experience should come through clarity and substance while the tone stays warm, curious, approachable, and human.
 - Direct labels and specific nouns over metaphors, slogans, or abstract positioning.
 - Calm, balanced layouts that feel intentional on both mobile and desktop.
 - Dense but scannable repeat-use surfaces, especially blog indexes, tag lists, and experiment grids.
@@ -20,14 +21,14 @@ Use this profile as the governing taste model:
 ## Workflow
 
 1. Inspect the live surface at desktop and mobile widths. Use the in-app browser when available for localhost or visible browser state.
-2. Review the relevant source for copy, typography tokens, layout constraints, color tokens, image assets, and interaction states.
+2. For copy and tone audits, inventory both visible pages and machine-facing summaries. Review the relevant source for copy, typography tokens, layout constraints, color tokens, image assets, and interaction states.
 3. Judge the experience against the profile, not against generic portfolio-site trends.
 4. Prioritize issues that a visitor would actually feel: imbalance, forced copy, weak hierarchy, cramped or sparse browsing, unclear clickability, poor tap targets, slow or heavy assets, and visual inconsistency.
 5. Recommend concrete changes. Prefer small, coherent adjustments over a redesign unless the current structure is the root problem.
 
 ## Audit Checklist
 
-- **Tone and Copy**: plain-spoken, specific, modest, and clear. Flag decorative metaphors, inflated positioning, influencer-style framing, broad AI claims, and titles that read like category labels.
+- **Tone and Copy**: calm, direct, technically grounded, understated, and quietly confident, with warmth and curiosity where the subject supports them. Flag vagueness, unnecessary hedging, sterile or corporate phrasing, keyword stacking, decorative metaphors, inflated positioning, influencer-style framing, broad AI claims, and titles that read like category labels.
 - **Layout Balance**: desktop columns, section width, vertical rhythm, alignment, and background framing. Flag surfaces that feel boxed-in, left-heavy, uneven, or artificially constrained.
 - **Mobile Density**: blog browsing, tag lists, card height, image prominence, and repeated metadata. Prefer denser scanning without making tap targets uncomfortable.
 - **Typography**: semantic text utilities, heading scale, line length, panel text sizing, prose rhythm, and breakpoint behavior.

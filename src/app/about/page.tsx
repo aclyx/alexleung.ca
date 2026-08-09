@@ -17,7 +17,7 @@ import { PreviousWork } from "./_components/PreviousWork";
 
 const title = "About Alex Leung | Software Engineer and Writer";
 const description =
-  "Learn about Alex Leung's software engineering work across AI products, embedded systems, infrastructure, and customer-facing systems, plus writing on software and deep learning.";
+  "Alex Leung's software engineering work, writing, education, and interests outside work.";
 const path = "/about";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -29,7 +29,7 @@ export const metadata: Metadata = buildPageMetadata({
       url: "/assets/about_portrait.webp",
       width: 5712,
       height: 4284,
-      alt: "Alex Leung sitting on a mountain trail during a hiking adventure",
+      alt: "Alex Leung sitting beside a mountain lake",
     },
   ],
 });

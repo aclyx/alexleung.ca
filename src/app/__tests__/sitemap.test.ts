@@ -15,7 +15,7 @@ jest.mock("@/lib/blogApi", () => ({
     {
       slug: "second-post",
       date: "2026-01-25T00:00:00.000Z",
-      updated: "2026-02-05T00:00:00.000Z",
+      updated: "2026-09-05T00:00:00.000Z",
       tags: ["Deep Learning"],
     },
   ]),
@@ -53,6 +53,23 @@ describe("sitemap", () => {
     expect(pidControllerEntry).toBeDefined();
     expect(tagEntry).toBeDefined();
     expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/about/")
+        ?.lastModified
+    ).toEqual(new Date("2026-08-02"));
+    expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/")
+        ?.lastModified
+    ).toEqual(new Date("2026-09-05"));
+    expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/blog/")
+        ?.lastModified
+    ).toEqual(new Date("2026-09-05"));
+    expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/contact/")
+        ?.lastModified
+    ).toEqual(new Date("2026-08-02"));
+    expect(pidControllerEntry?.lastModified).toEqual(new Date("2026-08-02"));
+    expect(
       entries.some(
         (entry) => entry.url === "https://alexleung.ca/blog/tags/ai/"
       )
@@ -78,7 +95,7 @@ describe("sitemap", () => {
     );
 
     expect(homeEntry?.lastModified).toEqual(
-      new Date("2026-02-05T00:00:00.000Z")
+      new Date("2026-09-05T00:00:00.000Z")
     );
   });
 });

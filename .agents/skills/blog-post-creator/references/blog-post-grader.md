@@ -1,6 +1,6 @@
 # Blog Post Grader
 
-Use this rubric to grade alexleung.ca blog drafts before publishing. The goal is not generic polish; it is fit with Alex's stated taste: concrete, understated, useful, lightly warm, and specific.
+Use this rubric to grade alexleung.ca blog drafts before publishing. The goal is not generic polish; it is fit with Alex's calm, direct, technically grounded, understated, and quietly confident voice.
 
 ## Scoring
 
@@ -29,10 +29,12 @@ Score out of 100. A publish-ready draft should score **90+** with no blocking is
 
 ### 3. Alex Voice Fit: 20 points
 
-- Sounds first-person, measured, understated, and clearly experienced.
+- Uses first person when grounding Alex's own experience or judgment and stays measured and direct elsewhere.
+- Feels technically grounded and clearly experienced through clarity, evidence, mechanisms, and trade-offs rather than self-description.
+- Makes supported claims with quiet confidence instead of drifting into promotion, vagueness, or unnecessary hedging.
+- Balances rigor with warmth, curiosity, approachability, and a human perspective rather than becoming sterile.
 - Avoids hype, influencer packaging, recruiter language, slogans, and broad future-of-work claims.
 - Avoids polished thesis scaffolding, rhetorical contrast templates, decorative metaphors, and phrasing that sounds like it is performing sophistication.
-- Preserves warmth without overexplaining or self-congratulating.
 
 ### 4. Structure and Flow: 15 points
 
@@ -68,7 +70,7 @@ Mark a grading result as blocked even if the numeric score is high when any of t
 
 - Invented or unsupported personal facts.
 - A misleading factual claim, stale current-state claim, or unsupported statistic.
-- Tone that reads as hype, self-promotion, or influencer packaging.
+- Tone that reads as hype, self-promotion, influencer packaging, corporate or resume language, sterile formality, or unsupported vagueness.
 - A reflective opening that summarizes meaning before showing the concrete experience.
 - A reflective opening that begins with a comparison, metric, or time jump before naming the actual subject or context for the reader.
 - A draft that replaces the user's stated main takeaway with a nearby generic takeaway, such as "know when to stop", "treat it as an operating signal", or "tokens per decision".

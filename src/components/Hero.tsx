@@ -21,13 +21,14 @@ export function Hero() {
             Software Engineer and Writer.
           </h2>
           <p className="mt-3 text-sm text-gray-200 md:text-gray-300">
-            I build AI product surfaces and reliable software systems. I share
-            some of my thoughts here.
+            I work on AI products at OpenAI in San Francisco. I write about
+            software, AI tools, technical books, experiments, and life outside
+            work.
           </p>
 
           <div className="mt-8 flex flex-wrap gap-4">
             <CTAButton href="/contact/">
-              <HiOutlineMail className="text-lg" /> Contact Alex
+              <HiOutlineMail className="text-lg" /> Contact me
             </CTAButton>
             <CTAButton href="/blog/" variant="secondary">
               Read writing <HiOutlineArrowRight className="text-lg" />

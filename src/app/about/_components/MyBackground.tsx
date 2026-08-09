@@ -45,26 +45,19 @@ export function Journey() {
               </p>
             </AboutNote>
 
-            <AboutNote title="How I Work">
+            <AboutNote title="Engineering Work">
               <p>
-                I often work on projects where the product and system boundaries
-                are still moving. I make the constraints and failure modes
-                explicit, help choose a direction, and work through the
-                implementation with the team.
-              </p>
-              <p>
-                Along the way, I write down decisions, clarify interfaces, and
-                build tools that make the system easier to change.
+                My work has included embedded software for AR and AI glasses,
+                backend and customer-facing systems for consumer finance, and
+                early customer and operations software for home electrification.
               </p>
             </AboutNote>
 
             <AboutNote title="Writing">
               <p>
-                I write about software systems, AI tools, deep learning, and
-                personal experiments here. For a better sense of how I think
-                through technical work, start with my{" "}
-                <LinkText href="/blog/">recent writing</LinkText>, or{" "}
-                <LinkText href="/contact/">get in touch here</LinkText>.
+                I write about software systems, AI tools, technical books,
+                experiments, and life outside work. You can find recent posts on
+                the <LinkText href="/blog/">blog</LinkText>.
               </p>
               <p>
                 Away from the desk, I spend time reading, playing tennis,
@@ -77,7 +70,7 @@ export function Journey() {
             <ResponsiveImage
               src={aboutPortraitFallback.path}
               srcSet={aboutPortraitSrcSet}
-              alt="Alex Leung sitting on a mountain trail during a hiking adventure"
+              alt="Alex Leung sitting beside a mountain lake"
               width={aboutPortraitFallback.width}
               height={aboutPortraitFallback.height}
               sizes="(min-width: 1024px) 28vw, (min-width: 768px) 36vw, 88vw"

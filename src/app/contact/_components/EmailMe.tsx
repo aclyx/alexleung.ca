@@ -35,8 +35,7 @@ export function EmailMe() {
         })}
       >
         <p className="text-body text-gray-200">
-          For project, writing, or professional conversations, email is the best
-          place to start.
+          Email me about a software project or something I wrote.
         </p>
         <p className="mt-3 font-semibold text-white">{EMAIL_ADDRESS}</p>
         <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
@@ -45,7 +44,7 @@ export function EmailMe() {
             className="text-body inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-gradient-to-br from-blue-500 to-accent-primary px-5 py-2.5 font-bold text-white transition-colors hover:from-blue-600 hover:to-accent-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
           >
             <HiOutlineMail aria-hidden="true" className="text-lg" />
-            Email Alex
+            Email me
           </a>
           <button
             type="button"
@@ -55,9 +54,6 @@ export function EmailMe() {
             {copyLabel}
           </button>
         </div>
-        <p className="text-body-sm mt-4 text-gray-300">
-          LinkedIn is the best secondary channel if email is not the right fit.
-        </p>
       </div>
     </ResponsiveContainer>
   );

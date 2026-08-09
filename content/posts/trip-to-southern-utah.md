@@ -1,6 +1,7 @@
 ---
 title: "Trip to Southern Utah"
 date: "2026-07-04"
+updated: "2026-08-02"
 excerpt: "OpenAI's mid-year break was a chance to fly to Las Vegas, drive into southern Utah, and hike around Zion, Escalante, and Bryce Canyon."
 coverImage: "/assets/blog/trip-to-southern-utah/cover.webp"
 coverAlt: "Illustration of Alex and a companion among red rock formations in southern Utah"
@@ -9,21 +10,21 @@ tags:
   - "Lifestyle"
 ---
 
-OpenAI's mid-year break was last week. We took the opportunity to visit southern Utah. We flew from SFO to Las Vegas, picked up an SUV, and drove toward Zion.
+Our trip through southern Utah began during OpenAI's mid-year break last week. We flew from SFO to Las Vegas, picked up an SUV, and drove toward Zion.
 
 We packed light for the trip. That helped because we were moving around most days: a stay near Zion, a few days at Ofland near Escalante, and a lot of driving between hikes.
 
 ## Zion and Red Canyon
 
-The first full day was very full: Watchman's Trail in Zion, Pink Ridge in Red Canyon, Mossy Cave, and then the drive to Escalante.
+The first full day was very full: Watchman Trail in Zion, Pink Ledges Trail in Red Canyon, Mossy Cave, and then the drive to Escalante.
 
-Watchman's Trail was a good first hike because Zion immediately feels tall. The photo is basically what I remember: the top of the cliff in sun, the lower canyon still in shadow.
+Watchman Trail was a good first hike because Zion immediately feels tall. The photo is basically what I remember: the top of the cliff in sun, the lower canyon still in shadow.
 
-![Zion cliffs seen from Watchman's Trail in morning light](/assets/blog/trip-to-southern-utah/zion-watchman.webp)
+![Zion cliffs seen from Watchman Trail in morning light](/assets/blog/trip-to-southern-utah/zion-watchman.webp)
 
-Pink Ridge was smaller and more concentrated. The formations were closer to the trail, with pine trees breaking up the orange rock.
+Pink Ledges Trail was smaller and more concentrated. The formations were closer to the trail, with pine trees breaking up the orange rock.
 
-![Orange hoodoos and pine trees along the Pink Ridge trail in Red Canyon](/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge.webp)
+![Orange hoodoos and pine trees along Pink Ledges Trail in Red Canyon](/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge.webp)
 
 Mossy Cave was more of a visit than a full hike. We stopped by on the way.
 

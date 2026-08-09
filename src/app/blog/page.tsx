@@ -30,7 +30,7 @@ import {
 
 const title = "Blog | Alex Leung";
 const description =
-  "Notes on software systems, AI-assisted coding, deep learning, Next.js static sites, and open experiments.";
+  "Essays and notes on software, AI tools, technical books, interactive experiments, and life outside work.";
 const path = "/blog";
 
 function SeriesLinks({
@@ -118,7 +118,8 @@ export default function BlogIndex() {
               Blog
             </h1>
             <p className="mx-auto max-w-2xl text-body text-gray-200">
-              Software systems, AI tools, books, and experiments.
+              Software, AI tools, technical books, experiments, and life outside
+              work.
             </p>
             <div className="hidden space-y-2 md:block md:space-y-3">
               <TopicRevealList topics={topics} />

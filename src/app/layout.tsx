@@ -21,7 +21,7 @@ import "./globals.css";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and open experiments.";
+  "Alex Leung's personal website, with writing about software, AI tools, books, and life alongside interactive technical experiments.";
 
 const lato = Lato({
   subsets: ["latin"],
@@ -100,7 +100,7 @@ export default function RootLayout({ children }: PropsWithChildren) {
         <main className="flex grow flex-col">{children}</main>
         <Footer />
         <SiteLinkAnalytics />
-        <JsonLd item={buildPersonSchema({ description })} />
+        <JsonLd item={buildPersonSchema()} />
         <JsonLd item={buildWebsiteSchema({ description })} />
         <JsonLd item={buildSiteNavigationSchema()} />
         {googleAnalyticsId ? (

@@ -12,8 +12,8 @@ type ExperimentEntry = {
   title: string;
 };
 
-const EXPERIMENT_LAST_MODIFIED_ISO = "2026-04-20";
-const LOAD_FLOW_LAST_MODIFIED_ISO = "2026-07-10";
+const EXPERIMENT_LAST_MODIFIED_ISO = "2026-08-02";
+const LOAD_FLOW_LAST_MODIFIED_ISO = "2026-08-02";
 const EXPERIMENT_THUMBNAIL_WIDTH = 960;
 const EXPERIMENT_THUMBNAIL_HEIGHT = 540;
 
@@ -82,7 +82,7 @@ export const EXPERIMENTS: readonly ExperimentEntry[] = [
     pageTitle: "Mandelbrot Explorer",
     title: "Mandelbrot Explorer | Alex Leung",
     description:
-      "A Mandelbrot explorer with arbitrary-precision viewport math, progressive rendering, and shareable zoom state.",
+      "A Mandelbrot explorer with arbitrary-precision viewport math, progressive rendering, and URL parameters that set the initial view.",
     path: "/experimental/mandelbrot/",
     thumbnail: {
       src: "/assets/experimental/mandelbrot.webp",
