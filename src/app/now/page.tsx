@@ -16,9 +16,7 @@ import { SectionBlock } from "@/components/SectionBlock";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
-import { SanFranciscoPhotos } from "./_components/SanFranciscoPhotos";
-
-export const NOW_PAGE_LAST_UPDATED_ISO = "2026-06-14";
+export const NOW_PAGE_LAST_UPDATED_ISO = "2026-08-08";
 
 const nowPageLastUpdatedDate = new Date(
   `${NOW_PAGE_LAST_UPDATED_ISO}T00:00:00Z`
@@ -33,7 +31,7 @@ export const NOW_PAGE_LAST_UPDATED_DISPLAY = new Intl.DateTimeFormat("en-US", {
 
 const title = "Now | Alex Leung";
 const description =
-  "Current notes from Alex Leung on what he is reading, working through, and paying attention to.";
+  "Current notes from Alex Leung on what he is reading and studying.";
 const path = "/now";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -74,65 +72,32 @@ export default function NowPage() {
         <ResponsiveContainer element="section">
           <SectionBlock spacing="lg">
             <div className="text-body space-y-8 text-left leading-relaxed">
-              <IconTextRow icon="🚀" title="Top of Mind" headingLevel="h2">
-                <p>
-                  I&apos;m spending most of my time getting settled into my new
-                  role at{" "}
-                  <ExternalLink href="https://openai.com/">OpenAI</ExternalLink>
-                  .
-                </p>
-                <p>
-                  Outside of that, I&apos;m still finding my rhythm in San
-                  Francisco after the recent move. Most of my attention is on
-                  building context at work, getting the rest of life into a
-                  steadier shape, and exploring the city in small pieces between
-                  errands.
-                </p>
-              </IconTextRow>
-
-              <SanFranciscoPhotos />
-
               <IconTextRow
                 icon="📚"
                 title="Currently Reading"
                 headingLevel="h2"
               >
                 <p>
-                  I&apos;m currently on Chapter 9 of{" "}
-                  <ExternalLink href="https://www.deeplearningbook.org/">
-                    <em>Deep Learning</em>
-                  </ExternalLink>{" "}
-                  by Goodfellow, Bengio, and Courville.
-                </p>
-                <p>
-                  I finished <em>Children of Time</em> and absolutely loved it.
-                  I want to pick up the next book once I have a bit more time.
-                </p>
-                <p>
-                  <ExternalLink href="https://www.domainlanguage.com/ddd/">
-                    <em>Domain Driven Design</em>
-                  </ExternalLink>{" "}
-                  is on hold while I work through Deep Learning.
+                  I&apos;m reading <em>Superintelligence</em> by{" "}
+                  <ExternalLink href="https://nickbostrom.com/">
+                    Nick Bostrom
+                  </ExternalLink>
+                  .
                 </p>
               </IconTextRow>
 
-              <IconTextRow icon="🎯" title="Current Goals" headingLevel="h2">
-                <ul className="list-outside list-disc space-y-1 pl-6">
-                  <li>Finish the Deep Learning book and write notes as I go</li>
-                  <li>Build context in my new role</li>
-                  <li>Get settled in San Francisco</li>
-                  <li>Keep improving at tennis</li>
-                  <li>Get to A2 proficiency in Chinese</li>
-                </ul>
-              </IconTextRow>
-
-              <IconTextRow icon="🎬" title="Recently Watched" headingLevel="h2">
+              <IconTextRow
+                icon="🧠"
+                title="Currently Studying"
+                headingLevel="h2"
+              >
                 <p>
-                  I watched <em>Project Hail Mary</em> and really liked it.
-                </p>
-                <p>
-                  The movie was a good time, but I still enjoyed the detail and
-                  depth of the book more.
+                  I&apos;m working through{" "}
+                  <ExternalLink href="https://spinningup.openai.com/en/latest/">
+                    OpenAI&apos;s Spinning Up
+                  </ExternalLink>{" "}
+                  to better understand reinforcement learning and deep
+                  reinforcement learning.
                 </p>
               </IconTextRow>
             </div>
