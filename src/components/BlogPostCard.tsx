@@ -57,15 +57,15 @@ export function BlogPostCard({
       ? "mb-1 text-lg font-semibold md:mb-3 md:text-2xl md:font-bold"
       : "mb-3 text-2xl font-bold";
   const dateClassName = dense
-    ? "mb-2 text-xs text-gray-300 md:text-sm"
+    ? "mb-2 text-xs text-muted md:text-sm"
     : compactOnMobile
-      ? "mb-0 text-xs text-gray-300 md:mb-4 md:text-sm"
-      : "mb-4 text-sm text-gray-300";
+      ? "mb-0 text-xs text-muted md:mb-4 md:text-sm"
+      : "mb-4 text-sm text-muted";
   const excerptClassName = dense
-    ? "hidden text-sm leading-relaxed text-gray-300 md:line-clamp-2 md:block"
+    ? "hidden text-sm leading-relaxed text-muted md:line-clamp-2 md:block"
     : compactOnMobile
-      ? "hidden text-base leading-relaxed text-gray-300 md:block"
-      : "text-base leading-relaxed text-gray-200 md:text-gray-300";
+      ? "hidden text-base leading-relaxed text-muted md:block"
+      : "text-base leading-relaxed text-muted";
   const readPostClassName = dense
     ? "mt-3 hidden items-center gap-2 text-sm font-semibold text-accent-link transition-colors group-hover:text-accent-link-hover md:inline-flex"
     : compactOnMobile
@@ -86,7 +86,7 @@ export function BlogPostCard({
     >
       <Link
         href={`/blog/${post.slug}/`}
-        className="absolute inset-0 z-10 rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+        className="absolute inset-0 z-10 rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
         aria-label={post.title}
       />
       <div className={`pointer-events-none relative ${contentLayoutClasses}`}>
@@ -106,7 +106,7 @@ export function BlogPostCard({
         </div>
         <div>
           <h2
-            className={`leading-snug text-white transition-colors group-hover:text-accent-link ${titleClassName}`}
+            className={`leading-snug text-ink transition-colors group-hover:text-accent-link-hover ${titleClassName}`}
           >
             {post.title}
           </h2>

@@ -13,27 +13,27 @@ const config = {
     extend: {
       colors: {
         white: "#fff",
-        hover: "#718093",
-        black: "#2f3640",
-        highlight: "#00D131",
+        black: "#20231f",
+        paper: "#f4f1e9",
+        surface: "#fbfaf6",
+        ink: "#20231f",
+        muted: "#62675f",
+        line: "#d8d2c6",
         accent: {
-          link: "#60a5fa", // blue-400
-          "link-hover": "#93c5fd", // blue-300
-          secondary: "#f59e0b", // amber-500
-          "secondary-hover": "#fbbf24", // amber-400
-          "secondary-soft": "#fde68a", // amber-200
-          success: "#86efac", // green-300
-          warning: "#fcd34d", // yellow-300
-          info: "#93c5fd", // blue-300
-          primary: "#2563eb", // blue-600
-          "primary-hover": "#1d4ed8", // blue-700
+          link: "#52634d",
+          "link-hover": "#3f4d3b",
+          secondary: "#66715e",
+          "secondary-hover": "#52634d",
+          "secondary-soft": "#e2e6dd",
+          success: "#39714c",
+          warning: "#80571d",
+          info: "#315f70",
+          primary: "#52634d",
+          "primary-hover": "#3f4d3b",
         },
       },
-      fontFamily: {
-        lato: ["Lato", "sans-serif"],
-      },
       maxWidth: {
-        content: "1170px",
+        content: "1120px",
       },
       transitionProperty: {
         all: "all",
@@ -46,22 +46,6 @@ const config = {
         linear: "linear",
         "expo-out": EXPO_OUT,
       },
-      keyframes: {
-        showTopText: {
-          "0%": {
-            transform: "translateY(20px)",
-            opacity: "0",
-          },
-          "100%": {
-            transform: "translateY(0)",
-            opacity: "1",
-          },
-        },
-      },
-      animation: {
-        showTopText: `showTopText 0.8s ${EXPO_OUT} forwards`,
-      },
-
       typography: {
         DEFAULT: {
           css: {

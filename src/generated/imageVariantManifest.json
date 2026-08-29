@@ -8,41 +8,22 @@
     "inlineContent": ["content-sm", "content"]
   },
   "sources": {
-    "/assets/about_portrait.webp": {
+    "/assets/alex_vibing.webp": {
       "variants": {
         "lg": {
-          "path": "/assets/about_portrait-lg.webp",
-          "width": 1280,
-          "height": 960
-        },
-        "md": {
-          "path": "/assets/about_portrait-md.webp",
-          "width": 900,
-          "height": 675
-        },
-        "sm": {
-          "path": "/assets/about_portrait-sm.webp",
-          "width": 480,
-          "height": 360
-        }
-      }
-    },
-    "/assets/background.webp": {
-      "variants": {
-        "desktop": {
-          "path": "/assets/background-desktop.webp",
-          "width": 1600,
-          "height": 1068
-        },
-        "mobile": {
-          "path": "/assets/background-mobile.webp",
-          "width": 768,
-          "height": 513
-        },
-        "tablet": {
-          "path": "/assets/background-tablet.webp",
+          "path": "/assets/alex_vibing-lg.webp",
           "width": 1280,
           "height": 854
+        },
+        "md": {
+          "path": "/assets/alex_vibing-md.webp",
+          "width": 900,
+          "height": 600
+        },
+        "sm": {
+          "path": "/assets/alex_vibing-sm.webp",
+          "width": 480,
+          "height": 320
         }
       }
     },

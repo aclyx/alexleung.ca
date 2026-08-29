@@ -84,7 +84,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   return {
     ...metadata,
-    authors: [{ name: "Alex Leung", url: toCanonical("/about") }],
+    authors: [{ name: "Alex Leung", url: toCanonical("/") }],
     openGraph: {
       type: "article",
       title,
@@ -176,8 +176,8 @@ export default async function Post({ params }: Props) {
           variant="prose"
           className="mb-12"
         >
-          <Surface className="mx-auto" padding="sm">
-            <div className="mb-3 flex flex-wrap items-center gap-x-4 gap-y-1 text-lg text-gray-300">
+          <div className="mx-auto">
+            <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
               <time dateTime={post.date}>
                 Published {formatIsoDateForDisplay(post.date)}
               </time>
@@ -190,12 +190,12 @@ export default async function Post({ params }: Props) {
             {seriesNavigation ? (
               <nav
                 aria-label={`${seriesNavigation.name} series navigation`}
-                className="mb-6 border-y border-white/10 py-4"
+                className="mb-6 border-y border-line py-4"
               >
-                <p className="text-sm font-semibold uppercase tracking-wide text-gray-300">
+                <p className="text-sm font-semibold uppercase tracking-wide text-muted">
                   {seriesNavigation.name}
                 </p>
-                <p className="mt-1 text-body-sm text-gray-200">
+                <p className="mt-1 text-body-sm text-ink">
                   Part {seriesNavigation.currentPart} of{" "}
                   {seriesNavigation.totalParts}
                 </p>
@@ -205,7 +205,7 @@ export default async function Post({ params }: Props) {
                       href={`/blog/${seriesNavigation.previousPost.slug}/`}
                       className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover"
                     >
-                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
                         Previous
                       </span>
                       {seriesNavigation.previousPost.title}
@@ -218,7 +218,7 @@ export default async function Post({ params }: Props) {
                       href={`/blog/${seriesNavigation.nextPost.slug}/`}
                       className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover md:text-right"
                     >
-                      <span className="block text-xs font-semibold uppercase tracking-wide text-gray-400">
+                      <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
                         Next
                       </span>
                       {seriesNavigation.nextPost.title}
@@ -255,11 +255,11 @@ export default async function Post({ params }: Props) {
             {relatedPosts.length > 0 && (
               <section
                 aria-labelledby="related-posts-heading"
-                className="mt-12 border-t border-white/10 pt-8"
+                className="mt-12 border-t border-line pt-8"
               >
                 <h2
                   id="related-posts-heading"
-                  className="mb-5 text-2xl font-bold text-white"
+                  className="mb-5 text-2xl font-bold text-ink"
                 >
                   Related posts
                 </h2>
@@ -270,18 +270,15 @@ export default async function Post({ params }: Props) {
                       href={`/blog/${relatedPost.slug}/`}
                       className="block"
                     >
-                      <Surface
-                        className="h-full p-4 transition-colors hover:border-white/30"
-                        interactive
-                      >
-                        <h3 className="text-base font-semibold text-white">
+                      <Surface className="h-full p-4" interactive>
+                        <h3 className="text-base font-semibold text-ink">
                           {relatedPost.title}
                         </h3>
-                        <p className="mt-1 text-sm text-gray-300">
+                        <p className="mt-1 text-sm text-muted">
                           {formatIsoDateForDisplay(relatedPost.date)}
                         </p>
                         {relatedPost.excerpt ? (
-                          <p className="mt-2 line-clamp-3 text-sm text-gray-200">
+                          <p className="mt-2 line-clamp-3 text-sm text-muted">
                             <ExcerptText text={relatedPost.excerpt} />
                           </p>
                         ) : null}
@@ -291,7 +288,7 @@ export default async function Post({ params }: Props) {
                 </div>
               </section>
             )}
-          </Surface>
+          </div>
         </ResponsiveContainer>
       </PageShell>
     </>

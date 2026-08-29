@@ -34,7 +34,7 @@ For every candidate:
    - In JS/TS repos, use as needed:
      - `yarn lint`
      - `yarn typecheck`
-     - `yarn dlx knip` (unused files/exports/deps)
+     - `yarn lint:unused` (the repository-pinned Knip check for unused files/exports/dependencies)
      - `yarn dlx ts-prune` (unused exports; often noisy)
    - Treat tool output as leads, not final truth.
 

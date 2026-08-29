@@ -1,8 +1,8 @@
 {
   "id": "https://alexleung.ca/",
   "short_name": "Alex Leung",
-  "name": "Alex Leung - Writing and Experiments",
-  "description": "Read Alex Leung's latest writing and open interactive technical experiments.",
+  "name": "Alex Leung - Software Engineering and Writing",
+  "description": "Alex Leung's personal website, with software engineering experience, writing, current interests, and ways to get in touch.",
   "lang": "en",
   "icons": [
     {
@@ -72,13 +72,13 @@
   "display_override": ["window-controls-overlay", "standalone"],
   "orientation": "any",
   "dir": "ltr",
-  "theme_color": "#1f2937",
-  "background_color": "#ffffff",
-  "categories": ["writing", "education", "utilities"],
+  "theme_color": "#f4f1e9",
+  "background_color": "#f4f1e9",
+  "categories": ["writing", "education"],
   "shortcuts": [
     {
-      "name": "Blog",
-      "short_name": "Blog",
+      "name": "Writing",
+      "short_name": "Writing",
       "description": "Read Alex Leung's essays and notes",
       "url": "/blog/",
       "icons": [
@@ -89,21 +89,9 @@
       ]
     },
     {
-      "name": "Experiments",
-      "short_name": "Experiments",
-      "description": "Try interactive tools for power systems, fractals, and control",
-      "url": "/experimental/",
-      "icons": [
-        {
-          "src": "/icon7.png",
-          "sizes": "192x192"
-        }
-      ]
-    },
-    {
       "name": "What I'm Doing Now",
       "short_name": "Now",
-      "description": "See Alex Leung's current reading, goals, and recent interests",
+      "description": "See what Alex Leung is currently reading and studying",
       "url": "/now/",
       "icons": [
         {
@@ -119,7 +107,7 @@
       "sizes": "1440x900",
       "type": "image/png",
       "form_factor": "wide",
-      "label": "Alex Leung writing and experiments website"
+      "label": "Alex Leung's personal website and writing archive"
     }
   ]
 }

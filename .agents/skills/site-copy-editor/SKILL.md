@@ -1,6 +1,6 @@
 ---
 name: site-copy-editor
-description: Create or revise non-blog copy for alexleung.ca, including page prose, headings, navigation, calls to action, experiment descriptions, metadata, manifests, RSS/feed descriptions, llms.txt, and structured data. Use when asked to write, edit, polish, simplify, or align site copy outside content/posts/*.md. Use blog-post-creator for blog posts and site-taste-audit for critique-led visual or tone audits.
+description: Create or revise non-blog copy for alexleung.ca, including page prose, headings, navigation, calls to action, metadata, manifests, RSS/feed descriptions, llms.txt, and structured data. Use when asked to write, edit, polish, simplify, or align site copy outside content/posts/*.md. Use blog-post-creator for blog posts and site-taste-audit for critique-led visual or tone audits.
 ---
 
 # Site Copy Editor

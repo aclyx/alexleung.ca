@@ -4,17 +4,14 @@
 
 ## Site Map
 
-- [About](https://alexleung.ca/about/): Alex's background, previous work, education, and professional credential
-- [Now](https://alexleung.ca/now/): a dated snapshot of Alex's current reading, goals, and interests
-- [Blog](https://alexleung.ca/blog/): essays, technical notes, book notes, and personal reflections
-- [Experiments](https://alexleung.ca/experimental/): browser-based tools for power systems, fractals, and control
+- [Home](https://alexleung.ca/): Alex's software engineering work, education, writing, and interests
+- [Now](https://alexleung.ca/now/): a dated snapshot of what Alex is reading and studying
+- [Writing](https://alexleung.ca/blog/): essays, technical notes, book notes, and personal reflections
 - [Contact](https://alexleung.ca/contact/): ways to reach Alex and follow new writing
 
-## Writing and Experiments
+## Writing
 
-The blog covers software projects, AI tools and workflows, technical books, interactive experiments, and personal notes on moving, travel, study, and life outside work.
-
-The experiments currently include an AC load flow solver, a Mandelbrot explorer, and a PID controller simulator. Each runs in the browser.
+The blog covers software projects, AI tools and workflows, technical books, and personal notes on moving, travel, study, and life outside work.
 
 ## Background
 

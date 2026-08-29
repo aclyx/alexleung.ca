@@ -11,21 +11,9 @@ This folder contains maintainer-facing documentation that supports implementatio
 | `architecture-seo-status.md`   | Status snapshot for technical architecture and SEO                    | After meaningful architecture, metadata, schema, or IA changes        |
 | `blog-notification-report.md`  | Notification architecture and operational runbook for new-post alerts | When notification provider, subscribe UX, or feed workflow changes    |
 | `codespaces.md`                | Codespaces-specific Lighthouse setup and troubleshooting details      | When Codespaces base image or Lighthouse prerequisites change         |
+| `design-system.md`             | Current visual, responsive, interaction, and accessibility rules      | After meaningful interface-system or shared-component changes         |
 | `playwright-testing-design.md` | Hermetic Playwright smoke + visual testing setup and workflow         | When E2E test architecture, CI strategy, or baseline workflow changes |
-| `typography-audit.md`          | Typography audit history and current prose guardrails                 | After typography-system or prose-behavior changes                     |
-
-### Feature Notes
-
-| File                               | Purpose                                                     | Update cadence                                              |
-| ---------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------- |
-| `pid-controller-simulator.md`      | PID simulator architecture, math model, and extension notes | When simulator model, presets, or stepping behavior changes |
-| `load-flow-implementation-plan.md` | Load-flow implementation status and remaining work          | When load-flow routing, solver scope, or UI scope changes   |
-
-### Parked Planning References
-
-| File                                      | Purpose                                               | Update cadence                          |
-| ----------------------------------------- | ----------------------------------------------------- | --------------------------------------- |
-| `industrial-ee-browser-utilities-plan.md` | Parked plan for possible future engineering utilities | Only when the plan becomes active again |
+| `typography-audit.md`          | Decision record for explicit prose sizing                             | When the `ProseContent` sizing contract changes                       |
 
 ## Scope Rules
 

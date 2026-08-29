@@ -1,7 +1,6 @@
 import { MetadataRoute } from "next";
 
 import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
-import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
 import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
@@ -14,11 +13,10 @@ const WEEKLY: SitemapEntry["changeFrequency"] = "weekly";
 const YEARLY: SitemapEntry["changeFrequency"] = "yearly";
 
 const PAGE_LAST_MODIFIED: Record<string, string> = {
-  home: "2026-08-02",
-  about: "2026-08-02",
+  home: "2026-08-29",
   now: NOW_PAGE_LAST_UPDATED_ISO,
-  blog: "2026-08-02",
-  contact: "2026-08-02",
+  blog: "2026-08-29",
+  contact: "2026-08-29",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -28,15 +26,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = posts.map((post) => ({
     url: toCanonical(`/blog/${post.slug}`),
     lastModified: new Date(
-      post.updated || post.date || PAGE_LAST_MODIFIED.about
+      post.updated || post.date || PAGE_LAST_MODIFIED.blog
     ),
-    changeFrequency: MONTHLY,
-    priority: 0.7,
-  }));
-
-  const experimentalPages = EXPERIMENTS.map((experiment) => ({
-    url: toCanonical(experiment.path),
-    lastModified: new Date(experiment.lastModified),
     changeFrequency: MONTHLY,
     priority: 0.7,
   }));
@@ -71,12 +62,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: toCanonical("/about"),
-      lastModified: new Date(PAGE_LAST_MODIFIED.about),
-      changeFrequency: MONTHLY,
-      priority: 0.8,
-    },
-    {
       url: toCanonical("/now"),
       lastModified: new Date(PAGE_LAST_MODIFIED.now),
       changeFrequency: MONTHLY,
@@ -89,18 +74,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: toCanonical(EXPERIMENTS_HUB.path),
-      lastModified: new Date(EXPERIMENTS_HUB.lastModified),
-      changeFrequency: MONTHLY,
-      priority: 0.7,
-    },
-    {
       url: toCanonical("/contact"),
       lastModified: new Date(PAGE_LAST_MODIFIED.contact),
       changeFrequency: YEARLY,
       priority: 0.5,
     },
-    ...experimentalPages,
     ...tagPages,
     ...blogPosts,
   ];

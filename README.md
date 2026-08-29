@@ -26,7 +26,13 @@ Personal website and writing hub for Alex Leung. Built with Next.js 16, React 19
    yarn install
    ```
 
-5. Start the development server:
+5. Configure the repository Git hooks:
+
+   ```bash
+   yarn prepare
+   ```
+
+6. Start the development server:
 
    ```bash
    yarn dev
@@ -40,9 +46,10 @@ Personal website and writing hub for Alex Leung. Built with Next.js 16, React 19
 - `yarn prepare` — configure repo Git hooks path (`.githooks`)
 - `yarn image:variants` — generate image variants and refresh image variant manifest
 - `yarn image:variants:stage` — generate and stage variants for staged post/image changes
-- `yarn build` — build static export (`out/`) with analytics disabled by default (runs `prebuild`)
+- `yarn build` — generate image variants and build the static export (`out/`) with analytics disabled by default
 - `yarn build:prod` — build static export (`out/`) with analytics enabled for a production deploy
-- `yarn lint` — run ESLint + Prettier checks
+- `yarn lint` — run ESLint, Prettier, and Knip checks
+- `yarn lint:unused` — run the pinned Knip unused-code check
 - `yarn lint:fix` — auto-fix lint/format issues
 - `yarn test` — run Jest tests
 - `yarn test:e2e` — run Playwright smoke tests in Docker against the exported site
@@ -82,12 +89,12 @@ Codespaces may need extra Chrome runtime setup before `yarn perf:lighthouse` can
 - Variant generator script:
   - `scripts/generate-image-variants.mjs`
 - Generated output:
-  - responsive cover variants: `*-card-sm.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
+  - responsive cover variants: `*-card-sm.webp`, `*-card-md.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
   - responsive inline markdown image variants: `*-content-sm.webp`, `*-content.webp`
-  - static asset variants for global background and about portrait
+  - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
 - Build integration:
-  - `yarn build` runs `prebuild`, which runs `yarn image:variants`
+  - `yarn build` runs `yarn image:variants` before creating the static export
 - Commit integration:
   - `.githooks/pre-commit` runs `yarn image:variants:stage` to keep variants in sync with staged changes
 - Runtime usage:
@@ -117,7 +124,7 @@ If `profiles.cover` or `profiles.inlineContent` is missing in the manifest, runt
 ### URL Convention
 
 - Site routes use trailing slashes to match `trailingSlash: true` and the GitHub Pages static export shape.
-- Prefer `/about/` and `/blog/post-slug/` over slashless internal links.
+- Prefer `/`, `/now/`, and `/blog/post-slug/` over slashless internal links.
 - Keep internal links, canonical URLs, sitemap entries, and tests aligned with that convention.
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`.
 
@@ -131,42 +138,15 @@ src/
 └── lib/         # Blog/content loading + SEO + markdown pipeline
 ```
 
-## Mandelbrot Explorer
-
-The Mandelbrot explorer lives at `/experimental/mandelbrot/` and is implemented as a client-side tool page with the precision math isolated under `src/features/mandelbrot/`.
-
-- **Precision library**: `decimal.js` keeps viewport center and scale updates out of normal JavaScript floating-point arithmetic so deep zoom state remains stable.
-- **Viewport model**: the explorer stores `centerX`, `centerY`, `width`, and `height` as arbitrary-precision decimals, and derives pixel-to-complex mapping from those values for click zoom, wheel zoom, box zoom, and panning.
-- **Render pipeline**: the canvas uses an async chunked renderer that paints a quick preview first, then refines to the selected quality level. New interactions cancel stale renders so the UI stays responsive, and pixel iteration uses a fast `number` path until zoom depth actually requires Decimal-based escape calculations.
-- **URL state**: query parameters can seed the initial center, width, palette, iteration budget, and quality. Interactions do not rewrite the browser URL.
-
-Relevant files:
-
-- `src/app/experimental/mandelbrot/page.tsx`
-- `src/app/experimental/mandelbrot/_components/MandelbrotExplorer.tsx`
-- `src/app/experimental/mandelbrot/_components/MandelbrotCanvas.tsx`
-- `src/features/mandelbrot/*`
-
-Targeted Mandelbrot tests can be run with:
-
-```bash
-yarn test src/features/mandelbrot/__tests__/viewport.test.ts \
-  src/features/mandelbrot/__tests__/mandelbrot.test.ts \
-  src/app/experimental/mandelbrot/__tests__/page.test.tsx \
-  src/app/experimental/mandelbrot/_components/__tests__/MandelbrotExplorer.test.tsx
-```
-
 ## Documentation Map
 
 - [`docs/README.md`](./docs/README.md) — docs directory guide and document inventory
 - [`docs/architecture-seo-status.md`](./docs/architecture-seo-status.md) — architecture and SEO status snapshot
 - [`docs/blog-notification-report.md`](./docs/blog-notification-report.md) — RSS and follow.it notification runbook
 - [`docs/codespaces.md`](./docs/codespaces.md) — Codespaces Lighthouse troubleshooting
+- [`docs/design-system.md`](./docs/design-system.md) — current visual, responsive, interaction, and accessibility rules
 - [`docs/playwright-testing-design.md`](./docs/playwright-testing-design.md) — Playwright smoke, visual, host-mode, and CI workflow
-- [`docs/typography-audit.md`](./docs/typography-audit.md) — typography audit history and current prose guardrails
-- [`docs/pid-controller-simulator.md`](./docs/pid-controller-simulator.md) — PID simulator architecture notes
-- [`docs/load-flow-implementation-plan.md`](./docs/load-flow-implementation-plan.md) — load-flow implementation status and remaining slices
-- [`docs/industrial-ee-browser-utilities-plan.md`](./docs/industrial-ee-browser-utilities-plan.md) — parked planning reference for possible future engineering utilities
+- [`docs/typography-audit.md`](./docs/typography-audit.md) — decision record for explicit prose sizing
 
 ## Licensing
 

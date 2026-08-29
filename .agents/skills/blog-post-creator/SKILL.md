@@ -39,6 +39,8 @@ Load references only when needed:
 11. Preserve the user-stated main takeaway as the spine of the title, excerpt, section path, and ending. Do not replace it with an adjacent generic lesson.
 12. For AI-workflow reflections, keep harness mechanisms explicit when they are the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token.
 13. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
+14. Do not add links or prose references from a dated post to a later-dated post unless the older entry receives an intentional `updated` date.
+15. Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow or textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
 
 ## Workflow
 

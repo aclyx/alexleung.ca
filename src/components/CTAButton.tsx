@@ -16,13 +16,12 @@ export function CTAButton({
   external = false,
 }: CTAButtonProps) {
   const baseStyles =
-    "inline-flex items-center gap-2 rounded-lg px-6 py-3 font-semibold transition-all duration-200 ease-expo-out focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950";
+    "inline-flex min-h-11 items-center gap-2 rounded-lg px-5 py-2.5 font-semibold transition-[background-color,border-color,color,transform] duration-200 ease-expo-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
 
   const variants = {
-    primary:
-      "bg-gradient-to-br from-blue-500 to-accent-primary text-white shadow-lg shadow-blue-500/20 hover:from-blue-600 hover:to-accent-primary-hover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white focus-visible:ring-white",
+    primary: "bg-accent-primary text-white hover:bg-accent-primary-hover",
     secondary:
-      "border border-white/20 bg-white/5 text-white backdrop-blur-sm hover:border-white/30 hover:bg-white/10 focus-visible:outline-none",
+      "border border-line bg-surface text-ink hover:border-accent-link/50 hover:bg-white",
   };
 
   const combinedStyles = `${baseStyles} ${variants[variant]} ${className}`;
