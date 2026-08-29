@@ -5,8 +5,11 @@ type SubtitleProps = {
 
 export function Subtitle({ title, id }: SubtitleProps) {
   return (
-    <div className="section-subtitle divider-lines-centered">
-      <h2 id={id} className="block whitespace-nowrap text-center">
+    <div>
+      <h2
+        id={id}
+        className="text-2xl font-bold tracking-[-0.03em] text-ink md:text-3xl"
+      >
         {title}
       </h2>
     </div>

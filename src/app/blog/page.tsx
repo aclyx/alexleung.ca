@@ -30,7 +30,7 @@ import {
 
 const title = "Blog | Alex Leung";
 const description =
-  "Essays and notes on software, AI tools, technical books, interactive experiments, and life outside work.";
+  "Essays and notes on software, AI tools, technical books, and life outside work.";
 const path = "/blog";
 
 function SeriesLinks({
@@ -44,10 +44,10 @@ function SeriesLinks({
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
+      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
         Series
       </h3>
-      <div className="flex flex-wrap gap-2 md:justify-center">
+      <div className="flex flex-wrap gap-2">
         {seriesSummaries.map((series) => (
           <Tag key={series.name} href={`/blog/${series.firstPost.slug}/`}>
             {series.name}
@@ -109,27 +109,26 @@ export default function BlogIndex() {
   return (
     <>
       <PageShell>
-        <ResponsiveContainer variant="wide" className="space-y-6 md:space-y-8">
-          <section
-            aria-label="Blog overview"
-            className="mx-auto max-w-5xl space-y-3 pt-6 text-left md:pt-8 md:text-center"
-          >
-            <h1 className="text-3xl font-semibold tracking-wide text-white md:text-5xl">
-              Blog
-            </h1>
-            <p className="mx-auto max-w-2xl text-body text-gray-200">
-              Software, AI tools, technical books, experiments, and life outside
-              work.
+        <ResponsiveContainer variant="wide" className="space-y-8 md:space-y-10">
+          <section aria-label="Blog overview" className="max-w-4xl space-y-4">
+            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-link">
+              Notes and essays
             </p>
-            <div className="hidden space-y-2 md:block md:space-y-3">
+            <h1 className="text-4xl font-bold tracking-[-0.045em] text-ink md:text-5xl">
+              Writing
+            </h1>
+            <p className="max-w-2xl text-lg leading-relaxed text-muted">
+              Software, AI tools, technical books, and life outside work.
+            </p>
+            <div className="hidden space-y-3 pt-3 md:block">
               <TopicRevealList topics={topics} />
               <SeriesLinks seriesSummaries={seriesSummaries} />
             </div>
-            <details className="rounded-lg border border-white/10 bg-slate-950/60 text-left md:hidden">
-              <summary className="min-h-11 cursor-pointer px-4 py-3 text-sm font-semibold text-gray-100">
+            <details className="rounded-lg border border-line bg-surface text-left md:hidden">
+              <summary className="min-h-11 cursor-pointer px-4 py-3 text-sm font-semibold text-ink">
                 Browse topics and series
               </summary>
-              <div className="space-y-4 border-t border-white/10 px-4 py-4">
+              <div className="space-y-4 border-t border-line px-4 py-4">
                 <TopicRevealList
                   listId="blog-topic-list-mobile"
                   topics={topics}

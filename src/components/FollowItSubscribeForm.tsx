@@ -31,27 +31,27 @@ export function FollowItSubscribeForm({
 }: FollowItSubscribeFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const buttonClassName = [
-    "text-body inline-flex w-full items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-accent-primary px-5 py-2.5 font-bold text-white transition-all duration-200 ease-expo-out",
+    "text-body inline-flex min-h-11 w-full items-center justify-center rounded-md bg-accent-primary px-5 py-2.5 font-bold text-white transition-[background-color,opacity] duration-200 ease-expo-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
     isSubmitting
       ? "cursor-progress opacity-90"
-      : "cursor-pointer hover:from-blue-600 hover:to-accent-primary-hover",
+      : "cursor-pointer hover:bg-accent-primary-hover",
   ].join(" ");
 
   return (
     <section
       aria-labelledby="follow-it-subscribe-title"
       className={surfaceClassNames({
-        className: `mx-auto max-w-xl p-6 md:p-8 ${className}`.trim(),
+        className: `max-w-xl p-6 md:p-8 ${className}`.trim(),
       })}
     >
-      <header className="text-center">
+      <header>
         <h2
           id="follow-it-subscribe-title"
-          className="text-heading font-semibold text-white"
+          className="text-heading font-semibold text-ink"
         >
           {title}
         </h2>
-        <p className="text-body-sm mt-2 text-gray-300">{description}</p>
+        <p className="text-body-sm mt-2 text-muted">{description}</p>
       </header>
 
       <form
@@ -75,7 +75,7 @@ export function FollowItSubscribeForm({
           autoComplete="email"
           placeholder={placeholder}
           readOnly={isSubmitting}
-          className="text-body w-full rounded-md border-2 border-white/15 bg-white/5 px-4 py-2.5 text-center text-white placeholder:text-gray-400 focus:border-accent-link focus:placeholder-transparent focus:outline-none"
+          className="text-body min-h-11 w-full rounded-md border border-line bg-white px-4 py-2.5 text-ink placeholder:text-muted focus:border-accent-link focus:placeholder-transparent focus:outline-none focus:ring-1 focus:ring-accent-link"
         />
         <button
           type="submit"
@@ -85,7 +85,7 @@ export function FollowItSubscribeForm({
           {isSubmitting ? "Subscribing..." : buttonLabel}
         </button>
       </form>
-      {note ? <p className="mt-3 text-xs text-gray-400">{note}</p> : null}
+      {note ? <p className="mt-3 text-xs text-muted">{note}</p> : null}
     </section>
   );
 }

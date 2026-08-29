@@ -8,6 +8,8 @@ const keyEventCategory = "key_event";
 const engagementCategory = "engagement";
 const navigationCategory = "navigation";
 
+export type HomeSectionId = "experience" | "interests" | "writing";
+
 function compactParams(
   params: AnalyticsParams
 ): Record<string, AnalyticsParam> {
@@ -72,18 +74,6 @@ export function trackContactLinkClick({
     link_text: label,
     link_url: url,
     placement,
-  });
-}
-
-export function trackExperimentInteraction(
-  experiment: string,
-  action: string,
-  params: AnalyticsParams = {}
-) {
-  trackKeyEvent("experiment_interaction", {
-    action,
-    experiment,
-    ...params,
   });
 }
 
@@ -160,5 +150,11 @@ export function trackArticleEngagedRead({
     article_title: title,
     minimum_seconds: minimumSeconds,
     scroll_depth: scrollDepth,
+  });
+}
+
+export function trackHomeSectionView(sectionId: HomeSectionId) {
+  trackEvent("home_section_view", engagementCategory, {
+    section_id: sectionId,
   });
 }

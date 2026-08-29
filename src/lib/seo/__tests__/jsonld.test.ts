@@ -5,7 +5,6 @@ import {
   buildBlogPostingSchema,
   buildCollectionPageSchema,
   buildContactPageSchema,
-  buildHomePageSchema,
   buildPersonSchema,
   buildProfilePageSchema,
   buildSiteNavigationSchema,
@@ -26,9 +25,9 @@ function expectSchemaArray<T>(value: unknown): readonly T[] {
 describe("seo jsonld builders", () => {
   it("builds profile/contact/web page schemas with canonical IDs", () => {
     const profile = buildProfilePageSchema({
-      path: "/about",
-      title: "About Alex Leung | Software Engineer",
-      description: "About page description",
+      path: "/",
+      title: "Alex Leung | Software Engineer and Writer",
+      description: "Homepage description",
     });
     const contact = buildContactPageSchema({
       path: "/contact",
@@ -41,26 +40,26 @@ describe("seo jsonld builders", () => {
       description: "Now page description",
     });
 
-    expect(profile["@id"]).toBe("https://alexleung.ca/about/");
+    expect(profile["@id"]).toBe("https://alexleung.ca/");
     expect(contact["@id"]).toBe("https://alexleung.ca/contact/");
     expect(now["@id"]).toBe("https://alexleung.ca/now/");
     expect(profile.mainEntity).toMatchObject({
       "@id": "https://alexleung.ca/#person",
       name: "Alex Leung",
-      url: "https://alexleung.ca/about/",
-      image: "https://alexleung.ca/assets/about_portrait.webp",
+      url: "https://alexleung.ca/",
+      image: "https://alexleung.ca/assets/alex_vibing.webp",
       description:
         "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance.",
     });
-    expect(profile.description).toBe("About page description");
+    expect(profile.description).toBe("Homepage description");
     expect(now.mainEntity).toBeUndefined();
   });
 
   it("builds blog collection and item list schemas", () => {
-    const experiments = buildCollectionPageSchema({
-      path: "/experimental",
-      title: "Experiments | Alex Leung",
-      description: "Experiments index description",
+    const archive = buildCollectionPageSchema({
+      path: "/archive",
+      title: "Archive | Alex Leung",
+      description: "Archive description",
     });
     const collection = buildBlogCollectionPageSchema({
       path: "/blog",
@@ -76,8 +75,8 @@ describe("seo jsonld builders", () => {
       "/blog/tags/ai/"
     );
 
-    expect(experiments["@type"]).toBe("CollectionPage");
-    expect(experiments["@id"]).toBe("https://alexleung.ca/experimental/");
+    expect(archive["@type"]).toBe("CollectionPage");
+    expect(archive["@id"]).toBe("https://alexleung.ca/archive/");
     expect(collection.mainEntity).toBeDefined();
     expect(itemList["@id"]).toBe("https://alexleung.ca/blog/#itemlist");
     expect(tagItemList["@id"]).toBe(
@@ -98,20 +97,9 @@ describe("seo jsonld builders", () => {
     });
   });
 
-  it("builds enhanced home and website schemas", () => {
-    const home = buildHomePageSchema({
-      path: "/",
-      title:
-        "Alex Leung | Software Engineer for AI Systems, Product Engineering, and Distributed Systems",
-      description: "Homepage description",
-    });
+  it("builds the website schema", () => {
     const website = buildWebsiteSchema({
       description: "Website description",
-    });
-
-    expect(home.primaryImageOfPage).toMatchObject({
-      "@type": "ImageObject",
-      url: "https://alexleung.ca/assets/alex_vibing.webp",
     });
 
     const hasPart = expectSchemaArray<{
@@ -119,18 +107,23 @@ describe("seo jsonld builders", () => {
       "@id"?: string;
     }>(website.hasPart);
 
-    expect(hasPart).toHaveLength(5);
-    expect(hasPart[0]).toEqual({
-      "@type": "WebPage",
-      "@id": "https://alexleung.ca/about/",
-    });
-    expect(hasPart[3]).toEqual({
-      "@type": "CollectionPage",
-      "@id": "https://alexleung.ca/experimental/",
-    });
+    expect(hasPart).toEqual([
+      {
+        "@type": "CollectionPage",
+        "@id": "https://alexleung.ca/blog/",
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://alexleung.ca/now/",
+      },
+      {
+        "@type": "ContactPage",
+        "@id": "https://alexleung.ca/contact/",
+      },
+    ]);
   });
 
-  it("builds site navigation schema with canonical nav entry urls", () => {
+  it("builds site navigation schema with configured destinations", () => {
     const navigation = buildSiteNavigationSchema();
     const hasPart = expectSchemaArray<{
       "@type"?: string;
@@ -147,33 +140,21 @@ describe("seo jsonld builders", () => {
     expect(hasPart).toEqual([
       {
         "@type": "SiteNavigationElement",
-        "@id": "https://alexleung.ca/#site-navigation-home",
-        name: "Home",
-        url: "https://alexleung.ca/",
+        "@id": "https://alexleung.ca/#site-navigation-experience",
+        name: "Experience",
+        url: "https://alexleung.ca/#experience",
       },
       {
         "@type": "SiteNavigationElement",
-        "@id": "https://alexleung.ca/#site-navigation-about",
-        name: "About",
-        url: "https://alexleung.ca/about/",
+        "@id": "https://alexleung.ca/#site-navigation-writing",
+        name: "Writing",
+        url: "https://alexleung.ca/blog/",
       },
       {
         "@type": "SiteNavigationElement",
         "@id": "https://alexleung.ca/#site-navigation-now",
         name: "Now",
         url: "https://alexleung.ca/now/",
-      },
-      {
-        "@type": "SiteNavigationElement",
-        "@id": "https://alexleung.ca/#site-navigation-blog",
-        name: "Blog",
-        url: "https://alexleung.ca/blog/",
-      },
-      {
-        "@type": "SiteNavigationElement",
-        "@id": "https://alexleung.ca/#site-navigation-experiments",
-        name: "Experiments",
-        url: "https://alexleung.ca/experimental/",
       },
       {
         "@type": "SiteNavigationElement",
@@ -198,6 +179,18 @@ describe("seo jsonld builders", () => {
       "@type": "Organization",
       name: "Professional Engineers Ontario",
     });
+    expect(person.image).toEqual([
+      {
+        "@type": "ImageObject",
+        url: "https://alexleung.ca/assets/alex_vibing.webp",
+        caption: "Alex Leung in an art studio",
+      },
+      {
+        "@type": "ImageObject",
+        url: "https://alexleung.ca/assets/alex_mountain.webp",
+        caption: "Alex Leung's portrait on a mountain",
+      },
+    ]);
     expect(person.knowsLanguage).toEqual(["en-CA"]);
     expect(person.sameAs).toContain("https://www.linkedin.com/in/aclyx");
     expect(person.sameAs).toContain("https://ca.linkedin.com/in/aclyx");
@@ -255,8 +248,8 @@ describe("seo jsonld builders", () => {
     expect(posting.author).toMatchObject({
       "@id": "https://alexleung.ca/#person",
       name: "Alex Leung",
-      url: "https://alexleung.ca/about/",
-      image: "https://alexleung.ca/assets/about_portrait.webp",
+      url: "https://alexleung.ca/",
+      image: "https://alexleung.ca/assets/alex_vibing.webp",
     });
     expect(posting.mainEntityOfPage).toEqual({
       "@type": "WebPage",

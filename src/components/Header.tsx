@@ -10,23 +10,12 @@ import { DesktopNav, MobileNavDrawer } from "@/components/NavMenu";
 
 export default function Header() {
   const pathname = usePathname();
+  const [currentHash, setCurrentHash] = useState("");
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const hasMountedRef = useRef(false);
+  const shouldRestoreMenuFocusRef = useRef(false);
 
-  // Prevent body scroll when menu is open
-  useEffect(() => {
-    if (isMenuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
-  }, [isMenuOpen]);
-
-  // Close menu when resizing to desktop width
   useEffect(() => {
     if (!isMenuOpen) {
       return;
@@ -34,6 +23,7 @@ export default function Header() {
 
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
+        shouldRestoreMenuFocusRef.current = true;
         setIsMenuOpen(false);
       }
     };
@@ -43,6 +33,7 @@ export default function Header() {
     const mediaQuery = window.matchMedia("(min-width: 768px)");
     const handleResize = () => {
       if (mediaQuery.matches && isMenuOpen) {
+        shouldRestoreMenuFocusRef.current = false;
         setIsMenuOpen(false);
       }
     };
@@ -60,59 +51,102 @@ export default function Header() {
       return;
     }
 
-    if (!isMenuOpen) {
+    if (!isMenuOpen && shouldRestoreMenuFocusRef.current) {
       menuButtonRef.current?.focus();
+      shouldRestoreMenuFocusRef.current = false;
     }
   }, [isMenuOpen]);
 
-  // Close mobile menu on route changes (including browser back/forward)
   useEffect(() => {
+    shouldRestoreMenuFocusRef.current = false;
     setIsMenuOpen(false);
   }, [pathname]);
 
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const closeMenu = () => setIsMenuOpen(false);
+  useEffect(() => {
+    const syncHash = () => setCurrentHash(window.location.hash);
+
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    window.addEventListener("popstate", syncHash);
+
+    return () => {
+      window.removeEventListener("hashchange", syncHash);
+      window.removeEventListener("popstate", syncHash);
+    };
+  }, [pathname]);
+
+  const toggleMenu = () => {
+    shouldRestoreMenuFocusRef.current = isMenuOpen;
+    setIsMenuOpen(!isMenuOpen);
+  };
+  const closeMenu = () => {
+    shouldRestoreMenuFocusRef.current = false;
+
+    if (
+      document.activeElement instanceof HTMLElement &&
+      document.activeElement.closest("#mobile-nav-drawer")
+    ) {
+      document.activeElement.blur();
+    }
+
+    setIsMenuOpen(false);
+  };
+  const handleNavigation = (href: string) => {
+    setCurrentHash(new URL(href, window.location.href).hash);
+    closeMenu();
+  };
   const normalizedPathname =
     pathname === "/" ? "/" : pathname.replace(/\/$/, "");
 
-  const isActive = (canonicalPath: string) => {
-    if (canonicalPath === "/") {
+  const isActive = (canonicalLocation: string) => {
+    const [canonicalPath, canonicalHash] = canonicalLocation.split("#");
+    const normalizedCanonicalPath =
+      canonicalPath === "/" ? "/" : canonicalPath.replace(/\/$/, "");
+
+    if (canonicalHash) {
+      return (
+        normalizedPathname === normalizedCanonicalPath &&
+        currentHash === `#${canonicalHash}`
+      );
+    }
+
+    if (normalizedCanonicalPath === "/") {
       return normalizedPathname === "/";
     }
 
     return (
-      normalizedPathname === canonicalPath ||
-      normalizedPathname.startsWith(`${canonicalPath}/`)
+      normalizedPathname === normalizedCanonicalPath ||
+      normalizedPathname.startsWith(`${normalizedCanonicalPath}/`)
     );
   };
 
   return (
     <>
-      <header className="fixed left-0 right-0 top-0 z-50 h-[var(--header-height)] border-b border-white/10 bg-black/80 backdrop-blur-sm">
-        <nav className="mx-auto flex h-full w-[90vw] max-w-content items-center justify-between">
-          {/* Logo/Name */}
+      <header className="fixed inset-x-0 top-0 z-50 h-[var(--header-height)] border-b border-line bg-paper/95 backdrop-blur-md">
+        <nav
+          aria-label="Primary navigation"
+          className="section-center flex h-full items-center justify-between"
+        >
           <Link
             href="/"
-            onClick={closeMenu}
-            className="relative z-50 inline-flex min-h-11 items-center text-lg font-black uppercase tracking-wider transition-colors hover:text-gray-300 md:text-2xl"
+            onClick={() => handleNavigation("/")}
+            className="relative z-50 inline-flex min-h-11 items-center text-lg font-bold tracking-[-0.025em] text-ink transition-colors hover:text-accent-link-hover md:text-xl"
           >
             Alex Leung
           </Link>
 
-          {/* Desktop Navigation */}
-          <DesktopNav isActive={isActive} />
+          <DesktopNav isActive={isActive} onNavigate={handleNavigation} />
 
-          {/* Mobile Menu Button */}
           <button
             ref={menuButtonRef}
             onClick={toggleMenu}
-            className="relative z-50 flex size-11 items-center justify-center rounded-md text-2xl transition-all duration-300 hover:bg-white/10 hover:text-gray-300 md:hidden"
+            className="relative z-50 flex size-11 items-center justify-center rounded-md text-xl text-ink transition-[background-color,color] duration-200 hover:bg-accent-secondary-soft hover:text-accent-link-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link md:hidden"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-nav-drawer"
           >
             <span
-              className={`block transition-transform duration-300 ${
+              className={`block transition-transform duration-200 ${
                 isMenuOpen ? "rotate-90" : "rotate-0"
               }`}
             >
@@ -122,13 +156,11 @@ export default function Header() {
         </nav>
       </header>
 
-      {isMenuOpen ? (
-        <MobileNavDrawer
-          isOpen={isMenuOpen}
-          isActive={isActive}
-          onClose={closeMenu}
-        />
-      ) : null}
+      <MobileNavDrawer
+        isOpen={isMenuOpen}
+        isActive={isActive}
+        onNavigate={handleNavigation}
+      />
     </>
   );
 }

@@ -7,15 +7,10 @@ type StaticImageProfile = {
 };
 
 const staticImageProfiles = {
-  aboutPortrait: {
-    source: "/assets/about_portrait.webp",
+  heroPortrait: {
+    source: "/assets/alex_vibing.webp",
     orderedVariants: ["sm", "md", "lg"],
     fallbackVariant: "md",
-  },
-  background: {
-    source: "/assets/background.webp",
-    orderedVariants: ["mobile", "tablet", "desktop"],
-    fallbackVariant: "tablet",
   },
 } satisfies Record<string, StaticImageProfile>;
 

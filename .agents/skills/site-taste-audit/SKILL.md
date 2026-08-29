@@ -13,7 +13,7 @@ Use this profile as the governing taste model:
 - Writing should feel calm, direct, technically grounded, and quietly confident. Experience should come through clarity and substance while the tone stays warm, curious, approachable, and human.
 - Direct labels and specific nouns over metaphors, slogans, or abstract positioning.
 - Calm, balanced layouts that feel intentional on both mobile and desktop.
-- Dense but scannable repeat-use surfaces, especially blog indexes, tag lists, and experiment grids.
+- Dense but scannable repeat-use surfaces, especially writing indexes and tag lists.
 - Editorial but practical typography: clear hierarchy, comfortable line length, restrained display sizes.
 - Warmth through concrete details and useful visual accents, not flourish.
 - AI/product language that is first-class but grounded; no hype or future-of-work packaging.

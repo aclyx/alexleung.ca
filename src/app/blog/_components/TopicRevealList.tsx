@@ -39,10 +39,10 @@ export function TopicRevealList({
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-gray-300">
+      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
         {heading}
       </h3>
-      <div id={listId} className="flex flex-wrap gap-2 md:justify-center">
+      <div id={listId} className="flex flex-wrap gap-2">
         {visibleTopics.map((topic) => (
           <Tag key={topic.href} href={topic.href}>
             {topic.name}
@@ -53,7 +53,7 @@ export function TopicRevealList({
             type="button"
             aria-controls={listId}
             className={chipClassName(
-              "border-gray-500/50 bg-slate-950/30 text-gray-200 transition-colors hover:border-accent-secondary hover:bg-accent-secondary/10 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+              "border-line bg-surface text-muted transition-colors hover:border-accent-link/50 hover:bg-accent-secondary-soft hover:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
             )}
             onClick={() =>
               setVisibleCount((currentCount) =>

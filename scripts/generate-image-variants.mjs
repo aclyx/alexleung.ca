@@ -70,42 +70,22 @@ const inlineImageVariants = inlineContentVariantProfile;
 
 const staticAssetVariants = [
   {
-    source: "/assets/background.webp",
-    variants: [
-      {
-        name: "mobile",
-        width: process.env.BACKGROUND_MOBILE_WIDTH || "768",
-        quality: process.env.BACKGROUND_MOBILE_QUALITY || "64",
-      },
-      {
-        name: "tablet",
-        width: process.env.BACKGROUND_TABLET_WIDTH || "1280",
-        quality: process.env.BACKGROUND_TABLET_QUALITY || "68",
-      },
-      {
-        name: "desktop",
-        width: process.env.BACKGROUND_DESKTOP_WIDTH || "1600",
-        quality: process.env.BACKGROUND_DESKTOP_QUALITY || "72",
-      },
-    ],
-  },
-  {
-    source: "/assets/about_portrait.webp",
+    source: "/assets/alex_vibing.webp",
     variants: [
       {
         name: "sm",
-        width: process.env.ABOUT_PORTRAIT_SM_WIDTH || "480",
-        quality: process.env.ABOUT_PORTRAIT_SM_QUALITY || "66",
+        width: process.env.HERO_PORTRAIT_SM_WIDTH || "480",
+        quality: process.env.HERO_PORTRAIT_SM_QUALITY || "66",
       },
       {
         name: "md",
-        width: process.env.ABOUT_PORTRAIT_MD_WIDTH || "900",
-        quality: process.env.ABOUT_PORTRAIT_MD_QUALITY || "70",
+        width: process.env.HERO_PORTRAIT_MD_WIDTH || "900",
+        quality: process.env.HERO_PORTRAIT_MD_QUALITY || "70",
       },
       {
         name: "lg",
-        width: process.env.ABOUT_PORTRAIT_LG_WIDTH || "1280",
-        quality: process.env.ABOUT_PORTRAIT_LG_QUALITY || "74",
+        width: process.env.HERO_PORTRAIT_LG_WIDTH || "1280",
+        quality: process.env.HERO_PORTRAIT_LG_QUALITY || "74",
       },
     ],
   },

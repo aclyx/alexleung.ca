@@ -11,8 +11,8 @@ type ResponsiveContainerProps<T extends ElementType = "div"> = {
 
 const variantClasses: Record<ContainerVariant, string> = {
   content: "section-center",
-  wide: "container mx-auto px-5",
-  prose: "container mx-auto max-w-3xl px-5",
+  wide: "section-center",
+  prose: "mx-auto w-full max-w-3xl px-5 sm:px-6",
 };
 
 export function ResponsiveContainer<T extends ElementType = "div">({

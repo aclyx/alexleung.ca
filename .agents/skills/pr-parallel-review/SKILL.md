@@ -25,7 +25,7 @@ Load [references/review-dimensions.md](references/review-dimensions.md) before w
      - any obvious hotspots from the diff
 
 2. Choose the review execution mode.
-   - If sub-agent delegation is available, spawn exactly one sub-agent per review dimension.
+   - If sub-agent delegation is available, assign exactly one sub-agent to each review dimension, scheduling the six dimensions in waves that do not exceed the available concurrency.
    - Prefer `explorer` agents for read-only review when that agent type exists; otherwise use the closest available read-only agent type.
    - Give every delegated agent the same base context and changed files.
    - Change only the review dimension and checklist.
@@ -34,7 +34,7 @@ Load [references/review-dimensions.md](references/review-dimensions.md) before w
    - If sub-agent delegation is unavailable, run the same six review dimensions sequentially in the main agent and state that the result is a non-parallel fallback.
 
 3. Collect delegated results completely.
-   - Start all six delegated agents before waiting on results.
+   - Start as many delegated agents as available concurrency permits before waiting. As each agent finishes, collect its result and start the next queued dimension until all six have run.
    - Do not rely on a single `wait_agent` call over all ids; keep collecting results until every delegated agent reaches a terminal status or the run times out.
    - If an agent times out, note that explicitly in the summary instead of silently omitting it.
 

@@ -43,7 +43,7 @@ export function SectionBlock<T extends ElementType = "section">({
     <Component className={`${spacingClasses[spacing]} ${className}`.trim()}>
       {title ? <Subtitle title={title} id={titleId} /> : null}
       {subtitle ? (
-        <p className={`text-sm text-gray-300 ${alignClasses[align]}`.trim()}>
+        <p className={`text-sm text-muted ${alignClasses[align]}`.trim()}>
           {subtitle}
         </p>
       ) : null}

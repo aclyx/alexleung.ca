@@ -55,7 +55,7 @@ Suggested search patterns:
 
 Common commands (adapt to project tooling):
 - `yarn npm audit --all`
-- `yarn outdated`
+- `yarn npm info <package> --fields version,deprecated --json`
 - `yarn why <package>`
 - language-specific audit tooling where applicable
 

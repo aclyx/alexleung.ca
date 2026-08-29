@@ -87,11 +87,13 @@ Files:
 
 Coverage:
 
-- home page render
-- primary navigation
-- blog index to blog post navigation
-- contact CTA and social links
-- not-found route behavior
+- home hero content and primary route navigation
+- responsive interests, education, and short-viewport mobile navigation
+- blog index-to-post navigation and article metadata
+- tag archive rendering and active navigation state
+- contact CTA and social profile links
+- not-found route behavior and static metadata artifacts
+- retired About and experiment URL bridges
 
 Current smoke projects:
 
@@ -106,24 +108,24 @@ This keeps the same functional checks running against desktop Chrome, desktop Sa
 
 Files:
 
-- `playwright/tests/visual/home-and-about.visual.spec.ts`
+- `playwright/tests/visual/home.visual.spec.ts`
 - `playwright/tests/visual/blog.visual.spec.ts`
-- `playwright/tests/visual/experimental.visual.spec.ts`
 
-Current visual baselines are Linux snapshots generated in Docker and focus on top-of-page layout:
+Current visual baselines are Linux snapshots generated in Docker and cover representative page and section composition:
 
 - home top fold
-- about top fold
+- home experience section
+- home interests section
 - blog index top fold
 - blog post top fold
-- experiments hub top fold
+- blog tag archive top fold
 
 Current visual projects:
 
 - `chromium-visual`
 - `mobile-chromium-visual`
 
-The current suite favors viewport/page-level top-fold screenshots over narrow element-only screenshots so diffs better reflect the composition users actually see.
+The current suite favors viewport-level page and section screenshots over narrow element-only screenshots so diffs better reflect the composition users actually see.
 
 Visual coverage intentionally stays narrow: desktop Chromium plus one mobile Chromium lane. That keeps the baseline set small and reviewable while still covering mobile layout regressions without introducing a full multi-browser visual matrix.
 
@@ -135,7 +137,6 @@ Visual coverage intentionally stays narrow: desktop Chromium plus one mobile Chr
   - `main` to be visible
   - fonts to finish loading
   - relevant `<img>` elements to finish loading
-  - above-the-fold CSS background images to finish loading
 - Visual baselines should be regenerated through `yarn test:e2e:visual:update`, not by ad hoc host-only runs.
 
 ## CI

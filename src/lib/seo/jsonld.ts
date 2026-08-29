@@ -19,7 +19,7 @@ import { toAbsoluteUrl, toCanonical } from "@/lib/seo/url";
 const PERSON_ID = "/#person";
 const WEBSITE_ID = "/#website";
 const SITE_NAVIGATION_ID = "/#site-navigation";
-const ABOUT_PATH = "/about";
+const PROFILE_PATH = "/";
 const SITE_ROOT = toAbsoluteUrl("/").replace(/\/$/, "");
 const SCHEMA_CONTEXT: "https://schema.org" = "https://schema.org";
 const PERSON_TYPE: "Person" = "Person";
@@ -80,8 +80,8 @@ const PERSON_REFERENCE: PersonReference = {
   "@type": PERSON_TYPE,
   "@id": toAbsoluteUrl(PERSON_ID),
   name: "Alex Leung",
-  url: toCanonical(ABOUT_PATH),
-  image: toAbsoluteUrl("/assets/about_portrait.webp"),
+  url: toCanonical(PROFILE_PATH),
+  image: toAbsoluteUrl("/assets/alex_vibing.webp"),
   sameAs: SOCIAL_PROFILES,
 };
 
@@ -211,28 +211,6 @@ export function buildCollectionPageSchema(input: {
   };
 }
 
-export function buildHomePageSchema(input: {
-  description: string;
-  path: string;
-  title: string;
-}): WithContext<WebPage> {
-  return {
-    ...buildBasePageSchema({ ...input, pageType: "WebPage" }),
-    about: {
-      "@id": toAbsoluteUrl(PERSON_ID),
-    },
-    mainEntity: {
-      "@type": "Person",
-      "@id": toAbsoluteUrl(PERSON_ID),
-    },
-    primaryImageOfPage: {
-      "@type": "ImageObject",
-      url: toAbsoluteUrl("/assets/alex_vibing.webp"),
-      caption: "Alex Leung",
-    },
-  };
-}
-
 export function buildBlogCollectionPageSchema(input: {
   description: string;
   path: string;
@@ -330,12 +308,12 @@ export function buildPersonSchema(): WithContext<Person> {
     image: [
       {
         "@type": "ImageObject",
-        url: toAbsoluteUrl("/assets/about_portrait.webp"),
-        caption: "Alex Leung",
+        url: toAbsoluteUrl("/assets/alex_vibing.webp"),
+        caption: "Alex Leung in an art studio",
       },
       {
         "@type": "ImageObject",
-        url: toAbsoluteUrl("/assets/about_portrait_mountain.webp"),
+        url: toAbsoluteUrl("/assets/alex_mountain.webp"),
         caption: "Alex Leung's portrait on a mountain",
       },
     ],
@@ -426,24 +404,16 @@ export function buildWebsiteSchema(input: {
     },
     hasPart: [
       {
-        "@type": "WebPage",
-        "@id": toCanonical("/about"),
-      },
-      {
         "@type": "CollectionPage",
         "@id": toCanonical("/blog"),
       },
       {
-        "@type": "ContactPage",
-        "@id": toCanonical("/contact"),
-      },
-      {
-        "@type": "CollectionPage",
-        "@id": toCanonical("/experimental"),
-      },
-      {
         "@type": "WebPage",
         "@id": toCanonical("/now"),
+      },
+      {
+        "@type": "ContactPage",
+        "@id": toCanonical("/contact"),
       },
     ],
     inLanguage: "en-CA",
@@ -465,7 +435,7 @@ export function buildSiteNavigationSchema(): WithContext<SiteNavigationElement> 
       "@type": SITE_NAVIGATION_ELEMENT_TYPE,
       "@id": toAbsoluteUrl(`/#site-navigation-${item.id}`),
       name: item.label,
-      url: toCanonical(item.canonicalPath),
+      url: toAbsoluteUrl(item.href),
     })),
     inLanguage: "en-CA",
   };

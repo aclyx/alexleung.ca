@@ -8,12 +8,10 @@ import { Badge } from "@/components/Badge";
 import ExternalLink from "@/components/ExternalLink";
 import { IconTextRow } from "@/components/IconTextRow";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
-import { LatestWritingSection } from "@/components/LatestWritingSection";
 import { PageShell } from "@/components/PageShell";
 import { ProseContent } from "@/components/ProseContent";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { SectionBlock } from "@/components/SectionBlock";
-import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 export const NOW_PAGE_LAST_UPDATED_ISO = "2026-08-08";
@@ -41,11 +39,6 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function NowPage() {
-  const latestPosts = getAllPosts(["slug", "title", "date", "excerpt"]).slice(
-    0,
-    3
-  );
-
   return (
     <>
       <JsonLdBreadcrumbs
@@ -63,66 +56,67 @@ export default function NowPage() {
       />
 
       <PageShell title="What I'm Doing Now" titleId="now">
-        <div className="mb-8 text-center">
+        <ResponsiveContainer className="mb-10">
           <Badge tone="info">
             Last updated: {NOW_PAGE_LAST_UPDATED_DISPLAY}
           </Badge>
-        </div>
+        </ResponsiveContainer>
 
         <ResponsiveContainer element="section">
-          <SectionBlock spacing="lg">
-            <div className="text-body space-y-8 text-left leading-relaxed">
-              <IconTextRow
-                icon="📚"
-                title="Currently Reading"
-                headingLevel="h2"
+          <div className="max-w-3xl">
+            <SectionBlock spacing="lg">
+              <div className="text-body space-y-8 text-left leading-relaxed">
+                <IconTextRow
+                  icon="📚"
+                  title="Currently Reading"
+                  headingLevel="h2"
+                >
+                  <p>
+                    I&apos;m reading <em>Superintelligence</em> by{" "}
+                    <ExternalLink href="https://nickbostrom.com/">
+                      Nick Bostrom
+                    </ExternalLink>
+                    .
+                  </p>
+                </IconTextRow>
+
+                <IconTextRow
+                  icon="🧠"
+                  title="Currently Studying"
+                  headingLevel="h2"
+                >
+                  <p>
+                    I&apos;m working through{" "}
+                    <ExternalLink href="https://spinningup.openai.com/en/latest/">
+                      OpenAI&apos;s Spinning Up
+                    </ExternalLink>{" "}
+                    to better understand reinforcement learning and deep
+                    reinforcement learning.
+                  </p>
+                </IconTextRow>
+              </div>
+
+              <ProseContent
+                size="sm"
+                className="mt-8 border-t border-line pt-8"
               >
                 <p>
-                  I&apos;m reading <em>Superintelligence</em> by{" "}
-                  <ExternalLink href="https://nickbostrom.com/">
-                    Nick Bostrom
+                  This is a{" "}
+                  <ExternalLink href="https://nownownow.com/about">
+                    now page
                   </ExternalLink>
-                  .
+                  . You can read more about the format{" "}
+                  <ExternalLink href="https://sive.rs/nowff">
+                    in Derek Sivers&apos; now page explainer
+                  </ExternalLink>
+                  . It&apos;s a snapshot of what I&apos;m focused on at this
+                  point in my life.
                 </p>
-              </IconTextRow>
-
-              <IconTextRow
-                icon="🧠"
-                title="Currently Studying"
-                headingLevel="h2"
-              >
-                <p>
-                  I&apos;m working through{" "}
-                  <ExternalLink href="https://spinningup.openai.com/en/latest/">
-                    OpenAI&apos;s Spinning Up
-                  </ExternalLink>{" "}
-                  to better understand reinforcement learning and deep
-                  reinforcement learning.
-                </p>
-              </IconTextRow>
-            </div>
-
-            <ProseContent
-              size="sm"
-              className="mt-8 border-t border-gray-700 pt-8"
-            >
-              <p>
-                This is a{" "}
-                <ExternalLink href="https://nownownow.com/about">
-                  now page
-                </ExternalLink>
-                . You can read more about the format{" "}
-                <ExternalLink href="https://sive.rs/nowff">
-                  in Derek Sivers&apos; now page explainer
-                </ExternalLink>
-                . It&apos;s a snapshot of what I&apos;m focused on at this point
-                in my life.
-              </p>
-            </ProseContent>
-          </SectionBlock>
+              </ProseContent>
+            </SectionBlock>
+          </div>
         </ResponsiveContainer>
       </PageShell>
-      <LatestWritingSection posts={latestPosts} />
     </>
   );
 }

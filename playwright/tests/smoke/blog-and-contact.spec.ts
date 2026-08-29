@@ -70,6 +70,12 @@ test("unknown routes render the exported not found page", async ({ page }) => {
     "href",
     "/"
   );
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(1);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    /noindex/
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 });
 
 test("static export metadata artifacts are served", async ({ request }) => {
