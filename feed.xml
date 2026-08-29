@@ -4,8 +4,8 @@
     <channel>
         <title>Alex Leung's Blog</title>
         <link>https://alexleung.ca/blog/</link>
-        <description>Follow Alex Leung's latest essays on software and AI tools, technical book notes, experiment write-ups, and personal reflections.</description>
-        <lastBuildDate>Sun, 02 Aug 2026 00:00:00 GMT</lastBuildDate>
+        <description>Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.</description>
+        <lastBuildDate>Sat, 29 Aug 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
