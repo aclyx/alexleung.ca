@@ -1,8 +1,26 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
+
+import { trackExperimentInteraction } from "@/lib/analytics";
 
 import { PidSimulatorWorkspace } from "../PidSimulatorWorkspace";
 
+jest.mock("@/lib/analytics", () => ({
+  trackExperimentInteraction: jest.fn(),
+}));
+
+const mockedTrackExperimentInteraction = jest.mocked(
+  trackExperimentInteraction
+);
+
 describe("PidSimulatorWorkspace", () => {
+  beforeEach(() => {
+    mockedTrackExperimentInteraction.mockReset();
+  });
+
+  afterEach(() => {
+    jest.useRealTimers();
+  });
+
   it("renders controls and chart", () => {
     render(<PidSimulatorWorkspace />);
 
@@ -65,5 +83,28 @@ describe("PidSimulatorWorkspace", () => {
     expect(
       screen.getByText(/full step response stays in view/i)
     ).toBeInTheDocument();
+  });
+
+  it("tracks one settled gain commit after continuous tuning", () => {
+    jest.useFakeTimers();
+    render(<PidSimulatorWorkspace />);
+
+    const proportionalGain = screen.getByLabelText(/^Kp$/i);
+    fireEvent.change(proportionalGain, { target: { value: "2.8" } });
+    fireEvent.change(proportionalGain, { target: { value: "3.1" } });
+
+    expect(proportionalGain).toHaveValue("3.1");
+    expect(mockedTrackExperimentInteraction).not.toHaveBeenCalled();
+
+    act(() => {
+      jest.advanceTimersByTime(500);
+    });
+
+    expect(mockedTrackExperimentInteraction).toHaveBeenCalledTimes(1);
+    expect(mockedTrackExperimentInteraction).toHaveBeenCalledWith(
+      "pid_controller_simulator",
+      "commit_gain",
+      { gain: "kp", value: 3.1 }
+    );
   });
 });

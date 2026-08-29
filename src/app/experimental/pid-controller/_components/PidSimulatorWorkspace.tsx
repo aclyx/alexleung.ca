@@ -28,6 +28,7 @@ const EXPERIMENT_ID = "pid_controller_simulator";
 const MAX_ELAPSED_SECONDS = 0.25;
 const MAX_CATCH_UP_STEPS_PER_FRAME = 12;
 const DEFAULT_MAX_TIME_SECONDS = 20;
+const CONTROL_INTERACTION_DEBOUNCE_MS = 500;
 const TIME_EPSILON = FIXED_DT_SECONDS / 2;
 
 const firstPreset = PID_SIMULATOR_PRESETS[0];
@@ -73,6 +74,18 @@ export function PidSimulatorWorkspace() {
   );
   const simulationStateRef = useRef(simulationState);
   const metricSamplesRef = useRef<SimulationSample[]>(simulationState.samples);
+  const interactionTimersRef = useRef(new Map<string, number>());
+
+  useEffect(() => {
+    const interactionTimers = interactionTimersRef.current;
+
+    return () => {
+      for (const timerId of interactionTimers.values()) {
+        window.clearTimeout(timerId);
+      }
+      interactionTimers.clear();
+    };
+  }, []);
 
   useEffect(() => {
     controllerRef.current.setConfig(buildControllerConfig(kp, ki, kd));
@@ -225,6 +238,24 @@ export function PidSimulatorWorkspace() {
   ) => {
     trackExperimentInteraction(EXPERIMENT_ID, action, params);
   };
+  const trackSettledPidInteraction = (
+    key: string,
+    action: string,
+    params: Record<string, string | number>
+  ) => {
+    const interactionTimers = interactionTimersRef.current;
+    const pendingTimerId = interactionTimers.get(key);
+
+    if (pendingTimerId !== undefined) {
+      window.clearTimeout(pendingTimerId);
+    }
+
+    const timerId = window.setTimeout(() => {
+      interactionTimers.delete(key);
+      trackPidInteraction(action, params);
+    }, CONTROL_INTERACTION_DEBOUNCE_MS);
+    interactionTimers.set(key, timerId);
+  };
 
   return (
     <section className="space-y-6 rounded-xl border border-gray-600 bg-slate-950/85 p-6 shadow-sm">
@@ -277,35 +308,52 @@ export function PidSimulatorWorkspace() {
             });
           }}
           onKpChange={(value) => {
-            trackPidInteraction("change_gain", { gain: "kp", value });
+            trackSettledPidInteraction("gain:kp", "commit_gain", {
+              gain: "kp",
+              value,
+            });
             applySimulationParameters({
               nextKp: value,
             });
           }}
           onKiChange={(value) => {
-            trackPidInteraction("change_gain", { gain: "ki", value });
+            trackSettledPidInteraction("gain:ki", "commit_gain", {
+              gain: "ki",
+              value,
+            });
             applySimulationParameters({
               nextKi: value,
             });
           }}
           onKdChange={(value) => {
-            trackPidInteraction("change_gain", { gain: "kd", value });
+            trackSettledPidInteraction("gain:kd", "commit_gain", {
+              gain: "kd",
+              value,
+            });
             applySimulationParameters({
               nextKd: value,
             });
           }}
           onSetpointChange={(value) => {
-            trackPidInteraction("change_setpoint", { value });
+            trackSettledPidInteraction("setpoint", "commit_setpoint", {
+              value,
+            });
             applySimulationParameters({
               nextSetpoint: value,
             });
           }}
           onSimulationSpeedChange={(value) => {
-            trackPidInteraction("change_simulation_speed", { value });
+            trackSettledPidInteraction(
+              "simulation_speed",
+              "commit_simulation_speed",
+              { value }
+            );
             setSimulationSpeed(value);
           }}
           onMaxTimeChange={(value) => {
-            trackPidInteraction("change_max_time", { value });
+            trackSettledPidInteraction("max_time", "commit_max_time", {
+              value,
+            });
             applySimulationParameters({
               nextMaxTimeSeconds: value,
             });
