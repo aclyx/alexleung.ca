@@ -20,16 +20,16 @@
             <link>https://alexleung.ca/blog/trip-to-southern-utah/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/trip-to-southern-utah/</guid>
             <pubDate>Sat, 04 Jul 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[OpenAI's mid-year break was a chance to fly to Las Vegas, drive into southern Utah, and hike around Zion, Escalante, and Bryce Canyon.]]></description>
+            <description><![CDATA[We flew to Las Vegas, drove into southern Utah, and hiked around Zion, Escalante, and Bryce Canyon.]]></description>
             <category>Reflection</category>
             <category>Lifestyle</category>
         </item>
         <item>
-            <title><![CDATA[Farming Expensive Coding Agent Sessions]]></title>
+            <title><![CDATA[Farming Agent Mistakes]]></title>
             <link>https://alexleung.ca/blog/farming-expensive-coding-agent-sessions/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/farming-expensive-coding-agent-sessions/</guid>
             <pubDate>Sun, 14 Jun 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[My coding-agent sessions are more expensive now. The useful spend is the part that turns mistakes into better tests, graders, prompts, and checks.]]></description>
+            <description><![CDATA[When a coding agent makes a repeatable mistake, I try to keep the correction in the harness for the next run.]]></description>
             <category>AI</category>
             <category>Developer Workflow</category>
             <category>Reflection</category>
@@ -44,13 +44,13 @@
             <category>Lifestyle</category>
         </item>
         <item>
-            <title><![CDATA[Coding Agents for Inspectable Browser Tools]]></title>
+            <title><![CDATA[Load Flow and Mandelbrot in the Browser]]></title>
             <link>https://alexleung.ca/blog/small-interactive-tools-with-a-coding-agent/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/small-interactive-tools-with-a-coding-agent/</guid>
             <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Building frontend-only tools for load flow and Mandelbrot zooming gave me concrete ways to inspect older technical models.]]></description>
+            <description><![CDATA[A browser-based load-flow solver and Mandelbrot explorer let me revisit power-system analysis, numerical precision, and the limits of small client-side tools.]]></description>
             <category>AI</category>
-            <category>Developer Workflow</category>
+            <category>Learning</category>
             <category>Reflection</category>
         </item>
         <item>
