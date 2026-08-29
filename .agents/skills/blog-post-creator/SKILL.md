@@ -22,6 +22,7 @@ Load references only when needed:
 - Keep rigorous writing warm, curious, approachable, and human without adding decorative personality.
 - Prefer literal phrasing over abstract framing when the concrete system, UI behavior, or comparison can be named.
 - For personal reflections, lead with the lived detail before the interpretation. Do not manufacture thesis energy with polished setup phrases.
+- Let a concrete detail stand when it already carries the point. Do not follow it with a generic interpretation or summary that adds no new consequence.
 - State stakes plainly when the evidence supports them; do not use declarations of importance as a substitute for facts and consequences.
 
 ## Hard Constraints
@@ -36,32 +37,39 @@ Load references only when needed:
 8. Do not turn learning notes, project writeups, or personal reflections into portfolio pitches.
 9. Avoid intro scaffolding that announces a thesis before showing the experience: rhetorical contrast, abstract significance framing, or decorative labels for mood/place/context.
 10. If the user corrects tone more than once, stop incremental patching. Reread the full piece, identify the repeated failure pattern, and revise the affected section from concrete facts outward.
-11. Preserve the user-stated main takeaway as the spine of the title, excerpt, section path, and ending. Do not replace it with an adjacent generic lesson.
+11. Preserve the user-stated main takeaway as the editorial spine without repeating the same formulation in the title, excerpt, headings, and ending. Do not replace it with an adjacent generic lesson.
 12. For AI-workflow reflections, keep harness mechanisms explicit when they are the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token.
 13. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
 14. Do not add links or prose references from a dated post to a later-dated post unless the older entry receives an intentional `updated` date.
 15. Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow or textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
+16. Do not force unlike genres into the same orientation, section, and closing-moral template. Let the subject determine the form.
+17. Audit pattern density across the full draft. Repeated balanced contrasts, tidy multi-item lists, and recap sentences can sound formulaic even when each instance is defensible.
+18. Make titles and excerpts subject-first: name the event, place, artifact, workflow, or question before an abstract category or lesson.
+19. Preserve the full shape of a user-stated takeaway: its mechanism, intended scope, and any explicit future aspiration. A concrete incident may demonstrate a broader philosophy, but it must not replace or narrow that philosophy. Keep aspirations framed as goals rather than present capabilities.
 
 ## Workflow
 
 1. Capture facts and intent.
    - Identify topic, thesis, audience, and depth target: learning note, technical explainer, reflection, or compact reflective piece.
    - Record the user's stated main takeaway verbatim, especially if they name a mechanism or correction loop.
+   - Separate the takeaway into mechanism, intended scope, and future aspiration when the user supplies those dimensions. Keep each one visible in the draft plan instead of letting the most concrete example stand in for all three.
    - Lock facts around actors, versions, decisions, ownership, and scope boundaries.
    - Mark assumptions instead of filling gaps with invented detail.
 
 2. Choose the shape.
    - For technical pieces, establish context and a clear point of view early. For reflections, orient the reader with the concrete subject, scene, or action before interpretation.
    - Make the first sentence orient a cold reader by naming the subject, workflow, object, or setting before using a comparison, metric, or time jump.
-   - Make the title, excerpt, headings, and ending point at the recorded takeaway, not merely a nearby theme.
+   - Make the title and excerpt name the concrete subject first. Keep surfaces aligned with the recorded takeaway without repeating one thesis sentence everywhere.
+   - Choose a genre-specific form: travel/photo essays may be selectively chronological without a thesis; personal updates may be diary- or scene-led and omit headings; technical reflections may use an argument or postmortem; implementation notes may use artifact-led case studies.
    - Use 2-4 `##` sections when structure helps; short reflective pieces may omit headings.
    - Make each section advance one concrete claim with supporting detail.
-   - End with synthesis, a changed understanding, or a specific forward point.
+   - End in a form suited to the genre: synthesis or a decision for an argument, a concrete scene or state for a personal piece, or an unresolved limit or next experiment for a case study.
 
 3. Draft or revise in house voice.
    - Prefer cohesive multi-sentence paragraphs.
    - Replace broad framing with the exact constraint, mechanism, symptom, or comparison.
    - For personal updates, keep the opening close to the actual scene, action, object, constraint, or observation before adding a conclusion.
+   - After drafting, mark repeated contrast pivots, lists, and sentences that recap nearby prose. Keep only the instances that add a real distinction, necessary scan value, or new consequence.
    - Use plain, literal titles and headings when the user pushes back on style. Avoid clever frames, point/lever metaphors, and transformation-style titles unless the user asks for them.
    - Use lists only when they improve scanning.
    - Keep technical trade-offs and limitations explicit.
@@ -83,7 +91,8 @@ Load references only when needed:
 
 6. Grade and iterate.
    - Use [blog-post-grader](references/blog-post-grader.md) for new posts and meaningful revisions unless the user explicitly asks for a rough draft only.
-   - Run the grader in a fresh-context subagent. Pass the post artifact, the grader rubric, and essential user-provided facts, including the exact main takeaway if the user supplied one; do not pass author rationale, known weak spots, previous scores, or intended fixes.
+   - Run the grader in a fresh-context subagent. Pass the target, the rubric, essential user-provided facts, and 3-5 other recent published posts; do not pass author rationale, known weak spots, previous scores, or intended fixes.
+   - Use the corpus comparison to catch repeated structure, phrase families, contrast/list/recap density, and moralized endings, not to make the new post imitate the corpus.
    - Revise from the highest-impact findings first, then re-run a fresh-context grading pass.
    - Continue until the score is 90+ with no blocking issues. If two passes stall below 90 on the same issue, stop smoothing locally and ask the user for missing facts or direction.
    - When the user asks to improve the harness after feedback, update the relevant skill, voice, or grader guidance so the failure is caught before the next draft.
@@ -103,11 +112,16 @@ Load references only when needed:
 - The draft feels calm, direct, technically grounded, understated, quietly confident, and human rather than sterile or promotional.
 - Paragraph cadence is varied and mostly multi-sentence.
 - Titles, excerpts, headings, and intro copy are specific and modest.
+- Titles and excerpts name the concrete subject before an abstract takeaway.
 - No inferred facts, inflated claims, or unsupported practice claims were introduced.
 - No slogan-like phrasing, draft scaffolding, or repeated synonym pairs remain.
+- Concrete details are not followed by generic interpretations that merely explain how to feel about them.
+- Contrast pivots, lists, and recap sentences are not dense enough to become a visible template.
+- The post has been compared with recent entries and its structure still feels native to its genre and subject.
 - Personal-reflection openings begin with specific lived details, not abstract contrast or significance framing.
 - The first sentence gives enough context to understand the subject before any comparison, metric, or time jump.
 - Title, excerpt, headings, and ending preserve the user's stated main takeaway instead of substituting a smoother adjacent lesson.
+- Concrete examples illustrate the stated philosophy without narrowing its scope, and explicit future aspirations remain present as bounded goals rather than current-state claims.
 - If the post is about AI-agent work, the harness or feedback-loop mechanism remains concrete where relevant.
 - Cover or body images are saved in the repo and referenced by frontmatter/markdown, or prompt output includes both `Cover Prompt (Primary)` and `Cover Prompt (Backup)` when generation is unavailable or intentionally deferred.
 - Fresh-context grader score is 90+ with no blocking issues, unless the user explicitly asked to stop earlier.
