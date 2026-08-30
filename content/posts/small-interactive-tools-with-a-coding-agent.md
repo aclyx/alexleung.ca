@@ -11,9 +11,7 @@ tags:
   - "Reflection"
 ---
 
-I built two frontend-only tools to revisit technical problems I had studied before: a load-flow solver and a Mandelbrot explorer. Both ran entirely in the browser, but they put different pressure on it. Load Flow solved nonlinear equations over a small electrical network. The Mandelbrot explorer performed many per-pixel calculations while keeping viewport coordinates at higher precision than ordinary JavaScript numbers allow. A coding agent helped me get started and scaffold both interfaces; I used the running tools to check the models and find the limits described below.
-
-The [Mandelbrot explorer](/experimental/mandelbrot/) is available again. The load-flow solver remains retired; I am keeping this post as a record of what I learned from both tools.
+I built two frontend-only tools to revisit technical problems I had studied before: a load-flow solver and a [Mandelbrot explorer](/experimental/mandelbrot/). Both ran entirely in the browser, but they put different pressure on it. Load Flow solved nonlinear equations over a small electrical network. The Mandelbrot explorer performed many per-pixel calculations while keeping viewport coordinates at higher precision than ordinary JavaScript numbers allow. A coding agent helped me get started and scaffold both interfaces; I used the running tools to check the models and find their limits.
 
 ## Load flow in the browser
 
@@ -31,7 +29,7 @@ The Mandelbrot explorer came from a master's degree course, ECE 8893 at Georgia 
 
 The browser version had to handle the same two constraints with a simpler implementation: many per-pixel computations and viewport coordinates that need more precision as the view gets narrower. It kept those coordinates in arbitrary-precision decimals, rendered asynchronously, and used lower resolutions to keep interaction usable. That was enough for deep zooming in the browser, although it was slower than the earlier CUDA version.
 
-The restored explorer limits resolution at deep zooms and caps the iteration setting at 4,000 to bound the work it asks of the browser. I do not remember running into the same limits in my earlier C++ version using the GNU Multiple Precision Arithmetic Library.
+To keep the workload bounded, I limited resolution at deep zooms and capped the iteration setting at 4,000. I do not remember running into the same limits in my earlier C++ version using the GNU Multiple Precision Arithmetic Library.
 
 ## What the tools exposed
 
