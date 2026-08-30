@@ -76,6 +76,7 @@ test("unknown routes render the exported not found page", async ({ page }) => {
     /noindex/
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  await expect(page.locator("footer")).toBeInViewport();
 });
 
 test("static export metadata artifacts are served", async ({ request }) => {

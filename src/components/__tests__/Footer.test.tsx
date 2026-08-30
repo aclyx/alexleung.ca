@@ -37,6 +37,10 @@ describe("Footer", () => {
 
     const rssLink = screen.getByRole("link", { name: /subscribe via rss/i });
     expect(rssLink).toHaveAttribute("href", "/feed.xml");
+    expect(rssLink).toHaveClass("focus-visible:outline-none");
+    expect(rssLink).toHaveClass("focus-visible:ring-2");
+    expect(rssLink).toHaveClass("focus-visible:ring-accent-link");
+    expect(rssLink).toHaveClass("focus-visible:ring-offset-paper");
   });
 
   it("should display copyright with current year", () => {

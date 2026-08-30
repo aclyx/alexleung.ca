@@ -126,6 +126,8 @@ describe("MandelbrotCanvas", () => {
       "aria-describedby",
       "mandelbrot-canvas-instructions mandelbrot-render-status"
     );
+    expect(canvas).toHaveClass("focus-visible:ring-paper");
+    expect(canvas).not.toHaveClass("focus-visible:ring-cyan-200");
     expect(status).toHaveAttribute("aria-live", "polite");
     expect(status).toHaveTextContent("Render complete.");
     expect(status).toHaveTextContent("1x");
