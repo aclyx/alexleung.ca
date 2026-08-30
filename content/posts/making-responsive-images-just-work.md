@@ -1,8 +1,8 @@
 ---
 title: "One Manifest for Responsive Images"
 date: "2026-03-04"
-updated: "2026-06-15"
-excerpt: "I replaced scattered responsive-image conventions in a Next.js static site with one generated manifest for variants, dimensions, and runtime lookup."
+updated: "2026-08-29"
+excerpt: "I replaced scattered responsive-image conventions in a Next.js static site with one generated manifest for variants, dimensions, and lookup during static rendering."
 coverImage: "/assets/blog/making-responsive-images-just-work/cover.webp"
 coverAlt: "Illustration of Alex measuring framed landscape images labeled sm, md, and lg"
 tags:
@@ -16,25 +16,17 @@ The responsive-image cleanup started as a performance task: downscale assets, ad
 Image behavior was spread across scripts and components with repeated conventions:
 
 - variant naming assumptions,
-- hardcoded `srcSet` strings,
+- duplicated variant-path assumptions,
 - multiple script aliases and legacy paths.
 
-That made drift easy. A renamed variant or new profile could leave a hardcoded `srcSet` behind. I replaced that with a simpler pattern: generate one manifest at build time (`src/generated/imageVariantManifest.json`) and resolve variants from it at runtime.
+That made drift easy. A renamed variant or new profile could leave an old path assumption behind. I replaced that with a simpler pattern: generate one manifest at build time (`src/generated/imageVariantManifest.json`) and use shared helpers to resolve variants before rendering.
 
 ## One manifest instead of scattered assumptions
 
-The main change was replacing repeated conventions with one manifest-driven path. There is now one canonical workflow: `yarn image:variants`. Rendering logic is less duplicated because a shared `ResponsiveImage` component replaced repeated `<picture>` patterns. Static assets also became data-driven, so background and portrait `srcSet` values now come from manifest-backed metadata rather than JSX literals.
+`yarn image:variants` is now the canonical workflow. Lookup helpers read the generated metadata and pass resolved image paths and `srcSet` values into the shared `ResponsiveImage` component used for cover images and the homepage portrait. Inline Markdown images use the same manifest through the HTML conversion pipeline.
 
-## A simpler authoring path
-
-I do not want to manually create `-sm`, `-md`, `-lg` files every time I add an image.
-
-The workflow is now simple: add the source image, reference it in frontmatter or markdown, then run `yarn image:variants`. That keeps authoring lightweight while still making outputs consistent.
+I also wanted to avoid manually creating every profile-specific variant when I added an image. For blog covers and inline Markdown images, the authoring path is now to add the source image, reference it in frontmatter or markdown, and run `yarn image:variants`.
 
 ## Stricter failure modes
 
-Once maintainability improved, performance work became easier to verify. I also removed silent fallback for required profiles (`cover.card`, `cover.hero`, `inlineContent`). If a required variant is missing, it now fails fast instead of shipping a hidden regression.
-
-## What I actually fixed
-
-I started by chasing LCP. The fix that stuck was maintainability: fewer scattered conventions, generated metadata, and a clearer boundary between build-time image work and runtime rendering. For this site, performance work became easier once the image system became easier to reason about.
+The manifest loader now rejects missing or empty required profile definitions (`cover.card`, `cover.hero`, `inlineContent`). Individual cover and inline variants can still fall back to the source image, so the hard failure protects the manifest schema rather than every cover or inline asset.
