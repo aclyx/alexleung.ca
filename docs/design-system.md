@@ -136,9 +136,12 @@ Tailwind's default breakpoints are in use. Mobile is the baseline; `md`
 
 ## Route And Asset Boundaries
 
-Experiments are retired and are not part of the active interface system. The
-static files under `public/about/` and `public/experimental/` are intentional,
-noindex legacy bridges for old URLs, not page templates to extend.
+The Mandelbrot Explorer is the only active route in the former experiment
+namespace. It uses the shared warm interface tokens around its dark rendering
+canvas and remains a standalone tool rather than a navigation category or hub.
+The static files under `public/about/` and the remaining retired routes under
+`public/experimental/` are intentional noindex bridges, not page templates to
+extend.
 
 Add source images under `public/assets/`, prefer metadata-stripped WebP, and run
 the repository image-variant workflow so generated variants and the manifest

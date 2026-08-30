@@ -3,6 +3,8 @@ x-playwright-base: &playwright-base
   working_dir: /workspace
   init: true
   ipc: host
+  ulimits:
+    core: 0
   environment:
     CI: ${CI:-}
     TZ: UTC

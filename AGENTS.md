@@ -66,7 +66,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Images are unoptimized (required for static export)
 - Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/now/` and `/blog/post-slug/`, not `/now` or `/blog/post-slug`)
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`
-- `public/about/index.html` and `public/experimental/**/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. Do not remove them as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
+- `public/about/index.html`, `public/experimental/index.html`, `public/experimental/load-flow/index.html`, and `public/experimental/pid-controller/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/` is an active Next.js route and must not have a public redirect bridge. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
 
 ### Component Organization
 

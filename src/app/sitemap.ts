@@ -1,6 +1,10 @@
 import { MetadataRoute } from "next";
 
 import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
+import {
+  MANDELBROT_LAST_MODIFIED_ISO,
+  MANDELBROT_PATH,
+} from "@/constants/mandelbrot";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
 import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
@@ -72,6 +76,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: blogLastModified,
       changeFrequency: WEEKLY,
       priority: 0.8,
+    },
+    {
+      url: toCanonical(MANDELBROT_PATH),
+      lastModified: new Date(MANDELBROT_LAST_MODIFIED_ISO),
+      changeFrequency: MONTHLY,
+      priority: 0.6,
     },
     {
       url: toCanonical("/contact"),
