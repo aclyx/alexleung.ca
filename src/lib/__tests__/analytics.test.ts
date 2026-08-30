@@ -56,6 +56,18 @@ describe("analytics helpers", () => {
     });
   });
 
+  it("emits homepage section views as engagement events", async () => {
+    window.gtag = jest.fn();
+    const { trackHomeSectionView } = await loadAnalytics({ enabled: true });
+
+    trackHomeSectionView("experience");
+
+    expect(window.gtag).toHaveBeenCalledWith("event", "home_section_view", {
+      event_category: "engagement",
+      section_id: "experience",
+    });
+  });
+
   it("falls back to dataLayer when gtag is not ready", async () => {
     window.dataLayer = [];
     const { trackExternalLinkClick } = await loadAnalytics({

@@ -24,7 +24,7 @@ describe("CTAButton", () => {
   it("applies primary variant styles by default", () => {
     render(<CTAButton href="/test">Test</CTAButton>);
     const link = screen.getByRole("link");
-    expect(link).toHaveClass("to-accent-primary");
+    expect(link).toHaveClass("bg-accent-primary");
   });
 
   it("applies secondary variant styles when specified", () => {

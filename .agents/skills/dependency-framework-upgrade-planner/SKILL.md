@@ -24,7 +24,7 @@ Use this skill to evaluate dependency health in a codebase and produce a practic
    - Map versions currently used in source code (for example via imports and config files).
 
 2. Detect outdated and risky dependencies.
-   - Use package-manager-native commands first (for example `yarn outdated`).
+   - Use package-manager-native registry inspection first. For Yarn 4, inspect each direct dependency with `yarn npm info <package> --fields version,versions,deprecated --json`; Yarn 4 does not provide `yarn outdated`.
    - Classify updates by severity:
      - patch/minor (low migration risk)
      - major (needs migration review)
@@ -54,8 +54,7 @@ Use this skill to evaluate dependency health in a codebase and produce a practic
 Use the repository's package manager and scripts. For JavaScript/TypeScript repos, typical commands include:
 
 - `corepack install`
-- `yarn outdated`
-- `yarn npm info <package> versions --json`
+- `yarn npm info <package> --fields version,versions,deprecated --json`
 - `yarn why <package>`
 - `yarn lint`
 - `yarn typecheck`

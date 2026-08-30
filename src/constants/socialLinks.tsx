@@ -23,7 +23,7 @@ export const data = [
     id: 3,
     icon: <FaGithub />,
     url: "https://github.com/aclyx-oai",
-    label: "Corporate GitHub Profile",
+    label: "Work GitHub Profile",
   },
   {
     id: 4,

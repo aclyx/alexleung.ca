@@ -25,7 +25,7 @@ describe("ProseContent", () => {
     const wrapper = screen.getByText("Writing").closest("div");
     expect(wrapper).toHaveClass("prose-a:text-accent-link");
     expect(wrapper).toHaveClass("prose-a:underline");
-    expect(wrapper).toHaveClass("prose-a:decoration-accent-link/50");
+    expect(wrapper).toHaveClass("prose-a:decoration-accent-link/40");
   });
 
   it("uses base prose sizing by default", () => {

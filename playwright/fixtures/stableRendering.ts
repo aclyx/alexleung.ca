@@ -44,7 +44,6 @@ export async function waitForStablePage(page: Page) {
   await page.addStyleTag({ content: STABLE_RENDERING_CSS });
   await waitForFonts(page);
   await waitForImages(page);
-  await waitForBackgroundImages(page);
   await page.evaluate(
     () =>
       new Promise<void>((resolve) => {
@@ -95,68 +94,6 @@ async function waitForImages(page: Page) {
 
             image.addEventListener("load", finish, { once: true });
             image.addEventListener("error", finish, { once: true });
-          })
-      )
-    );
-  });
-}
-
-async function waitForBackgroundImages(page: Page) {
-  await page.evaluate(async () => {
-    const backgroundLoadTimeoutMs = 5_000;
-    const relevantViewportBottom = window.innerHeight * 1.5;
-    const backgroundUrls = new Set<string>();
-
-    const getBackgroundUrls = (value: string) =>
-      Array.from(value.matchAll(/url\((['"]?)(.*?)\1\)/g))
-        .map((match) => match[2])
-        .filter((url) => Boolean(url));
-
-    const isRelevantElement = (element: Element) => {
-      const rect = element.getBoundingClientRect();
-
-      return (
-        rect.width > 0 &&
-        rect.height > 0 &&
-        rect.bottom > 0 &&
-        rect.top < relevantViewportBottom
-      );
-    };
-
-    for (const element of document.querySelectorAll("*")) {
-      if (!isRelevantElement(element)) {
-        continue;
-      }
-
-      const backgroundImage = window.getComputedStyle(element).backgroundImage;
-
-      if (!backgroundImage || backgroundImage === "none") {
-        continue;
-      }
-
-      for (const url of getBackgroundUrls(backgroundImage)) {
-        backgroundUrls.add(url);
-      }
-    }
-
-    await Promise.all(
-      Array.from(backgroundUrls).map(
-        (url) =>
-          new Promise<void>((resolve) => {
-            const image = new Image();
-            const finish = () => {
-              clearTimeout(timeoutId);
-              resolve();
-            };
-
-            const timeoutId = window.setTimeout(
-              finish,
-              backgroundLoadTimeoutMs
-            );
-
-            image.addEventListener("load", finish, { once: true });
-            image.addEventListener("error", finish, { once: true });
-            image.src = url;
           })
       )
     );

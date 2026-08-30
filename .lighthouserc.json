@@ -6,7 +6,7 @@
       "url": [
         "http://localhost/",
         "http://localhost/blog/",
-        "http://localhost/about/",
+        "http://localhost/blog/tags/deep-learning/",
         "http://localhost/now/",
         "http://localhost/contact/",
         "http://localhost/blog/from-coder-to-orchestrator/"

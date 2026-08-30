@@ -27,6 +27,6 @@ describe("LinkText", () => {
     const link = screen.getByText("Blog");
     expect(link).toHaveClass("text-accent-link");
     expect(link).toHaveClass("underline");
-    expect(link).toHaveClass("decoration-accent-link/50");
+    expect(link).toHaveClass("decoration-accent-link/40");
   });
 });

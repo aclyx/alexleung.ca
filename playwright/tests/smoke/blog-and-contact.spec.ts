@@ -40,11 +40,9 @@ test("contact page shows the email CTA and social profile links", async ({
 
   await expect(page.getByText("alex@alexleung.ca")).toBeVisible();
   await expect(
-    main.getByRole("link", { name: "Email Alex", exact: true })
+    main.getByRole("link", { name: "Email me", exact: true })
   ).toHaveAttribute("href", "mailto:alex@alexleung.ca");
-  await expect(
-    page.getByRole("heading", { name: "Follow Writing" })
-  ).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Subscribe" })).toBeVisible();
   await expect(
     main.getByRole("link", { name: "LinkedIn Profile", exact: true })
   ).toHaveAttribute("href", "https://www.linkedin.com/in/aclyx");
@@ -53,7 +51,7 @@ test("contact page shows the email CTA and social profile links", async ({
   ).toHaveAttribute("href", "https://www.github.com/aclyx");
   await expect(
     main.getByRole("link", {
-      name: "Corporate GitHub Profile",
+      name: "Work GitHub Profile",
       exact: true,
     })
   ).toHaveCount(0);
@@ -72,6 +70,12 @@ test("unknown routes render the exported not found page", async ({ page }) => {
     "href",
     "/"
   );
+  await expect(page.locator('meta[name="robots"]')).toHaveCount(1);
+  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+    "content",
+    /noindex/
+  );
+  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
 });
 
 test("static export metadata artifacts are served", async ({ request }) => {

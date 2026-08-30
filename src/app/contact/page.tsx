@@ -44,8 +44,8 @@ export default function ContactPage() {
       <PageShell title="Contact" titleId="contact">
         <EmailMe />
         <SocialMediaList />
-        <ResponsiveContainer element="section">
-          <Subtitle title="Follow Writing" id="subscribe" />
+        <ResponsiveContainer element="section" className="mt-16 space-y-6">
+          <Subtitle title="Subscribe" id="subscribe" />
           <FollowItSubscribeForm
             analyticsPlacement="contact_page"
             title="Get new posts by email"

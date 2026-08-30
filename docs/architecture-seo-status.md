@@ -1,4 +1,4 @@
-# Architecture & SEO Status (2026-03-04)
+# Architecture & SEO Status (2026-08-29)
 
 This is the canonical status document for technical architecture and SEO.
 
@@ -9,8 +9,8 @@ The site is in a healthy state for a static, content-first portfolio:
 - Next.js static export architecture is stable and well-suited to GitHub Pages.
 - Markdown rendering and front matter validation enforce stronger content safety and consistency.
 - SEO fundamentals (canonical handling, metadata helpers, JSON-LD, sitemap, robots) are implemented.
-- Discoverability now extends beyond the core pages through experimental hub routing and crawlable tag archives.
-- Remaining work is primarily editorial operations and internal-link quality.
+- The consolidated profile, writing archive, tag routes, and Now page remain crawlable, while retired routes resolve through static bridges.
+- Ongoing work is primarily publishing, internal linking, and periodic search-performance review.
 
 ## Architecture Status
 
@@ -19,7 +19,7 @@ The site is in a healthy state for a static, content-first portfolio:
 - **Framework**: Next.js 16 + React 19 + TypeScript
 - **Deployment model**: static export (`output: 'export'`) with GitHub Pages-compatible routing
 - **Content model**: Markdown posts parsed at build time with zod front matter validation
-- **Quality gates**: lint, tests, typecheck, build, image variant generation in CI and local scripts
+- **Quality gates**: lint, tests, typecheck, build, and explicit image variant generation in CI and local build scripts
 
 ### Completed Improvements
 
@@ -29,11 +29,9 @@ The site is in a healthy state for a static, content-first portfolio:
 - Shared SEO/URL and JSON-LD builders are centralized and reused by routes.
 - Lighthouse CI assertions run against static export routes.
 
-### Next Opportunities
+### Next Opportunity
 
-1. **Future content-domain expansion plan**
-   - When introducing another content type (e.g., resources/projects), extract shared conventions into `src/lib/content/`.
-2. **Operational consistency**
+1. **Operational consistency**
    - Keep architecture snapshots short and update only when meaningful framework or pipeline changes land.
 
 ## SEO Status
@@ -44,7 +42,9 @@ The site is in a healthy state for a static, content-first portfolio:
 - Route-level metadata generation.
 - Structured data coverage for person/site/pages/blog surfaces.
 - `sitemap` and `robots` routes for crawler discoverability.
-- Crawlable `/experimental/` hub plus sitemap coverage for experimental tools.
+- The exported 404 page emits one `noindex` directive and no homepage canonical.
+- A consolidated profile at `/`, with static redirect bridges for retired About
+  and experiment URLs.
 - Crawlable blog tag archives, with tag links that now contribute to internal linking.
 
 ### Next Opportunities
@@ -56,7 +56,7 @@ The site is in a healthy state for a static, content-first portfolio:
 3. **Lightweight SEO operations**
    - Periodically review indexing, CTR/impression trends, and broken links.
 4. **Page-specific social preview images**
-   - Create dedicated OG/Twitter images for experimental pages and other high-value landing pages that still fall back to text-only share cards.
+   - Create dedicated OG/Twitter images for high-value landing pages that still fall back to text-only share cards.
 
 ## Maintenance Rules
 

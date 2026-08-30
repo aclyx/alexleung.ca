@@ -30,11 +30,11 @@ export function CoverImage({
   const wrapperClassName =
     variant === "card"
       ? thumbnail
-        ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-800 md:h-24 md:w-36"
+        ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-accent-secondary-soft md:h-24 md:w-36"
         : compactOnMobile
-          ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-gray-800 md:h-52 md:w-full md:rounded-lg"
-          : "h-52 w-full overflow-hidden rounded-lg bg-gray-800"
-      : "overflow-hidden rounded-lg bg-gray-800";
+          ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-accent-secondary-soft md:h-52 md:w-full md:rounded-lg"
+          : "h-52 w-full overflow-hidden rounded-lg bg-accent-secondary-soft"
+      : "overflow-hidden rounded-xl border border-line bg-accent-secondary-soft";
 
   const basePictureClassName =
     variant === "card" ? "block h-full w-full" : "block w-full";
@@ -51,7 +51,7 @@ export function CoverImage({
   if (!src) {
     return (
       <div
-        className={`${wrapperClassName} flex items-center justify-center text-sm text-gray-300 ${className}`.trim()}
+        className={`${wrapperClassName} flex items-center justify-center text-sm text-muted ${className}`.trim()}
       >
         {fallbackLabel}
       </div>

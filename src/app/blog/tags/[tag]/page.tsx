@@ -45,32 +45,31 @@ function getPostsForTag(tagName: string) {
 }
 
 const TAG_DESCRIPTIONS: Record<string, string> = {
-  ai: "Posts about AI tools, coding agents, creativity, and how software work changes when rough prototypes get cheaper.",
+  ai: "Posts on coding agents, AI-assisted prototypes, and using generative tools to edit software and explore visuals.",
   architecture:
-    "Notes on software architecture, static site trade-offs, and the small systems that keep this site maintainable.",
+    "How this static Next.js site stores Markdown, generates responsive images, and keeps build-time conventions in one place.",
   "book-notes":
-    "Book notes from Alex Leung, with a focus on deep learning, machine learning foundations, and technical reading.",
+    "Notes on the mathematical foundations, network structure, and regularization sections of Deep Learning.",
   "deep-learning":
-    "Posts on deep learning concepts, textbook notes, regularization, and the structural assumptions behind neural networks.",
+    "Notes on the mathematics, feedforward networks, and regularization mechanisms in Goodfellow, Bengio, and Courville's Deep Learning.",
   "developer-workflow":
-    "Notes on developer workflow, AI coding tools, verification loops, and small improvements to the way software gets built.",
+    "Posts on software tooling, coding agents, verification, and systems that make repeated development work easier to maintain.",
   lifestyle:
-    "Personal notes on tools, moving, study routines, and the small practical details around work and life.",
+    "Notes on moving to San Francisco, traveling through southern Utah, and using an iPad for study and remote access.",
   "ml-theory":
-    "Machine learning theory notes on regularization, model structure, optimization, and the reasoning behind familiar techniques.",
+    "Notes on representation, optimization, and regularization in neural networks.",
   "next-js":
-    "Posts about building this Next.js site, including static export, image handling, and practical architecture choices.",
+    "How this static Next.js site handles Markdown posts, generated image variants, and build-time metadata.",
   reflection:
-    "Personal reflections on software, AI tools, creativity, learning, and the texture of day-to-day work.",
+    "Personal notes on moving and travel, alongside reflections on coding agents, prototypes, and visual tools.",
+  regularization:
+    "Notes on dropout, shared parameters, and model averaging as regularization mechanisms.",
   review:
-    "Short reviews and impressions of books, tools, and devices that changed how I work or learn.",
+    "Hands-on notes on the 11-inch iPad Air for reading, annotation, and remote access.",
 };
 
 function getTagDescription(tag: TagEntry): string {
-  return (
-    TAG_DESCRIPTIONS[tag.slug] ??
-    `Posts tagged ${tag.name} on Alex Leung's blog.`
-  );
+  return TAG_DESCRIPTIONS[tag.slug] ?? `Posts about ${tag.name}.`;
 }
 
 export function generateStaticParams() {
@@ -148,10 +147,9 @@ export default async function TagArchivePage({ params }: Props) {
 
       <PageShell title={tag.name} titleId={`tag-${tag.slug}`}>
         <ResponsiveContainer variant="wide" className="space-y-8">
-          <p className="text-body max-w-3xl text-gray-300">{description}</p>
-          <p className="text-body-sm max-w-3xl text-gray-400">
-            {tag.count} {tag.count === 1 ? "post" : "posts"} currently filed
-            under <strong className="text-white">{tag.name}</strong>.
+          <p className="text-body max-w-3xl text-muted">{description}</p>
+          <p className="text-body-sm max-w-3xl text-muted">
+            {tag.count} {tag.count === 1 ? "post" : "posts"}
           </p>
           <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
             {posts.map((post) => (

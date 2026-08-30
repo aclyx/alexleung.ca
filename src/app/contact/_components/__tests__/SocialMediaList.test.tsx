@@ -3,9 +3,9 @@ import { render, screen } from "@testing-library/react";
 import { SocialMediaList } from "../SocialMediaList";
 
 describe("SocialMediaList", () => {
-  it("renders the Professional Links subtitle", () => {
+  it("renders the Profiles subtitle", () => {
     render(<SocialMediaList />);
-    expect(screen.getByText("Professional Links")).toBeInTheDocument();
+    expect(screen.getByText("Profiles")).toBeInTheDocument();
   });
 
   it("renders the primary professional links", () => {
@@ -13,7 +13,7 @@ describe("SocialMediaList", () => {
     expect(screen.getByLabelText("LinkedIn Profile")).toBeInTheDocument();
     expect(screen.getByLabelText("GitHub Profile")).toBeInTheDocument();
     expect(
-      screen.queryByLabelText("Corporate GitHub Profile")
+      screen.queryByLabelText("Work GitHub Profile")
     ).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText("X (Twitter) Profile")
@@ -47,7 +47,7 @@ describe("SocialMediaList", () => {
     render(<SocialMediaList />);
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
-    expect(screen.queryByText("Corporate GitHub")).not.toBeInTheDocument();
+    expect(screen.queryByText("Work GitHub")).not.toBeInTheDocument();
     expect(screen.queryByText("X (Twitter)")).not.toBeInTheDocument();
     expect(screen.queryByText("Bluesky")).not.toBeInTheDocument();
     expect(screen.queryByText("Instagram")).not.toBeInTheDocument();

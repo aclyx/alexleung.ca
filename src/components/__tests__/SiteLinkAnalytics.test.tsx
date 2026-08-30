@@ -23,17 +23,17 @@ describe("SiteLinkAnalytics", () => {
     render(
       <>
         <SiteLinkAnalytics />
-        <a href="/about/">About Alex</a>
+        <a href="/now/">Now</a>
       </>
     );
 
-    fireEvent.click(screen.getByRole("link", { name: "About Alex" }));
+    fireEvent.click(screen.getByRole("link", { name: "Now" }));
 
     expect(trackInternalLinkClick).toHaveBeenCalledWith({
       current_path: "/blog/example/",
-      destination_path: "/about/",
-      link_text: "About Alex",
-      link_url: "http://localhost/about/",
+      destination_path: "/now/",
+      link_text: "Now",
+      link_url: "http://localhost/now/",
     });
     expect(trackExternalLinkClick).not.toHaveBeenCalled();
   });

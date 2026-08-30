@@ -78,7 +78,21 @@ describe("TagArchivePage", () => {
     );
     expect(screen.queryByText("Deep Learning Review")).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Posts about AI tools, coding agents, creativity/i)
+      screen.getByText(/Posts on coding agents, AI-assisted prototypes/i)
+    ).toBeInTheDocument();
+  });
+
+  it("describes developer workflow beyond coding-agent work", async () => {
+    const view = await TagArchivePage({
+      params: Promise.resolve({ tag: "developer-workflow" }),
+    });
+
+    render(view);
+
+    expect(
+      screen.getByText(
+        /Posts on software tooling, coding agents, verification/i
+      )
     ).toBeInTheDocument();
   });
 

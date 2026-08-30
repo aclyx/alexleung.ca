@@ -3,53 +3,52 @@ import { render, screen } from "@testing-library/react";
 import { Hero } from "../Hero";
 
 describe("Hero", () => {
-  it("should render name and professional title", () => {
+  it("renders Alex's name, professional identity, and portrait", () => {
     render(<Hero />);
 
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Alex Leung"
     );
     expect(
-      screen.getByRole("heading", {
-        level: 2,
-        name: /Software Engineer and Writer\./i,
+      screen.getByText(/Software engineer and writer/i)
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", {
+        name: /Alex Leung sitting in an art studio/i,
       })
     ).toBeInTheDocument();
   });
 
-  it("should render friendly supporting copy without an extra positioning panel", () => {
+  it("summarizes Alex's work and writing directly", () => {
     render(<Hero />);
 
     expect(
       screen.getByText(
-        /I build AI product surfaces and reliable software systems\. I share some of my thoughts here\./i
+        /I build products and systems that make new technology useful in everyday life\. I write about software, technical books, and life outside work\./i
       )
     ).toBeInTheDocument();
-    expect(
-      screen.queryByRole("heading", {
-        level: 2,
-        name: /^Writing$/i,
-      })
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/Most pieces start/i)).not.toBeInTheDocument();
   });
 
-  it("should render contact and writing CTA links", () => {
+  it("renders Now, contact, and writing links", () => {
     render(<Hero />);
 
-    expect(screen.getByRole("link", { name: /contact alex/i })).toHaveAttribute(
+    expect(
+      screen.getByRole("link", {
+        name: /Now — what I’m reading and studying/i,
+      })
+    ).toHaveAttribute("href", "/now");
+    expect(screen.getByRole("link", { name: /get in touch/i })).toHaveAttribute(
       "href",
       "/contact"
     );
-    expect(screen.getByRole("link", { name: /read writing/i })).toHaveAttribute(
-      "href",
-      "/blog"
-    );
+    expect(
+      screen.getByRole("link", { name: /read my writing/i })
+    ).toHaveAttribute("href", "/blog");
   });
 
-  it('should have id="home" for anchor navigation', () => {
+  it('uses id="about" for the consolidated profile section', () => {
     const { container } = render(<Hero />);
 
-    expect(container.querySelector("section")).toHaveAttribute("id", "home");
+    expect(container.querySelector("section")).toHaveAttribute("id", "about");
   });
 });

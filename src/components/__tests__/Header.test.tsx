@@ -14,6 +14,7 @@ const mockUsePathname = jest.mocked(usePathname);
 describe("Header", () => {
   beforeEach(() => {
     mockUsePathname.mockReturnValue("/");
+    window.history.replaceState(null, "", "/");
   });
 
   afterEach(() => {
@@ -23,11 +24,12 @@ describe("Header", () => {
   it("should render navigation with logo and links", () => {
     render(<Header />);
     expect(screen.getByText("Alex Leung")).toBeInTheDocument();
-    expect(screen.getAllByText("Home")).toHaveLength(1);
-    expect(screen.getAllByText("About")).toHaveLength(1);
-    expect(screen.getAllByText("Now")).toHaveLength(1);
-    expect(screen.getAllByText("Experiments")).toHaveLength(1);
-    expect(screen.getAllByText("Contact")).toHaveLength(1);
+    expect(screen.getAllByText("Experience")).toHaveLength(2);
+    expect(screen.getAllByText("Writing")).toHaveLength(2);
+    expect(screen.getAllByText("Now")).toHaveLength(2);
+    expect(screen.getAllByText("Contact")).toHaveLength(2);
+    expect(screen.queryByText("About")).not.toBeInTheDocument();
+    expect(screen.queryByText("Experiments")).not.toBeInTheDocument();
   });
 
   describe("Mobile Menu", () => {
@@ -47,35 +49,35 @@ describe("Header", () => {
       expect(button).toHaveAccessibleName("Open menu");
     });
 
-    it("should mount and unmount mobile menu when toggled", () => {
+    it("keeps the mobile menu mounted so open and close transitions can run", () => {
       const { container } = render(<Header />);
       const button = screen.getByRole("button", { name: "Open menu" });
+      const drawer = container.querySelector("#mobile-nav-drawer");
 
-      expect(
-        container.querySelector(".mobile-nav-link")
-      ).not.toBeInTheDocument();
-      expect(screen.getAllByText("Home")).toHaveLength(1);
-
-      fireEvent.click(button);
-      expect(container.querySelector(".mobile-nav-link")).toBeInTheDocument();
-      expect(screen.getAllByText("Home")).toHaveLength(2);
+      expect(drawer).toHaveAttribute("aria-hidden", "true");
+      expect(drawer).toHaveClass("opacity-0", "-translate-y-4");
 
       fireEvent.click(button);
-      expect(
-        container.querySelector(".mobile-nav-link")
-      ).not.toBeInTheDocument();
-      expect(screen.getAllByText("Home")).toHaveLength(1);
+      expect(drawer).toHaveAttribute("aria-hidden", "false");
+      expect(drawer).toHaveClass("opacity-100", "translate-y-0");
+
+      fireEvent.click(button);
+      expect(drawer).toHaveAttribute("aria-hidden", "true");
+      expect(drawer).toHaveClass("opacity-0", "-translate-y-4");
     });
 
-    it("should close menu when backdrop is clicked", () => {
+    it("keeps the non-modal drawer scrollable without locking the page", () => {
       const { container } = render(<Header />);
       const button = screen.getByRole("button", { name: "Open menu" });
 
       fireEvent.click(button);
-      const backdrop = container.querySelector(".fixed.inset-0");
-      fireEvent.click(backdrop!);
+      const drawer = container.querySelector("#mobile-nav-drawer");
 
-      expect(button).toHaveAttribute("aria-expanded", "false");
+      expect(drawer).toHaveClass(
+        "max-h-[calc(100dvh-var(--header-height))]",
+        "overflow-y-auto"
+      );
+      expect(document.body.style.overflow).toBe("");
     });
 
     it("should close menu when navigation link is clicked", () => {
@@ -83,10 +85,23 @@ describe("Header", () => {
       const button = screen.getByRole("button", { name: "Open menu" });
 
       fireEvent.click(button);
-      const mobileLink = screen.getAllByText("Home")[1];
+      const mobileLink = screen.getAllByText("Experience")[1];
       fireEvent.click(mobileLink);
 
       expect(button).toHaveAttribute("aria-expanded", "false");
+    });
+
+    it("does not return focus to the menu button after navigation", () => {
+      render(<Header />);
+      const button = screen.getByRole("button", { name: "Open menu" });
+
+      fireEvent.click(button);
+      const mobileLink = screen.getAllByText("Experience")[1];
+      mobileLink.focus();
+      fireEvent.click(mobileLink);
+
+      expect(button).not.toHaveFocus();
+      expect(mobileLink).not.toHaveFocus();
     });
 
     it("should close menu when pathname changes", async () => {
@@ -99,7 +114,7 @@ describe("Header", () => {
       fireEvent.click(button);
       expect(button).toHaveAttribute("aria-expanded", "true");
 
-      pathname = "/about/";
+      pathname = "/now/";
       rerender(<Header />);
 
       await waitFor(() => {
@@ -110,64 +125,81 @@ describe("Header", () => {
 
   describe("Active Link Detection", () => {
     it("should mark current page link as active", () => {
-      mockUsePathname.mockReturnValue("/about/");
+      mockUsePathname.mockReturnValue("/blog/");
       render(<Header />);
 
-      const aboutLink = screen.getByText("About");
-      const homeLink = screen.getByText("Home");
+      const writingLink = screen.getAllByText("Writing")[0];
+      const nowLink = screen.getAllByText("Now")[0];
 
-      expect(aboutLink).toHaveClass("nav-link--active");
-      expect(homeLink).toHaveClass("nav-link--inactive");
+      expect(writingLink).toHaveClass("nav-link--active");
+      expect(nowLink).toHaveClass("nav-link--inactive");
     });
 
     it("should handle trailing slashes in pathname matching", () => {
-      mockUsePathname.mockReturnValue("/about");
+      mockUsePathname.mockReturnValue("/blog");
       render(<Header />);
 
-      const aboutLink = screen.getByText("About");
-      expect(aboutLink).toHaveClass("nav-link--active");
+      const writingLink = screen.getAllByText("Writing")[0];
+      expect(writingLink).toHaveClass("nav-link--active");
     });
 
-    it("should mark home link active only on exact home path", () => {
+    it("links to the homepage experience section without marking it as a page", () => {
       mockUsePathname.mockReturnValue("/");
       render(<Header />);
 
-      const homeLink = screen.getByText("Home");
-      expect(homeLink).toHaveClass("nav-link--active");
+      const experienceLink = screen.getAllByText("Experience")[0];
+      expect(experienceLink).toHaveAttribute("href", "/#experience");
+      expect(experienceLink).toHaveClass("nav-link--inactive");
+      expect(experienceLink).not.toHaveAttribute("aria-current");
+    });
+
+    it("marks the homepage experience section as the current location", async () => {
+      window.history.replaceState(null, "", "/#experience");
+      render(<Header />);
+
+      await waitFor(() => {
+        const experienceLinks = screen.getAllByText("Experience");
+        expect(experienceLinks[0]).toHaveAttribute("aria-current", "location");
+        expect(experienceLinks[1]).toHaveAttribute("aria-current", "location");
+      });
+    });
+
+    it("marks Experience current when its link changes the hash", async () => {
+      render(<Header />);
+
+      fireEvent.click(screen.getAllByText("Experience")[0]);
+
+      await waitFor(() => {
+        expect(screen.getAllByText("Experience")[0]).toHaveAttribute(
+          "aria-current",
+          "location"
+        );
+      });
     });
 
     it("should set aria-current on active links across desktop and mobile nav", () => {
-      mockUsePathname.mockReturnValue("/about/");
+      mockUsePathname.mockReturnValue("/blog/");
       render(<Header />);
 
       const button = screen.getByRole("button", { name: "Open menu" });
       fireEvent.click(button);
 
-      const aboutLinks = screen.getAllByText("About");
-      expect(aboutLinks[0]).toHaveAttribute("aria-current", "page");
-      expect(aboutLinks[1]).toHaveAttribute("aria-current", "page");
+      const writingLinks = screen.getAllByText("Writing");
+      expect(writingLinks[0]).toHaveAttribute("aria-current", "page");
+      expect(writingLinks[1]).toHaveAttribute("aria-current", "page");
 
-      const homeLinks = screen.getAllByText("Home");
-      expect(homeLinks[0]).not.toHaveAttribute("aria-current");
-      expect(homeLinks[1]).not.toHaveAttribute("aria-current");
-    });
-
-    it("should keep section navigation active on experiment child routes", () => {
-      mockUsePathname.mockReturnValue("/experimental/mandelbrot/");
-      render(<Header />);
-
-      const experimentsLink = screen.getByText("Experiments");
-      expect(experimentsLink).toHaveClass("nav-link--active");
-      expect(experimentsLink).toHaveAttribute("aria-current", "page");
+      const experienceLinks = screen.getAllByText("Experience");
+      expect(experienceLinks[0]).not.toHaveAttribute("aria-current");
+      expect(experienceLinks[1]).not.toHaveAttribute("aria-current");
     });
 
     it("should keep blog navigation active on tag archive routes", () => {
       mockUsePathname.mockReturnValue("/blog/tags/ai/");
       render(<Header />);
 
-      const blogLink = screen.getByText("Blog");
-      expect(blogLink).toHaveClass("nav-link--active");
-      expect(blogLink).toHaveAttribute("aria-current", "page");
+      const writingLink = screen.getAllByText("Writing")[0];
+      expect(writingLink).toHaveClass("nav-link--active");
+      expect(writingLink).toHaveAttribute("aria-current", "page");
     });
   });
 
@@ -183,6 +215,9 @@ describe("Header", () => {
     it("should have proper aria-label on menu button", () => {
       render(<Header />);
       expect(
+        screen.getByRole("navigation", { name: "Primary navigation" })
+      ).toBeInTheDocument();
+      expect(
         screen.getByRole("button", { name: "Open menu" })
       ).toBeInTheDocument();
     });
@@ -193,9 +228,13 @@ describe("Header", () => {
       expect(button).toHaveAttribute("aria-expanded", "false");
     });
 
-    it("should not render mobile links when menu is closed", () => {
-      render(<Header />);
-      expect(screen.getAllByText("Home")).toHaveLength(1);
+    it("hides closed mobile links from assistive technology and tab order", () => {
+      const { container } = render(<Header />);
+      const drawer = container.querySelector("#mobile-nav-drawer");
+      const mobileLink = container.querySelector(".mobile-nav-link");
+
+      expect(drawer).toHaveAttribute("aria-hidden", "true");
+      expect(mobileLink).toHaveAttribute("tabindex", "-1");
     });
 
     it("should set tabIndex=0 on mobile links when menu is open", () => {
@@ -204,7 +243,7 @@ describe("Header", () => {
 
       fireEvent.click(button);
 
-      const mobileLink = screen.getAllByText("Home")[1];
+      const mobileLink = screen.getAllByText("Experience")[1];
       expect(mobileLink).toHaveAttribute("tabindex", "0");
     });
 

@@ -2,11 +2,9 @@ import { PropsWithChildren } from "react";
 import { JsonLd } from "react-schemaorg";
 
 import type { Metadata, Viewport } from "next";
-import { Lato } from "next/font/google";
 
 import { GoogleAnalytics } from "@next/third-parties/google";
 
-import { AppBackground } from "@/components/AppBackground";
 import Footer from "@/components/Footer";
 import Header from "@/components/Header";
 import { SiteLinkAnalytics } from "@/components/SiteLinkAnalytics";
@@ -21,13 +19,7 @@ import "./globals.css";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer and writer in San Francisco covering AI product development, software systems, deep learning notes, and open experiments.";
-
-const lato = Lato({
-  subsets: ["latin"],
-  weight: ["400", "900"],
-  display: "swap",
-});
+  "Alex Leung's personal website, with experience and writing about software, AI tools, books, and life outside work.";
 
 const googleAnalyticsId =
   process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true"
@@ -40,10 +32,8 @@ export const metadata: Metadata = {
   authors: [{ name: "Alex Leung" }],
   creator: "Alex Leung",
   publisher: "Alex Leung",
-  robots: "index, follow",
   metadataBase: new URL(BASE_URL),
   alternates: {
-    canonical: "/",
     types: {
       "application/rss+xml": [
         {
@@ -65,7 +55,7 @@ export const metadata: Metadata = {
         url: "/assets/alex_vibing.webp",
         width: 1536,
         height: 1024,
-        alt: "Portrait of Alex Leung",
+        alt: "Alex Leung in an art studio",
       },
     ],
   },
@@ -76,7 +66,7 @@ export const metadata: Metadata = {
     images: [
       {
         url: "/assets/alex_vibing.webp",
-        alt: "Portrait of Alex Leung",
+        alt: "Alex Leung in an art studio",
       },
     ],
   },
@@ -89,18 +79,19 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
+  themeColor: "#f4f1e9",
+  colorScheme: "light",
 };
 
 export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className={`${lato.className} flex min-h-screen flex-col`}>
-        <AppBackground />
+      <body className="flex min-h-screen flex-col font-sans">
         <Header />
         <main className="flex grow flex-col">{children}</main>
         <Footer />
         <SiteLinkAnalytics />
-        <JsonLd item={buildPersonSchema({ description })} />
+        <JsonLd item={buildPersonSchema()} />
         <JsonLd item={buildWebsiteSchema({ description })} />
         <JsonLd item={buildSiteNavigationSchema()} />
         {googleAnalyticsId ? (

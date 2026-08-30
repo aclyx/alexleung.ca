@@ -8,7 +8,7 @@ Assume the worktree may already contain unrelated user changes. Inspect `git sta
 
 ## Project Overview
 
-Personal portfolio website for Alex Leung. Multi-page static-export site for GitHub Pages deployment. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
+Personal website and writing hub for Alex Leung. Multi-page static-export site for GitHub Pages deployment. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
 
 ## Package Manager
 
@@ -38,8 +38,9 @@ yarn dev              # Start development server (port 3000)
 yarn prepare          # Configure repo Git hooks path (.githooks)
 yarn image:variants   # Generate image variants and refresh image variant manifest
 yarn image:variants:stage  # Generate variants for staged changes and git-add outputs
-yarn build            # Build static export to out/ (runs prebuild)
-yarn lint             # Run ESLint and Prettier checks
+yarn build            # Generate image variants and build static export to out/
+yarn lint             # Run ESLint, Prettier, and Knip checks
+yarn lint:unused      # Run the pinned Knip unused-code check
 yarn lint:fix         # Auto-fix lint issues
 yarn test             # Run Jest tests
 yarn test:e2e         # Run Playwright smoke tests in Docker
@@ -63,23 +64,24 @@ yarn deploy           # Build and deploy to GitHub Pages
 - `trailingSlash: true` for GitHub Pages compatibility
 - `.nojekyll` in public/ prevents Jekyll processing of `_next/` assets
 - Images are unoptimized (required for static export)
-- Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/about/` and `/blog/post-slug/`, not `/about` or `/blog/post-slug`)
+- Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/now/` and `/blog/post-slug/`, not `/now` or `/blog/post-slug`)
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`
+- `public/about/index.html` and `public/experimental/**/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. Do not remove them as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
 
 ### Component Organization
 
 - `src/app/` - Next.js App Router pages with route-specific `_components/` subdirectories
-- `src/components/` - Shared components (Header, Footer, SocialLinks, etc.)
-- `src/constants/` - Data files (skills.ts, socialLinks.tsx)
+- `src/components/` - Shared components (Header, Footer, SocialLinkList, etc.)
+- `src/constants/` - Static data and configuration (`index.ts`, `navigation.ts`, `socialLinks.tsx`)
 
 ### Image Variant Workflow
 
 - Build-time script `scripts/generate-image-variants.mjs` generates responsive variants and manifest metadata:
-  - cover variants: `*-card-sm.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
+  - cover variants: `*-card-sm.webp`, `*-card-md.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
   - inline markdown variants: `*-content-sm.webp`, `*-content.webp`
-  - static asset variants for background and about portrait
+  - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
-- `yarn build` runs `prebuild`, which runs `yarn image:variants`.
+- `yarn build` explicitly runs `yarn image:variants` before creating the static export.
 - `src/components/BlogPostCard.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
 - `src/lib/markdownToHtml.ts` resolves inline image variants from manifest profiles.
 - Pre-commit hook `.githooks/pre-commit` runs `yarn image:variants:stage` so generated variants and manifest stay in sync with staged content/image changes, but only after `prepare` has configured the hooks path and plain `yarn` is available on `PATH` as the pinned Yarn version. Treat the hook as best-effort automation; if hooks are not active or if the hook reports a skip because Yarn is unavailable, run `corepack yarn image:variants:stage` manually before commit when relevant.
@@ -153,7 +155,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Typography and Prose Guardrails (Agent Guidance)
 
-- Reference audit: `docs/typography-audit.md`.
+- Prose-sizing decision record: `docs/typography-audit.md`.
 - Prefer semantic typography utilities for body/headline copy:
   - body: `text-body-sm`, `text-body`, `text-body-lg`
   - headings: `text-heading-sm`, `text-heading`
@@ -164,11 +166,11 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Taste and Style Guardrails (Agent Guidance)
 
-- Canonical taste-audit workflow: `.agents/skills/site-taste-audit/SKILL.md`. Blog voice details live in `.agents/skills/blog-post-creator/references/voice-and-structure.md`; keep those files and this summary aligned when preferences change.
+- Canonical workflows: use `.agents/skills/site-taste-audit/SKILL.md` for critique-led taste and tone audits, `.agents/skills/site-copy-editor/SKILL.md` for non-blog site writing, and `.agents/skills/blog-post-creator/SKILL.md` for blog writing. Treat the copy guardrails below as the shared voice baseline; keep skill-specific guidance aligned and limited to its surface-specific needs.
 - Target taste: concrete, understated, utility-minded, and quietly polished. The site should feel calm, aligned, readable, and specific rather than flashy, clever, decorative, or like it is performing sophistication.
 - Prefer direct labels, specific nouns, and visible hierarchy over metaphors, slogans, or abstract framing. If the real thing can be named plainly, name it plainly.
 - Layout should feel balanced and intentional on both mobile and desktop. Avoid compositions that feel artificially constrained to one side, overly boxed-in, or visually uneven across columns and sections.
-- Favor dense but scannable browsing surfaces for repeat-use pages such as blog indexes, tag lists, and experiment grids. Reduce ceremony before reducing information.
+- Favor dense but scannable browsing surfaces for repeat-use pages such as writing indexes and tag lists. Reduce ceremony before reducing information.
 - Typography should read as editorial but practical: clear hierarchy, comfortable line length, restrained display sizes, and no oversized type inside compact panels.
 - Color and visual accents should support orientation and warmth without becoming the main event. Use secondary accents sparingly, avoid one-note palettes, and prefer backgrounds/images that create consistency without lowering legibility.
 - Visual assets should reveal the actual subject, object, or state. Avoid purely atmospheric, dark, blurred, cropped, or stock-like imagery when the user needs to understand the content.
@@ -178,33 +180,21 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Copy Editing Guardrails (Agent Guidance)
 
-- Target site voice: first-person where appropriate; humble, grounded, and clearly experienced; warm but understated; professional without becoming sterile. Confidence should come from evidence, specific work, and concrete observations rather than self-description or positioning claims.
-- Tone should be thoughtful, understated, concrete, and mildly warm. Prefer clear first-person language and specific descriptions over polished positioning copy.
+- Canonical site voice: calm, direct, technically grounded, and understated. It should feel quietly confident, thoughtful, approachable, warm, curious, and human.
+- Build confidence through clarity, accurate facts, concrete mechanisms, trade-offs, and observed results rather than self-description, promotion, or positioning. Do not confuse understatement with vagueness or humility with hesitation; make supported claims plainly.
+- Match rigor to the subject without becoming sterile. Use first-person experience and human detail where relevant, not as decoration or forced personality.
+- Apply this baseline to all visible and machine-facing writing. Surface-specific length and formality may vary, but the underlying voice should not.
 - Prefer revising existing copy over rewriting from scratch unless the current structure is actively causing clarity or tone problems.
 - Prefer site-representative language over recruiter-optimized phrasing in top-level labels such as homepage headlines, page titles, section names, metadata descriptions, `public/manifest.json`, `public/llms.txt`, RSS/feed text, and JSON-LD descriptions.
 - Treat visible pages and machine-facing summaries as one editorial system: navigation labels, CTA labels, blog titles/excerpts/intros, metadata, RSS/feed text, manifest text, `llms.txt`, and JSON-LD/schema text should feel consistent without becoming copy-pasted.
+- Before finalizing, read the affected surfaces as a whole and remove deviations toward hype, self-promotion, corporate or resume language, sterile formality, keyword stacking, abstract framing, decorative cleverness, generic smoothing, or unnecessary hedging.
 - Preserve warmth and voice before adding positioning language. Avoid recruiter-buzzy or self-promotional filler such as `thought leader`, `world-class`, `high-impact`, `passionate`, `results-driven`, or similar phrasing. Avoid inflated claims or interpretive self-assessments when a simpler factual description will do.
 - Do not force SEO phrases into headings when they fit better in supporting copy or metadata descriptions.
 - Avoid repeating the same positioning claim across hero, section intros, metadata, manifest text, RSS text, `llms.txt`, and JSON-LD. Keep them directionally consistent without making them all identical.
 - For metadata and machine-facing summaries, prefer durable wording over quickly stale current-state details unless the surface is intentionally time-stamped, such as the body of the Now page.
 - Use credentials, project history, and domain experience as factual context when relevant, but avoid turning them into a pitch.
 - Prefer direct, literal phrasing over abstract framing when editing prose. If the concrete mechanism, limitation, UI behavior, or comparison can be named directly, name it.
-- For blog titles, excerpts, and AI-tool posts, avoid influencer-style packaging, clickbait, and broad future-of-work framing. Prefer literal scope, concrete workflow details, and tags that match the actual argument.
-- Blog titles should feel concise and spoken, not like category labels. Prefer one crisp shape: an active claim (`Make Internal Tools Cheap to Try`), a concrete object/use case (`Studying with the 11-Inch iPad Air`), or a named-tool contrast (`Codex for Site Edits, Sora for Visual Sketches`). Avoid `Why...` or `Using...` title forms when they add ceremony without adding meaning.
-- When a title feels flat, look for stacked softeners or abstractions such as `rough`, `workflow`, `small`, `ideas`, `fit`, or `tools`. Keep the useful constraint and cut the vague scaffolding.
-- If the user states the main takeaway, preserve that mechanism in the title, excerpt, section path, and ending. Do not replace it with an adjacent generic lesson such as knowing when to stop, feeling productive, or treating a metric as an operating signal.
-- For AI-tool reflections, keep concrete harness terms visible when they are the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token. Do not smooth these into broader productivity language.
-- If the user says a title or heading style feels weird, switch to literal mechanism-first labels. Avoid clever or essayistic frames such as `What X Buy Me`, `The X Is the Point`, lever metaphors, or title-shaped transformations unless the user explicitly asks for that style.
-- For blog index and section labels, use plain labels unless the page has already earned a metaphor. Avoid one-off workshop, workbench, journey, lab, or craft metaphors in headings and intros; they tend to feel forced against the site's otherwise literal voice.
-- For learning notes and book reviews, do not overuse `I learned`, `I realized`, `I discovered`, or similar beginner-coded framing. Present the post as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism while preserving honest limits.
 - In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
-- Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow/textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
-- Do not add internal links or prose references from a dated blog entry to later-dated blog entries unless also updating the entry's `updated` date to reflect an intentional retrospective edit.
-- For personal reflections and lifestyle posts, open from concrete lived details before interpretation. Avoid polished thesis scaffolding, rhetorical contrast templates, and decorative atmosphere labels unless the user explicitly asks for a more essayistic style.
-- Do not start reflective posts with a comparison, metric, or time jump before naming the actual subject. A reader should know the object, workflow, place, or situation in the first sentence before seeing a line like `Compared with...`.
-- If the user corrects tone more than once, stop making local sentence swaps. Reread the whole section, name the repeated pattern, and revise from the user-provided facts outward.
-- Avoid draft-scaffolding phrases such as `the third thread`, `interesting middle ground`, or similar meta-organizing language when the actual point can be stated plainly.
-- Avoid rhetorical contrast templates like `it is one thing ... it is another ...` unless the user explicitly wants a more essayistic style.
 - Avoid pairing near-synonyms in the same sentence just for polish; if two clauses do not add distinct meaning, collapse them.
 - Keep experiential claims tightly bounded. Do not introduce phrases like `over time`, `in practice`, or other duration/usage claims unless the user explicitly established that scope.
 - Before changing labels or short copy in response to a brief user instruction like `do it`, state the chosen interpretation in a short update before editing if there were multiple plausible options in the immediately preceding discussion.

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
@@ -8,56 +8,111 @@ import { Subtitle } from "@/components/Subtitle";
 import { surfaceClassNames } from "@/components/Surface";
 
 const EMAIL_ADDRESS = "alex@alexleung.ca";
+const COPY_FEEDBACK_DURATION_MS = 2_000;
+
+type CopyStatus = "idle" | "copied" | "failed";
 
 export function EmailMe() {
-  const [copyLabel, setCopyLabel] = useState("Copy email");
+  const [copyStatus, setCopyStatus] = useState<CopyStatus>("idle");
+  const resetTimer = useRef<number | null>(null);
+
+  useEffect(
+    () => () => {
+      if (resetTimer.current !== null) {
+        window.clearTimeout(resetTimer.current);
+      }
+    },
+    []
+  );
+
+  const showCopyFeedback = (status: Exclude<CopyStatus, "idle">) => {
+    if (resetTimer.current !== null) {
+      window.clearTimeout(resetTimer.current);
+    }
+
+    setCopyStatus(status);
+    resetTimer.current = window.setTimeout(() => {
+      setCopyStatus("idle");
+      resetTimer.current = null;
+    }, COPY_FEEDBACK_DURATION_MS);
+  };
 
   const copyEmail = async () => {
     if (!navigator.clipboard) {
-      setCopyLabel("Copy unavailable");
+      showCopyFeedback("failed");
       return;
     }
 
     try {
       await navigator.clipboard.writeText(EMAIL_ADDRESS);
-      setCopyLabel("Copied");
+      showCopyFeedback("copied");
     } catch {
-      setCopyLabel("Copy unavailable");
+      showCopyFeedback("failed");
     }
   };
 
   return (
-    <ResponsiveContainer element="section" className="text-center">
+    <ResponsiveContainer element="section" className="space-y-6">
       <Subtitle title="Email" id="email" />
       <div
         className={surfaceClassNames({
-          className: "mx-auto max-w-2xl p-6 md:p-8",
+          className: "max-w-2xl p-6 md:p-8",
         })}
       >
-        <p className="text-body text-gray-200">
-          For project, writing, or professional conversations, email is the best
-          place to start.
+        <p className="text-body text-muted">
+          Email me about a software project or something I wrote.
         </p>
-        <p className="mt-3 font-semibold text-white">{EMAIL_ADDRESS}</p>
-        <div className="mt-5 flex flex-col justify-center gap-3 sm:flex-row">
+        <p className="mt-3 font-semibold text-ink">{EMAIL_ADDRESS}</p>
+        <div className="mt-5 flex flex-col gap-3 sm:flex-row">
           <a
             href={`mailto:${EMAIL_ADDRESS}`}
-            className="text-body inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-gradient-to-br from-blue-500 to-accent-primary px-5 py-2.5 font-bold text-white transition-colors hover:from-blue-600 hover:to-accent-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            className="text-body inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-accent-primary px-5 py-2.5 font-bold text-white transition-colors hover:bg-accent-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
           >
             <HiOutlineMail aria-hidden="true" className="text-lg" />
-            Email Alex
+            Email me
           </a>
           <button
             type="button"
             onClick={copyEmail}
-            className="text-body inline-flex min-h-11 items-center justify-center rounded-md border border-white/20 bg-white/5 px-5 py-2.5 font-semibold text-white transition-colors hover:border-white/30 hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-slate-950"
+            aria-label="Copy email"
+            data-copy-status={copyStatus}
+            className="text-body inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-surface px-5 py-2.5 font-semibold text-ink transition-colors hover:border-accent-link/50 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:w-32"
           >
-            {copyLabel}
+            <span
+              aria-hidden="true"
+              className="grid motion-reduce:transition-none"
+            >
+              <span
+                className={`col-start-1 row-start-1 transition-opacity duration-150 motion-reduce:transition-none ${
+                  copyStatus === "idle" ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                Copy email
+              </span>
+              <span
+                className={`col-start-1 row-start-1 transition-opacity duration-150 motion-reduce:transition-none ${
+                  copyStatus === "copied" ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                Copied
+              </span>
+              <span
+                className={`col-start-1 row-start-1 transition-opacity duration-150 motion-reduce:transition-none ${
+                  copyStatus === "failed" ? "opacity-100" : "opacity-0"
+                }`}
+              >
+                Try again
+              </span>
+            </span>
           </button>
+          <span role="status" aria-live="polite" className="sr-only">
+            {copyStatus === "copied"
+              ? "Email address copied to clipboard."
+              : copyStatus === "failed"
+                ? "Could not copy email address."
+                : ""}
+          </span>
         </div>
-        <p className="text-body-sm mt-4 text-gray-300">
-          LinkedIn is the best secondary channel if email is not the right fit.
-        </p>
       </div>
     </ResponsiveContainer>
   );

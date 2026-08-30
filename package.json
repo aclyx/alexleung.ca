@@ -9,8 +9,7 @@
     "prepare": "git config core.hooksPath .githooks || true",
     "image:variants": "node scripts/generate-image-variants.mjs",
     "image:variants:stage": "node scripts/generate-image-variants.mjs --staged --stage-generated",
-    "prebuild": "yarn image:variants",
-    "build": "next build && yarn build:deploy-marker",
+    "build": "yarn image:variants && next build && yarn build:deploy-marker",
     "build:prod": "NEXT_PUBLIC_ENABLE_ANALYTICS=true yarn build",
     "build:deploy-marker": "node scripts/generate-deploy-marker.mjs",
     "typecheck": "tsc --noEmit",
@@ -30,12 +29,10 @@
     "lint": "eslint . && prettier --check '{src,docs,playwright,scripts,.github}/**/*.{js,jsx,ts,tsx,css,md,json,yml,mjs}' '*.{js,mjs,ts,json,md,yml}' && yarn lint:unused",
     "lint:unused": "knip --reporter compact",
     "lint:fix": "eslint --fix . && prettier --write '{src,docs,playwright,scripts,.github}/**/*.{js,jsx,ts,tsx,css,md,json,yml,mjs}' '*.{js,mjs,ts,json,md,yml}'",
-    "predeploy": "yarn build:prod",
-    "deploy": "gh-pages -d out"
+    "deploy": "yarn build:prod && gh-pages -d out"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.4",
-    "decimal.js": "^10.6.0",
     "feed": "^5.2.1",
     "next": "^16.2.6",
     "react": "^19.2.5",
