@@ -273,7 +273,18 @@ describe("MandelbrotExplorer", () => {
     });
 
     expect(screen.getByLabelText("Color palette")).toHaveValue("glacier");
-    expect(screen.getByLabelText(/Maximum iterations/i)).toHaveValue(320);
+    const iterationsInput = screen.getByRole("spinbutton", {
+      name: "Maximum iterations",
+    });
+
+    expect(iterationsInput).toHaveValue(320);
+    expect(iterationsInput).toHaveAttribute(
+      "aria-describedby",
+      "mandelbrot-iteration-guidance"
+    );
+    expect(iterationsInput).toHaveAccessibleDescription(
+      "CPU rendering may use fewer iterations to keep navigation responsive."
+    );
     expect(screen.queryByLabelText(/Render backend/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Coloring mode/i)).not.toBeInTheDocument();
     expect(screen.queryByLabelText(/Render quality/i)).not.toBeInTheDocument();

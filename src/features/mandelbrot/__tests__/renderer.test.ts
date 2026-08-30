@@ -225,11 +225,11 @@ describe("renderMandelbrotWithStrategy", () => {
     expect(renderOnCpu).toHaveBeenCalledWith(request);
   });
 
-  it("caps CPU work and reports the effective iteration limit", async () => {
+  it("caps a 480x300 CPU render at 555 iterations", async () => {
     const request = createRenderRequest();
     const renderOnCpu = jest.fn(async () => true);
 
-    request.size = { width: 1000, height: 1000 };
+    request.size = { width: 480, height: 300 };
     request.settings = {
       ...request.settings,
       maxIterations: 4000,
@@ -246,14 +246,14 @@ describe("renderMandelbrotWithStrategy", () => {
       completed: true,
       backend: "cpu",
       gpuFallbackReason: undefined,
-      effectiveMaxIterations: 80,
+      effectiveMaxIterations: 555,
       cpuBudgetApplied: true,
     });
     expect(renderOnCpu).toHaveBeenCalledWith({
       ...request,
       settings: {
         ...request.settings,
-        maxIterations: 80,
+        maxIterations: 555,
       },
     });
     expect(request.settings.maxIterations).toBe(4000);

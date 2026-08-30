@@ -1,4 +1,10 @@
-import { createEvent, fireEvent, render, screen } from "@testing-library/react";
+import {
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+} from "@testing-library/react";
 
 import { PreciseViewport } from "@/features/mandelbrot/types";
 import { useMandelbrotRender } from "@/features/mandelbrot/useMandelbrotRender";
@@ -194,6 +200,80 @@ describe("MandelbrotCanvas", () => {
     expect(onPreviewViewport).toHaveBeenLastCalledWith(null);
   });
 
+  it("uses the measured canvas width for narrow-screen interactions", async () => {
+    const boundsSpy = jest
+      .spyOn(HTMLElement.prototype, "getBoundingClientRect")
+      .mockReturnValue({
+        bottom: 320,
+        height: 320,
+        left: 0,
+        right: 278,
+        top: 0,
+        width: 278,
+        x: 0,
+        y: 0,
+        toJSON: () => ({}),
+      });
+
+    try {
+      const { viewport, onCanvasSizeChange, onCommitViewport } = renderCanvas();
+      const canvas = screen.getByLabelText(/Interactive Mandelbrot set/i);
+
+      await waitFor(() => {
+        expect(onCanvasSizeChange).toHaveBeenLastCalledWith({
+          width: 278,
+          height: 320,
+        });
+        expect(mockedUseMandelbrotRender.mock.calls.at(-1)?.[0].size).toEqual({
+          width: 278,
+          height: 320,
+        });
+      });
+
+      firePointerEvent(canvas, "pointerdown", {
+        button: 0,
+        pointerId: 31,
+        clientX: 139,
+        clientY: 160,
+      });
+      firePointerEvent(canvas, "pointerup", {
+        pointerId: 31,
+        clientX: 139,
+        clientY: 160,
+      });
+
+      expect(onCommitViewport).toHaveBeenCalledTimes(1);
+      expect(
+        onCommitViewport.mock.calls[0][0].centerX.eq(viewport.centerX)
+      ).toBe(true);
+      expect(
+        onCommitViewport.mock.calls[0][0].centerY.eq(viewport.centerY)
+      ).toBe(true);
+
+      onCommitViewport.mockClear();
+      firePointerEvent(canvas, "pointerdown", {
+        button: 0,
+        pointerId: 32,
+        clientX: 0,
+        clientY: 160,
+      });
+      firePointerEvent(canvas, "pointerup", {
+        pointerId: 32,
+        clientX: 139,
+        clientY: 160,
+      });
+
+      expect(onCommitViewport).toHaveBeenCalledTimes(1);
+      expect(
+        onCommitViewport.mock.calls[0][0].centerX.eq(
+          viewport.centerX.sub(viewport.width.mul(0.5))
+        )
+      ).toBe(true);
+    } finally {
+      boundsSpy.mockRestore();
+    }
+  });
+
   it("renders pan previews, ignores unrelated pointers, and commits the owner pointer", () => {
     const { viewport, onCommitViewport, onPreviewViewport } = renderCanvas();
     const canvas = screen.getByLabelText(/Interactive Mandelbrot set/i);
@@ -356,5 +436,21 @@ describe("MandelbrotCanvas", () => {
 
     expect(screen.getByRole("status")).toHaveTextContent("Rendering…");
     expect(screen.getByRole("status")).not.toHaveTextContent("1x");
+  });
+
+  it("discloses an effective CPU iteration limit without changing the request", () => {
+    mockedUseMandelbrotRender.mockReturnValue({
+      phase: "ready",
+      message: "Render complete.",
+      backend: "cpu",
+      requestedMaxIterations: 4000,
+      effectiveMaxIterations: 555,
+      cpuBudgetApplied: true,
+    });
+    renderCanvas();
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "1x · CPU render used 555 of 4,000 requested iterations."
+    );
   });
 });

@@ -113,6 +113,13 @@ export function MandelbrotCanvas({
     settings,
     size: canvasSize,
   });
+  const iterationLimitMessage =
+    renderState.phase === "ready" &&
+    renderState.requestedMaxIterations !== undefined &&
+    renderState.effectiveMaxIterations !== undefined &&
+    renderState.effectiveMaxIterations < renderState.requestedMaxIterations
+      ? `${renderState.backend === "cpu" ? "CPU render" : "Render"} used ${renderState.effectiveMaxIterations.toLocaleString("en-CA")} of ${renderState.requestedMaxIterations.toLocaleString("en-CA")} requested iterations.`
+      : null;
 
   useEffect(() => {
     const element = containerRef.current;
@@ -124,10 +131,7 @@ export function MandelbrotCanvas({
     const measure = () => {
       const rect = element.getBoundingClientRect();
       const nextSize = {
-        width: Math.max(
-          320,
-          Math.round(rect.width || DEFAULT_CANVAS_SIZE.width)
-        ),
+        width: Math.max(1, Math.round(rect.width || DEFAULT_CANVAS_SIZE.width)),
         height: Math.max(
           240,
           Math.round(rect.height || DEFAULT_CANVAS_SIZE.height)
@@ -419,6 +423,7 @@ export function MandelbrotCanvas({
           <p>
             <span className="sr-only">{renderState.message} </span>
             {magnificationLabel}
+            {iterationLimitMessage ? ` · ${iterationLimitMessage}` : null}
           </p>
         ) : (
           <p>{renderState.message}</p>

@@ -304,20 +304,30 @@ export function MandelbrotExplorer() {
                 </select>
               </label>
 
-              <label className="text-sm font-medium text-ink">
-                Maximum iterations
-                <input
-                  type="number"
-                  min={25}
-                  max={4000}
-                  step={25}
-                  className={settingsControlClass}
-                  value={settings.maxIterations}
-                  onChange={(event) =>
-                    handleIterationsChange(event.target.value)
-                  }
-                />
-              </label>
+              <div>
+                <label className="text-sm font-medium text-ink">
+                  Maximum iterations
+                  <input
+                    type="number"
+                    min={25}
+                    max={4000}
+                    step={25}
+                    className={settingsControlClass}
+                    value={settings.maxIterations}
+                    aria-describedby="mandelbrot-iteration-guidance"
+                    onChange={(event) =>
+                      handleIterationsChange(event.target.value)
+                    }
+                  />
+                </label>
+                <p
+                  id="mandelbrot-iteration-guidance"
+                  className="mt-2 text-xs font-normal text-muted"
+                >
+                  CPU rendering may use fewer iterations to keep navigation
+                  responsive.
+                </p>
+              </div>
             </div>
           </Surface>
 

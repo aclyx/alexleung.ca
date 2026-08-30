@@ -21,6 +21,10 @@ type RenderPhase = "idle" | "preview" | "refining" | "ready" | "error";
 type RenderState = {
   phase: RenderPhase;
   message: string;
+  backend?: Awaited<ReturnType<typeof renderMandelbrotWithStrategy>>["backend"];
+  requestedMaxIterations?: number;
+  effectiveMaxIterations?: number;
+  cpuBudgetApplied?: boolean;
 };
 
 type UseMandelbrotRenderInput = {
@@ -120,6 +124,10 @@ export function useMandelbrotRender({
     }
 
     async function runRender() {
+      let finalRenderResult: Awaited<
+        ReturnType<typeof renderMandelbrotWithStrategy>
+      > | null = null;
+
       renderingCanvas.width = size.width;
       renderingCanvas.height = size.height;
       renderingGpuCanvas.width = size.width;
@@ -214,6 +222,8 @@ export function useMandelbrotRender({
           return;
         }
 
+        finalRenderResult = renderResult;
+
         if (renderResult.backend === "webgpu") {
           renderingContext.clearRect(0, 0, size.width, size.height);
         }
@@ -224,6 +234,10 @@ export function useMandelbrotRender({
         setRenderState({
           phase: "ready",
           message: "Render complete.",
+          backend: finalRenderResult?.backend,
+          requestedMaxIterations: settings.maxIterations,
+          effectiveMaxIterations: finalRenderResult?.effectiveMaxIterations,
+          cpuBudgetApplied: finalRenderResult?.cpuBudgetApplied,
         });
       }
     }

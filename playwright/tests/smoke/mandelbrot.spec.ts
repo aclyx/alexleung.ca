@@ -317,6 +317,60 @@ test("Mandelbrot renders and supports pointer, keyboard, and mobile-safe navigat
   expect(touchAction).toBe("none");
 });
 
+test("Mandelbrot keeps narrow-screen canvas geometry aligned", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    testInfo.project.name !== "chromium-smoke",
+    "The 320px geometry regression is covered once in desktop Chromium."
+  );
+  test.setTimeout(45_000);
+
+  await page.setViewportSize({ width: 320, height: 700 });
+  await gotoAndStabilize(page, explorerPath);
+  await expect(page.getByRole("status")).toContainText("1x", {
+    timeout: 30_000,
+  });
+
+  const dimensions = await page
+    .getByTestId("mandelbrot-render-canvas")
+    .evaluate((canvas) => {
+      if (!(canvas instanceof HTMLCanvasElement)) {
+        throw new Error("Expected the Mandelbrot render canvas");
+      }
+
+      return {
+        backingWidth: canvas.width,
+        cssWidth: canvas.getBoundingClientRect().width,
+      };
+    });
+
+  expect(dimensions.backingWidth).toBe(Math.round(dimensions.cssWidth));
+  expect(dimensions.backingWidth).toBeLessThan(320);
+
+  await openDisclosure(page, "Coordinates");
+  const centerX = page.getByTestId("viewport-center-x");
+  const width = page.getByTestId("viewport-width");
+  const initialCenterX = await centerX.textContent();
+  const initialWidth = await width.textContent();
+  const canvas = page.getByLabel(/Interactive Mandelbrot set/i);
+  const canvasBox = await canvas.boundingBox();
+
+  expect(canvasBox).not.toBeNull();
+
+  if (canvasBox) {
+    await canvas.click({
+      position: {
+        x: canvasBox.width / 2,
+        y: canvasBox.height / 2,
+      },
+    });
+  }
+
+  await expect(width).not.toHaveText(initialWidth ?? "");
+  await expect(centerX).toHaveText(initialCenterX ?? "");
+});
+
 test("Mandelbrot keeps a bounded deep zoom responsive", async ({
   page,
 }, testInfo) => {
@@ -336,4 +390,10 @@ test("Mandelbrot keeps a bounded deep zoom responsive", async ({
     "0.0000000000000000000000000000000222402701568815167"
   );
   expect(await sampledMandelbrotColorCount(page)).toBeGreaterThan(8);
+  await openDisclosure(page, "Render settings");
+  await expect(page.getByLabel("Maximum iterations")).toHaveValue("4000");
+  await expect(page.getByRole("status")).toContainText(
+    /CPU render used [\d,]+ of 4,000 requested iterations\./,
+    { timeout: 30_000 }
+  );
 });

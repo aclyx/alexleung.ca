@@ -238,4 +238,68 @@ describe("useMandelbrotRender", () => {
     });
     expect(cpuContext.clearRect).toHaveBeenCalledTimes(2);
   });
+
+  it("reports iteration metadata from the final refinement pass", async () => {
+    const size = { width: 20, height: 12 };
+    const viewport = createDefaultViewport(size);
+    const settings: MandelbrotSettings = {
+      maxIterations: 4000,
+      paletteId: "oceanic",
+      resolutionScale: 1,
+      renderBackendPreference: "cpu",
+    };
+    const cpuCanvas = document.createElement("canvas");
+    const gpuCanvas = document.createElement("canvas");
+    const cpuContext = createCanvasContext();
+    const cpuCanvasRef = { current: cpuCanvas };
+    const gpuCanvasRef = { current: gpuCanvas };
+
+    Object.defineProperty(cpuCanvas, "getContext", {
+      configurable: true,
+      value: jest.fn((contextType: string) =>
+        contextType === "2d" ? cpuContext : null
+      ),
+    });
+
+    mockedShouldAttemptWebGpu.mockReturnValue(false);
+    mockedRenderMandelbrotWithStrategy
+      .mockResolvedValueOnce({
+        completed: true,
+        backend: "webgpu",
+        gpuFallbackReason: undefined,
+        effectiveMaxIterations: 4000,
+        cpuBudgetApplied: false,
+      })
+      .mockResolvedValueOnce({
+        completed: true,
+        backend: "cpu",
+        gpuFallbackReason: undefined,
+        effectiveMaxIterations: 555,
+        cpuBudgetApplied: true,
+      });
+
+    const { result } = renderHook(() =>
+      useMandelbrotRender({
+        cpuCanvasRef,
+        gpuCanvasRef,
+        viewport,
+        settings,
+        size,
+      })
+    );
+
+    await waitFor(() => {
+      expect(result.current.phase).toBe("ready");
+    });
+
+    expect(mockedRenderMandelbrotWithStrategy).toHaveBeenCalledTimes(2);
+    expect(result.current).toEqual({
+      phase: "ready",
+      message: "Render complete.",
+      backend: "cpu",
+      requestedMaxIterations: 4000,
+      effectiveMaxIterations: 555,
+      cpuBudgetApplied: true,
+    });
+  });
 });
