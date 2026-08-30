@@ -25,7 +25,7 @@ test("blog index navigates into a post and renders article metadata", async ({
   await expect(
     page.getByRole("heading", { level: 1, name: postTitle })
   ).toBeVisible();
-  await expect(page.locator("article time").first()).toContainText("Published");
+  await expect(page.locator("main time").first()).toContainText("Published");
   await expect(
     page.getByRole("heading", { name: "Get new posts by email" })
   ).toBeVisible();

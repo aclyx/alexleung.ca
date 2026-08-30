@@ -2,6 +2,7 @@ import Link from "next/link";
 
 import { ExcerptText } from "@/components/ExcerptText";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+import { SectionHeading } from "@/components/SectionHeading";
 import { formatIsoDateForDisplay } from "@/lib/date";
 
 type LatestWritingPost = {
@@ -35,14 +36,7 @@ export function LatestWritingSection({
       className="border-t border-line py-16 md:py-24"
     >
       <div id={id} className="grid gap-8 md:grid-cols-[15rem_minmax(0,1fr)]">
-        <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-link">
-            Notes and essays
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-ink md:text-4xl">
-            {title}
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Notes and essays" title={title} />
         <div>
           <div className="border-b border-line">
             {posts.map((post) => (
@@ -55,7 +49,7 @@ export function LatestWritingSection({
                   {formatIsoDateForDisplay(post.date)}
                 </time>
                 <div>
-                  <h3 className="text-lg font-semibold leading-snug text-ink group-hover:text-accent-link-hover">
+                  <h3 className="text-lg font-semibold leading-snug text-ink transition-colors group-hover:text-accent-link-hover group-focus-visible:text-accent-link-hover">
                     {post.title}
                   </h3>
                   {post.excerpt ? (
@@ -66,7 +60,7 @@ export function LatestWritingSection({
                 </div>
                 <span
                   aria-hidden="true"
-                  className="hidden translate-x-0 text-lg text-accent-link transition-transform group-hover:translate-x-1 md:block"
+                  className="hidden translate-x-0 text-lg text-accent-link transition-transform duration-200 ease-expo-out group-hover:translate-x-1 group-focus-visible:translate-x-1 md:block"
                 >
                   →
                 </span>

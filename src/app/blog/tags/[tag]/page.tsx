@@ -145,15 +145,16 @@ export default async function TagArchivePage({ params }: Props) {
         )}
       />
 
-      <PageShell title={tag.name} titleId={`tag-${tag.slug}`}>
-        <ResponsiveContainer variant="wide" className="space-y-8">
-          <p className="text-body max-w-3xl text-muted">{description}</p>
-          <p className="text-body-sm max-w-3xl text-muted">
-            {tag.count} {tag.count === 1 ? "post" : "posts"}
-          </p>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+      <PageShell
+        title={tag.name}
+        titleId={`tag-${tag.slug}`}
+        description={description}
+        metadata={`${tag.count} ${tag.count === 1 ? "post" : "posts"}`}
+      >
+        <ResponsiveContainer className="space-y-8">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             {posts.map((post) => (
-              <BlogPostCard key={post.slug} post={post} />
+              <BlogPostCard key={post.slug} post={post} variant="dense" />
             ))}
           </div>
         </ResponsiveContainer>

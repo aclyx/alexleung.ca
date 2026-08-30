@@ -8,7 +8,6 @@ const config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {
@@ -19,6 +18,8 @@ const config = {
         ink: "#20231f",
         muted: "#62675f",
         line: "#d8d2c6",
+        "control-border": "#918c82",
+        canvas: "#030712",
         accent: {
           link: "#52634d",
           "link-hover": "#3f4d3b",
@@ -34,13 +35,6 @@ const config = {
       },
       maxWidth: {
         content: "1120px",
-      },
-      transitionProperty: {
-        all: "all",
-      },
-      transitionDuration: {
-        200: "0.2s",
-        500: "0.5s",
       },
       transitionTimingFunction: {
         linear: "linear",

@@ -74,24 +74,16 @@ export function MobileNavDrawer({
     <nav
       id="mobile-nav-drawer"
       aria-label="Mobile navigation"
-      className={`fixed inset-x-0 top-[var(--header-height)] z-40 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto overscroll-contain border-b border-line bg-paper/98 shadow-lg backdrop-blur-md transition-[opacity,transform] duration-200 md:hidden ${
+      className={`fixed inset-x-0 top-[var(--header-height)] z-40 max-h-[calc(100dvh-var(--header-height))] overflow-y-auto overscroll-contain border-b border-line bg-paper/98 shadow-lg backdrop-blur-md transition-[opacity,translate] duration-200 ease-expo-out md:hidden ${
         isOpen
           ? "translate-y-0 opacity-100"
-          : "pointer-events-none -translate-y-4 opacity-0"
+          : "pointer-events-none -translate-y-2 opacity-0"
       }`}
       aria-hidden={!isOpen}
     >
       <ul className="section-center flex flex-col py-5">
-        {NAV_LINKS.map((link, index) => (
-          <li
-            key={link.href}
-            className={`transition-[opacity,transform] duration-200 ${
-              isOpen ? "translate-x-0 opacity-100" : "-translate-x-4 opacity-0"
-            }`}
-            style={{
-              transitionDelay: isOpen ? `${index * 35}ms` : "0ms",
-            }}
-          >
+        {NAV_LINKS.map((link) => (
+          <li key={link.href}>
             <NavItem
               {...link}
               active={isActive(link.canonicalPath)}

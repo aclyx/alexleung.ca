@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { HiOutlineMail } from "react-icons/hi";
 
+import { actionClassNames } from "@/components/controlStyles";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Subtitle } from "@/components/Subtitle";
 import { surfaceClassNames } from "@/components/Surface";
@@ -56,7 +57,8 @@ export function EmailMe() {
       <Subtitle title="Email" id="email" />
       <div
         className={surfaceClassNames({
-          className: "max-w-2xl p-6 md:p-8",
+          padding: "responsive",
+          className: "max-w-2xl",
         })}
       >
         <p className="text-body text-muted">
@@ -64,10 +66,7 @@ export function EmailMe() {
         </p>
         <p className="mt-3 font-semibold text-ink">{EMAIL_ADDRESS}</p>
         <div className="mt-5 flex flex-col gap-3 sm:flex-row">
-          <a
-            href={`mailto:${EMAIL_ADDRESS}`}
-            className="text-body inline-flex min-h-11 items-center justify-center gap-2 rounded-md bg-accent-primary px-5 py-2.5 font-bold text-white transition-colors hover:bg-accent-primary-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-          >
+          <a href={`mailto:${EMAIL_ADDRESS}`} className={actionClassNames()}>
             <HiOutlineMail aria-hidden="true" className="text-lg" />
             Email me
           </a>
@@ -76,7 +75,10 @@ export function EmailMe() {
             onClick={copyEmail}
             aria-label="Copy email"
             data-copy-status={copyStatus}
-            className="text-body inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-surface px-5 py-2.5 font-semibold text-ink transition-colors hover:border-accent-link/50 hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper sm:w-32"
+            className={actionClassNames({
+              variant: "secondary",
+              className: "sm:w-32",
+            })}
           >
             <span
               aria-hidden="true"

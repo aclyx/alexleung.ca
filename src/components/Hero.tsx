@@ -27,7 +27,7 @@ export function Hero() {
           >
             Alex Leung
           </h1>
-          <p className="mt-7 max-w-xl text-xl leading-relaxed text-muted md:text-2xl">
+          <p className="text-hero-description mt-7 max-w-xl leading-relaxed text-muted">
             I build products and systems that make new technology useful in
             everyday life. I write about software, technical books, and life
             outside work.
@@ -55,7 +55,7 @@ export function Hero() {
           </div>
         </div>
 
-        <div className="hero-enter-delayed order-1 md:order-2">
+        <div className="order-1 md:order-2">
           <ResponsiveImage
             src={portraitFallback.path}
             srcSet={portraitSrcSet}
