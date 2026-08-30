@@ -2,6 +2,11 @@
 
 import { useEffect, useState } from "react";
 
+import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
+import {
+  DisclosureIndicator,
+  disclosureSummaryClassNames,
+} from "@/components/Disclosure";
 import { LinkText } from "@/components/LinkText";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Surface } from "@/components/Surface";
@@ -58,27 +63,20 @@ const DEFAULT_CPU_SETTINGS: MandelbrotSettings = {
 };
 
 const metaValueClass = "break-all text-sm text-ink";
-const settingsControlClass =
-  "mt-1 min-h-11 w-full rounded-md border border-line bg-white px-3 py-2 text-ink focus:border-accent-link focus:outline-none focus:ring-1 focus:ring-accent-link";
-const moveButtonClass =
-  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border border-line bg-white px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-accent-link/50 hover:bg-accent-secondary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link";
-const disclosureSummaryClass =
-  "flex min-h-11 cursor-pointer list-none items-center justify-between gap-3 px-4 py-3 text-sm font-semibold text-ink transition-colors hover:bg-accent-secondary-soft/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-link [&::-webkit-details-marker]:hidden";
+const settingsInputClass = fieldClassNames({ className: "mt-1" });
+const settingsSelectClass = fieldClassNames({
+  kind: "select",
+  className: "mt-1",
+});
+const moveButtonClass = actionClassNames({
+  variant: "secondary",
+  size: "sm",
+  className: "min-w-11",
+});
 const EXPERIMENT_ID = "mandelbrot_explorer";
 
 function isPaletteId(value: string): value is MandelbrotSettings["paletteId"] {
   return PALETTE_OPTIONS.some((option) => option.id === value);
-}
-
-function DisclosureIndicator() {
-  return (
-    <span
-      aria-hidden="true"
-      className="text-lg font-normal leading-none text-muted transition-transform group-open:rotate-90"
-    >
-      ›
-    </span>
-  );
 }
 
 export function MandelbrotExplorer() {
@@ -242,7 +240,7 @@ export function MandelbrotExplorer() {
   }
 
   return (
-    <ResponsiveContainer element="section" variant="wide" className="space-y-6">
+    <ResponsiveContainer element="section" className="space-y-6">
       <div className="max-w-3xl" data-testid="experiment-intro">
         <p className="text-body-lg leading-relaxed text-muted">
           Explore the Mandelbrot set in your browser. It keeps precise
@@ -275,7 +273,7 @@ export function MandelbrotExplorer() {
             padding="none"
             className="group overflow-hidden"
           >
-            <summary className={disclosureSummaryClass}>
+            <summary className={disclosureSummaryClassNames()}>
               <span>Render settings</span>
               <DisclosureIndicator />
             </summary>
@@ -283,7 +281,7 @@ export function MandelbrotExplorer() {
               <label className="text-sm font-medium text-ink">
                 Palette
                 <select
-                  className={settingsControlClass}
+                  className={settingsSelectClass}
                   aria-label="Color palette"
                   value={settings.paletteId}
                   onChange={(event) => {
@@ -312,7 +310,7 @@ export function MandelbrotExplorer() {
                     min={25}
                     max={4000}
                     step={25}
-                    className={settingsControlClass}
+                    className={settingsInputClass}
                     value={settings.maxIterations}
                     aria-describedby="mandelbrot-iteration-guidance"
                     onChange={(event) =>
@@ -336,7 +334,7 @@ export function MandelbrotExplorer() {
             padding="none"
             className="group overflow-hidden"
           >
-            <summary className={disclosureSummaryClass}>
+            <summary className={disclosureSummaryClassNames()}>
               <span>Coordinates</span>
               <DisclosureIndicator />
             </summary>

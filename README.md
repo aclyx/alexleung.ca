@@ -2,7 +2,7 @@
 
 Personal website and writing hub for Alex Leung. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
 
-![Homepage screenshot](./public/assets/screenshot.png)
+![Homepage screenshot](./public/assets/screenshot.webp)
 
 ## Installation & Setup
 

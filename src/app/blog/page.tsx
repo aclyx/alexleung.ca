@@ -9,6 +9,10 @@ import {
   type TopicLink,
 } from "@/app/blog/_components/TopicRevealList";
 import { BlogPostCard } from "@/components/BlogPostCard";
+import {
+  DisclosureIndicator,
+  disclosureSummaryClassNames,
+} from "@/components/Disclosure";
 import { FollowItSubscribeForm } from "@/components/FollowItSubscribeForm";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
@@ -44,9 +48,9 @@ function SeriesLinks({
 
   return (
     <div>
-      <h3 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
+      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
         Series
-      </h3>
+      </h2>
       <div className="flex flex-wrap gap-2">
         {seriesSummaries.map((series) => (
           <Tag key={series.name} href={`/blog/${series.firstPost.slug}/`}>
@@ -108,25 +112,21 @@ export default function BlogIndex() {
 
   return (
     <>
-      <PageShell>
-        <ResponsiveContainer variant="wide" className="space-y-8 md:space-y-10">
-          <section aria-label="Blog overview" className="max-w-4xl space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-link">
-              Notes and essays
-            </p>
-            <h1 className="text-4xl font-bold tracking-[-0.045em] text-ink md:text-5xl">
-              Writing
-            </h1>
-            <p className="max-w-2xl text-lg leading-relaxed text-muted">
-              Software, AI tools, technical books, and life outside work.
-            </p>
-            <div className="hidden space-y-3 pt-3 md:block">
+      <PageShell
+        title="Writing"
+        titleId="writing"
+        eyebrow="Notes and essays"
+        description="Software, AI tools, technical books, and life outside work."
+        metadata={
+          <>
+            <div className="hidden space-y-3 md:block">
               <TopicRevealList topics={topics} />
               <SeriesLinks seriesSummaries={seriesSummaries} />
             </div>
-            <details className="rounded-lg border border-line bg-surface text-left md:hidden">
-              <summary className="min-h-11 cursor-pointer px-4 py-3 text-sm font-semibold text-ink">
-                Browse topics and series
+            <details className="group rounded-lg border border-line bg-surface text-left md:hidden">
+              <summary className={disclosureSummaryClassNames()}>
+                <span>Browse topics and series</span>
+                <DisclosureIndicator />
               </summary>
               <div className="space-y-4 border-t border-line px-4 py-4">
                 <TopicRevealList
@@ -136,19 +136,21 @@ export default function BlogIndex() {
                 <SeriesLinks seriesSummaries={seriesSummaries} />
               </div>
             </details>
-          </section>
+          </>
+        }
+      >
+        <ResponsiveContainer className="space-y-8 md:space-y-10">
           <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
             {firstPost ? (
               <BlogPostCard
                 key={firstPost.slug}
                 post={firstPost}
                 coverPriority
-                compactOnMobile
-                dense
+                variant="dense"
               />
             ) : null}
             {remainingPosts.map((post) => (
-              <BlogPostCard key={post.slug} post={post} compactOnMobile dense />
+              <BlogPostCard key={post.slug} post={post} variant="dense" />
             ))}
           </div>
           <FollowItSubscribeForm

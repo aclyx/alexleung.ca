@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { actionClassNames } from "@/components/controlStyles";
 import {
   CanvasPoint,
   MandelbrotSettings,
@@ -52,8 +53,10 @@ const INITIAL_CANVAS_SIZE: PixelSize = {
   height: 0,
 };
 
-const toolbarButtonClass =
-  "inline-flex min-h-11 items-center justify-center rounded-md border border-line bg-white px-3 py-2 text-sm font-medium text-ink transition-colors hover:border-accent-link/50 hover:bg-accent-secondary-soft focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link disabled:cursor-not-allowed disabled:opacity-40";
+const toolbarButtonClass = actionClassNames({
+  variant: "secondary",
+  size: "sm",
+});
 
 function pointsAreFarEnough(
   start: CanvasPoint,
@@ -376,7 +379,7 @@ export function MandelbrotCanvas({
 
       <div
         ref={containerRef}
-        className="relative min-h-[20rem] overflow-hidden bg-black sm:min-h-[28rem]"
+        className="relative min-h-[20rem] overflow-hidden bg-canvas sm:min-h-[28rem]"
       >
         <div className="pointer-events-none absolute inset-0">
           <canvas

@@ -5,6 +5,10 @@ function readPublicFile(path: string) {
   return readFileSync(join(process.cwd(), "public", path), "utf8");
 }
 
+function readPublicBuffer(path: string) {
+  return readFileSync(join(process.cwd(), "public", path));
+}
+
 describe("public discovery files", () => {
   it("keeps the retired about URL as a static redirect bridge", () => {
     const html = readPublicFile("about/index.html");
@@ -65,6 +69,24 @@ describe("public discovery files", () => {
       theme_color: "#f4f1e9",
       background_color: "#f4f1e9",
     });
+  });
+
+  it("keeps the install screenshot metadata aligned with its file", () => {
+    const manifest: {
+      screenshots: Array<{ sizes: string; src: string; type: string }>;
+    } = JSON.parse(readPublicFile("manifest.json"));
+
+    expect(manifest.screenshots).toEqual([
+      expect.objectContaining({
+        src: "/assets/screenshot.webp",
+        sizes: "1440x900",
+        type: "image/webp",
+      }),
+    ]);
+
+    const screenshot = readPublicBuffer("assets/screenshot.webp");
+    expect(screenshot.subarray(0, 4).toString("ascii")).toBe("RIFF");
+    expect(screenshot.subarray(8, 12).toString("ascii")).toBe("WEBP");
   });
 
   it("points the text site map at the consolidated profile", () => {
