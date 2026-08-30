@@ -398,7 +398,7 @@ export function MandelbrotCanvas({
 
         <canvas
           ref={interactionCanvasRef}
-          className="absolute inset-0 z-10 block h-full w-full touch-none cursor-grab bg-transparent outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-cyan-200"
+          className="absolute inset-0 z-10 block h-full w-full touch-none cursor-grab bg-transparent outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-paper"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}

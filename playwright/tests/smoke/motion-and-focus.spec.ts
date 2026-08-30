@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 
-import { expect, test } from "../../fixtures/stableRendering";
+import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
 
 type BlogCardSupportingState = {
   arrowTranslate: string;
@@ -206,7 +206,7 @@ test("each topic reveal moves focus to the newly revealed link", async ({
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/blog/", { waitUntil: "domcontentloaded" });
+  await gotoAndStabilize(page, "/blog/");
 
   const topicList = page.locator("#blog-topic-list");
   const topicLinks = topicList.getByRole("link");

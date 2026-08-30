@@ -1,5 +1,7 @@
 import { render, screen } from "@testing-library/react";
 
+import { getSeriesNavigation } from "@/lib/blogApi";
+
 import Post from "../page";
 
 jest.mock("next/link", () => {
@@ -51,7 +53,13 @@ jest.mock("@/lib/blogApi", () => ({
   getSeriesNavigation: jest.fn(() => null),
 }));
 
+const mockedGetSeriesNavigation = jest.mocked(getSeriesNavigation);
+
 describe("Blog post page", () => {
+  beforeEach(() => {
+    mockedGetSeriesNavigation.mockReturnValue(null);
+  });
+
   it("uses custom cover alt text for the hero image", async () => {
     const view = await Post({
       params: Promise.resolve({ slug: "cover-alt-hero" }),
@@ -64,5 +72,37 @@ describe("Blog post page", () => {
         name: "A laptop beside a notebook on a desk.",
       })
     ).toBeInTheDocument();
+  });
+
+  it("uses the shared focus treatment for series navigation links", async () => {
+    mockedGetSeriesNavigation.mockReturnValue({
+      name: "Example Series",
+      currentPart: 2,
+      totalParts: 3,
+      previousPost: {
+        slug: "previous-part",
+        title: "Previous part",
+        seriesOrder: 1,
+      },
+      nextPost: {
+        slug: "next-part",
+        title: "Next part",
+        seriesOrder: 3,
+      },
+    });
+
+    const view = await Post({
+      params: Promise.resolve({ slug: "cover-alt-hero" }),
+    });
+
+    render(view);
+
+    for (const title of ["Previous part", "Next part"]) {
+      const link = screen.getByText(title).closest("a");
+      expect(link).toHaveClass("focus-visible:outline-none");
+      expect(link).toHaveClass("focus-visible:ring-2");
+      expect(link).toHaveClass("focus-visible:ring-accent-link");
+      expect(link).toHaveClass("focus-visible:ring-offset-paper");
+    }
   });
 });
