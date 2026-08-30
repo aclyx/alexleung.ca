@@ -9,6 +9,7 @@
         "http://localhost/blog/tags/deep-learning/",
         "http://localhost/now/",
         "http://localhost/contact/",
+        "http://localhost/experimental/mandelbrot/",
         "http://localhost/blog/from-coder-to-orchestrator/"
       ],
       "settings": {

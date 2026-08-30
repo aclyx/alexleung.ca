@@ -1,6 +1,22 @@
 // Learn more: https://github.com/testing-library/jest-dom
 import "@testing-library/jest-dom";
 
+if (!window.PointerEvent) {
+  class TestPointerEvent extends MouseEvent {
+    readonly pointerId: number;
+
+    constructor(type: string, init: PointerEventInit = {}) {
+      super(type, init);
+      this.pointerId = init.pointerId ?? 0;
+    }
+  }
+
+  Object.defineProperty(window, "PointerEvent", {
+    writable: true,
+    value: TestPointerEvent,
+  });
+}
+
 // Mock window.matchMedia for components that use media queries
 Object.defineProperty(window, "matchMedia", {
   writable: true,

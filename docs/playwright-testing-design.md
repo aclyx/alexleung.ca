@@ -84,6 +84,7 @@ Files:
 
 - `playwright/tests/smoke/navigation.spec.ts`
 - `playwright/tests/smoke/blog-and-contact.spec.ts`
+- `playwright/tests/smoke/mandelbrot.spec.ts`
 
 Coverage:
 
@@ -93,7 +94,8 @@ Coverage:
 - tag archive rendering and active navigation state
 - contact CTA and social profile links
 - not-found route behavior and static metadata artifacts
-- retired About and experiment URL bridges
+- Mandelbrot rendering, interaction, and bounded deep-zoom behavior
+- retired About, experiment hub, load-flow, and PID URL bridges
 
 Current smoke projects:
 
@@ -110,6 +112,7 @@ Files:
 
 - `playwright/tests/visual/home.visual.spec.ts`
 - `playwright/tests/visual/blog.visual.spec.ts`
+- `playwright/tests/visual/mandelbrot.visual.spec.ts`
 
 Current visual baselines are Linux snapshots generated in Docker and cover representative page and section composition:
 
@@ -119,6 +122,8 @@ Current visual baselines are Linux snapshots generated in Docker and cover repre
 - blog index top fold
 - blog post top fold
 - blog tag archive top fold
+- Mandelbrot explorer top fold
+- Mandelbrot desktop and mobile control-panel layout
 
 Current visual projects:
 

@@ -227,10 +227,6 @@ test("legacy page URLs resolve to their canonical destinations", async ({
       legacy: "/experimental/load-flow/",
       destination: "/blog/small-interactive-tools-with-a-coding-agent/",
     },
-    {
-      legacy: "/experimental/mandelbrot/",
-      destination: "/blog/small-interactive-tools-with-a-coding-agent/",
-    },
     { legacy: "/experimental/pid-controller/", destination: "/blog/" },
   ];
 

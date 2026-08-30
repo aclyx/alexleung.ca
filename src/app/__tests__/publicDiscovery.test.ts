@@ -1,4 +1,4 @@
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 
 function readPublicFile(path: string) {
@@ -25,10 +25,6 @@ describe("public discovery files", () => {
         destination: "/blog/small-interactive-tools-with-a-coding-agent/",
       },
       {
-        path: "experimental/mandelbrot/index.html",
-        destination: "/blog/small-interactive-tools-with-a-coding-agent/",
-      },
-      {
         path: "experimental/pid-controller/index.html",
         destination: "/blog/",
       },
@@ -43,6 +39,14 @@ describe("public discovery files", () => {
       expect(html).toContain(`content="0; url=${redirect.destination}"`);
       expect(html).toContain(`href="${redirect.destination}"`);
     }
+  });
+
+  it("does not shadow the active Mandelbrot route with a redirect bridge", () => {
+    expect(
+      existsSync(
+        join(process.cwd(), "public", "experimental/mandelbrot/index.html")
+      )
+    ).toBe(false);
   });
 
   it("keeps only writing and now shortcuts in the web manifest", () => {
@@ -68,7 +72,10 @@ describe("public discovery files", () => {
 
     expect(llmsText).toContain("[Home](https://alexleung.ca/)");
     expect(llmsText).toContain("[Writing](https://alexleung.ca/blog/)");
+    expect(llmsText).toContain(
+      "[Mandelbrot Explorer](https://alexleung.ca/experimental/mandelbrot/)"
+    );
     expect(llmsText).not.toContain("/about/");
-    expect(llmsText).not.toContain("/experimental/");
+    expect(llmsText).not.toContain("[Experiments]");
   });
 });
