@@ -22,7 +22,7 @@ Load references only when needed:
 
 ## Hard Constraints
 
-1. Preserve user-provided facts exactly; do not invent anecdotes, metrics, timeline claims, ownership, or hands-on practice.
+1. Preserve user-provided facts exactly, including actors, scope, precision, and stated causal, temporal, or comparative relationships; do not invent anecdotes, metrics, timeline claims, ownership, or hands-on practice.
 2. Keep claims tightly bounded to what the user actually said.
 3. Avoid repeated one-sentence paragraphs as the dominant cadence.
 4. Prefer concise titles and specific excerpts over authority-oriented positioning.
@@ -45,11 +45,11 @@ Load references only when needed:
 ## Workflow
 
 1. Capture facts and intent.
-   - Identify topic, thesis, audience, and depth target: learning note, technical explainer, reflection, or compact reflective piece.
+   - Identify the topic, genre, audience, and depth target. Capture a thesis when the user supplies one or the genre benefits from it; do not require one for a travel note or photo essay.
    - Record the user's stated main takeaway verbatim, especially if they name a mechanism or correction loop.
    - Separate the takeaway into mechanism, intended scope, and future aspiration when the user supplies those dimensions. Keep each one visible in the draft plan instead of letting the most concrete example stand in for all three.
-   - Lock facts around actors, versions, decisions, ownership, and scope boundaries.
-   - Mark assumptions instead of filling gaps with invented detail.
+   - Maintain a verbatim source-fact ledger for details that may enter the prose, including actors, values, ownership, scope, qualifiers such as `about`, `around`, and `probably`, and explicit causal, temporal, or comparative relationships. The post may paraphrase those facts without changing their semantic precision; mark assumptions instead of drafting them as facts.
+   - For personal and travel posts, separate logistics such as route, time, and distance from lived material. Publish-ready source material needs both a user-supplied condition, scene, or observation and a user-supplied reaction, evaluation, consequence, trade-off, or preference. If either is missing, ask one bundled follow-up for the smallest missing details unless the user explicitly wants a bare trip log or caption-led photo essay. This is a material gate, not a required thesis, moral, or paragraph template.
 
 2. Choose the shape.
    - For technical pieces, establish context and a clear point of view early. For reflections, orient the reader with the concrete subject, scene, or action before interpretation.
@@ -68,9 +68,11 @@ Load references only when needed:
    - Use plain, literal titles and headings when the user pushes back on style. Avoid clever frames, point/lever metaphors, and transformation-style titles unless the user asks for them.
    - Use lists only when they improve scanning.
    - Keep technical trade-offs and limitations explicit.
+   - Before grading, run a fact-delta pass against the source-fact ledger. Every selected claim must preserve its actor, value, scope, precision, and causal, temporal, or comparative relationships.
 
 4. Apply repo format.
    - Use [post-template](references/post-template.md) for new files under `content/posts/`.
+   - Start every new post with `draft: true`.
    - Keep filenames slug-safe: lowercase words joined by hyphens.
    - Use 2-4 tags and prefer existing site tag language when possible.
    - Include `updated` only when materially revising an existing post.
@@ -86,10 +88,11 @@ Load references only when needed:
 
 6. Grade and iterate.
    - Use [blog-post-grader](references/blog-post-grader.md) for new posts and meaningful revisions unless the user explicitly asks for a rough draft only.
-   - Run the grader in a fresh-context subagent. Pass the target, the rubric, essential user-provided facts, and 3-5 other recent published posts; do not pass author rationale, known weak spots, previous scores, or intended fixes.
+   - Run the grader in a fresh-context subagent. Pass the target, the rubric, the verbatim source-fact ledger, any explicit bare-log or caption-led-photo-essay mode or editorial-gate waiver, and 3-5 other recent published posts; do not pass author rationale, known weak spots, previous scores, or intended fixes.
    - Use the corpus comparison to catch repeated structure, phrase families, contrast/list/recap density, and moralized endings, not to make the new post imitate the corpus.
    - Revise from the highest-impact findings first, then re-run a fresh-context grading pass.
    - Continue until the score is 90+ with no blocking issues. If two passes stall below 90 on the same issue, stop smoothing locally and ask the user for missing facts or direction.
+   - Keep a new post at `draft: true` until the current prose revision scores 90+ with no blockers, passes fact delta, and, for personal or travel posts, passes experiential sufficiency. Then set `draft: false` when the user asks to publish or preview it normally. Only an explicit request to bypass the editorial gate or rough-publish waives it; an earlier prose score or image-only review does not satisfy it.
    - When the user asks to improve the harness after feedback, update the relevant skill, voice, or grader guidance so the failure is caught before the next draft.
 
 ## Output Modes
@@ -109,6 +112,8 @@ Load references only when needed:
 - Titles, excerpts, headings, and intro copy are specific and modest.
 - Titles and excerpts name the concrete subject before an abstract takeaway.
 - No inferred facts, inflated claims, or unsupported practice claims were introduced.
+- Selected claims match the source-fact ledger in actor, value, scope, precision, and causal, temporal, or comparative relationships.
+- Personal and travel drafts contain both user-sourced observations and user-sourced reactions, evaluations, consequences, trade-offs, or preferences unless the user requested a bare trip log or caption-led photo essay.
 - No slogan-like phrasing, draft scaffolding, or repeated synonym pairs remain.
 - Concrete details are not followed by generic interpretations that merely explain how to feel about them.
 - Contrast pivots, lists, and recap sentences are not dense enough to become a visible template.

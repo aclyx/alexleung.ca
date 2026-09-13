@@ -44,6 +44,8 @@ Read and apply the canonical [writing voice](../../../../docs/writing-voice.md) 
 
 - Select the scenes and images that carry the trip; itinerary completeness is optional.
 - Chronology can supply the structure. A thesis and closing lesson are not required.
+- Route, time, distance, and place names orient the reader but are not lived material by themselves. Unless Alex explicitly wants a bare trip log or caption-led photo essay, include at least one supported condition, scene, or observation and one supported reaction, evaluation, trade-off, consequence, or preference. This is a material gate, not a required thesis or closing lesson.
+- Treat a salient setup such as new gear, an excess or shortage, or a notable inconvenience as incomplete until it has a user-supplied result or trade-off. Ask for the missing fact rather than inventing the payoff.
 - End on the strongest scene, memory, or concrete preference rather than converting the trip into a principle.
 
 2. Personal or lifestyle update
