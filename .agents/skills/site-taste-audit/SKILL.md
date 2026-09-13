@@ -10,7 +10,7 @@ description: Review alexleung.ca for style, tone, typography, color, visual asse
 Use this profile as the governing taste model:
 
 - Concrete, understated, utility-minded, and quietly polished.
-- Writing should feel calm, direct, technically grounded, and quietly confident. Experience should come through clarity and substance while the tone stays warm, curious, approachable, and human.
+- For copy and tone, read and apply the canonical [writing voice](../../../docs/writing-voice.md).
 - Direct labels and specific nouns over metaphors, slogans, or abstract positioning.
 - Calm, balanced layouts that feel intentional on both mobile and desktop.
 - Dense but scannable repeat-use surfaces, especially writing indexes and tag lists.
@@ -28,7 +28,7 @@ Use this profile as the governing taste model:
 
 ## Audit Checklist
 
-- **Tone and Copy**: calm, direct, technically grounded, understated, and quietly confident, with warmth and curiosity where the subject supports them. Flag vagueness, unnecessary hedging, sterile or corporate phrasing, keyword stacking, decorative metaphors, inflated positioning, influencer-style framing, broad AI claims, and titles that read like category labels.
+- **Tone and Copy**: evaluate against `docs/writing-voice.md`. Flag unnecessary hedging, corporate phrasing, keyword stacking, inflated positioning, broad AI claims, and titles that read like category labels.
 - **Layout Balance**: desktop columns, section width, vertical rhythm, alignment, and background framing. Flag surfaces that feel boxed-in, left-heavy, uneven, or artificially constrained.
 - **Mobile Density**: blog browsing, tag lists, card height, image prominence, and repeated metadata. Prefer denser scanning without making tap targets uncomfortable.
 - **Typography**: semantic text utilities, heading scale, line length, panel text sizing, prose rhythm, and breakpoint behavior.
