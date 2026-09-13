@@ -14,6 +14,7 @@ This folder contains maintainer-facing documentation that supports implementatio
 | `design-system.md`             | Current visual, responsive, interaction, and accessibility rules      | After meaningful interface-system or shared-component changes         |
 | `playwright-testing-design.md` | Hermetic Playwright smoke + visual testing setup and workflow         | When E2E test architecture, CI strategy, or baseline workflow changes |
 | `typography-audit.md`          | Decision record for explicit prose sizing                             | When the `ProseContent` sizing contract changes                       |
+| `writing-voice.md`             | Canonical voice and prose principles for site and blog writing        | When recurring editorial feedback changes the house voice             |
 
 ## Scope Rules
 

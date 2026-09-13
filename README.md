@@ -147,6 +147,7 @@ src/
 - [`docs/design-system.md`](./docs/design-system.md) — current visual, responsive, interaction, and accessibility rules
 - [`docs/playwright-testing-design.md`](./docs/playwright-testing-design.md) — Playwright smoke, visual, host-mode, and CI workflow
 - [`docs/typography-audit.md`](./docs/typography-audit.md) — decision record for explicit prose sizing
+- [`docs/writing-voice.md`](./docs/writing-voice.md) — canonical voice and prose principles for site and blog writing
 
 ## Licensing
 

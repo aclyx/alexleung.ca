@@ -9,12 +9,8 @@ Create or revise non-blog site copy while preserving Alex's facts, structure, an
 
 ## Voice Standard
 
-- Use a calm, direct, technically grounded, and understated voice.
-- Build quiet confidence through accurate facts, concrete mechanisms, trade-offs, and observed results rather than self-description or positioning.
-- Keep rigorous writing warm, curious, approachable, and human without adding decorative personality.
-- Do not confuse understatement with vagueness or humility with hesitation. Make supported claims plainly.
+- Read and apply the canonical [writing voice](../../../docs/writing-voice.md) before editing.
 - Default visible prose to first person when Alex is the speaker. Use third person only when the surface convention requires it, such as metadata, structured data, alt text, or captions.
-- Apply the root `AGENTS.md` copy guardrails as the canonical standard.
 
 ## Workflow
 
@@ -38,7 +34,7 @@ Create or revise non-blog site copy while preserving Alex's facts, structure, an
 
 4. Run a coherence and deviation pass.
    - Read the affected copy together, including mirrored descriptions.
-   - Remove drift toward hype, self-promotion, corporate or resume language, sterile formality, abstract framing, decorative cleverness, or generic smoothing.
+   - Compare the result with `docs/writing-voice.md`; remove surface-specific drift such as keyword stacking, corporate or resume framing, and generic smoothing.
    - Remove unsupported certainty and unnecessary hedging. Retain clear, bounded judgment.
    - Keep surfaces directionally consistent without copying the same sentence everywhere.
 
@@ -50,9 +46,9 @@ Create or revise non-blog site copy while preserving Alex's facts, structure, an
 
 ## Final Checks
 
-- The copy feels calm, direct, technically grounded, understated, and quietly confident.
+- The copy matches `docs/writing-voice.md` across every affected surface.
 - Clarity and substance carry the authority; the prose does not describe its own importance.
-- Professional rigor coexists with warmth, curiosity, and a human perspective where relevant.
 - The surface sounds like the same person as the rest of the site without becoming duplicated copy.
+- Near-synonym pairs and clauses that do not add distinct meaning are collapsed.
 - Self-descriptive titles and qualitative claims are grounded in supplied facts or removed.
 - No facts, implications, or experiential claims were added beyond the available evidence.
