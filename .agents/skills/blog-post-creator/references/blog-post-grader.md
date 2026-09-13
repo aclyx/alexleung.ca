@@ -73,6 +73,7 @@ Score out of 100. A publish-ready draft should score **90+** with no blocking is
 - Generated images are grounded and content-revealing, not decorative filler.
 - Images with Alex refer to Alex by name in alt/caption-style metadata.
 - Inline images are only present when they clarify the argument or make a model/example inspectable.
+- Every served raster blog source and generated variant uses a `.webp` extension and contains genuine RIFF/WEBP bytes. Playwright PNG baselines are test artifacts and are outside this check.
 
 ## Blocking Issues
 
@@ -91,6 +92,7 @@ Mark a grading result as blocked even if the numeric score is high when any of t
 - For AI-agent/token-use posts, missing the harness or feedback-loop mechanism when the user explicitly identified it as the point.
 - Titles or headings that rely on clever frames, point/lever metaphors, or transformation slogans after the user asked for a plainer style.
 - Missing required frontmatter or broken asset references.
+- A served raster blog source or generated variant is not genuine WebP, including a PNG or JPEG renamed with a `.webp` extension.
 - A new post marked `draft: false` before the current prose passes this full grader, unless the user explicitly waived the editorial gate.
 
 ## Fresh-Context Grading Prompt

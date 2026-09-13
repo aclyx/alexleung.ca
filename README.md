@@ -103,7 +103,7 @@ Codespaces may need extra Chrome runtime setup before `yarn perf:lighthouse` can
 
 ### Adding Images (Human Workflow)
 
-1. Add the source image under `public/assets/...`.
+1. Convert blog source images to genuine WebP, then add them under `public/assets/blog/<slug>/`. Playwright visual baselines remain PNG test artifacts.
 2. If it is a blog post cover, set `coverImage` in that post frontmatter.
 3. If it is an inline blog image, reference it in markdown using a normal image link.
 4. Run `yarn image:variants` (or rely on pre-commit: `yarn image:variants:stage`).

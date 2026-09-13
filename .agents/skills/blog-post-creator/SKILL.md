@@ -41,6 +41,7 @@ Load references only when needed:
 17. Audit pattern density across the full draft. Repeated balanced contrasts, tidy multi-item lists, and recap sentences can sound formulaic even when each instance is defensible.
 18. Make titles and excerpts subject-first: name the event, place, artifact, workflow, or question before an abstract category or lesson.
 19. Preserve the full shape of a user-stated takeaway: its mechanism, intended scope, and any explicit future aspiration. A concrete incident may demonstrate a broader philosophy, but it must not replace or narrow that philosophy. Keep aspirations framed as goals rather than present capabilities.
+20. Require every served raster blog source and generated variant to use a `.webp` extension and contain genuine RIFF/WEBP bytes. Do not treat a renamed PNG or JPEG as WebP; Playwright PNG baselines are exempt test artifacts.
 
 ## Workflow
 
@@ -82,7 +83,7 @@ Load references only when needed:
    - Default visual direction to Ghibli-style unless the user asks for another style.
    - For covers or body images that depict Alex, use Photos to find a clear reference photo of Alex by default when the user has authorized generated blog imagery. Prefer the Alex person album, Favorites, or existing site-relevant photos; avoid photos with other people's faces unless the post needs them and the user has clearly allowed that.
    - Export the reference photo to a temporary workspace location, inspect it, and use imagegen for the final blog asset. Treat the photo as a likeness reference only unless the user asks for a direct edit or transformation.
-   - Save final generated assets under `public/assets/blog/<slug>/`, prefer WebP source assets, add `coverImage`/`coverAlt` or markdown image references, and run the image variant workflow when adding or changing image sources.
+   - Save final generated assets under `public/assets/blog/<slug>/` as metadata-stripped WebP, add `coverImage`/`coverAlt` or markdown image references, and run the image variant workflow when adding or changing image sources. The workflow must pass its extension and RIFF/WEBP signature checks; renaming another format to `.webp` is not conversion.
    - Feel free to generate inline/body images when they make the post more concrete or inspectable. Do not add decorative images just to fill space.
    - Keep the scene readable at thumbnail size and avoid text overlays.
 
@@ -124,4 +125,5 @@ Load references only when needed:
 - Concrete examples illustrate the stated philosophy without narrowing its scope, and explicit future aspirations remain present as bounded goals rather than current-state claims.
 - If the post is about AI-agent work, the harness or feedback-loop mechanism remains concrete where relevant.
 - Cover or body images are saved in the repo and referenced by frontmatter/markdown, or prompt output includes both `Cover Prompt (Primary)` and `Cover Prompt (Backup)` when generation is unavailable or intentionally deferred.
+- Every served raster blog source and generated variant passes the image workflow's `.webp` extension and RIFF/WEBP signature checks.
 - Fresh-context grader score is 90+ with no blocking issues, unless the user explicitly asked to stop earlier.
