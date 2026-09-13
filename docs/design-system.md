@@ -31,6 +31,8 @@ The interface is light-only and uses a warm neutral palette:
 
 Use semantic tokens instead of raw color values. Accent colors should help with
 orientation and interaction; they should not become large decorative fields.
+On a dark `canvas` surface, a `paper` focus ring is the intentional inverse-
+surface exception so keyboard focus retains strong contrast.
 
 ## Typography
 
@@ -61,7 +63,8 @@ call site.
 Use `ProseContent` for rendered long-form content. It defaults to base sizing;
 use `size="sm"` for notes and `size="lg"` for article bodies that should scale at
 `md` and above. Keep display typography out of compact cards and utility
-panels.
+panels. Blog code blocks intentionally invert the warm palette with an `ink`
+background and `paper` text, while inline code remains on the light surface.
 
 ## Layout And Spacing
 

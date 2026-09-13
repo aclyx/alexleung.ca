@@ -208,7 +208,7 @@ export default async function Post({ params }: Props) {
                   {seriesNavigation.previousPost ? (
                     <Link
                       href={`/blog/${seriesNavigation.previousPost.slug}/`}
-                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover"
+                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                     >
                       <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
                         Previous
@@ -221,7 +221,7 @@ export default async function Post({ params }: Props) {
                   {seriesNavigation.nextPost ? (
                     <Link
                       href={`/blog/${seriesNavigation.nextPost.slug}/`}
-                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover md:text-right"
+                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper md:text-right"
                     >
                       <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
                         Next

@@ -26,6 +26,13 @@ describe("ProseContent", () => {
     expect(wrapper).toHaveClass("prose-a:text-accent-link");
     expect(wrapper).toHaveClass("prose-a:underline");
     expect(wrapper).toHaveClass("prose-a:decoration-accent-link/40");
+    expect(wrapper).toHaveClass("prose-a:hover:text-accent-link-hover");
+    expect(wrapper).toHaveClass("prose-a:focus-visible:rounded-sm");
+    expect(wrapper).toHaveClass("prose-a:focus-visible:outline-none");
+    expect(wrapper).toHaveClass("prose-a:focus-visible:ring-2");
+    expect(wrapper).toHaveClass("prose-a:focus-visible:ring-accent-link");
+    expect(wrapper).toHaveClass("prose-a:focus-visible:ring-offset-2");
+    expect(wrapper).toHaveClass("prose-a:focus-visible:ring-offset-paper");
   });
 
   it("uses base prose sizing by default", () => {
