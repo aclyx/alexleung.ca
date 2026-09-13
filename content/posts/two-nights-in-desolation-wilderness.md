@@ -20,7 +20,7 @@ On the second day, we made our way to Upper Velma Lake, probably seven kilometre
 
 ![A cup held in front of Upper Velma Lake and the granite above it](/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning.webp)
 
-Both campsites were super cold. We tried a new sleep setup for the trip, the Zenbivy Double Sleeping System. It was great: warm and roomy, but it took up more pack space. We also got a new bear canister for the trip. We had more food than we needed, so we probably could have packed lighter.
+The campsites were not super cold. It was super windy and loud. We tried a new sleep setup for the trip, the Zenbivy Double Sleeping System. It was great: warm and roomy, but it took up more pack space. We also got a new bear canister for the trip. We had more food than we needed, so we probably could have packed lighter.
 
 On the last day, we went all the way back.
 
