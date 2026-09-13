@@ -5,7 +5,7 @@
         <title>Alex Leung's Blog</title>
         <link>https://alexleung.ca/blog/</link>
         <description>Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.</description>
-        <lastBuildDate>Sat, 29 Aug 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 12 Sep 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -15,6 +15,15 @@
             <link>https://alexleung.ca/blog/</link>
         </image>
         <atom:link href="https://alexleung.ca/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[Two Nights in Desolation Wilderness]]></title>
+            <link>https://alexleung.ca/blog/two-nights-in-desolation-wilderness/</link>
+            <guid isPermaLink="false">https://alexleung.ca/blog/two-nights-in-desolation-wilderness/</guid>
+            <pubDate>Sat, 12 Sep 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A Labor Day weekend backpacking trip from Granite Lake to Upper Velma Lake, with a new sleep setup and more food than we needed.]]></description>
+            <category>Reflection</category>
+            <category>Lifestyle</category>
+        </item>
         <item>
             <title><![CDATA[Trip to Southern Utah]]></title>
             <link>https://alexleung.ca/blog/trip-to-southern-utah/</link>
