@@ -1,6 +1,6 @@
 # Blog Post Grader
 
-Use this rubric to grade alexleung.ca blog drafts before publishing. The goal is not generic polish; it is fit with Alex's calm, direct, technically grounded, understated, and quietly confident voice.
+Use this rubric to grade alexleung.ca blog drafts before publishing. It operationalizes the canonical [writing voice](../../../../docs/writing-voice.md); the goal is fit with Alex's voice, not generic polish.
 
 ## Scoring
 
