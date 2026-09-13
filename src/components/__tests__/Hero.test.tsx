@@ -51,4 +51,14 @@ describe("Hero", () => {
 
     expect(container.querySelector("section")).toHaveAttribute("id", "about");
   });
+
+  it("animates the copy while keeping the portrait immediately visible", () => {
+    const { container } = render(<Hero />);
+    const portrait = screen.getByRole("img", {
+      name: /Alex Leung sitting in an art studio/i,
+    });
+
+    expect(container.querySelectorAll(".hero-enter")).toHaveLength(1);
+    expect(portrait.closest(".hero-enter")).toBeNull();
+  });
 });

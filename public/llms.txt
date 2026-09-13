@@ -7,6 +7,7 @@
 - [Home](https://alexleung.ca/): Alex's software engineering work, education, writing, and interests
 - [Now](https://alexleung.ca/now/): a dated snapshot of what Alex is reading and studying
 - [Writing](https://alexleung.ca/blog/): essays, technical notes, book notes, and personal reflections
+- [Mandelbrot Explorer](https://alexleung.ca/experimental/mandelbrot/): an interactive fractal explorer with arbitrary-precision viewport coordinates and bounded deep zoom
 - [Contact](https://alexleung.ca/contact/): ways to reach Alex and follow new writing
 
 ## Writing

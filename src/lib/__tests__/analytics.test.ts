@@ -68,6 +68,28 @@ describe("analytics helpers", () => {
     });
   });
 
+  it("emits bounded explorer interactions as key events", async () => {
+    window.gtag = jest.fn();
+    const { trackExperimentInteraction } = await loadAnalytics({
+      enabled: true,
+    });
+
+    trackExperimentInteraction("mandelbrot_explorer", "zoom_in", {
+      source: "toolbar",
+    });
+
+    expect(window.gtag).toHaveBeenCalledWith(
+      "event",
+      "experiment_interaction",
+      {
+        action: "zoom_in",
+        event_category: "key_event",
+        experiment: "mandelbrot_explorer",
+        source: "toolbar",
+      }
+    );
+  });
+
   it("falls back to dataLayer when gtag is not ready", async () => {
     window.dataLayer = [];
     const { trackExternalLinkClick } = await loadAnalytics({

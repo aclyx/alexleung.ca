@@ -55,7 +55,7 @@ describe("Header", () => {
       const drawer = container.querySelector("#mobile-nav-drawer");
 
       expect(drawer).toHaveAttribute("aria-hidden", "true");
-      expect(drawer).toHaveClass("opacity-0", "-translate-y-4");
+      expect(drawer).toHaveClass("opacity-0", "-translate-y-2");
 
       fireEvent.click(button);
       expect(drawer).toHaveAttribute("aria-hidden", "false");
@@ -63,7 +63,7 @@ describe("Header", () => {
 
       fireEvent.click(button);
       expect(drawer).toHaveAttribute("aria-hidden", "true");
-      expect(drawer).toHaveClass("opacity-0", "-translate-y-4");
+      expect(drawer).toHaveClass("opacity-0", "-translate-y-2");
     });
 
     it("keeps the non-modal drawer scrollable without locking the page", () => {
@@ -78,6 +78,18 @@ describe("Header", () => {
         "overflow-y-auto"
       );
       expect(document.body.style.overflow).toBe("");
+    });
+
+    it("animates the drawer as one unit without staggered link motion", () => {
+      const { container } = render(<Header />);
+      const drawer = container.querySelector("#mobile-nav-drawer");
+      const items = drawer?.querySelectorAll("li") ?? [];
+
+      expect(drawer).toHaveClass("transition-[opacity,translate]");
+      items.forEach((item) => {
+        expect(item).not.toHaveAttribute("style");
+        expect(item).not.toHaveClass("transition-[opacity,transform]");
+      });
     });
 
     it("should close menu when navigation link is clicked", () => {

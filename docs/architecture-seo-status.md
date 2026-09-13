@@ -9,7 +9,7 @@ The site is in a healthy state for a static, content-first portfolio:
 - Next.js static export architecture is stable and well-suited to GitHub Pages.
 - Markdown rendering and front matter validation enforce stronger content safety and consistency.
 - SEO fundamentals (canonical handling, metadata helpers, JSON-LD, sitemap, robots) are implemented.
-- The consolidated profile, writing archive, tag routes, and Now page remain crawlable, while retired routes resolve through static bridges.
+- The consolidated profile, writing archive, tag routes, Now page, and standalone Mandelbrot Explorer remain crawlable, while retired routes resolve through static bridges.
 - Ongoing work is primarily publishing, internal linking, and periodic search-performance review.
 
 ## Architecture Status
@@ -43,8 +43,10 @@ The site is in a healthy state for a static, content-first portfolio:
 - Structured data coverage for person/site/pages/blog surfaces.
 - `sitemap` and `robots` routes for crawler discoverability.
 - The exported 404 page emits one `noindex` directive and no homepage canonical.
-- A consolidated profile at `/`, with static redirect bridges for retired About
-  and experiment URLs.
+- A consolidated profile at `/`, with static redirect bridges for the retired
+  About page, experiment hub, load-flow solver, and PID simulator.
+- A standalone Mandelbrot Explorer at its established
+  `/experimental/mandelbrot/` URL, linked from its accompanying essay.
 - Crawlable blog tag archives, with tag links that now contribute to internal linking.
 
 ### Next Opportunities

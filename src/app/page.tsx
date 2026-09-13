@@ -10,6 +10,7 @@ import { HomeSectionAnalytics } from "@/components/HomeSectionAnalytics";
 import { LatestWritingSection } from "@/components/LatestWritingSection";
 import { LinkText } from "@/components/LinkText";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+import { SectionHeading } from "@/components/SectionHeading";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildPageMetadata, buildProfilePageSchema } from "@/lib/seo";
 
@@ -62,12 +63,7 @@ export default function Page() {
           className="grid gap-8 md:grid-cols-[15rem_minmax(0,1fr)]"
         >
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-link">
-              Work and study
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-ink md:text-4xl">
-              Experience
-            </h2>
+            <SectionHeading eyebrow="Work and study" title="Experience" />
           </div>
 
           <div>
@@ -189,12 +185,7 @@ export default function Page() {
           className="grid items-start gap-8 md:grid-cols-[15rem_minmax(0,1fr)]"
         >
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-link">
-              Outside work
-            </p>
-            <h2 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-ink md:text-4xl">
-              Interests
-            </h2>
+            <SectionHeading eyebrow="Outside work" title="Interests" />
           </div>
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
             <div className="max-w-2xl text-lg leading-relaxed text-muted">
@@ -237,12 +228,7 @@ export default function Page() {
         className="border-t border-line py-16 md:py-24"
       >
         <div className="max-w-2xl">
-          <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-link">
-            Contact
-          </p>
-          <h2 className="mt-3 text-3xl font-bold tracking-[-0.035em] text-ink md:text-4xl">
-            Say hello
-          </h2>
+          <SectionHeading eyebrow="Contact" title="Say hello" />
           <p className="mt-5 text-lg leading-relaxed text-muted">
             The <LinkText href="/contact/">contact page</LinkText> has the best
             ways to reach me and follow new writing.

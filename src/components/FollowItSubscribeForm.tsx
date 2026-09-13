@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 
+import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
 import { surfaceClassNames } from "@/components/Surface";
 import { trackNewsletterSubscribe } from "@/lib/analytics";
 
@@ -17,6 +18,7 @@ type FollowItSubscribeFormProps = {
   buttonLabel?: string;
   action?: string;
   analyticsPlacement?: string;
+  headingLevel?: "h2" | "h3";
 };
 
 export function FollowItSubscribeForm({
@@ -28,29 +30,29 @@ export function FollowItSubscribeForm({
   buttonLabel = "Subscribe",
   action = DEFAULT_FOLLOW_IT_ACTION,
   analyticsPlacement = "newsletter_form",
+  headingLevel = "h2",
 }: FollowItSubscribeFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const buttonClassName = [
-    "text-body inline-flex min-h-11 w-full items-center justify-center rounded-md bg-accent-primary px-5 py-2.5 font-bold text-white transition-[background-color,opacity] duration-200 ease-expo-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-surface",
-    isSubmitting
-      ? "cursor-progress opacity-90"
-      : "cursor-pointer hover:bg-accent-primary-hover",
-  ].join(" ");
+  const Heading = headingLevel;
+  const buttonClassName = actionClassNames({
+    className: `w-full ${isSubmitting ? "cursor-progress opacity-90" : "cursor-pointer"}`,
+  });
 
   return (
     <section
       aria-labelledby="follow-it-subscribe-title"
       className={surfaceClassNames({
-        className: `max-w-xl p-6 md:p-8 ${className}`.trim(),
+        padding: "responsive",
+        className: `max-w-xl ${className}`.trim(),
       })}
     >
       <header>
-        <h2
+        <Heading
           id="follow-it-subscribe-title"
           className="text-heading font-semibold text-ink"
         >
           {title}
-        </h2>
+        </Heading>
         <p className="text-body-sm mt-2 text-muted">{description}</p>
       </header>
 
@@ -75,7 +77,7 @@ export function FollowItSubscribeForm({
           autoComplete="email"
           placeholder={placeholder}
           readOnly={isSubmitting}
-          className="text-body min-h-11 w-full rounded-md border border-line bg-white px-4 py-2.5 text-ink placeholder:text-muted focus:border-accent-link focus:placeholder-transparent focus:outline-none focus:ring-1 focus:ring-accent-link"
+          className={fieldClassNames()}
         />
         <button
           type="submit"

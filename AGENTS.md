@@ -66,7 +66,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Images are unoptimized (required for static export)
 - Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/now/` and `/blog/post-slug/`, not `/now` or `/blog/post-slug`)
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`
-- `public/about/index.html` and `public/experimental/**/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. Do not remove them as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
+- `public/about/index.html`, `public/experimental/index.html`, `public/experimental/load-flow/index.html`, and `public/experimental/pid-controller/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/` is an active Next.js route and must not have a public redirect bridge. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
 
 ### Component Organization
 
@@ -166,7 +166,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Taste and Style Guardrails (Agent Guidance)
 
-- Canonical workflows: use `.agents/skills/site-taste-audit/SKILL.md` for critique-led taste and tone audits, `.agents/skills/site-copy-editor/SKILL.md` for non-blog site writing, and `.agents/skills/blog-post-creator/SKILL.md` for blog writing. Treat the copy guardrails below as the shared voice baseline; keep skill-specific guidance aligned and limited to its surface-specific needs.
+- Canonical writing voice: `docs/writing-voice.md`. Use `.agents/skills/site-taste-audit/SKILL.md` for critique-led taste and tone audits, `.agents/skills/site-copy-editor/SKILL.md` for non-blog site writing, and `.agents/skills/blog-post-creator/SKILL.md` for blog writing. Keep skill-specific guidance aligned with the canonical voice and limited to its surface-specific needs.
 - Target taste: concrete, understated, utility-minded, and quietly polished. The site should feel calm, aligned, readable, and specific rather than flashy, clever, decorative, or like it is performing sophistication.
 - Prefer direct labels, specific nouns, and visible hierarchy over metaphors, slogans, or abstract framing. If the real thing can be named plainly, name it plainly.
 - Layout should feel balanced and intentional on both mobile and desktop. Avoid compositions that feel artificially constrained to one side, overly boxed-in, or visually uneven across columns and sections.
@@ -180,22 +180,18 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 ### Copy Editing Guardrails (Agent Guidance)
 
-- Canonical site voice: calm, direct, technically grounded, and understated. It should feel quietly confident, thoughtful, approachable, warm, curious, and human.
-- Build confidence through clarity, accurate facts, concrete mechanisms, trade-offs, and observed results rather than self-description, promotion, or positioning. Do not confuse understatement with vagueness or humility with hesitation; make supported claims plainly.
-- Match rigor to the subject without becoming sterile. Use first-person experience and human detail where relevant, not as decoration or forced personality.
-- Apply this baseline to all visible and machine-facing writing. Surface-specific length and formality may vary, but the underlying voice should not.
+- Read and apply `docs/writing-voice.md` for site and blog writing.
+- Keep prose compact, calm, direct, technically grounded, and understated. Build quiet confidence from concrete details, mechanisms, constraints, trade-offs, and observed results; let personal writing add sparse warmth without turning it into a pitch or moral.
+- Apply the canonical voice to all visible and machine-facing writing. Surface-specific length and formality may vary, but the underlying voice should not.
 - Prefer revising existing copy over rewriting from scratch unless the current structure is actively causing clarity or tone problems.
 - Prefer site-representative language over recruiter-optimized phrasing in top-level labels such as homepage headlines, page titles, section names, metadata descriptions, `public/manifest.json`, `public/llms.txt`, RSS/feed text, and JSON-LD descriptions.
 - Treat visible pages and machine-facing summaries as one editorial system: navigation labels, CTA labels, blog titles/excerpts/intros, metadata, RSS/feed text, manifest text, `llms.txt`, and JSON-LD/schema text should feel consistent without becoming copy-pasted.
-- Before finalizing, read the affected surfaces as a whole and remove deviations toward hype, self-promotion, corporate or resume language, sterile formality, keyword stacking, abstract framing, decorative cleverness, generic smoothing, or unnecessary hedging.
-- Preserve warmth and voice before adding positioning language. Avoid recruiter-buzzy or self-promotional filler such as `thought leader`, `world-class`, `high-impact`, `passionate`, `results-driven`, or similar phrasing. Avoid inflated claims or interpretive self-assessments when a simpler factual description will do.
+- Before finalizing, read the affected surfaces together and remove deviations from the canonical voice.
 - Do not force SEO phrases into headings when they fit better in supporting copy or metadata descriptions.
 - Avoid repeating the same positioning claim across hero, section intros, metadata, manifest text, RSS text, `llms.txt`, and JSON-LD. Keep them directionally consistent without making them all identical.
 - For metadata and machine-facing summaries, prefer durable wording over quickly stale current-state details unless the surface is intentionally time-stamped, such as the body of the Now page.
 - Use credentials, project history, and domain experience as factual context when relevant, but avoid turning them into a pitch.
-- Prefer direct, literal phrasing over abstract framing when editing prose. If the concrete mechanism, limitation, UI behavior, or comparison can be named directly, name it.
 - In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
-- Avoid pairing near-synonyms in the same sentence just for polish; if two clauses do not add distinct meaning, collapse them.
 - Keep experiential claims tightly bounded. Do not introduce phrases like `over time`, `in practice`, or other duration/usage claims unless the user explicitly established that scope.
 - Before changing labels or short copy in response to a brief user instruction like `do it`, state the chosen interpretation in a short update before editing if there were multiple plausible options in the immediately preceding discussion.
 - Do not add emphasis styling such as bold inline links unless the existing page already uses that pattern or the user asked for stronger emphasis.

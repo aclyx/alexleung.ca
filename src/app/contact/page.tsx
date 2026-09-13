@@ -50,6 +50,7 @@ export default function ContactPage() {
             analyticsPlacement="contact_page"
             title="Get new posts by email"
             description="Occasional updates when I publish something new."
+            headingLevel="h3"
           />
         </ResponsiveContainer>
       </PageShell>

@@ -170,23 +170,28 @@ export default async function Post({ params }: Props) {
         })}
       />
       <BlogPostAnalytics slug={post.slug} title={post.title} />
-      <PageShell title={post.title}>
+      <PageShell
+        title={post.title}
+        headerRail="prose"
+        metadata={
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <time dateTime={post.date}>
+              Published {formatIsoDateForDisplay(post.date)}
+            </time>
+            {post.updated && post.updated !== post.date ? (
+              <time dateTime={post.updated}>
+                Updated {formatIsoDateForDisplay(post.updated)}
+              </time>
+            ) : null}
+          </div>
+        }
+      >
         <ResponsiveContainer
           element="article"
           variant="prose"
           className="mb-12"
         >
           <div className="mx-auto">
-            <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted">
-              <time dateTime={post.date}>
-                Published {formatIsoDateForDisplay(post.date)}
-              </time>
-              {post.updated && post.updated !== post.date && (
-                <time dateTime={post.updated}>
-                  Updated {formatIsoDateForDisplay(post.updated)}
-                </time>
-              )}
-            </div>
             {seriesNavigation ? (
               <nav
                 aria-label={`${seriesNavigation.name} series navigation`}
@@ -203,7 +208,7 @@ export default async function Post({ params }: Props) {
                   {seriesNavigation.previousPost ? (
                     <Link
                       href={`/blog/${seriesNavigation.previousPost.slug}/`}
-                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover"
+                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                     >
                       <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
                         Previous
@@ -216,7 +221,7 @@ export default async function Post({ params }: Props) {
                   {seriesNavigation.nextPost ? (
                     <Link
                       href={`/blog/${seriesNavigation.nextPost.slug}/`}
-                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover md:text-right"
+                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper md:text-right"
                     >
                       <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
                         Next
@@ -268,10 +273,13 @@ export default async function Post({ params }: Props) {
                     <Link
                       key={relatedPost.slug}
                       href={`/blog/${relatedPost.slug}/`}
-                      className="block"
+                      className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
                     >
-                      <Surface className="h-full p-4" interactive>
-                        <h3 className="text-base font-semibold text-ink">
+                      <Surface
+                        className="h-full p-4 group-focus-visible:border-accent-link/50 group-focus-visible:-translate-y-0.5 group-focus-visible:bg-white group-focus-visible:shadow-md"
+                        interactive
+                      >
+                        <h3 className="text-base font-semibold text-ink transition-colors group-hover:text-accent-link-hover group-focus-visible:text-accent-link-hover">
                           {relatedPost.title}
                         </h3>
                         <p className="mt-1 text-sm text-muted">

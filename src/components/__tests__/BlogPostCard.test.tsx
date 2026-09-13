@@ -85,4 +85,29 @@ describe("BlogPostCard", () => {
       })
     ).toHaveAttribute("src", "/assets/blog/cover.webp");
   });
+
+  it("uses the explicit dense presentation variant", () => {
+    const { container } = render(
+      <BlogPostCard
+        variant="dense"
+        post={{
+          slug: "dense-post",
+          title: "Dense Post",
+          date: "2026-01-01T00:00:00.000Z",
+          coverImage: undefined,
+          coverAlt: undefined,
+          excerpt: "A compact summary",
+          tags: ["one", "two", "three"],
+        }}
+      />
+    );
+
+    expect(container.querySelector("article")).toHaveClass("mb-0", "p-4");
+    expect(screen.getByText("A compact summary")).toHaveClass("hidden");
+    expect(screen.getByRole("link", { name: "one" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "two" })).toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: "three" })
+    ).not.toBeInTheDocument();
+  });
 });

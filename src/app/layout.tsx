@@ -87,8 +87,16 @@ export default function RootLayout({ children }: PropsWithChildren) {
   return (
     <html lang="en">
       <body className="flex min-h-screen flex-col font-sans">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[60] focus:inline-flex focus:min-h-11 focus:items-center focus:rounded-md focus:bg-surface focus:px-4 focus:py-2 focus:font-semibold focus:text-ink focus:outline-none focus:ring-2 focus:ring-accent-link focus:ring-offset-2 focus:ring-offset-paper"
+        >
+          Skip to main content
+        </a>
         <Header />
-        <main className="flex grow flex-col">{children}</main>
+        <main id="main-content" tabIndex={-1} className="flex grow flex-col">
+          {children}
+        </main>
         <Footer />
         <SiteLinkAnalytics />
         <JsonLd item={buildPersonSchema()} />

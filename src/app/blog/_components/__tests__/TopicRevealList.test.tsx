@@ -47,6 +47,7 @@ describe("TopicRevealList", () => {
     fireEvent.click(screen.getByRole("button", { name: "View 4 more" }));
 
     expect(screen.getByRole("link", { name: "Review" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Review" })).toHaveFocus();
     expect(screen.getByRole("link", { name: "Next.js" })).toBeInTheDocument();
     expect(
       screen.queryByRole("link", { name: "Systems" })
@@ -54,8 +55,19 @@ describe("TopicRevealList", () => {
 
     fireEvent.click(screen.getByRole("button", { name: "View 1 more" }));
 
-    expect(screen.getByRole("link", { name: "Systems" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Systems" })).toHaveClass(
+      "topic-enter"
+    );
+    expect(screen.getByRole("link", { name: "Systems" })).toHaveFocus();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
+  });
+
+  it("uses a logical section heading by default", () => {
+    render(<TopicRevealList topics={topics.slice(0, 2)} />);
+
+    expect(
+      screen.getByRole("heading", { level: 2, name: "Topics" })
+    ).toBeInTheDocument();
   });
 
   it("renders no controls when there are no topics", () => {

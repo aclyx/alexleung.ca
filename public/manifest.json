@@ -103,9 +103,9 @@
   ],
   "screenshots": [
     {
-      "src": "/assets/screenshot.png",
+      "src": "/assets/screenshot.webp",
       "sizes": "1440x900",
-      "type": "image/png",
+      "type": "image/webp",
       "form_factor": "wide",
       "label": "Alex Leung's personal website and writing archive"
     }

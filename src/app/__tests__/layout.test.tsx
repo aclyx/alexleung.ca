@@ -36,7 +36,13 @@ describe("RootLayout", () => {
     );
 
     expect(screen.getByTestId("test-child")).toBeInTheDocument();
-    expect(container.querySelector("main")).toBeInTheDocument();
+    expect(container.querySelector("main")).toHaveAttribute(
+      "id",
+      "main-content"
+    );
+    expect(
+      screen.getByRole("link", { name: "Skip to main content" })
+    ).toHaveAttribute("href", "#main-content");
   });
 
   describe("JSON-LD Schema", () => {

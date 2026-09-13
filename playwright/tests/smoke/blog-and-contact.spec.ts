@@ -25,7 +25,7 @@ test("blog index navigates into a post and renders article metadata", async ({
   await expect(
     page.getByRole("heading", { level: 1, name: postTitle })
   ).toBeVisible();
-  await expect(page.locator("article time").first()).toContainText("Published");
+  await expect(page.locator("main time").first()).toContainText("Published");
   await expect(
     page.getByRole("heading", { name: "Get new posts by email" })
   ).toBeVisible();
@@ -76,6 +76,7 @@ test("unknown routes render the exported not found page", async ({ page }) => {
     /noindex/
   );
   await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+  await expect(page.locator("footer")).toBeInViewport();
 });
 
 test("static export metadata artifacts are served", async ({ request }) => {

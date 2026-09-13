@@ -13,7 +13,7 @@ export default function Footer() {
           <p>&copy; 2020–{currentYear} Alex Leung</p>
           <LinkText
             href="/feed.xml"
-            className="mt-2 inline-flex min-h-11 items-center gap-2 text-accent-link underline decoration-accent-link/35 underline-offset-4 hover:text-accent-link-hover"
+            className="mt-2 inline-flex min-h-11 items-center gap-2 text-accent-link underline decoration-accent-link/35 underline-offset-4 hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
           >
             <FaRss aria-hidden="true" />
             <span>Subscribe via RSS</span>

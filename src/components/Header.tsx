@@ -130,7 +130,7 @@ export default function Header() {
           <Link
             href="/"
             onClick={() => handleNavigation("/")}
-            className="relative z-50 inline-flex min-h-11 items-center text-lg font-bold tracking-[-0.025em] text-ink transition-colors hover:text-accent-link-hover md:text-xl"
+            className="relative z-50 inline-flex min-h-11 items-center rounded-sm text-lg font-bold tracking-[-0.025em] text-ink transition-colors hover:text-accent-link-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper md:text-xl"
           >
             Alex Leung
           </Link>
@@ -140,13 +140,13 @@ export default function Header() {
           <button
             ref={menuButtonRef}
             onClick={toggleMenu}
-            className="relative z-50 flex size-11 items-center justify-center rounded-md text-xl text-ink transition-[background-color,color] duration-200 hover:bg-accent-secondary-soft hover:text-accent-link-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link md:hidden"
+            className="relative z-50 flex size-11 items-center justify-center rounded-md text-xl text-ink transition-colors hover:bg-accent-secondary-soft hover:text-accent-link-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper md:hidden"
             aria-label={isMenuOpen ? "Close menu" : "Open menu"}
             aria-expanded={isMenuOpen}
             aria-controls="mobile-nav-drawer"
           >
             <span
-              className={`block transition-transform duration-200 ${
+              className={`block transition-[rotate] duration-200 ease-expo-out ${
                 isMenuOpen ? "rotate-90" : "rotate-0"
               }`}
             >

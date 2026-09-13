@@ -9,21 +9,16 @@ Use this skill to produce publish-ready markdown posts that match `content/posts
 
 Load references only when needed:
 
-- [voice-and-structure](references/voice-and-structure.md): detailed voice, cadence, and post-shape guidance.
+- [voice-and-structure](references/voice-and-structure.md): blog-specific title, cadence, and post-shape guidance.
 - [post-template](references/post-template.md): frontmatter and file skeleton.
 - [cover-prompt-template](references/cover-prompt-template.md): primary and backup cover prompt format.
 - [blog-post-grader](references/blog-post-grader.md): scoring rubric and fresh-context subagent prompt for publish-readiness checks.
 
-## Core Voice
+## Blog Voice Extensions
 
-- Apply the root `AGENTS.md` baseline: calm, direct, technically grounded, understated, and quietly confident.
-- Write in first person when the post draws on Alex's own experience, judgment, or learning.
-- Build confidence through accurate facts, concrete observations, trade-offs, mechanisms, and limits rather than self-description or positioning. Make supported claims plainly instead of hedging them away.
-- Keep rigorous writing warm, curious, approachable, and human without adding decorative personality.
-- Prefer literal phrasing over abstract framing when the concrete system, UI behavior, or comparison can be named.
+- Read and apply the canonical [writing voice](../../../docs/writing-voice.md) for every draft or revision.
 - For personal reflections, lead with the lived detail before the interpretation. Do not manufacture thesis energy with polished setup phrases.
 - Let a concrete detail stand when it already carries the point. Do not follow it with a generic interpretation or summary that adds no new consequence.
-- State stakes plainly when the evidence supports them; do not use declarations of importance as a substitute for facts and consequences.
 
 ## Hard Constraints
 
@@ -109,8 +104,8 @@ Load references only when needed:
 ## Final Checks
 
 - Argument is cohesive from opening to close.
-- The draft feels calm, direct, technically grounded, understated, quietly confident, and human rather than sterile or promotional.
-- Paragraph cadence is varied and mostly multi-sentence.
+- The draft matches the canonical voice in `docs/writing-voice.md`.
+- Paragraph cadence is cohesive and suited to the genre; argumentative passages are mostly multi-sentence.
 - Titles, excerpts, headings, and intro copy are specific and modest.
 - Titles and excerpts name the concrete subject before an abstract takeaway.
 - No inferred facts, inflated claims, or unsupported practice claims were introduced.

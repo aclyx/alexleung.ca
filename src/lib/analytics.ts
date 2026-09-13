@@ -77,6 +77,18 @@ export function trackContactLinkClick({
   });
 }
 
+export function trackExperimentInteraction(
+  experiment: string,
+  action: string,
+  params: AnalyticsParams = {}
+) {
+  trackKeyEvent("experiment_interaction", {
+    action,
+    experiment,
+    ...params,
+  });
+}
+
 export function trackNewsletterSubscribe(placement: string) {
   trackKeyEvent("newsletter_subscribe_submit", {
     form_id: "follow_it_subscribe",

@@ -1,6 +1,6 @@
 import { ElementType, ReactNode } from "react";
 
-type ContainerVariant = "content" | "wide" | "prose";
+export type ContainerVariant = "content" | "prose";
 
 type ResponsiveContainerProps<T extends ElementType = "div"> = {
   element?: T;
@@ -11,7 +11,6 @@ type ResponsiveContainerProps<T extends ElementType = "div"> = {
 
 const variantClasses: Record<ContainerVariant, string> = {
   content: "section-center",
-  wide: "section-center",
   prose: "mx-auto w-full max-w-3xl px-5 sm:px-6",
 };
 
