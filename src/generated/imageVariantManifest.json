@@ -571,6 +571,77 @@
           "height": 854
         }
       }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-card.webp",
+          "width": 768,
+          "height": 433
+        },
+        "card-md": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-card-md.webp",
+          "width": 640,
+          "height": 361
+        },
+        "card-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-card-sm.webp",
+          "width": 480,
+          "height": 271
+        },
+        "hero": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-hero.webp",
+          "width": 1280,
+          "height": 721
+        },
+        "hero-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-hero-sm.webp",
+          "width": 640,
+          "height": 361
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning-content.webp",
+          "width": 1024,
+          "height": 683
+        },
+        "content-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning-content-sm.webp",
+          "width": 640,
+          "height": 427
+        }
+      }
     }
   }
 }

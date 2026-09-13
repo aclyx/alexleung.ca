@@ -1,5 +1,5 @@
-import { existsSync, readFileSync } from "node:fs";
-import { join } from "node:path";
+import { existsSync, readdirSync, readFileSync } from "node:fs";
+import { extname, join, relative } from "node:path";
 
 function readPublicFile(path: string) {
   return readFileSync(join(process.cwd(), "public", path), "utf8");
@@ -7,6 +7,13 @@ function readPublicFile(path: string) {
 
 function readPublicBuffer(path: string) {
   return readFileSync(join(process.cwd(), "public", path));
+}
+
+function listFilesRecursively(directory: string): string[] {
+  return readdirSync(directory, { withFileTypes: true }).flatMap((entry) => {
+    const entryPath = join(directory, entry.name);
+    return entry.isDirectory() ? listFilesRecursively(entryPath) : [entryPath];
+  });
 }
 
 describe("public discovery files", () => {
@@ -87,6 +94,33 @@ describe("public discovery files", () => {
     const screenshot = readPublicBuffer("assets/screenshot.webp");
     expect(screenshot.subarray(0, 4).toString("ascii")).toBe("RIFF");
     expect(screenshot.subarray(8, 12).toString("ascii")).toBe("WEBP");
+  });
+
+  it("keeps every served blog image in a readable WebP container", () => {
+    const blogAssets = listFilesRecursively(
+      join(process.cwd(), "public", "assets", "blog")
+    );
+    const violations = blogAssets.flatMap((assetPath) => {
+      const displayPath = relative(process.cwd(), assetPath);
+      if (extname(assetPath).toLowerCase() !== ".webp") {
+        return [`${displayPath}: expected .webp`];
+      }
+
+      const image = readFileSync(assetPath);
+      if (
+        image.length < 16 ||
+        image.subarray(0, 4).toString("ascii") !== "RIFF" ||
+        image.subarray(8, 12).toString("ascii") !== "WEBP" ||
+        image.readUInt32LE(4) + 8 !== image.length
+      ) {
+        return [`${displayPath}: unreadable RIFF/WEBP container`];
+      }
+
+      return [];
+    });
+
+    expect(blogAssets.length).toBeGreaterThan(0);
+    expect(violations).toEqual([]);
   });
 
   it("points the text site map at the consolidated profile", () => {

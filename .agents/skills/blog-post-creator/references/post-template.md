@@ -11,6 +11,7 @@ coverImage: "/assets/blog/<slug>/cover.webp"
 tags:
   - "Tag One"
   - "Tag Two"
+draft: true
 ---
 
 Opening paragraph: name the concrete subject, object, action, or setting. Technical pieces may state their claim early; reflections should let interpretation follow lived detail.
@@ -31,3 +32,4 @@ Closing paragraph (optional): end on a specific observation, unresolved constrai
 - Keep `excerpt` specific and subject-first. Do not foreground an AI tool, employer, or production method unless it is central to the post.
 - Use 2-4 tags; prefer existing site tag language when possible.
 - Keep `coverImage` path aligned to slug directory naming.
+- Keep a new post at `draft: true` until its current prose passes the editorial gate in the main skill.
