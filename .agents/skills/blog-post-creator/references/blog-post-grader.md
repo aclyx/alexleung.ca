@@ -27,6 +27,8 @@ Score out of 100. A publish-ready draft should score **90+** with no blocking is
 - Opens from a concrete behavior, object, constraint, or observed change when the post is reflective.
 - Orients the reader in the first sentence by naming the subject, workflow, object, or setting before moving into comparison, measurement, or interpretation.
 - Uses specific examples, facts, mechanisms, or comparisons instead of abstract framing.
+- Distinguishes logistical specificity from lived material. Place names, times, distances, and route sequence establish orientation but do not by themselves count as a lived observation.
+- Pays off salient setups such as new gear, excess supplies, or difficult travel with a user-supplied result, evaluation, trade-off, consequence, or preference when the post depends on them.
 - Lets concrete details stand when they already carry the point; any following interpretation adds a distinct consequence, decision, or changed understanding.
 - Research-backed claims are dated when needed and linked to credible sources.
 
@@ -51,6 +53,7 @@ Score out of 100. A publish-ready draft should score **90+** with no blocking is
 ### 5. Truthfulness and Scope Control: 15 points
 
 - Preserves user-provided facts exactly.
+- Matches the source-fact ledger in actor, value, scope, precision, and causal, temporal, or comparative relationships.
 - Does not invent anecdotes, metrics, usage duration, ownership, or confidence.
 - Marks uncertainty honestly instead of converting it into a polished conclusion.
 - Keeps future aspirations clearly bounded as goals rather than presenting them as current capabilities or guarantees.
@@ -70,12 +73,14 @@ Score out of 100. A publish-ready draft should score **90+** with no blocking is
 - Generated images are grounded and content-revealing, not decorative filler.
 - Images with Alex refer to Alex by name in alt/caption-style metadata.
 - Inline images are only present when they clarify the argument or make a model/example inspectable.
+- Every served raster blog source and generated variant uses a `.webp` extension and contains genuine RIFF/WEBP bytes. Playwright PNG baselines are test artifacts and are outside this check.
 
 ## Blocking Issues
 
 Mark a grading result as blocked even if the numeric score is high when any of these are present:
 
-- Invented or unsupported personal facts.
+- Any fact delta against the supplied ledger: an invented or unsupported personal detail, a changed actor, value, scope, or qualifier, or an added causal, temporal, or comparative relationship.
+- A personal or travel draft missing either a supported condition, scene, or observation or a supported reaction, evaluation, consequence, trade-off, or preference, unless the user explicitly requested a bare trip log or caption-led photo essay.
 - A misleading factual claim, stale current-state claim, or unsupported statistic.
 - Tone that reads as hype, self-promotion, influencer packaging, corporate or resume language, sterile formality, or unsupported vagueness.
 - A dominant pattern of balanced contrasts, polished lists, generic interpretations after concrete details, or recap sentences that makes the draft read as templated.
@@ -87,11 +92,12 @@ Mark a grading result as blocked even if the numeric score is high when any of t
 - For AI-agent/token-use posts, missing the harness or feedback-loop mechanism when the user explicitly identified it as the point.
 - Titles or headings that rely on clever frames, point/lever metaphors, or transformation slogans after the user asked for a plainer style.
 - Missing required frontmatter or broken asset references.
-- A visible/public post still marked `draft: true` when the user asked to publish or preview it normally.
+- A served raster blog source or generated variant is not genuine WebP, including a PNG or JPEG renamed with a `.webp` extension.
+- A new post marked `draft: false` before the current prose passes this full grader, unless the user explicitly waived the editorial gate.
 
 ## Fresh-Context Grading Prompt
 
-Run the grader in a fresh subagent context. Pass only the target post, this rubric, essential user-provided facts, and 3-5 other recent published posts for corpus comparison. Do not pass the author's rationale, known weak spots, previous score, or planned fixes. The comparison posts are evidence for repeated patterns, not style templates.
+Run the grader in a fresh subagent context. Pass only the target post, this rubric, a verbatim source-fact ledger that preserves actors, values, scope, precision, and stated relationships, any explicit user-selected bare-log or caption-led-photo-essay mode or editorial-gate waiver, and 3-5 other recent published posts for corpus comparison. Do not pass the author's rationale, known weak spots, previous score, or planned fixes. The comparison posts are evidence for repeated patterns, not style templates.
 
 Use this prompt shape:
 
@@ -108,19 +114,23 @@ Use the attached blog-post grading rubric to grade the draft at <post path>. Wor
 8. Any sentence or section that feels off-tone for Alex's blog voice.
 9. Pattern density: pass/fail for balanced contrasts, lists, generic interpretations after details, and recaps, citing representative clusters rather than enforcing a word quota.
 10. Corpus distinctiveness: pass/fail against the supplied recent posts, naming any repeated opening, section, transition, or ending template.
+11. Experiential sufficiency: pass/fail for a personal or travel post; not applicable otherwise. For a personal or travel post, quote both the supported condition, scene, or observation and the supported reaction, evaluation, consequence, trade-off, or preference that make the piece more than an itinerary; logistics alone do not satisfy this check.
+12. Fact delta: pass/fail. Identify any claim that does not map to the source-fact ledger with its actor, value, scope, precision, and causal, temporal, or comparative relationships intact.
 
 Do not rewrite the post. Keep the report concise and evidence-backed with file/line references where possible.
 ```
 
 ## Authoring Loop
 
-1. Draft or revise the post locally.
-2. Write down the user-stated main takeaway before grading. If the user named a mechanism, treat it as an essential fact for the grader.
-3. Before grading, check that the title, excerpt, and first sentence name the concrete subject before comparison or interpretation.
-4. Check the full draft for clusters of balanced contrasts, tidy lists, generic interpretations after concrete details, and recap sentences. Judge density and function, not keyword counts.
-5. Supply 3-5 other recent published posts and run a fresh-context grading subagent using the prompt above.
-6. If the score is below 90, either pattern check fails, or any blocking issue remains, revise from the highest-impact findings first.
-7. Re-run the grader in a fresh context after meaningful revisions.
-8. Continue until the score is 90+ with no blocking issues and both pattern-density and corpus-distinctiveness checks pass.
-9. If two grading passes stall below 90 on the same core issue, stop local patching, name the repeated pattern, and ask the user for missing facts or a direction choice instead of smoothing the prose into generic polish.
-10. If user feedback exposes a recurring failure and the user asks to improve the harness, update the skill or rubric so future grading catches that failure mode.
+1. Build a verbatim source-fact ledger that preserves actors, values, scope, precision, and only the causal, temporal, or comparative relationships the user stated. Record the main takeaway as part of it when one was supplied.
+2. For personal and travel posts, confirm that the source material contains both required kinds of lived material. Ask one bundled follow-up if either is missing, unless the user requested a bare trip log or caption-led photo essay.
+3. Draft or revise the post locally while keeping a new post at `draft: true`.
+4. Run a fact-delta check against the ledger, then confirm that the title, excerpt, and first sentence name the concrete subject before comparison or interpretation.
+5. Check the full draft for clusters of balanced contrasts, tidy lists, generic interpretations after concrete details, and recap sentences. Judge density and function, not keyword counts.
+6. Supply the ledger and 3-5 other recent published posts to a fresh-context grading subagent using the prompt above.
+7. If the score is below 90, any applicable pass/fail check fails, or any blocking issue remains, revise from the highest-impact findings first.
+8. Re-run the grader in a fresh context after meaningful revisions.
+9. Continue until the score is 90+ with no blocking issues and all applicable pass/fail checks succeed.
+10. Set `draft: false` only after the current prose passes and the user asks to publish or preview normally, unless the user explicitly waived the editorial gate.
+11. If two grading passes stall below 90 on the same core issue, stop local patching, name the repeated pattern, and ask the user for missing facts or a direction choice instead of smoothing the prose into generic polish.
+12. If user feedback exposes a recurring failure and the user asks to improve the harness, update the skill or rubric so future grading catches that failure mode.

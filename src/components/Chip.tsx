@@ -1,9 +1,10 @@
-import { ElementType, ReactNode } from "react";
+import { CSSProperties, ElementType, ReactNode } from "react";
 
 type ChipProps<T extends ElementType = "span"> = {
   element?: T;
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 };
 
 const chipBaseClassName =
@@ -17,8 +18,13 @@ export function Chip<T extends ElementType = "span">({
   element,
   children,
   className = "",
+  style,
 }: ChipProps<T>) {
   const Component = element ?? "span";
 
-  return <Component className={chipClassName(className)}>{children}</Component>;
+  return (
+    <Component className={chipClassName(className)} style={style}>
+      {children}
+    </Component>
+  );
 }

@@ -9,6 +9,7 @@ import prettier from "prettier";
 const repoRoot = process.cwd();
 const postsDir = path.join(repoRoot, "content", "posts");
 const publicDir = path.join(repoRoot, "public");
+const blogAssetsDir = path.join(publicDir, "assets", "blog");
 const imageVariantManifestPath = path.join(
   repoRoot,
   "src",
@@ -101,7 +102,8 @@ function getWebpDimensions(buffer) {
   if (
     buffer.length < 16 ||
     buffer.toString("ascii", 0, 4) !== "RIFF" ||
-    buffer.toString("ascii", 8, 12) !== "WEBP"
+    buffer.toString("ascii", 8, 12) !== "WEBP" ||
+    buffer.readUInt32LE(4) + 8 !== buffer.length
   ) {
     return undefined;
   }
@@ -111,20 +113,31 @@ function getWebpDimensions(buffer) {
     const chunkType = buffer.toString("ascii", offset, offset + 4);
     const chunkSize = buffer.readUInt32LE(offset + 4);
     const chunkStart = offset + 8;
+    const chunkEnd = chunkStart + chunkSize;
 
-    if (chunkType === "VP8X" && chunkStart + 10 <= buffer.length) {
+    if (chunkEnd > buffer.length) {
+      return undefined;
+    }
+
+    if (chunkType === "VP8X" && chunkSize >= 10) {
       const width = readUint24LE(buffer, chunkStart + 4) + 1;
       const height = readUint24LE(buffer, chunkStart + 7) + 1;
       return { width, height };
     }
 
-    if (chunkType === "VP8 " && chunkStart + 10 <= buffer.length) {
+    if (
+      chunkType === "VP8 " &&
+      chunkSize >= 10 &&
+      buffer[chunkStart + 3] === 0x9d &&
+      buffer[chunkStart + 4] === 0x01 &&
+      buffer[chunkStart + 5] === 0x2a
+    ) {
       const width = buffer.readUInt16LE(chunkStart + 6) & 0x3fff;
       const height = buffer.readUInt16LE(chunkStart + 8) & 0x3fff;
       return { width, height };
     }
 
-    if (chunkType === "VP8L" && chunkStart + 5 <= buffer.length) {
+    if (chunkType === "VP8L" && chunkSize >= 5 && buffer[chunkStart] === 0x2f) {
       const b0 = buffer[chunkStart + 1];
       const b1 = buffer[chunkStart + 2];
       const b2 = buffer[chunkStart + 3];
@@ -134,10 +147,108 @@ function getWebpDimensions(buffer) {
       return { width, height };
     }
 
-    offset = chunkStart + chunkSize + (chunkSize % 2);
+    offset = chunkEnd + (chunkSize % 2);
   }
 
   return undefined;
+}
+
+function listFilesRecursively(directory) {
+  if (!fs.existsSync(directory)) {
+    return [];
+  }
+
+  const files = [];
+  for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+    const entryPath = path.join(directory, entry.name);
+    if (entry.isDirectory()) {
+      files.push(...listFilesRecursively(entryPath));
+    } else if (entry.isFile()) {
+      files.push(entryPath);
+    }
+  }
+
+  return files;
+}
+
+function readFileFromGitIndex(filePath) {
+  const repoRelativePath = (
+    path.isAbsolute(filePath) ? path.relative(repoRoot, filePath) : filePath
+  ).replace(/\\/g, "/");
+
+  try {
+    return execFileSync("git", ["show", `:${repoRelativePath}`], {
+      cwd: repoRoot,
+      maxBuffer: 100 * 1024 * 1024,
+      stdio: ["ignore", "pipe", "ignore"],
+    });
+  } catch {
+    return undefined;
+  }
+}
+
+function assertWebpFiles(imagePaths, context, { fromGitIndex = false } = {}) {
+  const violations = [];
+
+  for (const imagePath of [...new Set(imagePaths)].sort()) {
+    const displayPath = path.relative(repoRoot, imagePath);
+    if (path.extname(imagePath).toLowerCase() !== ".webp") {
+      violations.push(`${displayPath}: expected a .webp extension`);
+      continue;
+    }
+
+    let image;
+    if (fromGitIndex) {
+      image = readFileFromGitIndex(imagePath);
+    } else if (fs.existsSync(imagePath)) {
+      image = fs.readFileSync(imagePath);
+    }
+    if (!image) {
+      violations.push(
+        `${displayPath}: file is missing${fromGitIndex ? " from the Git index" : ""}`
+      );
+      continue;
+    }
+    if (!getWebpDimensions(image)) {
+      violations.push(
+        `${displayPath}: extension is .webp but its RIFF/WEBP structure is not readable`
+      );
+    }
+  }
+
+  if (violations.length > 0) {
+    throw new Error(
+      `[image:variants] ${context} must be genuine WebP files:\n- ${violations.join("\n- ")}`
+    );
+  }
+}
+
+function assertWorkingTreeMatchesGitIndex(imagePaths) {
+  const violations = [];
+
+  for (const imagePath of [...new Set(imagePaths)].sort()) {
+    const displayPath = path.relative(repoRoot, imagePath);
+    const indexedImage = readFileFromGitIndex(imagePath);
+    const workingTreeImage = fs.existsSync(imagePath)
+      ? fs.readFileSync(imagePath)
+      : undefined;
+
+    if (!indexedImage) {
+      violations.push(`${displayPath}: file is missing from the Git index`);
+    } else if (!workingTreeImage) {
+      violations.push(`${displayPath}: file is missing from the working tree`);
+    } else if (!indexedImage.equals(workingTreeImage)) {
+      violations.push(
+        `${displayPath}: staged and working-tree copies differ; stage the intended source before generating variants`
+      );
+    }
+  }
+
+  if (violations.length > 0) {
+    throw new Error(
+      `[image:variants] Variant sources must match the Git index:\n- ${violations.join("\n- ")}`
+    );
+  }
 }
 
 function getPngDimensions(buffer) {
@@ -203,13 +314,18 @@ function getJpegDimensions(buffer) {
   return undefined;
 }
 
-function getImageDimensions(imagePath) {
-  if (!fs.existsSync(imagePath)) {
-    return undefined;
+function getImageDimensions(imagePath, { fromGitIndex = false } = {}) {
+  const extension = path.extname(imagePath).toLowerCase();
+  let buffer;
+  if (fromGitIndex) {
+    buffer = readFileFromGitIndex(imagePath);
+  } else if (fs.existsSync(imagePath)) {
+    buffer = fs.readFileSync(imagePath);
   }
 
-  const extension = path.extname(imagePath).toLowerCase();
-  const buffer = fs.readFileSync(imagePath);
+  if (!buffer) {
+    return undefined;
+  }
 
   if (extension === ".webp") {
     return getWebpDimensions(buffer);
@@ -314,6 +430,22 @@ function getStagedFiles() {
 }
 
 function getAllPostFiles() {
+  if (stagedOnly) {
+    const output = execFileSync(
+      "git",
+      ["ls-files", "--cached", "--", "content/posts"],
+      {
+        cwd: repoRoot,
+        encoding: "utf8",
+      }
+    );
+
+    return output
+      .split("\n")
+      .map((line) => line.trim())
+      .filter((file) => file.endsWith(".md"));
+  }
+
   if (!fs.existsSync(postsDir)) {
     return [];
   }
@@ -326,11 +458,17 @@ function getAllPostFiles() {
 
 function getPostMatter(postFile) {
   const fullPath = path.join(repoRoot, postFile);
-  if (!fs.existsSync(fullPath)) {
+  let source;
+  if (stagedOnly) {
+    source = readFileFromGitIndex(postFile)?.toString("utf8");
+  } else if (fs.existsSync(fullPath)) {
+    source = fs.readFileSync(fullPath, "utf8");
+  }
+
+  if (source === undefined) {
     return undefined;
   }
 
-  const source = fs.readFileSync(fullPath, "utf8");
   return matter(source);
 }
 
@@ -516,7 +654,7 @@ function createSourceVariantCandidates() {
   return sourceVariantCandidates;
 }
 
-function buildImageVariantManifest() {
+function buildImageVariantManifest(generatedPaths = new Set()) {
   const sourceVariantCandidates = createSourceVariantCandidates();
   const sources = {};
 
@@ -527,11 +665,9 @@ function buildImageVariantManifest() {
     for (const variant of variants) {
       const variantPath = toVariantPath(sourcePath, variant.name);
       const absoluteVariantPath = resolvePublicAbsolutePath(variantPath);
-      if (!fs.existsSync(absoluteVariantPath)) {
-        continue;
-      }
-
-      const dimensions = getImageDimensions(absoluteVariantPath);
+      const dimensions = getImageDimensions(absoluteVariantPath, {
+        fromGitIndex: stagedOnly && !generatedPaths.has(absoluteVariantPath),
+      });
       if (!dimensions) {
         continue;
       }
@@ -569,8 +705,8 @@ function buildImageVariantManifest() {
   };
 }
 
-async function writeImageVariantManifest() {
-  const manifest = buildImageVariantManifest();
+async function writeImageVariantManifest(generatedPaths) {
+  const manifest = buildImageVariantManifest(generatedPaths);
   const serializedManifest = `${JSON.stringify(manifest, null, 2)}\n`;
   let output = serializedManifest;
 
@@ -659,6 +795,29 @@ async function run() {
   const inlineImages = resolveInlineImages({ stagedFiles, stagedPublicFiles });
   const staticSources = resolveStaticAssets({ stagedPublicFiles });
 
+  assertWebpFiles(
+    [...coverImages, ...inlineImages].map(resolvePublicAbsolutePath),
+    "Referenced blog images",
+    { fromGitIndex: stagedOnly }
+  );
+
+  const blogAssetPaths = stagedOnly
+    ? [...stagedPublicFiles]
+        .filter((publicPath) => publicPath.startsWith("/assets/blog/"))
+        .map(resolvePublicAbsolutePath)
+    : listFilesRecursively(blogAssetsDir);
+  assertWebpFiles(blogAssetPaths, "Blog assets", {
+    fromGitIndex: stagedOnly,
+  });
+
+  if (stagedOnly && canGenerateVariants) {
+    assertWorkingTreeMatchesGitIndex(
+      [...coverImages, ...inlineImages, ...staticSources].map(
+        resolvePublicAbsolutePath
+      )
+    );
+  }
+
   const generated = [];
   const staticVariantMap = new Map(
     staticAssetVariants.map((asset) => [asset.source, asset.variants])
@@ -696,7 +855,20 @@ async function run() {
     }
   }
 
-  const manifestPath = await writeImageVariantManifest();
+  assertWebpFiles(
+    generated
+      .filter((generatedPath) =>
+        generatedPath.replace(/\\/g, "/").startsWith("public/assets/blog/")
+      )
+      .map((generatedPath) => path.join(repoRoot, generatedPath)),
+    "Generated blog variants"
+  );
+
+  const manifestPath = await writeImageVariantManifest(
+    new Set(
+      generated.map((generatedPath) => path.resolve(repoRoot, generatedPath))
+    )
+  );
   generated.push(manifestPath);
 
   if (stageGenerated && generated.length > 0) {

@@ -96,6 +96,8 @@ desktop composition mechanically.
 - Static surfaces use `border-line bg-surface rounded-xl border shadow-sm`.
 - Interactive surfaces add a restrained border, background, shadow, and
   `-translate-y-0.5` hover response plus an accent focus ring.
+- On coarse pointers, full-card links may use a one-pixel pressed response.
+  Keep this feedback off inline links and other reading surfaces.
 - Padding belongs in the component's `padding` prop when one of the standard
   `sm`, `md`, or `lg` options fits. Use `responsive` for `p-5 sm:p-6 md:p-8` on
   content surfaces that need to breathe more as the viewport grows.
@@ -136,7 +138,14 @@ Motion should clarify entry or interaction without asking for attention:
   immediately so the primary visual and layout do not wait on animation.
 - Experience rails may reveal with the scroll timeline when the browser
   supports it.
-- Newly revealed topic links may use the short `topic-enter` fade and rise.
+- Newly revealed topic links may use the short `topic-enter` fade and rise,
+  staggered by no more than `20ms` per item.
+- Blog posts may show a two-pixel reading-progress line from the title through
+  the final prose paragraph. It should not include tags, subscription, or
+  related-post content, and it should remain hidden when the article is too
+  short to produce useful progress.
+- State feedback may animate within a stable control label, such as the drawn
+  check in the copy-email action. Feedback must not resize the control.
 - Arrow links translate a few pixels on both hover and keyboard focus. Cards
   and other composite interactions should provide the same visual hierarchy for
   `focus-visible`/`focus-within` that they provide on hover.

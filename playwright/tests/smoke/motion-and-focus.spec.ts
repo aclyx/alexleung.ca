@@ -236,3 +236,83 @@ test("each topic reveal moves focus to the newly revealed link", async ({
     );
   }
 });
+
+test("new topic links enter in a short, capped cadence", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto("/blog/", { waitUntil: "domcontentloaded" });
+
+  const topicList = page.locator("#blog-topic-list");
+  const topicLinks = topicList.getByRole("link");
+  const firstNewTopicIndex = await topicLinks.count();
+
+  await topicList.getByRole("button", { name: /View \d+ more/ }).click();
+
+  const delays = await topicLinks.evaluateAll(
+    (links, startIndex) =>
+      links
+        .slice(startIndex, startIndex + 4)
+        .map((link) => getComputedStyle(link).animationDelay),
+    firstNewTopicIndex
+  );
+
+  expect(delays.length).toBeGreaterThan(0);
+  expect(delays.length).toBeLessThanOrEqual(4);
+  delays.forEach((delay, index) => {
+    expect(Number.parseFloat(delay)).toBeCloseTo(index * 0.02);
+  });
+});
+
+test("coarse-pointer cards use one-pixel press feedback", async ({
+  page,
+}, testInfo) => {
+  test.skip(
+    !testInfo.project.name.startsWith("mobile-"),
+    "Press feedback is intentionally limited to coarse pointers."
+  );
+
+  await page.goto("/blog/", { waitUntil: "domcontentloaded" });
+
+  const card = page.locator("main article.touch-press-surface").first();
+  const link = card.locator("a[aria-label]").first();
+  const bounds = await link.boundingBox();
+
+  if (!bounds) {
+    throw new Error("Expected the first blog-card link to have bounds.");
+  }
+
+  await link.evaluate((element) => {
+    element.addEventListener("click", (event) => event.preventDefault(), {
+      once: true,
+    });
+  });
+  await page.mouse.move(
+    bounds.x + bounds.width / 2,
+    bounds.y + bounds.height / 2
+  );
+  await page.mouse.down();
+
+  const pointerState = await card.evaluate((element) => {
+    const link = element.querySelector("a[aria-label]");
+
+    return {
+      coarsePointer: matchMedia("(hover: none) and (pointer: coarse)").matches,
+      hasActiveLink: element.matches(":has(> a:active)"),
+      linkActive: link?.matches(":active") ?? false,
+    };
+  });
+  expect(pointerState).toEqual({
+    coarsePointer: true,
+    hasActiveLink: true,
+    linkActive: true,
+  });
+
+  await expect
+    .poll(() =>
+      card.evaluate((element) =>
+        getComputedStyle(element).getPropertyValue("translate").trim()
+      )
+    )
+    .toContain("1px");
+
+  await page.mouse.up();
+});

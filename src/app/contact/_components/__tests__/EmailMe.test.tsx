@@ -31,6 +31,7 @@ describe("EmailMe", () => {
 
     expect(writeText).toHaveBeenCalledWith("alex@alexleung.ca");
     expect(copyButton).toHaveAttribute("data-copy-status", "copied");
+    expect(copyButton.querySelector(".copy-check-path")).toBeInTheDocument();
     expect(screen.getByRole("status")).toHaveTextContent(
       "Email address copied to clipboard."
     );

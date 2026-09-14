@@ -90,10 +90,10 @@ yarn deploy           # Build and deploy to GitHub Pages
 ### Adding Images (Agent Guidance)
 
 - Always add source images under `public/assets/...`.
-- Prefer WebP for website source images. When starting from a camera export or screenshot in another format, convert it to a metadata-stripped `.webp` source asset and do not keep the temporary JPEG/PNG export in the repo unless there is a specific reason.
+- Every served raster blog source and generated variant must use a `.webp` extension and contain genuine RIFF/WEBP bytes. Convert camera exports, screenshots, and generated images to metadata-stripped WebP instead of renaming them, and do not keep temporary JPEG/PNG exports in the repo. Playwright PNG baselines under `playwright/**-snapshots/` are test artifacts and are exempt.
 - For blog covers: update frontmatter `coverImage` in `content/posts/*.md`.
 - For inline blog images: add standard markdown image references.
-- After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit) and ensure the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json` are included.
+- After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit). The command verifies blog-image extensions and file signatures before updating variants and the manifest; include the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json`.
 
 ### SEO and Structured Data
 

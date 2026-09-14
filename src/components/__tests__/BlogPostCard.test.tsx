@@ -42,6 +42,7 @@ describe("BlogPostCard", () => {
       "href",
       "/blog/tags/ai/"
     );
+    expect(screen.getByRole("article")).toHaveClass("touch-press-surface");
   });
 
   it("formats inline code spans in excerpt text", () => {

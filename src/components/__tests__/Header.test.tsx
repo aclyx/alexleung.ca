@@ -49,6 +49,28 @@ describe("Header", () => {
       expect(button).toHaveAccessibleName("Open menu");
     });
 
+    it("morphs three fixed menu lines without swapping the icon", () => {
+      const { container } = render(<Header />);
+      const button = screen.getByRole("button", { name: "Open menu" });
+      const icon = container.querySelector("[data-menu-icon]");
+      const topLine = container.querySelector('[data-menu-line="top"]');
+      const middleLine = container.querySelector('[data-menu-line="middle"]');
+      const bottomLine = container.querySelector('[data-menu-line="bottom"]');
+
+      expect(icon).toHaveAttribute("aria-hidden", "true");
+      expect(icon?.querySelectorAll("[data-menu-line]")).toHaveLength(3);
+      expect(topLine).toHaveClass("translate-y-0", "rotate-0");
+      expect(middleLine).toHaveClass("scale-x-100", "opacity-100");
+      expect(bottomLine).toHaveClass("translate-y-0", "rotate-0");
+
+      fireEvent.click(button);
+
+      expect(topLine).toHaveClass("translate-y-[5px]", "rotate-45");
+      expect(middleLine).toHaveClass("scale-x-50", "opacity-0");
+      expect(bottomLine).toHaveClass("-translate-y-[5px]", "-rotate-45");
+      expect(icon?.querySelectorAll("[data-menu-line]")).toHaveLength(3);
+    });
+
     it("keeps the mobile menu mounted so open and close transitions can run", () => {
       const { container } = render(<Header />);
       const button = screen.getByRole("button", { name: "Open menu" });

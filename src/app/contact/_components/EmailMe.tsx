@@ -92,10 +92,26 @@ export function EmailMe() {
                 Copy email
               </span>
               <span
-                className={`col-start-1 row-start-1 transition-opacity duration-150 motion-reduce:transition-none ${
+                className={`col-start-1 row-start-1 inline-flex items-center justify-center gap-1.5 transition-opacity duration-150 motion-reduce:transition-none ${
                   copyStatus === "copied" ? "opacity-100" : "opacity-0"
                 }`}
               >
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  className="size-4 shrink-0"
+                  fill="none"
+                >
+                  <path
+                    className="copy-check-path"
+                    pathLength="1"
+                    d="m3 8.5 3 3L13 4.75"
+                    stroke="currentColor"
+                    strokeWidth="1.75"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
                 Copied
               </span>
               <span

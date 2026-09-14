@@ -18,7 +18,7 @@ Use this template to generate or defer a blog cover image. By default, find a re
 1. Open Photos and find a clear Alex reference photo, preferably from the Alex person album, Favorites, or a recent site-relevant image.
 2. Export the chosen reference into a temporary workspace location and inspect it before generation.
 3. Use imagegen with the selected prompt. Label the exported photo as a likeness reference, not the edit target, unless the user asked for a direct transformation.
-4. Save the selected generated cover under `public/assets/blog/<slug>/cover.webp` when possible.
+4. Convert the selected generated cover to metadata-stripped WebP and save it under `public/assets/blog/<slug>/cover.webp`. Verify that the file contains genuine RIFF/WEBP bytes rather than relying on its extension.
 5. Add `coverImage` and `coverAlt` to the post frontmatter, then run the repo image-variant workflow for added or changed source images.
 
 Use the same judgment for optional body images: add them only when they clarify the argument, make an example inspectable, or add concrete visual context that the prose has earned.
