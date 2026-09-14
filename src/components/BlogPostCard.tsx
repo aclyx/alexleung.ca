@@ -62,7 +62,7 @@ export function BlogPostCard({
     <Surface
       element="article"
       interactive
-      className={`group relative focus-within:border-accent-link/50 focus-within:-translate-y-0.5 focus-within:bg-white focus-within:shadow-md ${surfaceClasses} ${className}`.trim()}
+      className={`touch-press-surface group relative ${surfaceClasses} ${className}`.trim()}
     >
       <Link
         href={`/blog/${post.slug}/`}

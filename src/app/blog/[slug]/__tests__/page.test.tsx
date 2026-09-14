@@ -72,6 +72,14 @@ describe("Blog post page", () => {
         name: "A laptop beside a notebook on a desk.",
       })
     ).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 1 })).toHaveAttribute(
+      "id",
+      "post-title"
+    );
+    expect(document.querySelector("[data-reading-progress]")).toHaveAttribute(
+      "aria-hidden",
+      "true"
+    );
   });
 
   it("uses the shared focus treatment for series navigation links", async () => {

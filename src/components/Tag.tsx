@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { CSSProperties, ReactNode } from "react";
 
 import Link from "next/link";
 
@@ -8,9 +8,10 @@ type TagProps = {
   children: ReactNode;
   className?: string;
   href?: string;
+  style?: CSSProperties;
 };
 
-export function Tag({ children, className = "", href }: TagProps) {
+export function Tag({ children, className = "", href, style }: TagProps) {
   const sharedClassName =
     `border-accent-link/25 bg-accent-secondary-soft/70 text-accent-link ${className}`.trim();
 
@@ -18,6 +19,7 @@ export function Tag({ children, className = "", href }: TagProps) {
     return (
       <Link
         href={href}
+        style={style}
         className={chipClassName(
           `${sharedClassName} transition-colors hover:border-accent-link/50 hover:bg-accent-secondary-soft hover:text-accent-link-hover`
         )}
@@ -27,5 +29,9 @@ export function Tag({ children, className = "", href }: TagProps) {
     );
   }
 
-  return <Chip className={sharedClassName}>{children}</Chip>;
+  return (
+    <Chip className={sharedClassName} style={style}>
+      {children}
+    </Chip>
+  );
 }

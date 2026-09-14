@@ -36,6 +36,10 @@ describe("RootLayout", () => {
     );
 
     expect(screen.getByTestId("test-child")).toBeInTheDocument();
+    expect(document.documentElement).toHaveAttribute(
+      "data-scroll-behavior",
+      "smooth"
+    );
     expect(container.querySelector("main")).toHaveAttribute(
       "id",
       "main-content"

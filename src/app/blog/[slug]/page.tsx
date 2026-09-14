@@ -37,6 +37,7 @@ import {
 import { getTagPath } from "@/lib/tags";
 
 import { BlogPostAnalytics } from "./_components/BlogPostAnalytics";
+import { ReadingProgress } from "./_components/ReadingProgress";
 
 export const dynamicParams = false;
 
@@ -170,8 +171,10 @@ export default async function Post({ params }: Props) {
         })}
       />
       <BlogPostAnalytics slug={post.slug} title={post.title} />
+      <ReadingProgress startId="post-title" endSelector="main article .prose" />
       <PageShell
         title={post.title}
+        titleId="post-title"
         headerRail="prose"
         metadata={
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1">

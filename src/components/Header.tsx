@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -146,11 +145,34 @@ export default function Header() {
             aria-controls="mobile-nav-drawer"
           >
             <span
-              className={`block transition-[rotate] duration-200 ease-expo-out ${
-                isMenuOpen ? "rotate-90" : "rotate-0"
-              }`}
+              aria-hidden="true"
+              data-menu-icon
+              className="relative block size-5"
             >
-              {isMenuOpen ? <FaTimes /> : <FaBars />}
+              <span
+                data-menu-line="top"
+                className={`absolute top-1 left-0 block h-0.5 w-5 rounded-full bg-current transition-[translate,rotate,opacity,scale] duration-200 ease-expo-out motion-reduce:transition-none ${
+                  isMenuOpen
+                    ? "translate-y-[5px] rotate-45"
+                    : "translate-y-0 rotate-0"
+                }`}
+              />
+              <span
+                data-menu-line="middle"
+                className={`absolute top-[9px] left-0 block h-0.5 w-5 rounded-full bg-current transition-[translate,rotate,opacity,scale] duration-200 ease-expo-out motion-reduce:transition-none ${
+                  isMenuOpen
+                    ? "scale-x-50 opacity-0"
+                    : "scale-x-100 opacity-100"
+                }`}
+              />
+              <span
+                data-menu-line="bottom"
+                className={`absolute top-[14px] left-0 block h-0.5 w-5 rounded-full bg-current transition-[translate,rotate,opacity,scale] duration-200 ease-expo-out motion-reduce:transition-none ${
+                  isMenuOpen
+                    ? "-translate-y-[5px] -rotate-45"
+                    : "translate-y-0 rotate-0"
+                }`}
+              />
             </span>
           </button>
         </nav>
