@@ -59,19 +59,27 @@ export function TopicRevealList({
         {heading}
       </Heading>
       <div id={listId} className="flex flex-wrap gap-2">
-        {visibleTopics.map((topic, index) => (
-          <Tag
-            key={topic.href}
-            href={topic.href}
-            className={
-              revealStartIndex !== null && index >= revealStartIndex
-                ? "topic-enter"
-                : ""
-            }
-          >
-            {topic.name}
-          </Tag>
-        ))}
+        {visibleTopics.map((topic, index) => {
+          const isNewlyRevealed =
+            revealStartIndex !== null && index >= revealStartIndex;
+
+          return (
+            <Tag
+              key={topic.href}
+              href={topic.href}
+              className={isNewlyRevealed ? "topic-enter" : ""}
+              style={
+                isNewlyRevealed
+                  ? {
+                      animationDelay: `${(index - revealStartIndex) * 20}ms`,
+                    }
+                  : undefined
+              }
+            >
+              {topic.name}
+            </Tag>
+          );
+        })}
         {hiddenCount > 0 ? (
           <button
             type="button"

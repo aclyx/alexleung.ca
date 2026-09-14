@@ -49,6 +49,18 @@ describe("TopicRevealList", () => {
     expect(screen.getByRole("link", { name: "Review" })).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Review" })).toHaveFocus();
     expect(screen.getByRole("link", { name: "Next.js" })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Review" })).toHaveStyle({
+      animationDelay: "0ms",
+    });
+    expect(screen.getByRole("link", { name: "Architecture" })).toHaveStyle({
+      animationDelay: "20ms",
+    });
+    expect(screen.getByRole("link", { name: "Lifestyle" })).toHaveStyle({
+      animationDelay: "40ms",
+    });
+    expect(screen.getByRole("link", { name: "Next.js" })).toHaveStyle({
+      animationDelay: "60ms",
+    });
     expect(
       screen.queryByRole("link", { name: "Systems" })
     ).not.toBeInTheDocument();
@@ -58,6 +70,9 @@ describe("TopicRevealList", () => {
     expect(screen.getByRole("link", { name: "Systems" })).toHaveClass(
       "topic-enter"
     );
+    expect(screen.getByRole("link", { name: "Systems" })).toHaveStyle({
+      animationDelay: "0ms",
+    });
     expect(screen.getByRole("link", { name: "Systems" })).toHaveFocus();
     expect(screen.queryByRole("button")).not.toBeInTheDocument();
   });

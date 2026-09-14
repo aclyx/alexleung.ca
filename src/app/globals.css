@@ -138,6 +138,28 @@
     @apply focus-visible:ring-accent-link focus-visible:ring-offset-paper focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none;
   }
 
+  .touch-press-surface:focus-within {
+    @apply border-accent-link/50 -translate-y-0.5 bg-white shadow-md;
+  }
+
+  @media (hover: none) and (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+    .touch-press-surface:has(> a:active) {
+      translate: 0 1px;
+      box-shadow: var(--shadow-sm);
+      transition-duration: 90ms;
+    }
+  }
+
+  .copy-check-path {
+    stroke-dasharray: 1;
+    stroke-dashoffset: 1;
+    transition: stroke-dashoffset 160ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  [data-copy-status="copied"] .copy-check-path {
+    stroke-dashoffset: 0;
+  }
+
   .link-arrow span[aria-hidden="true"] {
     @apply ease-expo-out inline-block transition-[translate] duration-200;
   }
