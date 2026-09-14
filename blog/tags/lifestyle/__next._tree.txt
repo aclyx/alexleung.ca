@@ -1,4 +1,4 @@
-:HL["/_next/static/chunks/03widt2a~qi3o.css","style"]
-:HL["/_next/static/chunks/145o.lsi86g0w.css","style"]
+:HL["/_next/static/chunks/0cf8rjzo066j6.css","style"]
+:HL["/_next/static/chunks/171jgbi0lszxo.css","style"]
 :HC["/",""]
-0:{"tree":{"name":"","param":null,"prefetchHints":16,"slots":{"children":{"name":"blog","param":null,"prefetchHints":0,"slots":{"children":{"name":"tags","param":null,"prefetchHints":0,"slots":{"children":{"name":"tag","param":{"type":"d","key":"lifestyle","siblings":null},"prefetchHints":0,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":0,"slots":null}}}}}}}}},"staleTime":300,"buildId":"p7qKEiAbSDPIGex5d0J7s"}
+0:{"tree":{"name":"","param":null,"prefetchHints":4112,"slots":{"children":{"name":"blog","param":null,"prefetchHints":4160,"slots":{"children":{"name":"tags","param":null,"prefetchHints":4192,"slots":{"children":{"name":"tag","param":{"type":"d","key":"lifestyle","siblings":[]},"prefetchHints":4192,"slots":{"children":{"name":"__PAGE__","param":null,"prefetchHints":4256,"slots":null}}}}}}}}},"staleTime":300,"buildId":"-uw7pn7GyXCbjlDj7EbWa"}
