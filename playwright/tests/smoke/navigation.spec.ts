@@ -217,6 +217,23 @@ test("tag archive routes render and keep the writing nav item active", async ({
   await expectPrimaryNavLinkCurrent(page, "Writing");
 });
 
+test("PID controller notes preserve the retired simulator model", async ({
+  page,
+}) => {
+  await gotoAndStabilize(page, "/experimental/pid-controller/");
+
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "PID Controller Simulator Notes",
+    })
+  ).toBeVisible();
+  await expect(page.getByText(/first-order process/)).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "controller and simulation modules" })
+  ).toHaveAttribute("href", /src\/features\/pid-simulator/);
+});
+
 test("legacy page URLs resolve to their canonical destinations", async ({
   page,
 }) => {
@@ -227,7 +244,6 @@ test("legacy page URLs resolve to their canonical destinations", async ({
       legacy: "/experimental/load-flow/",
       destination: "/blog/small-interactive-tools-with-a-coding-agent/",
     },
-    { legacy: "/experimental/pid-controller/", destination: "/blog/" },
   ];
 
   for (const redirect of redirects) {
