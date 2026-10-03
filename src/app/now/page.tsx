@@ -14,7 +14,7 @@ import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { SectionBlock } from "@/components/SectionBlock";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
-export const NOW_PAGE_LAST_UPDATED_ISO = "2026-08-08";
+export const NOW_PAGE_LAST_UPDATED_ISO = "2026-10-03";
 
 const nowPageLastUpdatedDate = new Date(
   `${NOW_PAGE_LAST_UPDATED_ISO}T00:00:00Z`
@@ -29,7 +29,7 @@ export const NOW_PAGE_LAST_UPDATED_DISPLAY = new Intl.DateTimeFormat("en-US", {
 
 const title = "Now | Alex Leung";
 const description =
-  "Current notes from Alex Leung on what he is reading and studying.";
+  "Current notes from Alex Leung on reading and everyday life.";
 const path = "/now";
 
 export const metadata: Metadata = buildPageMetadata({
@@ -72,26 +72,23 @@ export default function NowPage() {
                   headingLevel="h2"
                 >
                   <p>
-                    I&apos;m reading <em>Superintelligence</em> by{" "}
-                    <ExternalLink href="https://nickbostrom.com/">
-                      Nick Bostrom
-                    </ExternalLink>
-                    .
+                    I&apos;m reading{" "}
+                    <ExternalLink href="https://rlhfbook.com/">
+                      <em>Reinforcement Learning from Human Feedback</em>
+                    </ExternalLink>{" "}
+                    by Nathan Lambert.
                   </p>
                 </IconTextRow>
 
                 <IconTextRow
-                  icon="🧠"
-                  title="Currently Studying"
+                  icon="🍶"
+                  title="Trying New Sake"
                   headingLevel="h2"
                 >
                   <p>
-                    I&apos;m working through{" "}
-                    <ExternalLink href="https://spinningup.openai.com/en/latest/">
-                      OpenAI&apos;s Spinning Up
-                    </ExternalLink>{" "}
-                    to better understand reinforcement learning and deep
-                    reinforcement learning.
+                    We&apos;ve been enjoying trying new sake. We recently tried
+                    an unpasteurized sake, and I particularly liked its
+                    effervescence and brighter aroma.
                   </p>
                 </IconTextRow>
               </div>
