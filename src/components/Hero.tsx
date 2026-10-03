@@ -36,7 +36,7 @@ export function Hero() {
             href="/now/"
             className="link-arrow mt-5 inline-flex min-h-11 items-center gap-2 text-base font-medium text-ink underline decoration-line underline-offset-4 hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
           >
-            Now — what I’m reading and studying
+            Now — what I’m up to
             <span aria-hidden="true">→</span>
           </Link>
           <div className="mt-8 flex flex-wrap gap-x-7 gap-y-3">

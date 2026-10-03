@@ -34,7 +34,7 @@ describe("Hero", () => {
 
     expect(
       screen.getByRole("link", {
-        name: /Now — what I’m reading and studying/i,
+        name: /Now — what I’m up to/i,
       })
     ).toHaveAttribute("href", "/now");
     expect(screen.getByRole("link", { name: /get in touch/i })).toHaveAttribute(
