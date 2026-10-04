@@ -13,7 +13,7 @@
     "build:prod": "NEXT_PUBLIC_ENABLE_ANALYTICS=true yarn build",
     "build:deploy-marker": "node scripts/generate-deploy-marker.mjs",
     "typecheck": "tsc --noEmit",
-    "test": "jest",
+    "test": "yarn test:harness && jest",
     "playwright:smoke:run": "playwright test --project=chromium-smoke --project=webkit-smoke --project=mobile-chromium-smoke --project=mobile-webkit-smoke",
     "playwright:visual:run": "playwright test --project=chromium-visual --project=mobile-chromium-visual",
     "playwright:visual:update:run": "playwright test --project=chromium-visual --project=mobile-chromium-visual --update-snapshots",
@@ -26,10 +26,12 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "perf:lighthouse": "lhci autorun --config=.lighthouserc.json",
-    "lint": "eslint . && prettier --check '{src,docs,playwright,scripts,.github}/**/*.{js,jsx,ts,tsx,css,md,json,yml,mjs}' '*.{js,mjs,ts,json,md,yml}' && yarn lint:unused",
+    "lint": "eslint . && prettier --check '{src,docs,content,playwright,scripts,.github,.agents}/**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,mjs}' '*.{js,mjs,ts,json,md,yml}' && yarn lint:unused && yarn lint:harness",
     "lint:unused": "knip --reporter compact",
-    "lint:fix": "eslint --fix . && prettier --write '{src,docs,playwright,scripts,.github}/**/*.{js,jsx,ts,tsx,css,md,json,yml,mjs}' '*.{js,mjs,ts,json,md,yml}'",
-    "deploy": "yarn build:prod && gh-pages -d out"
+    "lint:fix": "eslint --fix . && prettier --write '{src,docs,content,playwright,scripts,.github,.agents}/**/*.{js,jsx,ts,tsx,css,md,json,yml,yaml,mjs}' '*.{js,mjs,ts,json,md,yml}'",
+    "deploy": "yarn build:prod && gh-pages -d out",
+    "lint:harness": "node scripts/check-agent-harness.mjs",
+    "test:harness": "node --test scripts/__tests__/check-agent-harness.test.mjs"
   },
   "dependencies": {
     "@next/third-parties": "^16.2.4",
@@ -82,7 +84,8 @@
     "schema-dts": "^2.0.0",
     "shiki": "^4.0.2",
     "tailwindcss": "^4.2.4",
-    "typescript": "^6.0.3"
+    "typescript": "^6.0.3",
+    "yaml": "2.8.3"
   },
   "resolutions": {
     "basic-ftp@npm:^5.0.2": "npm:5.3.0",

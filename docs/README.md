@@ -8,6 +8,7 @@ This folder contains maintainer-facing documentation that supports implementatio
 
 | File                           | Purpose                                                               | Update cadence                                                        |
 | ------------------------------ | --------------------------------------------------------------------- | --------------------------------------------------------------------- |
+| `agent-environments.md`        | Agent environment troubleshooting and bounded platform exceptions     | When a documented failure or its supported workaround changes         |
 | `architecture-seo-status.md`   | Status snapshot for technical architecture and SEO                    | After meaningful architecture, metadata, schema, or IA changes        |
 | `blog-notification-report.md`  | Notification architecture and operational runbook for new-post alerts | When notification provider, subscribe UX, or feed workflow changes    |
 | `codespaces.md`                | Codespaces-specific Lighthouse setup and troubleshooting details      | When Codespaces base image or Lighthouse prerequisites change         |

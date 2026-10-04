@@ -1,128 +1,44 @@
 ---
 name: blog-post-creator
-description: Create or revise markdown blog posts for alexleung.ca in Alex Leung's established style, including frontmatter, Photos-sourced Alex reference images, generated blog imagery, and independent grader iteration. Use when asked to draft a post, revise existing blog prose, expand notes into publish-ready prose, rewrite content to match house voice, grade or improve content/posts/*.md, generate or place cover/body images, or use imagegen for blog visuals. Do not use for generic copy editing outside the blog.
+description: Draft, revise, or grade alexleung.ca blog posts, including frontmatter and cover or body imagery. Use for content/posts/*.md and blog writing requests; use site-copy-editor for non-blog copy and site-taste-audit for visual critique.
 ---
 
 # Blog Post Creator
 
-Use this skill to produce publish-ready markdown posts that match `content/posts/` and the site's understated, concrete voice.
+Write from Alex's facts and intent using the canonical [writing voice](../../../docs/writing-voice.md). Preserve the existing prose where it works. Use [voice-and-structure](references/voice-and-structure.md) for blog surfaces and genre choices, not as a fixed outline.
 
-Load references only when needed:
+## Capture the brief
 
-- [voice-and-structure](references/voice-and-structure.md): blog-specific title, cadence, and post-shape guidance.
-- [post-template](references/post-template.md): frontmatter and file skeleton.
-- [cover-prompt-template](references/cover-prompt-template.md): primary and backup cover prompt format.
-- [blog-post-grader](references/blog-post-grader.md): scoring rubric and fresh-context subagent prompt for publish-readiness checks.
+Identify the subject, genre, audience, and requested depth. Record the main takeaway or question, its mechanism and scope, any future aspiration, and what remains unresolved. Do not turn a broader idea into only its most convenient example.
 
-## Blog Voice Extensions
+Keep the source-fact ledger in the three parts defined in the grader's [intent and facts check](references/blog-post-grader.md#intent-and-facts). Preserve actors, values, precision, ownership, uncertainty, and stated relationships. Paraphrase meaning faithfully; do not invent biography, practice, chronology, metrics, or confidence. Verify outside factual claims against appropriate sources before including them.
 
-- Read and apply the canonical [writing voice](../../../docs/writing-voice.md) for every draft or revision.
-- For personal reflections, lead with the lived detail or encounter with an idea before interpreting it. A philosophical reflection can begin with reading or a specific question; it does not need an invented physical scene.
-- Let a concrete detail stand when it already carries the point. Do not follow it with a generic interpretation or summary that adds no new consequence.
+Personal and travel posts need both a supported observation, condition, or scene and a supported reaction, preference, consequence, or trade-off. Reading and an intellectual reaction can provide that grounding. If necessary material is missing, ask one bundled question while continuing work that does not depend on it. An explicitly requested bare trip log or caption-led photo essay does not need added reflection.
 
-## Hard Constraints
+## Draft or revise
 
-1. Preserve user-provided facts exactly, including actors, scope, precision, and stated causal, temporal, or comparative relationships; do not invent anecdotes, metrics, timeline claims, ownership, or hands-on practice.
-2. Keep claims tightly bounded to what the user actually said.
-3. Avoid repeated one-sentence paragraphs as the dominant cadence.
-4. Prefer concise titles and specific excerpts over authority-oriented positioning.
-5. For blog titles, prefer a crisp active claim, a concrete object/use case, or a named-tool contrast over generic `Why...` or `Using...` packaging.
-6. Use section headings that name the idea of the section, not generic scaffolds like `What`, `How`, `Why`, `The Goal`, or `The Implementation`.
-7. Avoid one-off metaphors in blog index headings or section intros unless the surrounding page already supports that metaphor; plain labels usually fit this site better.
-8. Do not turn learning notes, project writeups, or personal reflections into portfolio pitches.
-9. Avoid intro scaffolding that announces a thesis before showing the experience: rhetorical contrast, abstract significance framing, or decorative labels for mood/place/context.
-10. If the user corrects tone more than once, stop incremental patching. Reread the whole piece and identify the missing question, reaction, or reasoning before changing wording. Rebuild weak connections rather than swapping evaluative adjectives; preserve supported uncertainty and dry observations.
-11. Preserve the user-stated main takeaway as the editorial spine without repeating the same formulation in the title, excerpt, headings, and ending. Do not replace it with an adjacent generic lesson.
-12. For AI-workflow reflections, keep harness mechanisms explicit when they are the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token.
-13. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
-14. Do not add links or prose references from a dated post to a later-dated post unless the older entry receives an intentional `updated` date.
-15. Prefer one precise topical tag over overlapping near-duplicates. For Goodfellow or textbook neural-network notes, use `Deep Learning` rather than a broader machine-learning tag.
-16. Do not force unlike genres into the same orientation, section, and closing-moral template. Let the subject determine the form.
-17. Audit pattern density across the full draft. Repeated balanced contrasts, tidy multi-item lists, and recap sentences can sound formulaic even when each instance is defensible.
-18. Make titles and excerpts subject-first: name the event, place, artifact, workflow, or question before an abstract category or lesson.
-19. Preserve the full shape of a user-stated takeaway: its mechanism, intended scope, and any explicit future aspiration. A concrete incident may demonstrate a broader philosophy, but it must not replace or narrow that philosophy. Keep aspirations framed as goals rather than present capabilities.
-20. Require every served raster blog source and generated variant to use a `.webp` extension and contain genuine RIFF/WEBP bytes. Do not treat a renamed PNG or JPEG as WebP; Playwright PNG baselines are exempt test artifacts.
+- Follow the subject's natural structure. Headings, lists, and a concluding paragraph are useful when they help the reader; none has a required count.
+- Explain the concepts needed to follow the piece. Make their relevance to its question visible instead of merely listing the source's topics. Keep conditions and uncertainty intact.
+- When feedback repeats, reread the whole piece and identify the missing question, reaction, or reasoning before adjusting phrasing. Preserve dry observations and unresolved questions.
+- Use [post-template](references/post-template.md) for frontmatter, tags, dates, and file placement. Start a new post at `draft: true`; use the editorial gate below before changing that status.
+- Before grading, apply the rubric's [review order and local clarity pass](references/blog-post-grader.md#review-order-and-local-clarity). Do not cut a necessary inference simply because it repeats a noun from a definition.
 
-## Workflow
+## Images
 
-1. Capture facts and intent.
-   - Identify the topic, genre, audience, and depth target. Capture a thesis when the user supplies one or the genre benefits from it; do not require one for a travel note or photo essay. For a philosophical reflection, record the central question, Alex's stated position, and what remains unresolved; use the philosophical-reflection guidance in [voice-and-structure](references/voice-and-structure.md).
-   - Record the user's stated main takeaway verbatim, especially if they name a mechanism or correction loop.
-   - Separate the takeaway into mechanism, intended scope, and future aspiration when the user supplies those dimensions. Keep each one visible in the draft plan instead of letting the most concrete example stand in for all three.
-   - Maintain a verbatim source-fact ledger for details that may enter the prose, including actors, values, ownership, scope, qualifiers such as `about`, `around`, and `probably`, and explicit causal, temporal, or comparative relationships. The post may paraphrase those facts without changing their semantic precision; mark assumptions instead of drafting them as facts. Keep current facts and intent separate from required verbatim wording and earlier approved drafts, as described in the grader’s intent coverage guidance.
-   - For personal and travel posts, separate logistics such as route, time, and distance from lived material. Publish-ready source material needs both a user-supplied condition, scene, or observation and a user-supplied reaction, evaluation, consequence, trade-off, or preference. If either is missing, ask one bundled follow-up for the smallest missing details unless the user explicitly wants a bare trip log or caption-led photo essay. This is a material gate, not a required thesis, moral, or paragraph template.
+For new posts, include suitable generated imagery by default unless the user asks for post-only output or intentionally defers it. Use the [cover workflow](references/cover-prompt-template.md) to choose the subject before deciding whether a likeness reference is needed. If generation or a required reference is unavailable, provide a usable cover prompt and explain the specific limitation. Photos access is not a prerequisite for an image without Alex.
 
-2. Choose the shape.
-   - For technical pieces, establish context and a clear point of view early. For reflections, orient the reader with the concrete subject, scene, or action before interpretation.
-   - Make the first sentence orient a cold reader by naming the subject, workflow, object, or setting before using a comparison, metric, or time jump.
-   - Make the title and excerpt name the concrete subject first. Keep surfaces aligned with the recorded takeaway without repeating one thesis sentence everywhere.
-   - Choose a genre-specific form: travel/photo essays may be selectively chronological without a thesis; personal updates may be diary- or scene-led and omit headings; technical reflections may use an argument or postmortem; implementation notes may use artifact-led case studies.
-   - Use 2-4 `##` sections when structure helps; short reflective pieces may omit headings.
-   - Make each section advance one concrete claim with supporting detail. For arguments and philosophical reflections, identify how each main section advances or complicates the central question. Choose headings that make that contribution legible, and supply the definitions needed to follow it.
-   - End in a form suited to the genre: synthesis or a decision for an argument, a concrete scene or state for a personal piece, or an unresolved limit or next experiment for a case study. A philosophical ending should account for material complications raised in the body and can retain uncertainty without forcing a resolution.
+Inline images are optional and should clarify a scene, example, or mechanism. Follow the image storage and variant requirements in [AGENTS.md](../../../AGENTS.md#adding-images-agent-guidance).
 
-3. Draft or revise in house voice.
-   - Prefer cohesive multi-sentence paragraphs.
-   - Replace broad framing with the exact constraint, mechanism, symptom, or comparison.
-   - For personal updates, keep the opening close to the actual scene, action, object, constraint, or observation before adding a conclusion.
-   - After drafting, mark repeated contrast pivots, lists, and sentences that recap nearby prose. Keep only the instances that add a real distinction, necessary scan value, or new consequence. Preserve sentences that apply a concept to the post’s specific question; naming or defining the concept does not make that inference redundant. Use the grader’s coherence evidence check before cutting such a bridge.
-   - Use plain, literal titles and headings when the user pushes back on style. Avoid clever frames, point/lever metaphors, and transformation-style titles unless the user asks for them.
-   - Use lists only when they improve scanning.
-   - Keep technical trade-offs and limitations explicit.
-   - Before grading, use the grader’s [review order and local clarity pass](references/blog-post-grader.md#review-order-and-local-clarity): read isolated surfaces, inspect sentence connections and references, then check fact delta against current intent.
+## Editorial gate
 
-4. Apply repo format.
-   - Use [post-template](references/post-template.md) for new files under `content/posts/`.
-   - Start every new post with `draft: true`.
-   - Keep filenames slug-safe: lowercase words joined by hyphens.
-   - Use 2-4 tags and prefer existing site tag language when possible.
-   - Include `updated` only when materially revising an existing post.
+Use the [blog-post-grader](references/blog-post-grader.md) for new posts and meaningful revisions unless the user asks for a rough draft only. Spelling, punctuation, and small wording edits that preserve meaning need a contextual reread, not the full editorial loop.
 
-5. Generate and place blog images when appropriate.
-   - Use [cover-prompt-template](references/cover-prompt-template.md).
-   - Default visual direction to Ghibli-style unless the user asks for another style.
-   - For covers or body images that depict Alex, use Photos to find a clear reference photo of Alex by default when the user has authorized generated blog imagery. Prefer the Alex person album, Favorites, or existing site-relevant photos; avoid photos with other people's faces unless the post needs them and the user has clearly allowed that.
-   - Export the reference photo to a temporary workspace location, inspect it, and use imagegen for the final blog asset. Treat the photo as a likeness reference only unless the user asks for a direct edit or transformation.
-   - Save final generated assets under `public/assets/blog/<slug>/` as metadata-stripped WebP, add `coverImage`/`coverAlt` or markdown image references, and run the image variant workflow when adding or changing image sources. The workflow must pass its extension and RIFF/WEBP signature checks; renaming another format to `.webp` is not conversion.
-   - Feel free to generate inline/body images when they make the post more concrete or inspectable. Do not add decorative images just to fill space.
-   - Keep the scene readable at thumbnail size and avoid text overlays.
+1. Prepare separate surface and body snapshots, the full target post and asset paths for the later format check, the current ledger, the rubric and canonical voice, and 3–5 other recent published posts. Include any explicit bare-log/photo-essay mode or editorial waiver.
+2. Start a fresh-context grading subagent with only those inputs and an output location. Do not pass the author's rationale, known weak spots, previous scores, or planned fixes. The rubric specifies the reading order and report.
+3. Address material findings, then grade meaningful revisions in a new context. If the same issue survives two passes, reconsider the structure and source material. Continue repairs supported by the brief; ask the user only when a missing fact or substantive direction choice blocks progress. Do not repeat cosmetic edits or solicit permission for ordinary editing.
+4. Accept the current prose only when it scores 90+ with no blockers and all applicable checks pass. An earlier revision's score or image-only review does not satisfy this gate. Optional preferences do not require another iteration.
+5. Set a new post to `draft: false` when the current prose passes and the user asks to publish or preview normally. Only an explicit editorial-gate waiver permits publishing before it passes.
 
-6. Grade and iterate.
-   - Use [blog-post-grader](references/blog-post-grader.md) for new posts and meaningful revisions unless the user explicitly asks for a rough draft only.
-   - Run the grader in a fresh-context subagent. Supply a surface-only snapshot separately from the body so the grader can record its cold reading first. Also pass the target, rubric, source-fact ledger, any explicit bare-log or caption-led-photo-essay mode or editorial-gate waiver, and 3-5 other recent published posts. Follow the grader’s review order; do not pass author rationale, known weak spots, previous scores, or intended fixes.
-   - Use the corpus comparison to catch repeated structure, phrase families, contrast/list/recap density, and moralized endings, not to make the new post imitate the corpus.
-   - Revise from the highest-impact findings first, then re-run a fresh-context grading pass.
-   - Continue until the score is 90+, there are no blocking issues, and every applicable pass/fail check succeeds. Require evidence for coherence, coverage of the user’s intended points, and the ending before accepting a score. If two passes fail the editorial gate on the same issue, stop smoothing locally and ask the user for missing facts or direction.
-   - Keep a new post at `draft: true` until the current prose revision scores 90+ with no blockers, passes fact delta, and, for personal or travel posts, passes experiential sufficiency. Then set `draft: false` when the user asks to publish or preview it normally. Only an explicit request to bypass the editorial gate or rough-publish waives it; an earlier prose score or image-only review does not satisfy it.
-   - When the user asks to improve the harness after feedback, update the relevant skill, voice, or grader guidance so the failure is caught before the next draft. For coherence, intent, surface, or local-clarity changes, run the relevant isolated cases in [coherence-regressions](references/coherence-regressions.md), including a held-out example when generalizing a new rule. Record actual findings and limitations; a revised rubric alone is not behavioral validation.
+Run the repository verification required by `AGENTS.md` for file changes. Report the result and material limitations without reproducing the grader's entire report.
 
-## Output Modes
-
-- **Draft + generated imagery**: default for new-post creation when imagegen and a usable Alex reference photo are available.
-- **Draft + cover prompt**: fallback when imagegen, Photos access, or a usable reference photo is unavailable.
-- **Full draft**: complete markdown with frontmatter and final prose.
-- **Revision pass**: edited markdown that preserves the user's facts.
-- **Outline-first**: frontmatter plus sectioned outline before drafting, when requested.
-- **Graded revision**: draft or revise, then iterate against the independent grader until the post scores 90+ without blockers.
-
-## Final Checks
-
-- For arguments and philosophical reflections, the grader can reconstruct the connections among main sections and the ending from the prose itself. Brief personal asides may remain; repeating the thesis in every section is not required.
-- The draft matches the canonical voice in `docs/writing-voice.md`.
-- Paragraph cadence is cohesive and suited to the genre; argumentative passages are mostly multi-sentence.
-- Titles and excerpts identify the subject when read without the body; headings and intro copy remain specific and modest.
-- No inferred facts, inflated claims, or unsupported practice claims were introduced.
-- Selected claims match the source-fact ledger in actor, value, scope, precision, and causal, temporal, or comparative relationships.
-- Personal and travel drafts contain both user-sourced observations and user-sourced reactions, evaluations, consequences, trade-offs, or preferences unless the user requested a bare trip log or caption-led photo essay.
-- No slogan-like phrasing, draft scaffolding, or repeated synonym pairs remain.
-- Concrete details are not followed by generic interpretations that merely explain how to feel about them.
-- Contrast pivots, lists, and recap sentences are not dense enough to become a visible template.
-- The post has been compared with recent entries and its structure still feels native to its genre and subject.
-- Personal-reflection openings begin with specific lived details, not abstract contrast or significance framing.
-- The first sentence gives enough context to understand the subject before any comparison, metric, or time jump.
-- Title, excerpt, headings, and ending preserve the user's stated main takeaway instead of substituting a smoother adjacent lesson.
-- Concrete examples illustrate the stated philosophy without narrowing its scope, and explicit future aspirations remain present as bounded goals rather than current-state claims.
-- If the post is about AI-agent work, the harness or feedback-loop mechanism remains concrete where relevant.
-- Cover or body images are saved in the repo and referenced by frontmatter/markdown, or prompt output includes both `Cover Prompt (Primary)` and `Cover Prompt (Backup)` when generation is unavailable or intentionally deferred.
-- Every served raster blog source and generated variant passes the image workflow's `.webp` extension and RIFF/WEBP signature checks.
-- Fresh-context grader score is 90+ with no blocking issues, unless the user explicitly asked to stop earlier.
+When asked to improve the harness, amend the rule that owns the demonstrated failure instead of adding another checklist. Run the relevant [isolated regression cases](references/coherence-regressions.md) for changes to editorial behavior. A revised rubric or higher score alone is not behavioral validation.
