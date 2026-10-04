@@ -272,6 +272,35 @@
         }
       }
     },
+    "/assets/blog/humanitys-cosmic-endowment/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-card.webp",
+          "width": 768,
+          "height": 433
+        },
+        "card-md": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-card-md.webp",
+          "width": 640,
+          "height": 361
+        },
+        "card-sm": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-card-sm.webp",
+          "width": 480,
+          "height": 271
+        },
+        "hero": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-hero.webp",
+          "width": 1280,
+          "height": 721
+        },
+        "hero-sm": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-hero-sm.webp",
+          "width": 640,
+          "height": 361
+        }
+      }
+    },
     "/assets/blog/ipad-air-m3-11-inch-first-impressions/cover.webp": {
       "variants": {
         "card": {

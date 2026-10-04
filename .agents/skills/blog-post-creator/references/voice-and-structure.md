@@ -9,7 +9,7 @@ Read and apply the canonical [writing voice](../../../../docs/writing-voice.md) 
 - When revising a weak title, remove stacked softeners and category words before reaching for cleverness. Words like `rough`, `workflow`, `small`, `ideas`, `fit`, and `tools` often hide the concrete subject unless they are doing necessary work.
 - If Alex names the main takeaway, keep that mechanism visible in the title, excerpt, headings, and ending. Do not replace it with a smoother adjacent lesson.
 - For AI-agent and token-use posts, preserve concrete harness language when it is the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token.
-- When title or heading style is challenged, move toward literal mechanism-first labels. Avoid clever frames like "What X Buy Me", "The X Is the Point", lever metaphors, or transformation slogans unless Alex explicitly asks for that style.
+- When title or heading style is challenged, use plain labels for the section's subject, question, or consequence. In a philosophical reflection, a concept name alone may hide its role in the central question. Avoid clever frames like "What X Buy Me", "The X Is the Point", lever metaphors, or transformation slogans unless Alex explicitly asks for that style.
 - For blog index headings and intros, prefer plain labels over decorative metaphors. Do not introduce standalone workbench/workshop/lab/journey language unless the surrounding page already uses that frame.
 - In learning notes and book reviews, frame the writing as refinement of an existing mental model, a sharper technical distinction, or a more precise mechanism. Do not lean on repeated "I learned", "I realized", or "I discovered" phrasing that makes the author sound new to the subject.
 - In personal reflections, do not make the first paragraph carry a grand interpretive frame. Start with the actual scene, action, object, constraint, or observation, then let the interpretation arrive later.
@@ -35,7 +35,7 @@ Read and apply the canonical [writing voice](../../../../docs/writing-voice.md) 
 - Avoid decorative labels for atmosphere, identity, or place when a sensory detail, object, action, limitation, or observed behavior can do the work.
 - Do not swap Alex's stated takeaway for a nearby generic lesson, even when that lesson would make a cleaner essay.
 - Do not let one convenient example replace the scope of the stated idea. Preserve its mechanism, intended scope, and any explicit future aspiration.
-- If a user pushes back on tone repeatedly, treat it as evidence that the governing voice is wrong, not that one sentence needs a synonym swap.
+- If a user pushes back on tone repeatedly, inspect the reasoning and genre as well as the wording. Replace vague praise with the actual question or reaction it stands for; preserve supported uncertainty and dry observations. Do not turn a rejected phrase into a universal word ban.
 - For travel, lifestyle, career, project, or personal-update posts, prefer ordinary nouns and verbs drawn from the user's facts.
 
 ## Genre-Specific Post Shapes
@@ -71,12 +71,19 @@ Read and apply the canonical [writing voice](../../../../docs/writing-voice.md) 
 - State the source material and the specific model or distinction being refined.
 - Develop the concepts through examples, then end with what remains to test or understand.
 
+6. Philosophical reflection
+
+- Orient the reader through the source, idea, or question Alex encountered. Reading and a specific intellectual reaction can supply the personal grounding; a physical scene is not required.
+- Organize around the central question, Alex's stated position, and unresolved tensions. Source concepts should advance or complicate that inquiry instead of becoming a catalogue of the source's topics.
+- Explain unfamiliar concepts only as far as the reasoning needs. A list of categories or a citation does not replace a definition; keep important conditions and limits intact.
+- Connect main sections through their consequences for the question. Brief personal asides are allowed, and every paragraph need not repeat the thesis.
+- Let the ending reflect the complications introduced in the body. It may express a preference or leave a sharper question; do not manufacture a settled answer or a general moral.
+
 ## Content Quality Checks
 
-- Tie each section to one clear claim.
+- Tie each main section to one clear claim and, where the piece has a central argument or question, make its contribution to that argument legible.
 - Back claims with concrete mechanisms, examples, or constraints.
 - Prefer specific examples over summary labels when introducing a section or transition.
 - Do not follow a concrete scene, behavior, or mechanism with a generic sentence that only labels it as useful, interesting, meaningful, or memorable.
-- Cut duplicated meaning: if the second half of a sentence only restates the first more elegantly, simplify it.
-- Keep transitions explicit between sections.
+- Use the grader’s [local clarity pass](blog-post-grader.md#review-order-and-local-clarity) for duplicated meaning, vague references, and weak connections between sentences or sections. Consider order and deletion before adding explanatory prose.
 - Keep the ending aligned with the subject and genre; argumentative posts should preserve the thesis, while personal and travel posts may simply land on a concrete scene or state.
