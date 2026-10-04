@@ -17,7 +17,7 @@ Load references only when needed:
 ## Blog Voice Extensions
 
 - Read and apply the canonical [writing voice](../../../docs/writing-voice.md) for every draft or revision.
-- For personal reflections, lead with the lived detail before the interpretation. Do not manufacture thesis energy with polished setup phrases.
+- For personal reflections, lead with the lived detail or encounter with an idea before interpreting it. A philosophical reflection can begin with reading or a specific question; it does not need an invented physical scene.
 - Let a concrete detail stand when it already carries the point. Do not follow it with a generic interpretation or summary that adds no new consequence.
 
 ## Hard Constraints
@@ -31,7 +31,7 @@ Load references only when needed:
 7. Avoid one-off metaphors in blog index headings or section intros unless the surrounding page already supports that metaphor; plain labels usually fit this site better.
 8. Do not turn learning notes, project writeups, or personal reflections into portfolio pitches.
 9. Avoid intro scaffolding that announces a thesis before showing the experience: rhetorical contrast, abstract significance framing, or decorative labels for mood/place/context.
-10. If the user corrects tone more than once, stop incremental patching. Reread the full piece, identify the repeated failure pattern, and revise the affected section from concrete facts outward.
+10. If the user corrects tone more than once, stop incremental patching. Reread the whole piece and identify the missing question, reaction, or reasoning before changing wording. Rebuild weak connections rather than swapping evaluative adjectives; preserve supported uncertainty and dry observations.
 11. Preserve the user-stated main takeaway as the editorial spine without repeating the same formulation in the title, excerpt, headings, and ending. Do not replace it with an adjacent generic lesson.
 12. For AI-workflow reflections, keep harness mechanisms explicit when they are the point: tests, graders, prompts, skill notes, checks, feedback loops, and marginal value per token.
 13. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
@@ -46,10 +46,10 @@ Load references only when needed:
 ## Workflow
 
 1. Capture facts and intent.
-   - Identify the topic, genre, audience, and depth target. Capture a thesis when the user supplies one or the genre benefits from it; do not require one for a travel note or photo essay.
+   - Identify the topic, genre, audience, and depth target. Capture a thesis when the user supplies one or the genre benefits from it; do not require one for a travel note or photo essay. For a philosophical reflection, record the central question, Alex's stated position, and what remains unresolved; use the philosophical-reflection guidance in [voice-and-structure](references/voice-and-structure.md).
    - Record the user's stated main takeaway verbatim, especially if they name a mechanism or correction loop.
    - Separate the takeaway into mechanism, intended scope, and future aspiration when the user supplies those dimensions. Keep each one visible in the draft plan instead of letting the most concrete example stand in for all three.
-   - Maintain a verbatim source-fact ledger for details that may enter the prose, including actors, values, ownership, scope, qualifiers such as `about`, `around`, and `probably`, and explicit causal, temporal, or comparative relationships. The post may paraphrase those facts without changing their semantic precision; mark assumptions instead of drafting them as facts.
+   - Maintain a verbatim source-fact ledger for details that may enter the prose, including actors, values, ownership, scope, qualifiers such as `about`, `around`, and `probably`, and explicit causal, temporal, or comparative relationships. The post may paraphrase those facts without changing their semantic precision; mark assumptions instead of drafting them as facts. Keep current facts and intent separate from required verbatim wording and earlier approved drafts, as described in the grader’s intent coverage guidance.
    - For personal and travel posts, separate logistics such as route, time, and distance from lived material. Publish-ready source material needs both a user-supplied condition, scene, or observation and a user-supplied reaction, evaluation, consequence, trade-off, or preference. If either is missing, ask one bundled follow-up for the smallest missing details unless the user explicitly wants a bare trip log or caption-led photo essay. This is a material gate, not a required thesis, moral, or paragraph template.
 
 2. Choose the shape.
@@ -58,18 +58,18 @@ Load references only when needed:
    - Make the title and excerpt name the concrete subject first. Keep surfaces aligned with the recorded takeaway without repeating one thesis sentence everywhere.
    - Choose a genre-specific form: travel/photo essays may be selectively chronological without a thesis; personal updates may be diary- or scene-led and omit headings; technical reflections may use an argument or postmortem; implementation notes may use artifact-led case studies.
    - Use 2-4 `##` sections when structure helps; short reflective pieces may omit headings.
-   - Make each section advance one concrete claim with supporting detail.
-   - End in a form suited to the genre: synthesis or a decision for an argument, a concrete scene or state for a personal piece, or an unresolved limit or next experiment for a case study.
+   - Make each section advance one concrete claim with supporting detail. For arguments and philosophical reflections, identify how each main section advances or complicates the central question. Choose headings that make that contribution legible, and supply the definitions needed to follow it.
+   - End in a form suited to the genre: synthesis or a decision for an argument, a concrete scene or state for a personal piece, or an unresolved limit or next experiment for a case study. A philosophical ending should account for material complications raised in the body and can retain uncertainty without forcing a resolution.
 
 3. Draft or revise in house voice.
    - Prefer cohesive multi-sentence paragraphs.
    - Replace broad framing with the exact constraint, mechanism, symptom, or comparison.
    - For personal updates, keep the opening close to the actual scene, action, object, constraint, or observation before adding a conclusion.
-   - After drafting, mark repeated contrast pivots, lists, and sentences that recap nearby prose. Keep only the instances that add a real distinction, necessary scan value, or new consequence.
+   - After drafting, mark repeated contrast pivots, lists, and sentences that recap nearby prose. Keep only the instances that add a real distinction, necessary scan value, or new consequence. Preserve sentences that apply a concept to the post’s specific question; naming or defining the concept does not make that inference redundant. Use the grader’s coherence evidence check before cutting such a bridge.
    - Use plain, literal titles and headings when the user pushes back on style. Avoid clever frames, point/lever metaphors, and transformation-style titles unless the user asks for them.
    - Use lists only when they improve scanning.
    - Keep technical trade-offs and limitations explicit.
-   - Before grading, run a fact-delta pass against the source-fact ledger. Every selected claim must preserve its actor, value, scope, precision, and causal, temporal, or comparative relationships.
+   - Before grading, use the grader’s [review order and local clarity pass](references/blog-post-grader.md#review-order-and-local-clarity): read isolated surfaces, inspect sentence connections and references, then check fact delta against current intent.
 
 4. Apply repo format.
    - Use [post-template](references/post-template.md) for new files under `content/posts/`.
@@ -89,12 +89,12 @@ Load references only when needed:
 
 6. Grade and iterate.
    - Use [blog-post-grader](references/blog-post-grader.md) for new posts and meaningful revisions unless the user explicitly asks for a rough draft only.
-   - Run the grader in a fresh-context subagent. Pass the target, the rubric, the verbatim source-fact ledger, any explicit bare-log or caption-led-photo-essay mode or editorial-gate waiver, and 3-5 other recent published posts; do not pass author rationale, known weak spots, previous scores, or intended fixes.
+   - Run the grader in a fresh-context subagent. Supply a surface-only snapshot separately from the body so the grader can record its cold reading first. Also pass the target, rubric, source-fact ledger, any explicit bare-log or caption-led-photo-essay mode or editorial-gate waiver, and 3-5 other recent published posts. Follow the grader’s review order; do not pass author rationale, known weak spots, previous scores, or intended fixes.
    - Use the corpus comparison to catch repeated structure, phrase families, contrast/list/recap density, and moralized endings, not to make the new post imitate the corpus.
    - Revise from the highest-impact findings first, then re-run a fresh-context grading pass.
-   - Continue until the score is 90+ with no blocking issues. If two passes stall below 90 on the same issue, stop smoothing locally and ask the user for missing facts or direction.
+   - Continue until the score is 90+, there are no blocking issues, and every applicable pass/fail check succeeds. Require evidence for coherence, coverage of the user’s intended points, and the ending before accepting a score. If two passes fail the editorial gate on the same issue, stop smoothing locally and ask the user for missing facts or direction.
    - Keep a new post at `draft: true` until the current prose revision scores 90+ with no blockers, passes fact delta, and, for personal or travel posts, passes experiential sufficiency. Then set `draft: false` when the user asks to publish or preview it normally. Only an explicit request to bypass the editorial gate or rough-publish waives it; an earlier prose score or image-only review does not satisfy it.
-   - When the user asks to improve the harness after feedback, update the relevant skill, voice, or grader guidance so the failure is caught before the next draft.
+   - When the user asks to improve the harness after feedback, update the relevant skill, voice, or grader guidance so the failure is caught before the next draft. For coherence, intent, surface, or local-clarity changes, run the relevant isolated cases in [coherence-regressions](references/coherence-regressions.md), including a held-out example when generalizing a new rule. Record actual findings and limitations; a revised rubric alone is not behavioral validation.
 
 ## Output Modes
 
@@ -107,11 +107,10 @@ Load references only when needed:
 
 ## Final Checks
 
-- Argument is cohesive from opening to close.
+- For arguments and philosophical reflections, the grader can reconstruct the connections among main sections and the ending from the prose itself. Brief personal asides may remain; repeating the thesis in every section is not required.
 - The draft matches the canonical voice in `docs/writing-voice.md`.
 - Paragraph cadence is cohesive and suited to the genre; argumentative passages are mostly multi-sentence.
-- Titles, excerpts, headings, and intro copy are specific and modest.
-- Titles and excerpts name the concrete subject before an abstract takeaway.
+- Titles and excerpts identify the subject when read without the body; headings and intro copy remain specific and modest.
 - No inferred facts, inflated claims, or unsupported practice claims were introduced.
 - Selected claims match the source-fact ledger in actor, value, scope, precision, and causal, temporal, or comparative relationships.
 - Personal and travel drafts contain both user-sourced observations and user-sourced reactions, evaluations, consequences, trade-offs, or preferences unless the user requested a bare trip log or caption-led photo essay.
