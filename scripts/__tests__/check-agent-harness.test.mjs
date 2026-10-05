@@ -92,3 +92,30 @@ test("rejects malformed YAML and incorrectly typed invocation metadata", (t) => 
   );
   assert.match(result.output, /allow_implicit_invocation must be boolean/);
 });
+
+test("accepts a default prompt that invokes its own skill", (t) => {
+  const f = fixture(t);
+  f.write(
+    ".agents/skills/example/agents/openai.yaml",
+    'interface:\n  default_prompt: "Use $example, then $another-skill."\n'
+  );
+  assert.equal(f.run().status, 0);
+});
+
+test("rejects default prompts with missing, wrong, or partial skill names", (t) => {
+  const f = fixture(t);
+  for (const prompt of [
+    "Review this repository.",
+    "Use $different.",
+    "Use $example-extra.",
+    "Use $example_extra.",
+  ]) {
+    f.write(
+      ".agents/skills/example/agents/openai.yaml",
+      `interface:\n  default_prompt: ${JSON.stringify(prompt)}\n`
+    );
+    const result = f.run();
+    assert.equal(result.status, 1, prompt);
+    assert.match(result.output, /default_prompt must mention \$example/);
+  }
+});

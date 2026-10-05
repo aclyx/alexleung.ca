@@ -1,5 +1,5 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
-import { dirname, join, relative, resolve } from "node:path";
+import { basename, dirname, join, relative, resolve } from "node:path";
 
 import matter from "gray-matter";
 import { remark } from "remark";
@@ -64,6 +64,14 @@ function inspectDirectory(directory) {
             if (data.interface[key] !== undefined) {
               requireText(file, data.interface[key], `interface.${key}`);
             }
+          }
+          const prompt = data.interface.default_prompt;
+          const skillToken = `$${basename(dirname(dirname(file)))}`;
+          if (
+            typeof prompt === "string" &&
+            !(prompt.match(/\$[a-zA-Z0-9_-]+/g) ?? []).includes(skillToken)
+          ) {
+            report(file, `interface.default_prompt must mention ${skillToken}`);
           }
         }
       }
