@@ -56,7 +56,7 @@ test("home page renders the hero content", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByText(
-      "I build products and systems that make new technology useful in everyday life. I write about software, technical books, and life outside work.",
+      "I work on ChatGPT at OpenAI. I write about software, technical books, and life outside work.",
       { exact: true }
     )
   ).toBeVisible();

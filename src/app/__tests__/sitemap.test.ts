@@ -1,6 +1,6 @@
 import sitemap from "@/app/sitemap";
 
-jest.mock("@/app/now/page", () => ({
+jest.mock("@/constants/now", () => ({
   NOW_PAGE_LAST_UPDATED_ISO: "2026-01-15",
 }));
 

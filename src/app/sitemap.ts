@@ -1,10 +1,10 @@
 import { MetadataRoute } from "next";
 
-import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
 import {
   MANDELBROT_LAST_MODIFIED_ISO,
   MANDELBROT_PATH,
 } from "@/constants/mandelbrot";
+import { NOW_PAGE_LAST_UPDATED_ISO } from "@/constants/now";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
 import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";

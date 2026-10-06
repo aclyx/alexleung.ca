@@ -191,8 +191,7 @@ export default function Page() {
             <div className="max-w-2xl text-lg leading-relaxed text-muted">
               <p>
                 I spend time reading, playing tennis, hiking, climbing, and
-                hanging out with my cats. I write about technical books and life
-                outside work alongside my software notes.
+                hanging out with my cats.
               </p>
               <p className="mt-5">
                 My <LinkText href="/now/">Now page</LinkText>

@@ -1,8 +1,8 @@
 ---
 title: "Math Foundations for Deep Learning"
 date: "2026-02-07"
-updated: "2026-06-15"
-excerpt: "Part I of Goodfellow, Bengio, and Courville works best as shared vocabulary for later chapters, with proof details still worth supplementing."
+updated: "2026-10-05"
+excerpt: "Part I of Deep Learning reviews the linear algebra, probability, and numerical computation that later chapters build on."
 coverImage: "/assets/blog/deep-learning-part-1-review/cover.webp"
 coverAlt: "Illustration of Alex studying at a classroom desk in front of a chalkboard covered with math"
 tags:
@@ -20,8 +20,6 @@ The most useful part for me was the quick pass through linear algebra, probabili
 
 Chapter 5 was especially helpful in that respect. It reconnects the mathematical preliminaries to actual machine learning problems instead of leaving them as isolated review material. That made Part I feel like a reset of the vocabulary the later chapters will build on.
 
-## Proof Sketches I Still Wanted
+## Working Through the Derivations
 
-The main limitation for me was the level of mathematical exposition. In several places, I wanted more proofs, or at least proof sketches, to show where the results were coming from. Without that, some ideas felt more like statements to absorb than arguments to evaluate.
-
-That is not really a flaw so much as a limit of what this section is trying to do. As a foundation, Part I is effective. As a mathematical treatment, it still needs supplementation in places where a claim deserves stronger justification. I am treating it as a map for the later chapters, with separate notes or references when I want to understand why a result holds.
+I want to spend more time working through why the results hold, using proofs or proof sketches rather than stopping at the statements. I am treating Part I as a map for the later chapters, with separate notes or references when I want to follow a derivation in more detail.
