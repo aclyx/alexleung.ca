@@ -24,7 +24,7 @@ describe("Hero", () => {
 
     expect(
       screen.getByText(
-        /I build products and systems that make new technology useful in everyday life\. I write about software, technical books, and life outside work\./i
+        /I work on ChatGPT at OpenAI\. I write about software, technical books, and life outside work\./i
       )
     ).toBeInTheDocument();
   });

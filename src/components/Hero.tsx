@@ -28,9 +28,8 @@ export function Hero() {
             Alex Leung
           </h1>
           <p className="text-hero-description mt-7 max-w-xl leading-relaxed text-muted">
-            I build products and systems that make new technology useful in
-            everyday life. I write about software, technical books, and life
-            outside work.
+            I work on ChatGPT at OpenAI. I write about software, technical
+            books, and life outside work.
           </p>
           <Link
             href="/now/"
