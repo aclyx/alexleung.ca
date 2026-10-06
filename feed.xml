@@ -5,7 +5,7 @@
         <title>Alex Leung's Blog</title>
         <link>https://alexleung.ca/blog/</link>
         <description>Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.</description>
-        <lastBuildDate>Sat, 03 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 05 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -123,7 +123,7 @@
             <link>https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</guid>
             <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Chapter 6 separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness.]]></description>
+            <description><![CDATA[Chapter 6 of Deep Learning separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
         </item>
@@ -132,7 +132,7 @@
             <link>https://alexleung.ca/blog/deep-learning-part-1-review/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/deep-learning-part-1-review/</guid>
             <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Part I of Goodfellow, Bengio, and Courville works best as shared vocabulary for later chapters, with proof details still worth supplementing.]]></description>
+            <description><![CDATA[Part I of Deep Learning reviews the linear algebra, probability, and numerical computation that later chapters build on.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
         </item>
