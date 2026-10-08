@@ -49,7 +49,7 @@ The workflow has clear costs:
 
 - **Cost:** Frequent tool calls and retries add up quickly.
 - **Legacy code friction:** Agents struggle when systems rely on undocumented history.
-- **Personal skill drift:** I type less code directly than I used to.
+- **Less hands-on coding:** I type less code directly than I used to.
 
 The diagram below is illustrative; the areas are not measured proportions.
 

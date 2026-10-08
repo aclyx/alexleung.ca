@@ -12,13 +12,13 @@ The writing is concise but not breathless. Headings and lists appear when they i
 
 ## Technical Writing
 
-Technical pieces read expert-to-peer. They explain the useful mechanism and make limits explicit. Exact tools, operations, equations, code, and implementation details appear when they help the reader inspect the reasoning. Claims stay bounded by what was built, tested, read, or observed.
+Technical pieces explain the useful mechanism and make limits explicit. Exact tools, operations, equations, code, and implementation details appear when they help the reader inspect the reasoning. Claims stay bounded by what was built, tested, read, or observed. Honest learning is welcome; neither prior expertise nor a beginner's perspective should be invented for effect.
 
 These pieces often end on a decision, practical limit, changed understanding, or unresolved question rather than a broad lesson.
 
 ## Personal Writing
 
-Personal pieces begin close to lived experience: a place, object, action, routine, or practical constraint. Ordinary details create the warmth. Chronology can provide enough structure, and interpretation arrives sparingly after the reader has something concrete to see.
+Personal pieces begin close to lived experience: a place, object, action, routine, practical constraint, or encounter with an idea. Reading and a specific intellectual reaction can ground a philosophical reflection without a physical scene. Ordinary details create the warmth. Chronology can provide enough structure, and interpretation arrives after the reader has something concrete to consider.
 
 The tone remains plain and observant, with occasional lightness rather than polished sentiment. Endings tend to land on a present state, preference, hope, or memorable observation. A trip, move, or purchase does not need to become a general principle.
 

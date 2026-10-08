@@ -1,8 +1,8 @@
 ---
 title: "Depth Changes Scaling, Not Just Capacity"
 date: "2026-02-15"
-updated: "2026-08-29"
-excerpt: "Chapter 6 separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness."
+updated: "2026-10-05"
+excerpt: "Chapter 6 of Deep Learning separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness."
 coverImage: "/assets/blog/structural-reasoning-about-deep-networks/cover.webp"
 coverAlt: "Illustration of Alex studying neural network diagrams beside a lake"
 tags:
@@ -20,7 +20,7 @@ The common shorthand for the Universal Approximation Theorem is that neural netw
 
 A single hidden layer network can approximate complex structured functions, but the width required may scale exponentially for certain compositional forms. Depth can reduce parameter count by reusing intermediate computations. In that sense, depth changes scaling behavior, not just capacity.
 
-## Linear depth imposes a rank constraint
+## A linear bottleneck imposes a rank constraint
 
 When we stack linear layers without nonlinearities between them, two consecutive linear transformations collapse into a single linear transformation. Functionally, nothing changes, but the parameterization does.
 
@@ -32,4 +32,4 @@ The same structure shows up in LoRA-style adaptation for large language models. 
 
 The comparison between softplus and ReLU corrected an intuition I had inherited from smooth optimization: smoother functions should be easier to train. Softplus is differentiable everywhere with nonzero gradient, while ReLU is nondifferentiable at zero and flat for negative inputs. By a classical smoothness criterion, softplus seems preferable.
 
-Empirically, ReLU often performs better. Chapter 6 provides a structural explanation. ReLU induces sparsity through hard gating, effectively selecting a subnetwork conditioned on the input. The resulting function is piecewise linear: globally nonlinear, but locally linear within each region. The training behavior is not governed by smoothness alone.
+Chapter 6 cites experiments in which ReLU outperformed softplus. It also explains why ReLU's linear behavior on positive inputs can help optimization: its derivative is constant there, so the activation does not shrink the gradient as its input grows. On negative inputs, it outputs zero, effectively selecting a subnetwork for each input. These properties matter alongside smoothness; being differentiable everywhere does not by itself make an activation easier to train.

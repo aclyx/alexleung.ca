@@ -1,136 +1,68 @@
 # Blog Post Grader
 
-Use this rubric to grade alexleung.ca blog drafts before publishing. It operationalizes the canonical [writing voice](../../../../docs/writing-voice.md); the goal is fit with Alex's voice, not generic polish.
+Evaluate the draft against the canonical [writing voice](../../../../docs/writing-voice.md) and the user's brief. Judge the text the reader receives, distinguishing necessary repairs from preferences. A fresh perspective is useful only when its findings are supported by the prose.
 
-## Scoring
+## Review order and local clarity
 
-Score out of 100. A publish-ready draft should score **90+** with no blocking issue. If a post scores below 90, identify the smallest revision set likely to raise it above 90.
+1. Read only the title, excerpt, and any distinct card/metadata copy. Save `surface-only.md` before opening the body or ledger. The title can supply context for the excerpt; the unseen body cannot. An unfamiliar term does not automatically need a definition on a short surface. Distinguish rendered inspection from source-only review.
+2. Read the body alone. Check the opening, adjacent sentence relationships, references, reasoning, and ending; save `draft-only.md` before consulting the ledger or corpus. Quote material defects and give the smallest repair. Consider reordering or deletion before adding connective prose.
+3. Read the ledger for intent and fact checks, then compare with the supplied recent posts for repeated patterns. Keep the earlier cold-read findings; approved history cannot erase a clarity problem. The corpus reveals repetition, not a template to imitate.
 
-- 90-100: Strong fit. Only minor edits remain.
-- 80-89: Usable direction, but the post needs targeted revision before publishing.
-- 70-79: Clear idea, but voice, structure, evidence, or scope is not yet reliable.
-- Below 70: Rework from the user's facts and thesis before doing sentence-level edits.
+Resolve demonstratives against nearby text. Preserve ordinary references and legitimate contrasts; no word is banned. Flag repeated meaning or evaluations that add no substance, while keeping reactions that contribute personal meaning and sentences that apply a concept to the post's question. Avoid imposing a definition–example–lesson structure on every paragraph.
 
-## Rubric
+## Coherence and ending
 
-### 1. Thesis and Value: 15 points
+For arguments and philosophical reflections, identify the central question. For each concept carrying the reasoning, record a compact table:
 
-- Names a real tension, mechanism, or observation rather than a vague topic.
-- Makes the reader's takeaway legible without turning the post into a pitch.
-- Keeps the claim sized to the user's actual experience and evidence.
-- If the user supplied a main takeaway, preserves that mechanism instead of substituting an adjacent generic lesson.
-- Preserves the supplied mechanism, intended scope, and explicit future aspiration. Concrete examples demonstrate the broader idea without replacing it.
-- Preserves the takeaway semantically without restating it after every section or across every editorial surface.
+| Step                    | Evidence from the draft                                          |
+| ----------------------- | ---------------------------------------------------------------- |
+| Definition or mechanism | What the concept means or how it works.                          |
+| Applied inference       | What follows in this post's situation, including its conditions. |
+| Consequence             | How that changes the stakes, judgment, or unresolved question.   |
 
-### 2. Concrete Grounding: 15 points
+Mark each step **stated**, **implicit**, or **missing** and quote the relevant clause. Label connective reasoning supplied by the reviewer. Two quoted endpoints do not demonstrate the step between them. A definition, list, or single possible scenario does not establish an implication across scenarios; a conditional tendency is not a guarantee.
 
-- Opens from a concrete behavior, object, constraint, or observed change when the post is reflective.
-- Orients the reader in the first sentence by naming the subject, workflow, object, or setting before moving into comparison, measurement, or interpretation.
-- Uses specific examples, facts, mechanisms, or comparisons instead of abstract framing.
-- Distinguishes logistical specificity from lived material. Place names, times, distances, and route sequence establish orientation but do not by themselves count as a lived observation.
-- Pays off salient setups such as new gear, excess supplies, or difficult travel with a user-supplied result, evaluation, trade-off, consequence, or preference when the post depends on them.
-- Lets concrete details stand when they already carry the point; any following interpretation adds a distinct consequence, decision, or changed understanding.
-- Research-backed claims are dated when needed and linked to credible sources.
+Require the smallest missing proposition when the central argument relies on the reader supplying a substantive application or consequence. Ordinary implications need no ceremonial explanation. For important transitions, identify the needed relationship—contrast, addition, return, cause, or example—and assess whether the wording expresses it. Distinguish a logical gap from the author's requested emphasis.
 
-### 3. Alex Voice Fit: 20 points
+An argumentative ending should account for material complications raised in the body. If it announces a concern, preference, or changed view that the piece depends on, the prose should supply its reason rather than leaving the reviewer to invent one. That reason may appear earlier; do not demand a recap or a formulaic “because” sentence. Brief personal asides and deliberately open questions need no forced resolution. Other genres may end on a scene or observation without making an argument.
 
-- Uses first person when grounding Alex's own experience or judgment and stays measured and direct elsewhere.
-- Feels technically grounded and clearly experienced through clarity, evidence, mechanisms, and trade-offs rather than self-description.
-- Makes supported claims with quiet confidence instead of drifting into promotion, vagueness, or unnecessary hedging.
-- Balances rigor with warmth, curiosity, approachability, and a human perspective rather than becoming sterile.
-- Avoids hype, influencer packaging, recruiter language, slogans, and broad future-of-work claims.
-- Avoids polished thesis scaffolding, rhetorical contrast templates, decorative metaphors, and phrasing that sounds like it is performing sophistication.
-- Avoids draft-wide density of balanced contrasts, tidy inventories, generic evaluations, and recap sentences that makes the voice feel generated.
+## Intent and facts
 
-### 4. Structure and Flow: 15 points
+Keep the ledger in three parts:
 
-- Each section advances one clear claim.
-- The form fits the genre instead of defaulting to an orientation, 2-4 headings, and a closing moral.
-- Paragraph cadence is varied and mostly multi-sentence.
-- Transitions make the argument feel continuous rather than assembled from notes.
-- The ending fits the genre: it may return to an argument's tension, stop on a personal or travel scene, or leave a case study with a concrete limit or next experiment. It does not append a generic moral.
+- **Current facts and semantic intent:** source quotations preserving actors, values, precision, ownership, uncertainty, scope, and causal, temporal, or comparative relationships. Distinguish available background facts from requested inclusions. Include verified external sources for factual claims drawn from research.
+- **Explicit verbatim constraints:** only wording the user has specifically required unchanged.
+- **Editorial history:** earlier approved or superseded prose, only when needed to interpret a current constraint. Approval does not make wording mandatory or prove its quality; use the latest instruction when requests conflict.
 
-### 5. Truthfulness and Scope Control: 15 points
+Available facts are not an inclusion checklist. Tie a required inclusion to the user’s request or to reasoning the piece relies on; do not demand that every background note or ordinary implication be restated. Compare substantive requested points with the draft. Quote the request and corresponding passage; mark coverage **explicit**, **partial/implicit**, or **absent**. A narrower defensible example may leave the intended general application unstated. Treat substantive omissions as intent gaps even if the prose is logically coherent. Do not invent a logical error to enforce a wording preference, or repeat an unsupported absolute from rough notes when a qualified statement preserves the intended point. Flag unclear explicitly required wording instead of silently changing it.
 
-- Preserves user-provided facts exactly.
-- Matches the source-fact ledger in actor, value, scope, precision, and causal, temporal, or comparative relationships.
-- Does not invent anecdotes, metrics, usage duration, ownership, or confidence.
-- Marks uncertainty honestly instead of converting it into a polished conclusion.
-- Keeps future aspirations clearly bounded as goals rather than presenting them as current capabilities or guarantees.
-- Does not add links to later-dated posts without intentionally updating chronology metadata.
+Check factual claims against their sources. Paraphrase is allowed; changed actors, values, scope, qualifiers, or relationships are fact deltas. Do not infer personal experience, prior expertise, duration, or certainty. Future aspirations remain aspirations. Personal/travel drafts need both sourced observations and sourced reactions, preferences, consequences, or trade-offs, except in an explicitly requested bare-log or caption-led-photo-essay mode. Reading and an intellectual reaction count; physical scenery is not required.
 
-### 6. Blog Surface Fit: 10 points
+## Score and decision
 
-- Title, excerpt, tags, headings, cover alt text, and metadata feel like the same editorial system.
-- Title and excerpt name the concrete subject before its abstract category or lesson.
-- Title is concise, spoken, and subject- or mechanism-specific, not a category label, clickbait frame, or clever essay title.
-- Headings are plain and literal unless the post has already earned a more essayistic frame.
-- Tags are precise and non-overlapping.
+Score only after the evidence checks. A publish-ready draft needs **90+**, no blockers, and a pass on every applicable check. Scores are editorial judgments, not calibrated measurements. Do not let the total conceal a failed check.
 
-### 7. Visual and Asset Fit: 10 points
+| Category           | Points | Assessment                                                                                                                                               |
+| ------------------ | -----: | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Intent and value   |     15 | The requested question or takeaway, mechanism, scope, and aspirations remain intact.                                                                     |
+| Grounding          |     15 | The opening orients a cold reader; supported observations, definitions, examples, and sourced claims make the reasoning inspectable.                     |
+| Voice              |     20 | Fits the canonical voice, preserves honest learning and uncertainty, and avoids a dominant template of contrasts, lists, generic evaluations, or recaps. |
+| Structure and flow |     15 | Sentence connections and references are clear; sections contribute to the inquiry; the form and ending fit the genre.                                    |
+| Facts and scope    |     15 | No unsupported personal details, factual changes, chronology problems, or inflated claims.                                                               |
+| Surfaces           |     10 | Title/excerpt work together without the body; headings, precise tags, and metadata fit the piece.                                                        |
+| Visuals and format |     10 | Required frontmatter and assets are valid; imagery reveals the subject; Alex is named in alt text when depicted.                                         |
 
-- Cover or inline imagery reveals the actual subject, object, state, or thesis.
-- Generated images are grounded and content-revealing, not decorative filler.
-- Images with Alex refer to Alex by name in alt/caption-style metadata.
-- Inline images are only present when they clarify the argument or make a model/example inspectable.
-- Every served raster blog source and generated variant uses a `.webp` extension and contains genuine RIFF/WEBP bytes. Playwright PNG baselines are test artifacts and are outside this check.
+Any material intent gap, fact delta, unsupported claim, central clarity/coherence failure, or unearned argumentative ending blocks publication. So do missing required source material, dominant promotional or formulaic prose, and broken frontmatter/assets. Assess these by genre and evidence, not arbitrary word or heading counts. Cite image-workflow evidence for genuine WebP and variant validity; do not infer file bytes from an extension. Apply the dates and chronology rules in [post-template](post-template.md). Mark any unperformed required check as unverified rather than passed.
 
-## Blocking Issues
+## Fresh-context inputs and report
 
-Mark a grading result as blocked even if the numeric score is high when any of these are present:
+The author supplies separate surface and body snapshots, the full target post and asset paths for format verification, this rubric, the canonical voice, a ledger, and 3–5 other recent published posts, plus any explicit mode or editorial waiver. Inspect frontmatter and assets after the cold reads. Do not read the source conversation, previous grades, author rationale, or intended repairs. Follow the reading order above.
 
-- Any fact delta against the supplied ledger: an invented or unsupported personal detail, a changed actor, value, scope, or qualifier, or an added causal, temporal, or comparative relationship.
-- A personal or travel draft missing either a supported condition, scene, or observation or a supported reaction, evaluation, consequence, trade-off, or preference, unless the user explicitly requested a bare trip log or caption-led photo essay.
-- A misleading factual claim, stale current-state claim, or unsupported statistic.
-- Tone that reads as hype, self-promotion, influencer packaging, corporate or resume language, sterile formality, or unsupported vagueness.
-- A dominant pattern of balanced contrasts, polished lists, generic interpretations after concrete details, or recap sentences that makes the draft read as templated.
-- A structure that closely repeats recent posts despite a different genre or subject, especially the same context block, heading count, and closing moral.
-- A reflective opening that summarizes meaning before showing the concrete experience.
-- A reflective opening that begins with a comparison, metric, or time jump before naming the actual subject or context for the reader.
-- A draft that replaces the user's stated main takeaway with a nearby generic takeaway, such as "know when to stop", "treat it as an operating signal", or "tokens per decision".
-- A draft that narrows a stated general philosophy to one concrete example, or omits an explicit future aspiration that materially defines the user's intended story.
-- For AI-agent/token-use posts, missing the harness or feedback-loop mechanism when the user explicitly identified it as the point.
-- Titles or headings that rely on clever frames, point/lever metaphors, or transformation slogans after the user asked for a plainer style.
-- Missing required frontmatter or broken asset references.
-- A served raster blog source or generated variant is not genuine WebP, including a PNG or JPEG renamed with a `.webp` extension.
-- A new post marked `draft: false` before the current prose passes this full grader, unless the user explicitly waived the editorial gate.
+Return:
 
-## Fresh-Context Grading Prompt
+- **Decision and score:** ready, needs revision, or verification incomplete; give category scores with brief reasons.
+- **Required repairs:** quoted evidence, its effect on the reader or intent, and the smallest supported fix. Order by impact. Zero repairs is a valid result; do not fill a quota.
+- **Check results:** intent coverage, fact delta, orientation/surfaces, local clarity/voice, corpus pattern density, experiential sufficiency, whole-piece coherence/ending, and assets/format. Mark each pass, fail, not applicable, or unverified. Include the intent evidence and applicable coherence table; avoid repeating them under separate headings.
+- **Optional preferences or limitations:** only when useful. A clean draft does not need invented improvement suggestions. Do not rewrite the post.
 
-Run the grader in a fresh subagent context. Pass only the target post, this rubric, a verbatim source-fact ledger that preserves actors, values, scope, precision, and stated relationships, any explicit user-selected bare-log or caption-led-photo-essay mode or editorial-gate waiver, and 3-5 other recent published posts for corpus comparison. Do not pass the author's rationale, known weak spots, previous score, or planned fixes. The comparison posts are evidence for repeated patterns, not style templates.
-
-Use this prompt shape:
-
-```text
-Use the attached blog-post grading rubric to grade the draft at <post path>. Work independently from the authoring agent. Return:
-
-1. Score out of 100.
-2. Blocking issues, if any.
-3. Main-takeaway fidelity: pass/fail, naming the stated takeaway if one was supplied and quoting where the draft lands it.
-4. Opening orientation: pass/fail, with the first sentence quoted or referenced.
-5. Surface style: pass/fail for a subject-first title and excerpt plus appropriate headings.
-6. Category scores with one-sentence rationale each.
-7. The top 3 revision priorities, ordered by expected score impact.
-8. Any sentence or section that feels off-tone for Alex's blog voice.
-9. Pattern density: pass/fail for balanced contrasts, lists, generic interpretations after details, and recaps, citing representative clusters rather than enforcing a word quota.
-10. Corpus distinctiveness: pass/fail against the supplied recent posts, naming any repeated opening, section, transition, or ending template.
-11. Experiential sufficiency: pass/fail for a personal or travel post; not applicable otherwise. For a personal or travel post, quote both the supported condition, scene, or observation and the supported reaction, evaluation, consequence, trade-off, or preference that make the piece more than an itinerary; logistics alone do not satisfy this check.
-12. Fact delta: pass/fail. Identify any claim that does not map to the source-fact ledger with its actor, value, scope, precision, and causal, temporal, or comparative relationships intact.
-
-Do not rewrite the post. Keep the report concise and evidence-backed with file/line references where possible.
-```
-
-## Authoring Loop
-
-1. Build a verbatim source-fact ledger that preserves actors, values, scope, precision, and only the causal, temporal, or comparative relationships the user stated. Record the main takeaway as part of it when one was supplied.
-2. For personal and travel posts, confirm that the source material contains both required kinds of lived material. Ask one bundled follow-up if either is missing, unless the user requested a bare trip log or caption-led photo essay.
-3. Draft or revise the post locally while keeping a new post at `draft: true`.
-4. Run a fact-delta check against the ledger, then confirm that the title, excerpt, and first sentence name the concrete subject before comparison or interpretation.
-5. Check the full draft for clusters of balanced contrasts, tidy lists, generic interpretations after concrete details, and recap sentences. Judge density and function, not keyword counts.
-6. Supply the ledger and 3-5 other recent published posts to a fresh-context grading subagent using the prompt above.
-7. If the score is below 90, any applicable pass/fail check fails, or any blocking issue remains, revise from the highest-impact findings first.
-8. Re-run the grader in a fresh context after meaningful revisions.
-9. Continue until the score is 90+ with no blocking issues and all applicable pass/fail checks succeed.
-10. Set `draft: false` only after the current prose passes and the user asks to publish or preview normally, unless the user explicitly waived the editorial gate.
-11. If two grading passes stall below 90 on the same core issue, stop local patching, name the repeated pattern, and ask the user for missing facts or a direction choice instead of smoothing the prose into generic polish.
-12. If user feedback exposes a recurring failure and the user asks to improve the harness, update the skill or rubric so future grading catches that failure mode.
+For scoped excerpt or regression reviews, assess only the requested dimensions and report that scope; do not assign a full-post score or publication verdict. Publishing status and the authoring loop are governed by the [main skill](../SKILL.md#editorial-gate).

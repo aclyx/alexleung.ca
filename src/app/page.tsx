@@ -191,12 +191,11 @@ export default function Page() {
             <div className="max-w-2xl text-lg leading-relaxed text-muted">
               <p>
                 I spend time reading, playing tennis, hiking, climbing, and
-                hanging out with my cats. I write about technical books and life
-                outside work alongside my software notes.
+                hanging out with my cats.
               </p>
               <p className="mt-5">
                 My <LinkText href="/now/">Now page</LinkText>
-                {" is a short, current note on what I'm reading and studying."}
+                {" is a short update on what I'm reading and doing."}
               </p>
             </div>
             <dl className="grid grid-cols-2 gap-x-5 gap-y-5 border-t border-line pt-5 text-sm lg:grid-cols-1 lg:border-t-0 lg:pt-0">

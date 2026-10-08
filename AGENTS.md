@@ -39,7 +39,8 @@ yarn prepare          # Configure repo Git hooks path (.githooks)
 yarn image:variants   # Generate image variants and refresh image variant manifest
 yarn image:variants:stage  # Generate variants for staged changes and git-add outputs
 yarn build            # Generate image variants and build static export to out/
-yarn lint             # Run ESLint, Prettier, and Knip checks
+yarn lint             # Run ESLint, Prettier, Knip, and harness checks
+yarn lint:harness     # Validate skill metadata and local link file targets
 yarn lint:unused      # Run the pinned Knip unused-code check
 yarn lint:fix         # Auto-fix lint issues
 yarn test             # Run Jest tests
@@ -105,7 +106,6 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 - Jest with React Testing Library
 - Playwright E2E coverage runs in Docker via `docker compose` by default, with host-mode wrappers available for environments where Docker is unavailable: `yarn test:e2e:host`, `yarn test:e2e:visual:host`, and `yarn test:e2e:visual:update:host`
-- Temporary Windows/WSL exception: until the Windows Docker/Playwright harness issue is fixed, agents running from a Windows host against this WSL checkout may treat Playwright smoke/visual coverage as environment-blocked and skip those suites automatically, but they must say that explicitly in the handoff and must not claim those suites passed.
 - Jest tests live in `__tests__/` subdirectories alongside source files
 - Playwright tests live under `playwright/tests/` with shared setup in `playwright.config.ts` and `playwright/fixtures/`
 - `yarn test:e2e` covers smoke flows across desktop/mobile Chrome and Safari/WebKit
@@ -116,9 +116,10 @@ yarn deploy           # Build and deploy to GitHub Pages
 ### Verification Guardrails (Agent Guidance)
 
 - Do not claim the repo is clean or that changes are verified unless you have run the relevant checks in this workspace and seen them pass.
-- During normal iteration, run `yarn lint`, `yarn typecheck`, `yarn test`, and `yarn build` for any repository change unless the user explicitly asked for a narrower verification scope.
+- During iteration, run checks that can detect failures from the change: scoped formatting and `yarn lint:harness` for guidance edits, relevant unit/type checks for code, and build/browser checks for affected runtime or layout behavior. Expand verification when new failures or risks justify it. The full pre-commit/pre-PR gate below still applies to every change.
+- For editorial rubric changes, also run the relevant isolated cases linked from the blog skill. Structural validation and application tests do not establish editorial quality.
 - For Playwright verification, use the Docker commands when Docker is available. If `docker` is missing or the daemon is unavailable, run the corresponding host-mode wrappers instead of skipping E2E coverage, and state which path you used.
-- Temporary Windows/WSL exception: if the agent is running from Windows against this WSL repo and the known Docker/Playwright harness issue applies, the agent may skip `yarn test:e2e`, `yarn test:e2e:visual`, and the host-mode Playwright wrappers without retrying alternate Playwright paths. Treat those suites as environment-blocked, still run the non-Playwright gate, and state the skip explicitly.
+- For Windows-launched WSL checkouts, consult the narrowly scoped [environment exception](docs/agent-environments.md#windowswsl-playwright-exception) before classifying Playwright as blocked. It includes evidence requirements and a retirement condition.
 - If typography classes, prose sizing, or breakpoint-sensitive copy/layout are changed, also verify the affected UI at both mobile and `md`+ breakpoints via local browser inspection or relevant Playwright coverage.
 - If a failure is only formatting, fix it and rerun the failing command rather than reporting partial success.
 - Prefer file-scoped fixes over repo-wide autofix commands. In a dirty worktree, do not run repo-wide mutating commands such as `yarn lint:fix` unless the user explicitly wants that broader scope.
@@ -145,13 +146,9 @@ yarn deploy           # Build and deploy to GitHub Pages
 - For any request path that creates commits or pull requests (including the yeet skill), keep wording tool-agnostic: do not mention Codex or any other AI agent/model by name.
 - After pushing a commit or PR branch, do not watch or wait for remote CI by default. Check current status once only if useful for the handoff, then stop unless the user explicitly asks you to wait, watch, or fix a failing check.
 
-### Windows / WSL Worktrees (Agent Guidance)
+### Environment Troubleshooting
 
-- If a WSL worktree was created by Windows git, the worktree `.git` file may point at a Windows-style `//wsl.localhost/...` gitdir that WSL git cannot resolve automatically.
-- When WSL-only tooling such as `node`, `yarn`, or `gh` must operate on that worktree, run from WSL with explicit environment variables that point at your own checkout metadata: `GIT_DIR=<path-to-main-repo>/.git/worktrees/<worktree-name>` and `GIT_WORK_TREE=<path-to-this-worktree>`.
-- The worktree name is usually visible in the worktree `.git` file. Use the WSL path to the primary checkout that owns the shared `.git/worktrees/` directory for `<path-to-main-repo>`, and use `pwd` for `<path-to-this-worktree>`. Validate the setup with `git status --short --branch` before running other WSL git commands.
-- When pushing a rebased PR branch from one of these worktrees, prefer WSL `git` / WSL `gh` with those explicit `GIT_DIR` / `GIT_WORK_TREE` values, because Windows-side SSH auth may be unavailable even when WSL GitHub auth works.
-- When updating an existing remote PR branch after a rebase, prefer `git push --force-with-lease` over plain `--force`.
+See [agent environments](docs/agent-environments.md) for Windows/WSL worktree metadata, Playwright startup failures, and the supported Docker build fallback.
 
 ### Typography and Prose Guardrails (Agent Guidance)
 
@@ -164,25 +161,14 @@ yarn deploy           # Build and deploy to GitHub Pages
 - `ProseContent` defaults to base prose sizing. Use `size="lg"` for `md:prose-lg`; for small notes/footers, explicitly set `size="sm"` so both `prose-sm` and `md:prose-sm` are applied.
 - When editing typography classes, verify rendered size at both mobile and `md`+ breakpoints via local browser inspection or the relevant Playwright coverage. Do not claim breakpoint verification unless you actually performed one of those checks.
 
-### Taste and Style Guardrails (Agent Guidance)
+### Writing and Design Guidance
 
-- Canonical writing voice: `docs/writing-voice.md`. Use `.agents/skills/site-taste-audit/SKILL.md` for critique-led taste and tone audits, `.agents/skills/site-copy-editor/SKILL.md` for non-blog site writing, and `.agents/skills/blog-post-creator/SKILL.md` for blog writing. Keep skill-specific guidance aligned with the canonical voice and limited to its surface-specific needs.
-- Target taste: concrete, understated, utility-minded, and quietly polished. The site should feel calm, aligned, readable, and specific rather than flashy, clever, decorative, or like it is performing sophistication.
-- Prefer direct labels, specific nouns, and visible hierarchy over metaphors, slogans, or abstract framing. If the real thing can be named plainly, name it plainly.
-- Layout should feel balanced and intentional on both mobile and desktop. Avoid compositions that feel artificially constrained to one side, overly boxed-in, or visually uneven across columns and sections.
-- Favor dense but scannable browsing surfaces for repeat-use pages such as writing indexes and tag lists. Reduce ceremony before reducing information.
-- Typography should read as editorial but practical: clear hierarchy, comfortable line length, restrained display sizes, and no oversized type inside compact panels.
-- Color and visual accents should support orientation and warmth without becoming the main event. Use secondary accents sparingly, avoid one-note palettes, and prefer backgrounds/images that create consistency without lowering legibility.
-- Visual assets should reveal the actual subject, object, or state. Avoid purely atmospheric, dark, blurred, cropped, or stock-like imagery when the user needs to understand the content.
-- Interaction polish matters: cards that look clickable should be clickable, mobile tap targets should be comfortable, and hover/focus states should reinforce the hierarchy without layout shift.
-- Treat AI product development as a first-class interest when relevant, but keep AI wording practical and grounded. Avoid hype, broad future-of-work claims, or self-congratulatory tooling language.
-- When the user asks for a taste, style, tone, typography, color, mobile/desktop, or visual critique of the site, use the repo-local `site-taste-audit` skill if it is available.
+- Canonical writing voice: [docs/writing-voice.md](docs/writing-voice.md). Apply it to visible copy and machine-facing summaries; keep skill instructions focused on their workflow.
+- Use [blog-post-creator](.agents/skills/blog-post-creator/SKILL.md) for blog prose, [site-copy-editor](.agents/skills/site-copy-editor/SKILL.md) for other site writing, and [site-taste-audit](.agents/skills/site-taste-audit/SKILL.md) for visual or tone critique.
+- Follow [docs/design-system.md](docs/design-system.md) for visual implementation. Verify affected mobile and desktop layouts; typography-specific rules are above.
 
 ### Copy Editing Guardrails (Agent Guidance)
 
-- Read and apply `docs/writing-voice.md` for site and blog writing.
-- Keep prose compact, calm, direct, technically grounded, and understated. Build quiet confidence from concrete details, mechanisms, constraints, trade-offs, and observed results; let personal writing add sparse warmth without turning it into a pitch or moral.
-- Apply the canonical voice to all visible and machine-facing writing. Surface-specific length and formality may vary, but the underlying voice should not.
 - Prefer revising existing copy over rewriting from scratch unless the current structure is actively causing clarity or tone problems.
 - Prefer site-representative language over recruiter-optimized phrasing in top-level labels such as homepage headlines, page titles, section names, metadata descriptions, `public/manifest.json`, `public/llms.txt`, RSS/feed text, and JSON-LD descriptions.
 - Treat visible pages and machine-facing summaries as one editorial system: navigation labels, CTA labels, blog titles/excerpts/intros, metadata, RSS/feed text, manifest text, `llms.txt`, and JSON-LD/schema text should feel consistent without becoming copy-pasted.

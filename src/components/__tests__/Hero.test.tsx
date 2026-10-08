@@ -24,7 +24,7 @@ describe("Hero", () => {
 
     expect(
       screen.getByText(
-        /I build products and systems that make new technology useful in everyday life\. I write about software, technical books, and life outside work\./i
+        /I work on ChatGPT at OpenAI\. I write about software, technical books, and life outside work\./i
       )
     ).toBeInTheDocument();
   });
@@ -34,7 +34,7 @@ describe("Hero", () => {
 
     expect(
       screen.getByRole("link", {
-        name: /Now — what I’m reading and studying/i,
+        name: /Now — what I’m up to/i,
       })
     ).toHaveAttribute("href", "/now");
     expect(screen.getByRole("link", { name: /get in touch/i })).toHaveAttribute(

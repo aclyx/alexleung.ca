@@ -56,7 +56,7 @@ test("home page renders the hero content", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.getByText(
-      "I build products and systems that make new technology useful in everyday life. I write about software, technical books, and life outside work.",
+      "I work on ChatGPT at OpenAI. I write about software, technical books, and life outside work.",
       { exact: true }
     )
   ).toBeVisible();
@@ -67,7 +67,7 @@ test("home page renders the hero content", async ({ page }) => {
     page.getByRole("link", { name: "Read my writing" })
   ).toHaveAttribute("href", "/blog/");
   await expect(
-    page.getByRole("link", { name: "Now — what I’m reading and studying" })
+    page.getByRole("link", { name: "Now — what I’m up to" })
   ).toHaveAttribute("href", "/now/");
   await expect(
     page.getByRole("heading", { level: 2, name: "Experience" })
@@ -97,12 +97,9 @@ test("home page renders the hero content", async ({ page }) => {
   ).toBeVisible();
   await expect(
     page.locator("#interests p").filter({
-      hasText:
-        "My Now page is a short, current note on what I'm reading and studying.",
+      hasText: "My Now page is a short update on what I'm reading and doing.",
     })
-  ).toHaveText(
-    "My Now page is a short, current note on what I'm reading and studying."
-  );
+  ).toHaveText("My Now page is a short update on what I'm reading and doing.");
 });
 
 test("interests divider adapts to the content layout", async ({ page }) => {
