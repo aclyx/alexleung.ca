@@ -28,7 +28,7 @@ const WEBPAGE_TYPE: "WebPage" = "WebPage";
 const SITE_NAVIGATION_ELEMENT_TYPE: "SiteNavigationElement" =
   "SiteNavigationElement";
 const PERSON_DESCRIPTION =
-  "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance.";
+  "Alex Leung is a software engineer and writer. His previous work includes home electrification, AR and AI hardware, and consumer finance.";
 const SOCIAL_PROFILES = [
   "https://www.linkedin.com/in/aclyx",
   "https://ca.linkedin.com/in/aclyx",
@@ -221,7 +221,7 @@ export function buildBlogCollectionPageSchema(input: {
     mainEntity: {
       "@type": "Blog",
       "@id": toAbsoluteUrl("/blog/#blog"),
-      name: "Alex Leung's Blog",
+      name: "Alex Leung's Writing",
       description: input.description,
       publisher: {
         "@id": toAbsoluteUrl(PERSON_ID),
@@ -261,7 +261,7 @@ export function buildBlogPostingSchema(
     isPartOf: {
       "@type": "Blog",
       "@id": toAbsoluteUrl("/blog/#blog"),
-      name: "Blog | Alex Leung",
+      name: "Writing | Alex Leung",
     },
   };
 }

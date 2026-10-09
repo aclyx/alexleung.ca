@@ -3,7 +3,6 @@
 import { useState } from "react";
 
 import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
-import { surfaceClassNames } from "@/components/Surface";
 import { trackNewsletterSubscribe } from "@/lib/analytics";
 
 const DEFAULT_FOLLOW_IT_ACTION =
@@ -35,21 +34,18 @@ export function FollowItSubscribeForm({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const Heading = headingLevel;
   const buttonClassName = actionClassNames({
-    className: `w-full ${isSubmitting ? "cursor-progress opacity-90" : "cursor-pointer"}`,
+    className: `w-full sm:min-w-40 sm:w-auto ${isSubmitting ? "cursor-progress opacity-90" : "cursor-pointer"}`,
   });
 
   return (
     <section
       aria-labelledby="follow-it-subscribe-title"
-      className={surfaceClassNames({
-        padding: "responsive",
-        className: `max-w-xl ${className}`.trim(),
-      })}
+      className={`max-w-[650px] border-t border-line pt-6 ${className}`.trim()}
     >
       <header>
         <Heading
           id="follow-it-subscribe-title"
-          className="text-heading font-semibold text-ink"
+          className="text-editorial-heading text-ink"
         >
           {title}
         </Heading>
@@ -59,7 +55,7 @@ export function FollowItSubscribeForm({
       <form
         action={action}
         method="post"
-        className="mt-5 space-y-3"
+        className="mt-4 flex flex-col gap-3 sm:flex-row"
         aria-busy={isSubmitting}
         onSubmit={() => {
           trackNewsletterSubscribe(analyticsPlacement);
@@ -77,7 +73,7 @@ export function FollowItSubscribeForm({
           autoComplete="email"
           placeholder={placeholder}
           readOnly={isSubmitting}
-          className={fieldClassNames()}
+          className={fieldClassNames({ className: "min-w-0 sm:flex-1" })}
         />
         <button
           type="submit"

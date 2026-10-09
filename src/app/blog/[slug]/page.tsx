@@ -7,13 +7,11 @@ import { notFound } from "next/navigation";
 import { Article, BlogPosting } from "schema-dts";
 
 import { CoverImage } from "@/components/CoverImage";
-import { ExcerptText } from "@/components/ExcerptText";
 import { FollowItSubscribeForm } from "@/components/FollowItSubscribeForm";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ProseContent } from "@/components/ProseContent";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { Surface } from "@/components/Surface";
 import { Tag } from "@/components/Tag";
 import {
   getAllPosts,
@@ -144,7 +142,7 @@ export default async function Post({ params }: Props) {
       <JsonLdBreadcrumbs
         items={[
           { name: "Home", item: "/" },
-          { name: "Blog", item: "/blog" },
+          { name: "Writing", item: "/blog" },
           { name: post.title, item: `/blog/${post.slug}` },
         ]}
       />
@@ -267,33 +265,27 @@ export default async function Post({ params }: Props) {
               >
                 <h2
                   id="related-posts-heading"
-                  className="mb-5 text-2xl font-bold text-ink"
+                  className="text-editorial-heading mb-3 text-ink"
                 >
                   Related posts
                 </h2>
-                <div className="grid gap-4 md:grid-cols-3">
+                <div className="divide-y divide-line">
                   {relatedPosts.map((relatedPost) => (
                     <Link
                       key={relatedPost.slug}
                       href={`/blog/${relatedPost.slug}/`}
-                      className="group block rounded-xl focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
+                      aria-label={relatedPost.title}
+                      className="group block py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
                     >
-                      <Surface
-                        className="h-full p-4 group-focus-visible:border-accent-link/50 group-focus-visible:-translate-y-0.5 group-focus-visible:bg-white group-focus-visible:shadow-md"
-                        interactive
+                      <h3 className="text-body-lg font-serif leading-snug text-ink group-hover:underline group-hover:decoration-line group-hover:underline-offset-4 group-focus-visible:underline group-focus-visible:underline-offset-4">
+                        {relatedPost.title}
+                      </h3>
+                      <time
+                        dateTime={relatedPost.date}
+                        className="mt-1 block font-mono text-xs leading-relaxed text-muted"
                       >
-                        <h3 className="text-base font-semibold text-ink transition-colors group-hover:text-accent-link-hover group-focus-visible:text-accent-link-hover">
-                          {relatedPost.title}
-                        </h3>
-                        <p className="mt-1 text-sm text-muted">
-                          {formatIsoDateForDisplay(relatedPost.date)}
-                        </p>
-                        {relatedPost.excerpt ? (
-                          <p className="mt-2 line-clamp-3 text-sm text-muted">
-                            <ExcerptText text={relatedPost.excerpt} />
-                          </p>
-                        ) : null}
-                      </Surface>
+                        {formatIsoDateForDisplay(relatedPost.date)}
+                      </time>
                     </Link>
                   ))}
                 </div>

@@ -7,10 +7,10 @@ type NavLink = {
 
 export const NAV_LINKS: readonly NavLink[] = [
   {
-    id: "experience",
-    href: "/#experience",
-    canonicalPath: "/#experience",
-    label: "Experience",
+    id: "home",
+    href: "/",
+    canonicalPath: "/",
+    label: "Home",
   },
   {
     id: "writing",

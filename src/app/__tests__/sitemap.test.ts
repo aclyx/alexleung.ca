@@ -1,7 +1,8 @@
 import sitemap from "@/app/sitemap";
+import { getAllPosts } from "@/lib/blogApi";
 
 jest.mock("@/constants/now", () => ({
-  NOW_PAGE_LAST_UPDATED_ISO: "2026-01-15",
+  NOW_PAGE_LAST_UPDATED_ISO: "2026-10-15",
 }));
 
 jest.mock("@/lib/blogApi", () => ({
@@ -53,7 +54,7 @@ describe("sitemap", () => {
     expect(
       entries.find((entry) => entry.url === "https://alexleung.ca/")
         ?.lastModified
-    ).toEqual(new Date("2026-09-05"));
+    ).toEqual(new Date("2026-10-15"));
     expect(
       entries.find((entry) => entry.url === "https://alexleung.ca/blog/")
         ?.lastModified
@@ -82,14 +83,36 @@ describe("sitemap", () => {
     );
   });
 
-  it("uses the freshest post update as the homepage lastModified value", () => {
+  it("updates the homepage and Now lastModified values when Now is newer than the posts", () => {
     const entries = sitemap();
     const homeEntry = entries.find(
       (entry) => entry.url === "https://alexleung.ca/"
     );
+    const nowEntry = entries.find(
+      (entry) => entry.url === "https://alexleung.ca/now/"
+    );
+
+    expect(homeEntry?.lastModified).toEqual(new Date("2026-10-15"));
+    expect(nowEntry?.lastModified).toEqual(homeEntry?.lastModified);
+  });
+
+  it("uses a post update newer than Now for the homepage lastModified value", () => {
+    jest.mocked(getAllPosts).mockReturnValueOnce([
+      {
+        slug: "newer-post",
+        title: "Newer post",
+        date: "2026-10-20T00:00:00.000Z",
+        tags: [],
+        draft: false,
+        content: "",
+      },
+    ]);
+    const homeEntry = sitemap().find(
+      (entry) => entry.url === "https://alexleung.ca/"
+    );
 
     expect(homeEntry?.lastModified).toEqual(
-      new Date("2026-09-05T00:00:00.000Z")
+      new Date("2026-10-20T00:00:00.000Z")
     );
   });
 });

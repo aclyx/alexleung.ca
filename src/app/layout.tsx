@@ -38,7 +38,7 @@ export const metadata: Metadata = {
       "application/rss+xml": [
         {
           url: "/feed.xml",
-          title: "Alex Leung Blog RSS Feed",
+          title: "Alex Leung's Writing RSS Feed",
         },
       ],
     },
@@ -79,7 +79,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#f4f1e9",
+  themeColor: "#faf9f5",
   colorScheme: "light",
 };
 

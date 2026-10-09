@@ -1,23 +1,32 @@
 import { JsonLd } from "react-schemaorg";
 
 import { Metadata } from "next";
+import Link from "next/link";
 
 import type { ProfilePage } from "schema-dts";
 
-import ExternalLink from "@/components/ExternalLink";
 import { Hero } from "@/components/Hero";
 import { HomeSectionAnalytics } from "@/components/HomeSectionAnalytics";
-import { LatestWritingSection } from "@/components/LatestWritingSection";
 import { LinkText } from "@/components/LinkText";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { SectionHeading } from "@/components/SectionHeading";
-import { getAllPosts } from "@/lib/blogApi";
+import { ResponsiveImage } from "@/components/ResponsiveImage";
+import { WritingList } from "@/components/WritingList";
+import { getPostBySlug } from "@/lib/blogApi";
+import {
+  getStaticImageFallback,
+  getStaticImageSourceSet,
+} from "@/lib/localImageMetadata";
 import { buildPageMetadata, buildProfilePageSchema } from "@/lib/seo";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung is a software engineer and writer in San Francisco. He writes about software, technical books, and life outside work.";
+  "Alex Leung works on ChatGPT at OpenAI and writes about software, technical books, and life outside work.";
 const path = "/";
+const selectedPostSlugs = [
+  "humanitys-cosmic-endowment",
+  "farming-expensive-coding-agent-sessions",
+  "dropout-as-implicit-bagging",
+];
 
 export const metadata: Metadata = buildPageMetadata({
   title,
@@ -34,205 +43,101 @@ export const metadata: Metadata = buildPageMetadata({
 });
 
 export default function Page() {
-  const latestPosts = getAllPosts([
+  const selectedPosts = selectedPostSlugs
+    .map((slug) => getPostBySlug(slug, ["slug", "title", "date", "excerpt"]))
+    .filter((post) => post !== null);
+  const featuredPost = getPostBySlug("two-nights-in-desolation-wilderness", [
     "slug",
     "title",
-    "date",
-    "excerpt",
-    "tags",
-  ]).slice(0, 3);
+  ]);
+  const photo = getStaticImageFallback("homeFeature");
 
   return (
     <>
       <JsonLd<ProfilePage>
-        item={buildProfilePageSchema({
-          path,
-          title,
-          description,
-        })}
+        item={buildProfilePageSchema({ path, title, description })}
       />
       <HomeSectionAnalytics />
       <Hero />
-
-      <ResponsiveContainer
-        element="section"
-        className="border-t border-line py-16 md:py-24"
-      >
-        <div
+      <ResponsiveContainer>
+        <div className="grid gap-8 py-8 md:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)] md:gap-16 md:py-10">
+          <section id="writing" aria-labelledby="selected-writing-heading">
+            <div className="mb-2 flex items-center justify-between gap-5">
+              <h2
+                id="selected-writing-heading"
+                className="text-editorial-label"
+              >
+                Selected writing
+              </h2>
+              <div className="flex text-sm">
+                <LinkText href="/blog/" standalone>
+                  All writing →
+                </LinkText>
+              </div>
+            </div>
+            <WritingList
+              posts={selectedPosts}
+              variant="selected"
+              headingLevel="h3"
+            />
+          </section>
+          <aside
+            id="interests"
+            aria-label="More from this site"
+            className="border-t border-line pt-6 md:border-t-0 md:pt-3"
+          >
+            {featuredPost ? (
+              <section aria-labelledby="featured-writing-heading">
+                <h2
+                  id="featured-writing-heading"
+                  className="text-editorial-label"
+                >
+                  From the blog
+                </h2>
+                <article className="mt-4">
+                  <Link
+                    href={`/blog/${featuredPost.slug}/`}
+                    aria-label={`Read ${featuredPost.title}`}
+                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+                  >
+                    <ResponsiveImage
+                      src={photo.path}
+                      srcSet={getStaticImageSourceSet("homeFeature")}
+                      alt="A cup held in front of Upper Velma Lake and the granite above it"
+                      width={photo.width}
+                      height={photo.height}
+                      sizes="(min-width: 1120px) 366px, (min-width: 768px) 36vw, calc(100vw - 2.5rem)"
+                      className="aspect-[1.9] w-full object-cover"
+                      pictureClassName="block"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </Link>
+                  <h3 className="text-editorial-heading mt-4">
+                    <LinkText href={`/blog/${featuredPost.slug}/`}>
+                      {featuredPost.title}
+                    </LinkText>
+                  </h3>
+                  <p className="mt-3 text-sm leading-relaxed text-muted">
+                    A new sleep setup and more food than we needed.
+                  </p>
+                </article>
+              </section>
+            ) : null}
+          </aside>
+        </div>
+        <section
           id="experience"
-          className="grid gap-8 md:grid-cols-[15rem_minmax(0,1fr)]"
+          aria-labelledby="work-heading"
+          className="grid gap-3 border-t border-line py-6 md:grid-cols-[7.5rem_minmax(0,1fr)] md:gap-6"
         >
-          <div>
-            <SectionHeading eyebrow="Work and study" title="Experience" />
-          </div>
-
-          <div>
-            <div className="border-b border-line">
-              <article className="experience-entry grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-7">
-                <div>
-                  <h3 className="text-lg font-semibold text-ink">
-                    <ExternalLink href="https://openai.com/">
-                      OpenAI
-                    </ExternalLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-muted">AI products</p>
-                </div>
-                <p className="leading-relaxed text-muted">
-                  Building ChatGPT products and systems that bring model
-                  capabilities into everyday use.
-                </p>
-              </article>
-
-              <article className="experience-entry grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-7">
-                <div>
-                  <h3 className="text-lg font-semibold text-ink">
-                    <ExternalLink href="https://jetsonhome.com/">
-                      Jetson
-                    </ExternalLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-muted">
-                    Home electrification
-                  </p>
-                </div>
-                <p className="leading-relaxed text-muted">
-                  Built products and systems to make home electrification easier
-                  across North America.
-                </p>
-              </article>
-
-              <article className="experience-entry grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-7">
-                <div>
-                  <h3 className="text-lg font-semibold text-ink">
-                    <ExternalLink href="https://arvr.google.com/">
-                      Google
-                    </ExternalLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-muted">AR and AI glasses</p>
-                </div>
-                <p className="leading-relaxed text-muted">
-                  Built the platform that powered Google&apos;s AR glasses.
-                </p>
-              </article>
-
-              <article className="experience-entry grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-7">
-                <div>
-                  <h3 className="text-lg font-semibold text-ink">
-                    <ExternalLink href="https://cash.app/">
-                      Cash App
-                    </ExternalLink>
-                  </h3>
-                  <p className="mt-1 text-sm text-muted">Consumer finance</p>
-                </div>
-                <p className="leading-relaxed text-muted">
-                  Built products and systems used by millions of customers to
-                  move and manage their money.
-                </p>
-              </article>
-
-              <article className="experience-entry grid gap-3 md:grid-cols-[10rem_minmax(0,1fr)] md:gap-7">
-                <div>
-                  <h3 className="text-lg font-semibold text-ink">North</h3>
-                  <p className="mt-1 text-sm text-muted">
-                    Consumer smartglasses
-                  </p>
-                </div>
-                <p className="leading-relaxed text-muted">
-                  Built the world&apos;s first display-integrated consumer
-                  smartglasses.
-                </p>
-              </article>
-            </div>
-
-            <div className="grid gap-5 pt-8 text-sm md:grid-cols-2 lg:grid-cols-3">
-              <div>
-                <p className="font-semibold text-ink">P.Eng.</p>
-                <p className="mt-1 leading-relaxed text-muted">
-                  Professional Engineers{" "}
-                  <span className="whitespace-nowrap">
-                    Ontario · Since 2017
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-ink">Georgia Tech</p>
-                <p className="mt-1 leading-relaxed text-muted">
-                  MSECE, Electrical &amp; Computer{" "}
-                  <span className="whitespace-nowrap">
-                    Engineering · 2013–2016
-                  </span>
-                </p>
-              </div>
-              <div>
-                <p className="font-semibold text-ink">Waterloo</p>
-                <p className="mt-1 leading-relaxed text-muted">
-                  BASc, Electrical Engineering &amp; Pure{" "}
-                  <span className="whitespace-nowrap">
-                    Mathematics · 2008–2013
-                  </span>
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </ResponsiveContainer>
-
-      <ResponsiveContainer
-        element="section"
-        className="border-t border-line py-16 md:py-24"
-      >
-        <div
-          id="interests"
-          className="grid items-start gap-8 md:grid-cols-[15rem_minmax(0,1fr)]"
-        >
-          <div>
-            <SectionHeading eyebrow="Outside work" title="Interests" />
-          </div>
-          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_15rem] lg:gap-12">
-            <div className="max-w-2xl text-lg leading-relaxed text-muted">
-              <p>
-                I spend time reading, playing tennis, hiking, climbing, and
-                hanging out with my cats.
-              </p>
-              <p className="mt-5">
-                My <LinkText href="/now/">Now page</LinkText>
-                {" is a short update on what I'm reading and doing."}
-              </p>
-            </div>
-            <dl className="grid grid-cols-2 gap-x-5 gap-y-5 border-t border-line pt-5 text-sm lg:grid-cols-1 lg:border-t-0 lg:pt-0">
-              <div>
-                <dt className="font-semibold text-ink">Reading</dt>
-                <dd className="mt-1 text-muted">Technology and history</dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-ink">Outdoors</dt>
-                <dd className="mt-1 text-muted">Hiking and climbing</dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-ink">Sport</dt>
-                <dd className="mt-1 text-muted">Tennis</dd>
-              </div>
-              <div>
-                <dt className="font-semibold text-ink">Home</dt>
-                <dd className="mt-1 text-muted">Two cats</dd>
-              </div>
-            </dl>
-          </div>
-        </div>
-      </ResponsiveContainer>
-
-      <LatestWritingSection posts={latestPosts} />
-
-      <ResponsiveContainer
-        element="section"
-        className="border-t border-line py-16 md:py-24"
-      >
-        <div className="max-w-2xl">
-          <SectionHeading eyebrow="Contact" title="Say hello" />
-          <p className="mt-5 text-lg leading-relaxed text-muted">
-            The <LinkText href="/contact/">contact page</LinkText> has the best
-            ways to reach me and follow new writing.
+          <h2 id="work-heading" className="text-editorial-label">
+            Work
+          </h2>
+          <p className="text-sm leading-relaxed text-muted">
+            Previously at Jetson, Google, Cash App, and North.
           </p>
-        </div>
+        </section>
       </ResponsiveContainer>
     </>
   );

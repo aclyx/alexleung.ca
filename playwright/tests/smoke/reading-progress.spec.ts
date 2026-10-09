@@ -30,17 +30,13 @@ test("article reading progress spans the title through the final prose", async (
   const positions = await page.evaluate(() => {
     const title = document.querySelector("#post-title");
     const prose = document.querySelector("main article .prose");
-    const header = document.querySelector("header.fixed");
 
-    if (!title || !prose || !header) {
+    if (!title || !prose) {
       throw new Error("Expected article progress landmarks to exist.");
     }
 
     const scrollPosition = window.scrollY;
-    const start =
-      title.getBoundingClientRect().top +
-      scrollPosition -
-      header.getBoundingClientRect().height;
+    const start = title.getBoundingClientRect().top + scrollPosition;
     const end =
       prose.getBoundingClientRect().bottom +
       scrollPosition -

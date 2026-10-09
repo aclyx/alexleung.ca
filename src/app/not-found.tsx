@@ -1,20 +1,27 @@
-import Link from "next/link";
-
-import { actionClassNames } from "@/components/controlStyles";
+import { LinkText } from "@/components/LinkText";
+import { PageShell } from "@/components/PageShell";
+import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 
 export default function NotFound() {
   return (
-    <div className="flex grow items-center justify-center bg-paper px-5 py-16 text-ink">
-      <div className="text-center">
-        <h1 className="mb-4 text-6xl font-bold">404</h1>
-        <h2 className="mb-6 text-2xl">Page Not Found</h2>
-        <p className="mb-8 text-lg text-muted">
-          The page you&apos;re looking for doesn&apos;t exist.
-        </p>
-        <Link href="/" className={actionClassNames({ className: "px-6 py-3" })}>
-          Back home
-        </Link>
-      </div>
-    </div>
+    <PageShell
+      eyebrow="404"
+      title="Page not found"
+      description="The page you’re looking for doesn’t exist."
+    >
+      <ResponsiveContainer>
+        <nav
+          aria-label="Page recovery"
+          className="flex flex-wrap gap-x-6 gap-y-2"
+        >
+          <LinkText href="/" standalone>
+            Home
+          </LinkText>
+          <LinkText href="/blog/" standalone>
+            Writing
+          </LinkText>
+        </nav>
+      </ResponsiveContainer>
+    </PageShell>
   );
 }

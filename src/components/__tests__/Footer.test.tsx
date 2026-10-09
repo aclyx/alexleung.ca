@@ -1,54 +1,76 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, within } from "@testing-library/react";
 
 import { data } from "@/constants/socialLinks";
+import { trackContactLinkClick } from "@/lib/analytics";
 
 import Footer from "../Footer";
 
-describe("Footer", () => {
-  it("should render social links with proper security attributes", () => {
-    const { container } = render(<Footer />);
+jest.mock("@/lib/analytics", () => ({
+  trackContactLinkClick: jest.fn(),
+}));
 
-    const links = data.map((item) =>
-      container.querySelector(`a[aria-label="${item.label}"]`)
+jest.mock("next/link", () => {
+  return function MockLink({
+    href,
+    children,
+    ...props
+  }: React.AnchorHTMLAttributes<HTMLAnchorElement> & { href: string }) {
+    return (
+      <a href={href} {...props}>
+        {children}
+      </a>
     );
-    expect(links).toHaveLength(data.length);
+  };
+});
 
-    links.forEach((link) => {
-      expect(link).not.toBeNull();
-      expect(link).toHaveAttribute("target", "_blank");
-      expect(link).toHaveAttribute("rel", "me noopener");
-    });
-  });
-
-  it("keeps footer social links visible across breakpoints", () => {
-    const { container } = render(<Footer />);
-
-    const socialListItems = container.querySelectorAll("li");
-    expect(socialListItems).toHaveLength(data.length);
-
-    socialListItems.forEach((item) => {
-      expect(item).toHaveClass("inline-block");
-      expect(item).not.toHaveClass("lg:hidden");
-    });
-  });
-
-  it("should render RSS subscription link", () => {
+describe("Footer", () => {
+  it("renders Alex's name and five direct text links in the intended order", () => {
     render(<Footer />);
+    const navigation = screen.getByRole("navigation", {
+      name: "Footer navigation",
+    });
 
-    const rssLink = screen.getByRole("link", { name: /subscribe via rss/i });
-    expect(rssLink).toHaveAttribute("href", "/feed.xml");
-    expect(rssLink).toHaveClass("focus-visible:outline-none");
-    expect(rssLink).toHaveClass("focus-visible:ring-2");
-    expect(rssLink).toHaveClass("focus-visible:ring-accent-link");
-    expect(rssLink).toHaveClass("focus-visible:ring-offset-paper");
-  });
-
-  it("should display copyright with current year", () => {
-    render(<Footer />);
-
-    const currentYear = new Date().getFullYear();
+    expect(screen.getByText("Alex Leung")).toBeInTheDocument();
     expect(
-      screen.getByText(new RegExp(`${currentYear}.*Alex Leung`))
-    ).toBeInTheDocument();
+      within(navigation)
+        .getAllByRole("link")
+        .map((link) => link.textContent)
+    ).toEqual(["GitHub", "LinkedIn", "X", "RSS", "Contact"]);
+  });
+
+  it.each(data.filter(({ id }) => [1, 2, 4].includes(id)))(
+    "preserves the canonical URL and safe external-link attributes for $label",
+    ({ label, url }) => {
+      render(<Footer />);
+      const profileLink = screen.getByRole("link", { name: label });
+
+      expect(profileLink).toHaveAttribute("href", url);
+      expect(profileLink).toHaveAttribute("target", "_blank");
+      expect(profileLink).toHaveAttribute("rel", "me noopener");
+    }
+  );
+
+  it("tracks social clicks with the footer placement and canonical profile data", () => {
+    render(<Footer />);
+    fireEvent.click(screen.getByRole("link", { name: "X (Twitter) Profile" }));
+
+    expect(trackContactLinkClick).toHaveBeenCalledWith({
+      label: "X (Twitter) Profile",
+      placement: "footer",
+      url: data.find(({ id }) => id === 4)?.url,
+    });
+  });
+
+  it("links to the RSS file and the contact route", () => {
+    render(<Footer />);
+
+    expect(screen.getByRole("link", { name: "RSS" })).toHaveAttribute(
+      "href",
+      "/feed.xml"
+    );
+    expect(screen.getByRole("link", { name: "Contact" })).toHaveAttribute(
+      "href",
+      "/contact/"
+    );
   });
 });
