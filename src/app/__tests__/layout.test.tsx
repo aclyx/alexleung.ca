@@ -69,7 +69,7 @@ describe("RootLayout", () => {
       expect(schema.name).toBe("Alex Leung");
       expect(schema.url).toBe("https://alexleung.ca");
       expect(schema.description).toBe(
-        "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance."
+        "Alex Leung is a software engineer and writer. His previous work includes home electrification, AR and AI hardware, and consumer finance."
       );
     });
 

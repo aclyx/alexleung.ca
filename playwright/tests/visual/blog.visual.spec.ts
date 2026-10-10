@@ -23,19 +23,20 @@ test("tag archive top fold stays visually stable", async ({ page }) => {
   await expect(page).toHaveScreenshot("blog-tag-archive-top-fold.png");
 });
 
-test("expanded blog topics stay visually stable", async ({
-  page,
-}, testInfo) => {
+test("related posts stay visually stable", async ({ page }) => {
+  await gotoAndStabilize(page, "/blog/boring-blog-architecture/");
+  const relatedPosts = page.getByRole("region", { name: "Related posts" });
+  await relatedPosts.scrollIntoViewIfNeeded();
+  await waitForStablePage(page);
+
+  await expect(relatedPosts).toHaveScreenshot("blog-related-posts.png");
+});
+
+test("expanded blog topics stay visually stable", async ({ page }) => {
   await gotoAndStabilize(page, "/blog/");
+  await page.getByText("Browse topics and series", { exact: true }).click();
 
-  const isMobile = testInfo.project.name.startsWith("mobile-");
-  if (isMobile) {
-    await page.getByText("Browse topics and series", { exact: true }).click();
-  }
-
-  const topicList = page.locator(
-    isMobile ? "#blog-topic-list-mobile" : "#blog-topic-list"
-  );
+  const topicList = page.locator("#blog-topic-list");
   const revealButton = topicList.getByRole("button", {
     name: /View \d+ more/,
   });

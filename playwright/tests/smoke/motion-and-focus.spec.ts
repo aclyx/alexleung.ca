@@ -1,46 +1,11 @@
 import type { Locator, Page } from "@playwright/test";
 
-import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
-
-type BlogCardSupportingState = {
-  arrowTranslate: string;
-  backgroundColor: string;
-  borderColor: string;
-  boxShadow: string;
-  imageOpacity: string;
-  titleColor: string;
-  translate: string;
-};
-
-async function getBlogCardSupportingState(
-  card: Locator
-): Promise<BlogCardSupportingState> {
-  return card.evaluate((article) => {
-    const image = article.querySelector("img");
-    const title = article.querySelector("h2");
-    const arrow = Array.from(
-      article.querySelectorAll<HTMLElement>('span[aria-hidden="true"]')
-    ).find((element) => element.textContent?.trim() === "→");
-
-    if (!image || !title || !arrow) {
-      throw new Error("Expected the blog card supporting elements to exist.");
-    }
-
-    const articleStyles = getComputedStyle(article);
-
-    return {
-      arrowTranslate: getComputedStyle(arrow)
-        .getPropertyValue("translate")
-        .trim(),
-      backgroundColor: articleStyles.backgroundColor,
-      borderColor: articleStyles.borderColor,
-      boxShadow: articleStyles.boxShadow,
-      imageOpacity: getComputedStyle(image).opacity,
-      titleColor: getComputedStyle(title).color,
-      translate: articleStyles.getPropertyValue("translate").trim(),
-    };
-  });
-}
+import {
+  expect,
+  gotoAndStabilize,
+  test,
+  waitForStablePage,
+} from "../../fixtures/stableRendering";
 
 async function focusWithKeyboard(
   page: Page,
@@ -63,38 +28,8 @@ async function focusWithKeyboard(
     }
   }
 
-  throw new Error("Could not reach the blog card link with keyboard focus.");
+  throw new Error("Could not reach the requested link with keyboard focus.");
 }
-
-test("the mobile portrait is visible as soon as the homepage DOM is ready", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/", { waitUntil: "domcontentloaded" });
-
-  const portraitState = await page
-    .getByRole("img", { name: "Alex Leung sitting in an art studio" })
-    .evaluate((image) => {
-      const rect = image.getBoundingClientRect();
-      const styles = getComputedStyle(image);
-
-      return {
-        animationName: styles.animationName,
-        height: rect.height,
-        opacity: styles.opacity,
-        visibility: styles.visibility,
-        width: rect.width,
-      };
-    });
-
-  expect(portraitState).toMatchObject({
-    animationName: "none",
-    opacity: "1",
-    visibility: "visible",
-  });
-  expect(portraitState.width).toBeGreaterThan(0);
-  expect(portraitState.height).toBeGreaterThan(0);
-});
 
 test("reduced motion leaves the hero visible without timing delays", async ({
   page,
@@ -103,7 +38,7 @@ test("reduced motion leaves the hero visible without timing delays", async ({
   await page.emulateMedia({ reducedMotion: "reduce" });
   await page.goto("/", { waitUntil: "domcontentloaded" });
 
-  const heroCopy = page.locator("#about .hero-enter");
+  const heroCopy = page.locator("#about h1");
   await expect(heroCopy).toBeVisible();
   await expect(heroCopy).toHaveCSS("animation-duration", "0s");
   await expect(heroCopy).toHaveCSS("animation-delay", "0s");
@@ -121,198 +56,111 @@ test("reduced motion leaves the hero visible without timing delays", async ({
   expect(delayedElements).toBe(0);
 });
 
-test("the mobile drawer transitions as one accessible unit", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.goto("/", { waitUntil: "load" });
-  await page.evaluate(
-    () =>
-      new Promise<void>((resolve) => {
-        requestAnimationFrame(() => requestAnimationFrame(() => resolve()));
-      })
-  );
-
-  const openButton = page.getByRole("button", { name: "Open menu" });
-  const drawer = page.locator("#mobile-nav-drawer");
-  const transitionProperties = await drawer.evaluate((element) =>
-    getComputedStyle(element)
-      .transitionProperty.split(",")
-      .map((property) => property.trim())
-  );
-
-  expect(transitionProperties).toEqual(
-    expect.arrayContaining(["opacity", "translate"])
-  );
-  await expect(openButton).toHaveAttribute(
-    "aria-controls",
-    "mobile-nav-drawer"
-  );
-  await expect(openButton).toHaveAttribute("aria-expanded", "false");
-  await expect(drawer).toHaveAttribute("aria-hidden", "true");
-
-  await openButton.click();
-
-  const closeButton = page.getByRole("button", { name: "Close menu" });
-  const accessibleDrawer = page.getByRole("navigation", {
-    name: "Mobile navigation",
-  });
-  await expect(closeButton).toHaveAttribute("aria-expanded", "true");
-  await expect(accessibleDrawer).toHaveAttribute("aria-hidden", "false");
-  await expect(accessibleDrawer).toHaveCSS("opacity", "1");
-
-  await page.keyboard.press("Tab");
-  await expect(
-    accessibleDrawer.getByRole("link", { name: "Experience" })
-  ).toBeFocused();
-
-  await page.keyboard.press("Escape");
-  await expect(openButton).toBeFocused();
-  await expect(openButton).toHaveAttribute("aria-expanded", "false");
-  await expect(drawer).toHaveAttribute("aria-hidden", "true");
-});
-
-test("keyboard focus gives blog cards their supporting hover state", async ({
-  page,
-}, testInfo) => {
-  test.skip(
-    testInfo.project.name.startsWith("mobile-"),
-    "Comparing hover and keyboard focus requires a hover-capable project."
-  );
-  await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/blog/", { waitUntil: "domcontentloaded" });
-
-  const card = page.locator("main article").first();
-  const cardLink = card.locator("a[aria-label]").first();
-  await card.scrollIntoViewIfNeeded();
-  await card.hover();
-  await expect(card.locator("img")).toHaveCSS("opacity", "0.9");
-
-  const hoverState = await getBlogCardSupportingState(card);
-  expect(hoverState.arrowTranslate).not.toBe("none");
-  expect(hoverState.translate).not.toBe("none");
-
-  await page.mouse.move(0, 0);
-  await focusWithKeyboard(
+for (const width of [390, 1280]) {
+  test(`inline navigation and writing links work with a keyboard at ${width}px`, async ({
     page,
-    cardLink,
-    testInfo.project.name.startsWith("webkit-") ? "Alt+Tab" : "Tab"
-  );
-  await expect(cardLink).toBeFocused();
-  await expect.poll(() => getBlogCardSupportingState(card)).toEqual(hoverState);
-});
-
-test("each topic reveal moves focus to the newly revealed link", async ({
-  page,
-}) => {
-  await page.setViewportSize({ width: 1280, height: 900 });
-  await gotoAndStabilize(page, "/blog/");
-
-  const topicList = page.locator("#blog-topic-list");
-  const topicLinks = topicList.getByRole("link");
-  const revealButton = topicList.getByRole("button", {
-    name: /View \d+ more/,
-  });
-  let revealedLink: Locator | undefined;
-
-  for (let attempt = 0; attempt < 10; attempt += 1) {
-    if ((await revealButton.count()) === 0) {
-      break;
-    }
-
-    const firstNewTopicIndex = await topicLinks.count();
-    await revealButton.click();
-    revealedLink = topicLinks.nth(firstNewTopicIndex);
-    await expect(revealedLink).toBeFocused();
-
-    if ((await revealButton.count()) === 0) {
-      break;
-    }
-  }
-
-  if (!revealedLink) {
-    throw new Error(
-      "Expected the reveal control to add at least one topic link."
+  }, testInfo) => {
+    test.skip(
+      testInfo.project.name.startsWith("mobile-"),
+      "Keyboard navigation is exercised in desktop browser projects at both layout widths."
     );
-  }
-});
+    await page.setViewportSize({ width, height: 900 });
+    await gotoAndStabilize(page, "/");
+    const tabKey = testInfo.project.name.startsWith("webkit-")
+      ? "Alt+Tab"
+      : "Tab";
+    const writingNav = page
+      .getByRole("navigation", { name: "Primary navigation" })
+      .getByRole("link", { name: "Writing", exact: true });
 
-test("new topic links enter in a short, capped cadence", async ({ page }) => {
-  await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/blog/", { waitUntil: "domcontentloaded" });
+    await focusWithKeyboard(page, writingNav, tabKey);
+    await expect(writingNav).toBeFocused();
+    await expect(writingNav).not.toHaveCSS("box-shadow", "none");
+    await page.keyboard.press("Enter");
+    await expect(page).toHaveURL(/\/blog\/$/);
+    await waitForStablePage(page);
 
-  const topicList = page.locator("#blog-topic-list");
-  const topicLinks = topicList.getByRole("link");
-  const firstNewTopicIndex = await topicLinks.count();
+    for (const path of ["/blog/", "/blog/tags/ai/"]) {
+      await gotoAndStabilize(page, path);
+      const firstPostLink = page.locator("main article a[aria-label]").first();
+      const postTitle = await firstPostLink.getAttribute("aria-label");
+      if (!postTitle) {
+        throw new Error("Expected the writing link to expose its post title.");
+      }
 
-  await topicList.getByRole("button", { name: /View \d+ more/ }).click();
-
-  const delays = await topicLinks.evaluateAll(
-    (links, startIndex) =>
-      links
-        .slice(startIndex, startIndex + 4)
-        .map((link) => getComputedStyle(link).animationDelay),
-    firstNewTopicIndex
-  );
-
-  expect(delays.length).toBeGreaterThan(0);
-  expect(delays.length).toBeLessThanOrEqual(4);
-  delays.forEach((delay, index) => {
-    expect(Number.parseFloat(delay)).toBeCloseTo(index * 0.02);
+      await focusWithKeyboard(page, firstPostLink, tabKey);
+      await expect(firstPostLink).toBeFocused();
+      await expect(firstPostLink).not.toHaveCSS("box-shadow", "none");
+      await page.keyboard.press("Enter");
+      await expect(
+        page.getByRole("heading", { level: 1, name: postTitle })
+      ).toBeVisible();
+    }
   });
-});
+}
 
-test("coarse-pointer cards use one-pixel press feedback", async ({
-  page,
-}, testInfo) => {
-  test.skip(
-    !testInfo.project.name.startsWith("mobile-"),
-    "Press feedback is intentionally limited to coarse pointers."
-  );
+for (const width of [390, 1280]) {
+  test(`each topic reveal moves focus to the newly revealed link at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoAndStabilize(page, "/blog/");
 
-  await page.goto("/blog/", { waitUntil: "domcontentloaded" });
+    await page.getByText("Browse topics and series", { exact: true }).click();
+    const topicList = page.locator("#blog-topic-list");
+    const topicLinks = topicList.getByRole("link");
+    const revealButton = topicList.getByRole("button", {
+      name: /View \d+ more/,
+    });
+    let revealedLink: Locator | undefined;
 
-  const card = page.locator("main article.touch-press-surface").first();
-  const link = card.locator("a[aria-label]").first();
-  const bounds = await link.boundingBox();
+    for (let attempt = 0; attempt < 10; attempt += 1) {
+      if ((await revealButton.count()) === 0) {
+        break;
+      }
 
-  if (!bounds) {
-    throw new Error("Expected the first blog-card link to have bounds.");
-  }
+      const firstNewTopicIndex = await topicLinks.count();
+      await revealButton.click();
+      revealedLink = topicLinks.nth(firstNewTopicIndex);
+      await expect(revealedLink).toBeFocused();
 
-  await link.evaluate((element) => {
-    element.addEventListener("click", (event) => event.preventDefault(), {
-      once: true,
+      if ((await revealButton.count()) === 0) {
+        break;
+      }
+    }
+
+    if (!revealedLink) {
+      throw new Error(
+        "Expected the reveal control to add at least one topic link."
+      );
+    }
+  });
+
+  test(`new topic links enter in a short, capped cadence at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/blog/", { waitUntil: "domcontentloaded" });
+
+    await page.getByText("Browse topics and series", { exact: true }).click();
+    const topicList = page.locator("#blog-topic-list");
+    const topicLinks = topicList.getByRole("link");
+    const firstNewTopicIndex = await topicLinks.count();
+
+    await topicList.getByRole("button", { name: /View \d+ more/ }).click();
+
+    const delays = await topicLinks.evaluateAll(
+      (links, startIndex) =>
+        links
+          .slice(startIndex, startIndex + 4)
+          .map((link) => getComputedStyle(link).animationDelay),
+      firstNewTopicIndex
+    );
+
+    expect(delays.length).toBeGreaterThan(0);
+    expect(delays.length).toBeLessThanOrEqual(4);
+    delays.forEach((delay, index) => {
+      expect(Number.parseFloat(delay)).toBeCloseTo(index * 0.02);
     });
   });
-  await page.mouse.move(
-    bounds.x + bounds.width / 2,
-    bounds.y + bounds.height / 2
-  );
-  await page.mouse.down();
-
-  const pointerState = await card.evaluate((element) => {
-    const link = element.querySelector("a[aria-label]");
-
-    return {
-      coarsePointer: matchMedia("(hover: none) and (pointer: coarse)").matches,
-      hasActiveLink: element.matches(":has(> a:active)"),
-      linkActive: link?.matches(":active") ?? false,
-    };
-  });
-  expect(pointerState).toEqual({
-    coarsePointer: true,
-    hasActiveLink: true,
-    linkActive: true,
-  });
-
-  await expect
-    .poll(() =>
-      card.evaluate((element) =>
-        getComputedStyle(element).getPropertyValue("translate").trim()
-      )
-    )
-    .toContain("1px");
-
-  await page.mouse.up();
-});
+}

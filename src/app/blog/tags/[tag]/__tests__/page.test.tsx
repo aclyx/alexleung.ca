@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
 import TagArchivePage, {
   generateMetadata,
@@ -27,7 +27,8 @@ jest.mock("@/lib/blogApi", () => ({
         title: "Agent Notes",
         date: "2026-04-10T00:00:00.000Z",
         excerpt: "Thinking through AI workflows.",
-        coverImage: undefined,
+        coverImage: "/assets/blog/cover.webp",
+        coverAlt: "Alex reviewing code at his desk.",
         tags: ["AI", "Developer Workflow"],
       },
       {
@@ -80,6 +81,41 @@ describe("TagArchivePage", () => {
     expect(
       screen.getByText(/Posts on coding agents, AI-assisted prototypes/i)
     ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute(
+      "href",
+      "/blog/"
+    );
+
+    const article = screen.getByRole("article");
+    const row = within(article).getByRole("link", { name: "Agent Notes" });
+    expect(within(article).getAllByRole("link")).toHaveLength(1);
+    expect(
+      within(row).getByRole("heading", { level: 2, name: "Agent Notes" })
+    ).toBeInTheDocument();
+    expect(
+      within(row).getByRole("img", { name: "Alex reviewing code at his desk." })
+    ).toHaveAttribute("src", "/assets/blog/cover.webp");
+    expect(row.querySelector("time")).toHaveAttribute(
+      "datetime",
+      "2026-04-10T00:00:00.000Z"
+    );
+    expect(
+      within(row).getByText("Thinking through AI workflows.")
+    ).toBeVisible();
+  });
+
+  it("keeps posts without a cover readable without an empty image placeholder", async () => {
+    const view = await TagArchivePage({
+      params: Promise.resolve({ tag: "deep-learning" }),
+    });
+
+    render(view);
+
+    const row = screen.getByRole("link", { name: "Deep Learning Review" });
+    expect(within(row).queryByRole("img")).not.toBeInTheDocument();
+    expect(
+      within(row).getByText("Notes on representation learning.")
+    ).toBeVisible();
   });
 
   it("describes developer workflow beyond coding-agent work", async () => {

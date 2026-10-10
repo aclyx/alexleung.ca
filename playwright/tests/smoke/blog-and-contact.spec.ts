@@ -1,3 +1,5 @@
+import type { Locator } from "@playwright/test";
+
 import {
   expect,
   gotoAndStabilize,
@@ -5,21 +7,41 @@ import {
   waitForStablePage,
 } from "../../fixtures/stableRendering";
 
+async function expectLinksFitViewport(links: Locator, width: number) {
+  expect(await links.count()).toBeGreaterThan(0);
+
+  for (const link of await links.all()) {
+    await expect(link).toBeVisible();
+    const bounds = await link.boundingBox();
+    if (!bounds) {
+      throw new Error("Expected the link to have visible bounds.");
+    }
+    expect(bounds.width).toBeGreaterThanOrEqual(44);
+    expect(bounds.height).toBeGreaterThanOrEqual(44);
+    expect(bounds.x).toBeGreaterThanOrEqual(0);
+    expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+  }
+}
+
 test("blog index navigates into a post and renders article metadata", async ({
   page,
 }) => {
   await gotoAndStabilize(page, "/blog/");
 
-  const firstPostCard = page
-    .locator("main a[aria-label][href^='/blog/']")
-    .first();
-  const postTitle = await firstPostCard.getAttribute("aria-label");
+  const firstPostLink = page.locator("main article a[aria-label]").first();
+  const postTitle = await firstPostLink.getAttribute("aria-label");
 
   if (!postTitle) {
-    throw new Error("Expected the first blog card to expose an aria-label.");
+    throw new Error(
+      "Expected the first writing link to expose its post title."
+    );
   }
 
-  await firstPostCard.click();
+  await expect(firstPostLink.locator("time")).toHaveAttribute(
+    "datetime",
+    /\d{4}-\d{2}-\d{2}/
+  );
+  await firstPostLink.click();
   await waitForStablePage(page);
 
   await expect(
@@ -31,7 +53,7 @@ test("blog index navigates into a post and renders article metadata", async ({
   ).toBeVisible();
 });
 
-test("contact page shows the email CTA and social profile links", async ({
+test("contact page shows email, profile links, and subscription", async ({
   page,
 }) => {
   await gotoAndStabilize(page, "/contact/");
@@ -40,44 +62,250 @@ test("contact page shows the email CTA and social profile links", async ({
 
   await expect(page.getByText("alex@alexleung.ca")).toBeVisible();
   await expect(
-    main.getByRole("link", { name: "Email me", exact: true })
+    main.getByRole("link", { name: "alex@alexleung.ca", exact: true })
   ).toHaveAttribute("href", "mailto:alex@alexleung.ca");
-  await expect(page.getByRole("heading", { name: "Subscribe" })).toBeVisible();
+  await expect(main.getByRole("button", { name: "Copy email" })).toBeVisible();
   await expect(
-    main.getByRole("link", { name: "LinkedIn Profile", exact: true })
+    main.getByRole("heading", { level: 2, name: "Get new posts by email" })
+  ).toBeVisible();
+  await expect(main.getByLabel("Email address")).toHaveAttribute(
+    "required",
+    ""
+  );
+  const profiles = main.getByRole("navigation", { name: "Profiles" });
+  await expect(profiles.getByRole("link")).toHaveText([
+    "LinkedIn",
+    "GitHub",
+    "X",
+  ]);
+  await expect(
+    profiles.getByRole("link", { name: "LinkedIn Profile", exact: true })
   ).toHaveAttribute("href", "https://www.linkedin.com/in/aclyx");
   await expect(
-    main.getByRole("link", { name: "GitHub Profile", exact: true })
+    profiles.getByRole("link", { name: "GitHub Profile", exact: true })
   ).toHaveAttribute("href", "https://www.github.com/aclyx");
   await expect(
-    main.getByRole("link", {
+    profiles.getByRole("link", { name: "X (Twitter) Profile", exact: true })
+  ).toHaveAttribute("href", "https://www.x.com/aclyxpse");
+  await expect(
+    profiles.getByRole("link", {
       name: "Work GitHub Profile",
       exact: true,
     })
   ).toHaveCount(0);
 });
 
-test("unknown routes render the exported not found page", async ({ page }) => {
-  await gotoAndStabilize(page, "/this-route-should-not-exist/");
+for (const width of [320, 390, 1280]) {
+  test(`footer links stay consistent and usable across pages at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    const expectedLinks = [
+      { name: "GitHub Profile", href: "https://www.github.com/aclyx" },
+      { name: "LinkedIn Profile", href: "https://www.linkedin.com/in/aclyx" },
+      { name: "X (Twitter) Profile", href: "https://www.x.com/aclyxpse" },
+      { name: "RSS", href: "/feed.xml" },
+      { name: "Contact", href: "/contact/" },
+    ];
 
-  await expect(
-    page.getByRole("heading", { level: 1, name: "404" })
-  ).toBeVisible();
-  await expect(
-    page.getByRole("heading", { level: 2, name: "Page Not Found" })
-  ).toBeVisible();
-  await expect(page.getByRole("link", { name: "Back home" })).toHaveAttribute(
-    "href",
-    "/"
-  );
-  await expect(page.locator('meta[name="robots"]')).toHaveCount(1);
-  await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
-    "content",
-    /noindex/
-  );
-  await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
-  await expect(page.locator("footer")).toBeInViewport();
+    for (const path of ["/", "/contact/", "/now/", "/blog/"]) {
+      await gotoAndStabilize(page, path);
+      const footer = page.getByRole("contentinfo");
+      await footer.scrollIntoViewIfNeeded();
+      const navigation = footer.getByRole("navigation", {
+        name: "Footer navigation",
+      });
+      await expect(navigation.getByRole("link")).toHaveText([
+        "GitHub",
+        "LinkedIn",
+        "X",
+        "RSS",
+        "Contact",
+      ]);
+
+      for (const expectedLink of expectedLinks) {
+        const link = navigation.getByRole("link", {
+          name: expectedLink.name,
+          exact: true,
+        });
+        await expect(link).toBeVisible();
+        await expect(link).toHaveAttribute("href", expectedLink.href);
+        const bounds = await link.boundingBox();
+        if (!bounds) {
+          throw new Error(`Expected visible bounds for ${expectedLink.name}.`);
+        }
+        expect(bounds.width).toBeGreaterThanOrEqual(44);
+        expect(bounds.height).toBeGreaterThanOrEqual(44);
+        expect(bounds.x).toBeGreaterThanOrEqual(0);
+        expect(bounds.x + bounds.width).toBeLessThanOrEqual(width);
+      }
+
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth
+        )
+      ).toBe(true);
+    }
+  });
+}
+
+test("unknown routes render the exported not found page", async ({ page }) => {
+  for (const width of [320, 1280]) {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoAndStabilize(page, "/this-route-should-not-exist/");
+
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Page not found" })
+    ).toBeVisible();
+    await expect(
+      page.locator("main").getByText("404", { exact: true })
+    ).toBeVisible();
+    const recovery = page.getByRole("navigation", { name: "Page recovery" });
+    await expectLinksFitViewport(recovery.getByRole("link"), width);
+    await expect(
+      recovery.getByRole("link", { name: "Home", exact: true })
+    ).toHaveAttribute("href", "/");
+    const writingLink = recovery.getByRole("link", {
+      name: "Writing",
+      exact: true,
+    });
+    await expect(writingLink).toHaveAttribute("href", "/blog/");
+    await expect(page.locator('meta[name="robots"]')).toHaveCount(1);
+    await expect(page.locator('meta[name="robots"]')).toHaveAttribute(
+      "content",
+      /noindex/
+    );
+    await expect(page.locator('link[rel="canonical"]')).toHaveCount(0);
+    await expect(page.locator("footer")).toBeInViewport();
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth
+      )
+    ).toBe(true);
+
+    await writingLink.click();
+    await expect(page).toHaveURL(/\/blog\/$/);
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Writing" })
+    ).toBeVisible();
+  }
 });
+
+for (const width of [320, 1280]) {
+  test(`topic and related-post rows remain usable at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoAndStabilize(page, "/blog/tags/ai/");
+
+    const allWriting = page.getByRole("link", {
+      name: "All writing",
+      exact: true,
+    });
+    await expect(allWriting).toHaveAttribute("href", "/blog/");
+    await expectLinksFitViewport(allWriting, width);
+    const topicPosts = page.locator("main article a[aria-label]");
+    await expectLinksFitViewport(topicPosts, width);
+    for (const post of await topicPosts.all()) {
+      await expect(post).toHaveAttribute("href", /^\/blog\/[^/]+\/$/);
+      await expect(post.locator("time")).toHaveAttribute(
+        "datetime",
+        /\d{4}-\d{2}-\d{2}/
+      );
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth
+      )
+    ).toBe(true);
+
+    const firstPost = topicPosts.first();
+    const postTitle = await firstPost.getAttribute("aria-label");
+    if (!postTitle) {
+      throw new Error("Expected the topic row to expose its post title.");
+    }
+    await firstPost.click({ position: { x: 8, y: 8 } });
+    await waitForStablePage(page);
+    await expect(
+      page.getByRole("heading", { level: 1, name: postTitle, exact: true })
+    ).toBeVisible();
+
+    const related = page.getByRole("region", { name: "Related posts" });
+    await related.scrollIntoViewIfNeeded();
+    const relatedLinks = related.getByRole("link");
+    await expect(relatedLinks).toHaveCount(3);
+    await expectLinksFitViewport(relatedLinks, width);
+    for (const link of await relatedLinks.all()) {
+      await expect(link).toHaveAttribute("href", /^\/blog\/[^/]+\/$/);
+      await expect(link.locator("time")).toHaveAttribute(
+        "datetime",
+        /\d{4}-\d{2}-\d{2}/
+      );
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth
+      )
+    ).toBe(true);
+
+    const firstRelated = relatedLinks.first();
+    const relatedTitle = await firstRelated
+      .getByRole("heading", { level: 3 })
+      .innerText();
+    await firstRelated.click({ position: { x: 8, y: 8 } });
+    await expect(
+      page.getByRole("heading", { level: 1, name: relatedTitle, exact: true })
+    ).toBeVisible();
+  });
+
+  test(`RSS exposes a selectable feed address at ${width}px`, async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width, height: 900 });
+    await gotoAndStabilize(page, "/feed.xml");
+
+    await expect(
+      page.getByRole("heading", { level: 1, name: "Alex Leung's Writing" })
+    ).toBeVisible();
+    const feedAddress = page.getByLabel("Feed address", { exact: true });
+    await expect(feedAddress).toHaveValue("https://alexleung.ca/feed.xml");
+    await expect(feedAddress).not.toBeEditable();
+    const fieldBounds = await feedAddress.boundingBox();
+    expect(fieldBounds?.height).toBeGreaterThanOrEqual(44);
+    // WebKit ignores keyboard selection commands on readonly inputs.
+    await feedAddress.click({ clickCount: 3 });
+    await expect(feedAddress).toBeFocused();
+    expect(
+      await feedAddress.evaluate((element: HTMLInputElement) =>
+        element.value.slice(
+          element.selectionStart ?? 0,
+          element.selectionEnd ?? 0
+        )
+      )
+    ).toBe("https://alexleung.ca/feed.xml");
+
+    const navigation = page.getByRole("navigation", {
+      name: "Feed navigation",
+    });
+    await expectLinksFitViewport(navigation.getByRole("link"), width);
+    await expect(
+      navigation.getByRole("link", { name: "← Back to Writing", exact: true })
+    ).toHaveAttribute("href", "https://alexleung.ca/blog/");
+    const postLinks = page.locator("main h2 a");
+    await expectLinksFitViewport(postLinks, width);
+    for (const post of await postLinks.all()) {
+      await expect(post).toHaveAttribute(
+        "href",
+        /^https:\/\/alexleung\.ca\/blog\/[^/]+\/$/
+      );
+    }
+    expect(
+      await page.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth
+      )
+    ).toBe(true);
+  });
+}
 
 test("static export metadata artifacts are served", async ({ request }) => {
   const [feedResponse, robotsResponse, sitemapResponse] = await Promise.all([
@@ -96,7 +324,7 @@ test("static export metadata artifacts are served", async ({ request }) => {
 
   expect(feedResponse.headers()["content-type"]).toContain("xml");
   expect(feedText).toContain("<rss");
-  expect(feedText).toContain("https://alexleung.ca/feed.xsl");
+  expect(feedText).toContain('href="/feed.xsl"');
 
   expect(robotsText).toContain("Sitemap: https://alexleung.ca/sitemap.xml");
   expect(sitemapText).toContain("<urlset");

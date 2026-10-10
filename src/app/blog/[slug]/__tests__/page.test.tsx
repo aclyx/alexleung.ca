@@ -1,6 +1,6 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
-import { getSeriesNavigation } from "@/lib/blogApi";
+import { getRelatedPosts, getSeriesNavigation } from "@/lib/blogApi";
 
 import Post from "../page";
 
@@ -54,10 +54,57 @@ jest.mock("@/lib/blogApi", () => ({
 }));
 
 const mockedGetSeriesNavigation = jest.mocked(getSeriesNavigation);
+const mockedGetRelatedPosts = jest.mocked(getRelatedPosts);
 
 describe("Blog post page", () => {
   beforeEach(() => {
     mockedGetSeriesNavigation.mockReturnValue(null);
+    mockedGetRelatedPosts.mockReturnValue([]);
+  });
+
+  it("renders related posts as title-and-date links in the supplied order", async () => {
+    const relatedPosts = ["First", "Second", "Third"].map((name, index) => ({
+      slug: `related-${index}`,
+      title: `${name} related post`,
+      date: "2026-02-01",
+      excerpt: `Excerpt for ${name}.`,
+      coverImage: "/assets/blog/related.webp",
+      tags: [],
+      draft: false,
+      content: "Related body",
+    }));
+    mockedGetRelatedPosts.mockReturnValue(relatedPosts);
+
+    const view = await Post({
+      params: Promise.resolve({ slug: "cover-alt-hero" }),
+    });
+
+    render(view);
+
+    const section = screen.getByRole("region", { name: "Related posts" });
+    const links = within(section).getAllByRole("link");
+    expect(links).toHaveLength(3);
+    links.forEach((link, index) => {
+      expect(link).toHaveAccessibleName(relatedPosts[index].title);
+      expect(link).toHaveAttribute(
+        "href",
+        `/blog/${relatedPosts[index].slug}/`
+      );
+      expect(
+        within(link).getByRole("heading", {
+          level: 3,
+          name: relatedPosts[index].title,
+        })
+      ).toBeInTheDocument();
+      expect(link.querySelector("time")).toHaveAttribute(
+        "datetime",
+        "2026-02-01"
+      );
+      expect(within(link).queryByRole("img")).not.toBeInTheDocument();
+      expect(
+        within(link).queryByText(relatedPosts[index].excerpt)
+      ).not.toBeInTheDocument();
+    });
   });
 
   it("uses custom cover alt text for the hero image", async () => {

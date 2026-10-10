@@ -16,7 +16,7 @@ describe("buildPageMetadata", () => {
       "application/rss+xml": [
         {
           url: "https://alexleung.ca/feed.xml",
-          title: "Alex Leung Blog RSS Feed",
+          title: "Alex Leung's Writing RSS Feed",
         },
       ],
     });

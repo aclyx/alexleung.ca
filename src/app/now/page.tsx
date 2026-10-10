@@ -4,15 +4,12 @@ import { Metadata } from "next";
 
 import { WebPage } from "schema-dts";
 
-import { Badge } from "@/components/Badge";
 import ExternalLink from "@/components/ExternalLink";
-import { IconTextRow } from "@/components/IconTextRow";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
+import { NowEntry } from "@/components/NowEntry";
 import { PageShell } from "@/components/PageShell";
-import { ProseContent } from "@/components/ProseContent";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { SectionBlock } from "@/components/SectionBlock";
-import { NOW_PAGE_LAST_UPDATED_DISPLAY } from "@/constants/now";
+import { NOW_CONTENT, NOW_PAGE_LAST_UPDATED_DISPLAY } from "@/constants/now";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 const title = "Now | Alex Leung";
@@ -43,62 +40,28 @@ export default function NowPage() {
         })}
       />
 
-      <PageShell title="What I'm Doing Now" titleId="now">
-        <ResponsiveContainer className="mb-10">
-          <Badge tone="info">
-            Last updated: {NOW_PAGE_LAST_UPDATED_DISPLAY}
-          </Badge>
-        </ResponsiveContainer>
-
-        <ResponsiveContainer element="section">
-          <div className="max-w-3xl">
-            <SectionBlock spacing="lg">
-              <div className="text-body space-y-8 text-left leading-relaxed">
-                <IconTextRow
-                  icon="📚"
-                  title="Currently Reading"
-                  headingLevel="h2"
-                >
-                  <p>
-                    I&apos;m reading{" "}
-                    <ExternalLink href="https://rlhfbook.com/">
-                      <em>Reinforcement Learning from Human Feedback</em>
-                    </ExternalLink>{" "}
-                    by Nathan Lambert.
-                  </p>
-                </IconTextRow>
-
-                <IconTextRow
-                  icon="🍶"
-                  title="Trying New Sake"
-                  headingLevel="h2"
-                >
-                  <p>
-                    We&apos;ve been enjoying trying new sake. We recently tried
-                    an unpasteurized sake, and I particularly liked its
-                    effervescence and brighter aroma.
-                  </p>
-                </IconTextRow>
-              </div>
-
-              <ProseContent
-                size="sm"
-                className="mt-8 border-t border-line pt-8"
-              >
-                <p>
-                  This is a{" "}
-                  <ExternalLink href="https://nownownow.com/about">
-                    now page
-                  </ExternalLink>
-                  . You can read more about the format{" "}
-                  <ExternalLink href="https://sive.rs/nowff">
-                    in Derek Sivers&apos; now page explainer
-                  </ExternalLink>
-                  . It&apos;s a snapshot of what I&apos;m focused on at this
-                  point in my life.
-                </p>
-              </ProseContent>
-            </SectionBlock>
+      <PageShell
+        title="Now"
+        titleId="now"
+        metadata={
+          <time dateTime={NOW_CONTENT.updatedAt} className="font-mono text-xs">
+            Updated {NOW_PAGE_LAST_UPDATED_DISPLAY}
+          </time>
+        }
+      >
+        <ResponsiveContainer>
+          <div className="max-w-[650px]">
+            <div className="text-body space-y-8 leading-relaxed">
+              {NOW_CONTENT.entries.map((entry) => (
+                <NowEntry key={entry.id} entry={entry} />
+              ))}
+            </div>
+            <p className="text-body-sm mt-9 border-t border-line pt-5 text-muted">
+              A snapshot of what I’m reading and doing.{" "}
+              <ExternalLink href="https://nownownow.com/about">
+                About Now pages
+              </ExternalLink>
+            </p>
           </div>
         </ResponsiveContainer>
       </PageShell>

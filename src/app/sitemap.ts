@@ -52,7 +52,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
           .at(-1) || PAGE_LAST_MODIFIED.blog
       : PAGE_LAST_MODIFIED.blog;
   const homeLastModified = new Date(
-    [PAGE_LAST_MODIFIED.home, latestPostUpdateIso].sort().at(-1)!
+    [PAGE_LAST_MODIFIED.home, NOW_PAGE_LAST_UPDATED_ISO, latestPostUpdateIso]
+      .sort()
+      .at(-1)!
   );
   const blogLastModified = new Date(
     [PAGE_LAST_MODIFIED.blog, latestPostUpdateIso].sort().at(-1)!
