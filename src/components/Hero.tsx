@@ -1,44 +1,23 @@
 import { LinkText } from "@/components/LinkText";
 import { NowEntry } from "@/components/NowEntry";
-import { ResponsiveImage } from "@/components/ResponsiveImage";
 import {
   NOW_CONTENT,
   NOW_PAGE_LAST_UPDATED_DISPLAY,
   NOW_PAGE_LAST_UPDATED_ISO,
 } from "@/constants/now";
-import {
-  getStaticImageFallback,
-  getStaticImageSourceSet,
-} from "@/lib/localImageMetadata";
 
 export function Hero() {
-  const portrait = getStaticImageFallback("heroPortrait");
-
   return (
     <section id="about" aria-labelledby="home-title" className="section-center">
       <div className="grid gap-7 border-b border-line py-8 md:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)] md:gap-16 md:py-11">
-        <div className="grid grid-cols-[minmax(0,1fr)_5rem] items-center gap-5 sm:grid-cols-[minmax(0,1fr)_9rem] md:gap-6 lg:grid-cols-[minmax(0,1fr)_11rem]">
-          <div>
-            <h1 id="home-title" className="text-hero-title text-ink">
-              Alex Leung
-            </h1>
-            <p className="text-hero-description mt-5 max-w-xl leading-relaxed text-ink">
-              I work on ChatGPT at OpenAI. I write about software, technical
-              books, and life outside work.
-            </p>
-          </div>
-          <ResponsiveImage
-            src={portrait.path}
-            srcSet={getStaticImageSourceSet("heroPortrait")}
-            alt="Alex Leung in an art studio"
-            width={portrait.width}
-            height={portrait.height}
-            sizes="(min-width: 1024px) 176px, (min-width: 640px) 144px, 80px"
-            pictureClassName="block"
-            className="h-auto w-full"
-            loading="eager"
-            decoding="async"
-          />
+        <div>
+          <h1 id="home-title" className="text-hero-title text-ink">
+            Alex Leung
+          </h1>
+          <p className="text-hero-description mt-5 max-w-xl leading-relaxed text-ink">
+            I work on ChatGPT at OpenAI. I write about software, technical
+            books, and life outside work.
+          </p>
         </div>
         <aside
           aria-labelledby="home-now-heading"
