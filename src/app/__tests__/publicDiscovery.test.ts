@@ -35,10 +35,6 @@ describe("public discovery files", () => {
         path: "experimental/load-flow/index.html",
         destination: "/blog/small-interactive-tools-with-a-coding-agent/",
       },
-      {
-        path: "experimental/pid-controller/index.html",
-        destination: "/blog/",
-      },
     ];
 
     for (const redirect of redirects) {
@@ -52,12 +48,16 @@ describe("public discovery files", () => {
     }
   });
 
-  it("does not shadow the active Mandelbrot route with a redirect bridge", () => {
-    expect(
-      existsSync(
-        join(process.cwd(), "public", "experimental/mandelbrot/index.html")
-      )
-    ).toBe(false);
+  it("does not shadow active experiment routes with redirect bridges", () => {
+    const activeRoutes = ["mandelbrot", "pid-controller"];
+
+    for (const route of activeRoutes) {
+      expect(
+        existsSync(
+          join(process.cwd(), "public", "experimental", route, "index.html")
+        )
+      ).toBe(false);
+    }
   });
 
   it("keeps only writing and now shortcuts in the web manifest", () => {
@@ -130,6 +130,9 @@ describe("public discovery files", () => {
     expect(llmsText).toContain("[Writing](https://alexleung.ca/blog/)");
     expect(llmsText).toContain(
       "[Mandelbrot Explorer](https://alexleung.ca/experimental/mandelbrot/)"
+    );
+    expect(llmsText).toContain(
+      "[PID Controller Simulator Notes](https://alexleung.ca/experimental/pid-controller/)"
     );
     expect(llmsText).not.toContain("/about/");
     expect(llmsText).not.toContain("[Experiments]");

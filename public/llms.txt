@@ -8,6 +8,7 @@
 - [Now](https://alexleung.ca/now/): a dated snapshot of Alex's reading and everyday life
 - [Writing](https://alexleung.ca/blog/): essays, technical notes, book notes, and personal reflections
 - [Mandelbrot Explorer](https://alexleung.ca/experimental/mandelbrot/): an interactive fractal explorer with arbitrary-precision viewport coordinates and bounded deep zoom
+- [PID Controller Simulator Notes](https://alexleung.ca/experimental/pid-controller/): the model, controller terms, response presets, and archived source for a retired browser simulator
 - [Contact](https://alexleung.ca/contact/): ways to reach Alex and follow new writing
 
 ## Writing
