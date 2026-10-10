@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<?xml-stylesheet type="text/xsl" href="https://alexleung.ca/feed.xsl"?>
+<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
     <channel>
-        <title>Alex Leung's Blog</title>
+        <title>Alex Leung's Writing</title>
         <link>https://alexleung.ca/blog/</link>
         <description>Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.</description>
         <lastBuildDate>Mon, 05 Oct 2026 00:00:00 GMT</lastBuildDate>
@@ -10,7 +10,7 @@
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
         <image>
-            <title>Alex Leung's Blog</title>
+            <title>Alex Leung's Writing</title>
             <url>https://alexleung.ca/icon4.png</url>
             <link>https://alexleung.ca/blog/</link>
         </image>
