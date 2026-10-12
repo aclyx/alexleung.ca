@@ -49,6 +49,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
     "date",
     "updated",
     "tags",
+    "unlisted",
   ]);
 
   if (!post) {
@@ -83,6 +84,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 
   return {
     ...metadata,
+    ...(post.unlisted ? { robots: { index: false, follow: true } } : {}),
     authors: [{ name: "Alex Leung", url: toCanonical("/") }],
     openGraph: {
       type: "article",
@@ -99,7 +101,7 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 }
 
 export async function generateStaticParams() {
-  const posts = getAllPosts(["slug"]);
+  const posts = getAllPosts(["slug"], { includeUnlisted: true });
 
   return posts.map((post) => ({
     slug: post.slug,

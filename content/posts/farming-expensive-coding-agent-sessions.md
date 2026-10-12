@@ -1,7 +1,7 @@
 ---
 title: "Farming Agent Mistakes"
 date: "2026-06-14"
-updated: "2026-08-29"
+updated: "2026-10-12"
 excerpt: "When a coding agent makes a repeatable mistake, I try to keep the correction in the harness for the next run."
 coverImage: "/assets/blog/farming-expensive-coding-agent-sessions/cover.webp"
 coverAlt: "Illustration of Alex at a desk watching token-like lights flow from a laptop toward data-centre buildings"
@@ -26,8 +26,4 @@ This post produced that last kind of correction. An earlier draft turned the ide
 
 Not every miss deserves a new rule. Some are local judgment calls, and every harness change adds context and maintenance. I keep the corrections I can describe precisely and expect to need again. The transcript can then disappear without taking the useful part of the correction with it.
 
-## Getting closer to one shot
-
-I would love to reach a point where I can one-shot every task I give an agent. That is an aspiration, not a description of how the work goes today. Ambiguous and unfamiliar tasks still need judgment, and even familiar work can fail in a new way.
-
-Farming mistakes is how I try to move toward that goal. When a useful correction becomes part of the harness, the next run starts with something the previous run taught me. Over time, I want the system to make fewer old mistakes so I can spend more attention on the new ones.
+Ambiguous and unfamiliar tasks still need judgment, and even familiar work can fail in a new way. I want the system to make fewer old mistakes so I can spend more attention on the new ones.

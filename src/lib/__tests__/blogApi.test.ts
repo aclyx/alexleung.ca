@@ -53,6 +53,7 @@ describe("blogApi front matter validation", () => {
     expect(post?.title).toBe("Hello");
     expect(post?.tags).toEqual([]);
     expect(post?.draft).toBe(false);
+    expect(post?.unlisted).toBe(false);
   });
 
   test("parses explicit tags, cover alt text, and readingTimeMinutes", async () => {
@@ -161,6 +162,59 @@ describe("blogApi front matter validation", () => {
     expect(getPostBySlug("draft", ["slug"], { includeDrafts: true })).toEqual({
       slug: "draft",
     });
+  });
+
+  test("keeps unlisted posts public without publishing drafts or including them in discovery", async () => {
+    const tempDir = setupTempPosts({
+      listed: `---\ntitle: "Listed"\ndate: "2026-02-16"\n---\nBody`,
+      unlisted: `---\ntitle: "Unlisted"\ndate: "2026-02-17"\nunlisted: true\n---\nBody`,
+      draft: `---\ntitle: "Draft"\ndate: "2026-02-18"\ndraft: true\n---\nBody`,
+      "unlisted-draft": `---\ntitle: "Unlisted draft"\ndate: "2026-02-19"\ndraft: true\nunlisted: true\n---\nBody`,
+    });
+    const { getAllPosts, getPostBySlug } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getAllPosts(["slug"])).toEqual([{ slug: "listed" }]);
+    expect(getPostBySlug("unlisted", ["slug", "unlisted"])).toEqual({
+      slug: "unlisted",
+      unlisted: true,
+    });
+    expect(getAllPosts(["slug"], { includeUnlisted: true })).toEqual([
+      { slug: "unlisted" },
+      { slug: "listed" },
+    ]);
+    expect(
+      getAllPosts({ includeDrafts: true }).map((post) => post.slug)
+    ).toEqual(["draft", "listed"]);
+    expect(getPostBySlug("draft")).toBeNull();
+    expect(getPostBySlug("unlisted-draft")).toBeNull();
+    expect(
+      getAllPosts({ includeDrafts: true, includeUnlisted: true }).map(
+        (post) => post.slug
+      )
+    ).toEqual(["unlisted-draft", "draft", "unlisted", "listed"]);
+  });
+
+  test("omits unlisted posts from related posts and series navigation", async () => {
+    const tempDir = setupTempPosts({
+      first: `---\ntitle: "First"\ndate: "2026-02-16"\ntags: ["AI"]\nseries: "Notes"\nseriesOrder: 1\n---\nBody`,
+      unlisted: `---\ntitle: "Unlisted"\ndate: "2026-02-17"\ntags: ["AI"]\nseries: "Notes"\nseriesOrder: 2\nunlisted: true\n---\nBody`,
+      third: `---\ntitle: "Third"\ndate: "2026-02-18"\ntags: ["AI"]\nseries: "Notes"\nseriesOrder: 3\n---\nBody`,
+    });
+    const { getRelatedPosts, getSeriesNavigation, getSeriesSummaries } =
+      await loadBlogApiAtCwd(tempDir);
+
+    expect(getRelatedPosts("first").map((post) => post.slug)).toEqual([
+      "third",
+    ]);
+    expect(getSeriesNavigation("first")).toMatchObject({
+      currentPart: 1,
+      totalParts: 2,
+      nextPost: { slug: "third" },
+    });
+    expect(getSeriesNavigation("unlisted")).toBeNull();
+    expect(getSeriesSummaries()).toMatchObject([
+      { name: "Notes", count: 2, firstPost: { slug: "first" } },
+    ]);
   });
 
   test("supports options-only overload for getPostBySlug", async () => {

@@ -244,34 +244,6 @@
         }
       }
     },
-    "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution.webp": {
-      "variants": {
-        "content": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution-content.webp",
-          "width": 1024,
-          "height": 559
-        },
-        "content-sm": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution-content-sm.webp",
-          "width": 640,
-          "height": 350
-        }
-      }
-    },
-    "/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution.webp": {
-      "variants": {
-        "content": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution-content.webp",
-          "width": 1024,
-          "height": 559
-        },
-        "content-sm": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution-content-sm.webp",
-          "width": 640,
-          "height": 350
-        }
-      }
-    },
     "/assets/blog/humanitys-cosmic-endowment/cover.webp": {
       "variants": {
         "card": {

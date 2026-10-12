@@ -84,6 +84,20 @@ See [`docs/playwright-testing-design.md`](./docs/playwright-testing-design.md) f
 
 Codespaces may need extra Chrome runtime setup before `yarn perf:lighthouse` can run. See [`docs/codespaces.md`](./docs/codespaces.md) for the current one-time setup and troubleshooting notes.
 
+## Post Visibility
+
+Posts are listed by default. Set `unlisted: true` in frontmatter to keep a
+published post at its existing URL while removing it from the writing archive,
+topics, series navigation, related posts, RSS, and sitemap. Unlisted posts use
+`noindex, follow`; they remain public to anyone with the URL. Existing topic URLs
+also remain available, even if no listed posts remain in a topic.
+
+Use `draft: true` for unpublished posts. Drafts are excluded from the static
+export and cannot be read at a public URL. The static post-route generator uses
+`getAllPosts({ includeUnlisted: true })` to preserve unlisted URLs; ordinary
+discovery queries use the default filter. Keep manual homepage selections limited
+to listed posts.
+
 ## Image Variant Automation
 
 - Variant generator script:

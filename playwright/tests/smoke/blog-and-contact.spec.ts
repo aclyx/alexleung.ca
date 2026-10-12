@@ -330,3 +330,46 @@ test("static export metadata artifacts are served", async ({ request }) => {
   expect(sitemapText).toContain("<urlset");
   expect(sitemapText).toContain("https://alexleung.ca/now/");
 });
+
+test("unlisted posts retain public URLs but disappear from discovery", async ({
+  request,
+}) => {
+  const unlistedSlugs = [
+    "deep-learning-part-1-review",
+    "everyone-is-a-builder",
+    "medium-and-meaning",
+    "structural-reasoning-about-deep-networks",
+  ];
+
+  for (const slug of unlistedSlugs) {
+    const response = await request.get(`/blog/${slug}/`);
+    await expect(response).toBeOK();
+    const html = await response.text();
+    expect(html).toContain('id="post-title"');
+    expect(html).toContain('<meta name="robots" content="noindex, follow"');
+    expect(html).toContain(
+      `<link rel="canonical" href="https://alexleung.ca/blog/${slug}/"`
+    );
+  }
+
+  for (const path of [
+    "/",
+    "/blog/",
+    "/blog/tags/ai/",
+    "/blog/tags/deep-learning/",
+    "/blog/tags/book-notes/",
+    "/blog/dropout-as-implicit-bagging/",
+    "/blog/from-coder-to-orchestrator/",
+    "/feed.xml",
+    "/sitemap.xml",
+  ]) {
+    const response = await request.get(path);
+    await expect(response).toBeOK();
+    const text = await response.text();
+    for (const slug of unlistedSlugs) {
+      expect(text, `${path} should not promote ${slug}`).not.toContain(
+        `/blog/${slug}/`
+      );
+    }
+  }
+});

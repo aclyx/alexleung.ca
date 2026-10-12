@@ -53,13 +53,12 @@ function getPostsForTag(tagName: string) {
 }
 
 const TAG_DESCRIPTIONS: Record<string, string> = {
-  ai: "Posts on coding agents, AI-assisted prototypes, and using generative tools to edit software and explore visuals.",
+  ai: "Posts on coding agents, AI-assisted prototypes, and verification.",
   architecture:
     "How this static Next.js site stores Markdown, generates responsive images, and keeps build-time conventions in one place.",
-  "book-notes":
-    "Notes on the mathematical foundations, network structure, and regularization sections of Deep Learning.",
+  "book-notes": "Reading notes on dropout and regularization in Deep Learning.",
   "deep-learning":
-    "Notes on the mathematics, feedforward networks, and regularization mechanisms in Goodfellow, Bengio, and Courville's Deep Learning.",
+    "Notes on dropout and model averaging in Goodfellow, Bengio, and Courville's Deep Learning.",
   "developer-workflow":
     "Posts on software tooling, coding agents, verification, and systems that make repeated development work easier to maintain.",
   lifestyle:
@@ -69,7 +68,7 @@ const TAG_DESCRIPTIONS: Record<string, string> = {
   "next-js":
     "How this static Next.js site handles Markdown posts, generated image variants, and build-time metadata.",
   reflection:
-    "Personal notes on moving and travel, alongside reflections on coding agents, prototypes, and visual tools.",
+    "Personal notes on moving and travel, alongside reflections on coding agents and AI's possible futures.",
   regularization:
     "Notes on dropout, shared parameters, and model averaging as regularization mechanisms.",
   review:
@@ -77,11 +76,15 @@ const TAG_DESCRIPTIONS: Record<string, string> = {
 };
 
 function getTagDescription(tag: TagEntry): string {
+  if (tag.count === 0) {
+    return "There are no listed posts in this topic. Browse all writing for current posts.";
+  }
+
   return TAG_DESCRIPTIONS[tag.slug] ?? `Posts about ${tag.name}.`;
 }
 
 export function generateStaticParams() {
-  return getAllTags().map((tag) => ({
+  return getAllTags({ includeEmpty: true }).map((tag) => ({
     tag: tag.slug,
   }));
 }
