@@ -5,7 +5,7 @@
         <title>Alex Leung's Writing</title>
         <link>https://alexleung.ca/blog/</link>
         <description>Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.</description>
-        <lastBuildDate>Mon, 05 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Mon, 12 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -101,47 +101,11 @@
             <category>Developer Workflow</category>
         </item>
         <item>
-            <title><![CDATA[Make Internal Tools Cheap to Try]]></title>
-            <link>https://alexleung.ca/blog/everyone-is-a-builder/</link>
-            <guid isPermaLink="false">https://alexleung.ca/blog/everyone-is-a-builder/</guid>
-            <pubDate>Sat, 28 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A lightweight intake form, spreadsheet cleanup script, or dashboard mock can make an internal workflow concrete before it needs production engineering.]]></description>
-            <category>AI</category>
-            <category>Reflection</category>
-        </item>
-        <item>
-            <title><![CDATA[Codex for Site Edits, Sora for Visual Sketches]]></title>
-            <link>https://alexleung.ca/blog/medium-and-meaning/</link>
-            <guid isPermaLink="false">https://alexleung.ca/blog/medium-and-meaning/</guid>
-            <pubDate>Sun, 22 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Codex helps me make small site edits from my phone; Sora remains a way to test visual directions before I know whether they belong.]]></description>
-            <category>AI</category>
-            <category>Reflection</category>
-        </item>
-        <item>
-            <title><![CDATA[Depth Changes Scaling, Not Just Capacity]]></title>
-            <link>https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</link>
-            <guid isPermaLink="false">https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</guid>
-            <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Chapter 6 of Deep Learning separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness.]]></description>
-            <category>Deep Learning</category>
-            <category>Book Notes</category>
-        </item>
-        <item>
-            <title><![CDATA[Math Foundations for Deep Learning]]></title>
-            <link>https://alexleung.ca/blog/deep-learning-part-1-review/</link>
-            <guid isPermaLink="false">https://alexleung.ca/blog/deep-learning-part-1-review/</guid>
-            <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[Part I of Deep Learning reviews the linear algebra, probability, and numerical computation that later chapters build on.]]></description>
-            <category>Deep Learning</category>
-            <category>Book Notes</category>
-        </item>
-        <item>
-            <title><![CDATA[Planning and Verification in AI-Assisted Coding]]></title>
+            <title><![CDATA[The Review Bottleneck in AI-Assisted Coding]]></title>
             <link>https://alexleung.ca/blog/from-coder-to-orchestrator/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/from-coder-to-orchestrator/</guid>
             <pubDate>Tue, 03 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[My AI-assisted coding workflow now uses short briefs, plan reviews, checkpoints, and build/lint/test verification.]]></description>
+            <description><![CDATA[Agents can implement tasks in parallel; reviewing plans, checking edge cases, and coordinating the work still fall to me.]]></description>
             <category>AI</category>
             <category>Developer Workflow</category>
         </item>
