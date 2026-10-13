@@ -331,6 +331,40 @@ test("static export metadata artifacts are served", async ({ request }) => {
   expect(sitemapText).toContain("https://alexleung.ca/now/");
 });
 
+test("topic archives retain URLs and follow the indexing policy", async ({
+  request,
+}) => {
+  const [deepLearningResponse, aiResponse, sitemapResponse] = await Promise.all(
+    [
+      request.get("/blog/tags/deep-learning/"),
+      request.get("/blog/tags/ai/"),
+      request.get("/sitemap.xml"),
+    ]
+  );
+
+  expect(deepLearningResponse.status()).toBe(200);
+  expect(aiResponse.status()).toBe(200);
+  await expect(sitemapResponse).toBeOK();
+
+  const deepLearningHtml = await deepLearningResponse.text();
+  const aiHtml = await aiResponse.text();
+  const sitemapText = await sitemapResponse.text();
+  const deepLearningUrl = "https://alexleung.ca/blog/tags/deep-learning/";
+  const aiUrl = "https://alexleung.ca/blog/tags/ai/";
+
+  expect(deepLearningHtml).toContain(
+    `<link rel="canonical" href="${deepLearningUrl}"`
+  );
+  expect(deepLearningHtml).toContain(
+    '<meta name="robots" content="noindex, follow"'
+  );
+  expect(sitemapText).not.toContain(`<loc>${deepLearningUrl}</loc>`);
+
+  expect(aiHtml).toContain(`<link rel="canonical" href="${aiUrl}"`);
+  expect(aiHtml).not.toMatch(/<meta name="robots"[^>]*\bnoindex\b/);
+  expect(sitemapText).toContain(`<loc>${aiUrl}</loc>`);
+});
+
 test("unlisted posts retain public URLs but disappear from discovery", async ({
   request,
 }) => {

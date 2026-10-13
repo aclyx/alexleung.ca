@@ -26,4 +26,8 @@ This post produced that last kind of correction. An earlier draft turned the ide
 
 Not every miss deserves a new rule. Some are local judgment calls, and every harness change adds context and maintenance. I keep the corrections I can describe precisely and expect to need again. The transcript can then disappear without taking the useful part of the correction with it.
 
-Ambiguous and unfamiliar tasks still need judgment, and even familiar work can fail in a new way. I want the system to make fewer old mistakes so I can spend more attention on the new ones.
+## Getting closer to one shot
+
+I would love to reach a point where I can one-shot every task I give an agent. That is an aspiration, not a description of how the work goes today. Ambiguous and unfamiliar tasks still need judgment, and even familiar work can fail in a new way.
+
+Farming mistakes is how I try to move toward that goal. I want the system to make fewer old mistakes so I can spend more attention on the new ones.

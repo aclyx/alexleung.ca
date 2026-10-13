@@ -13,8 +13,6 @@ tags:
 
 I built two frontend-only tools to revisit technical problems I had studied before: a load-flow solver and a [Mandelbrot explorer](/experimental/mandelbrot/). Both ran entirely in the browser, but they put different pressure on it. Load Flow solved nonlinear equations over a small electrical network. The Mandelbrot explorer performed many per-pixel calculations while keeping viewport coordinates at higher precision than ordinary JavaScript numbers allow. A coding agent helped me get started and scaffold both interfaces; I used the running tools to check the models and find their limits.
 
-Load Flow is now retired. The Mandelbrot explorer remains available; the implementation described below is the earlier browser version.
-
 ## Load flow in the browser
 
 Earlier in my career, I was more drawn to electrical power engineering than to software. I was especially fascinated by power-system analysis tools like PSS/E. The core problem was interesting: solve for voltages, phase angles, and power flows in a nonlinear system. The real utility models I had seen were much larger than the IEEE reference cases I used, so I carried the impression that the solvers themselves were heavy, specialized systems.
@@ -38,3 +36,5 @@ To keep the workload bounded, I limited resolution at deep zooms and capped the 
 ## What the tools exposed
 
 Changing a bus input and seeing the voltage and branch-flow results made load flow easier to reason about. Zooming into the Mandelbrot set exposed precision and rendering limits directly. In both cases, the tool gave me something concrete to vary and inspect instead of leaving the model at the level of equations or notes.
+
+Update: Load Flow is no longer hosted. The Mandelbrot section describes an earlier version of the explorer.
