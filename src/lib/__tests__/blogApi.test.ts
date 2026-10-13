@@ -347,32 +347,75 @@ describe("getRelatedPosts", () => {
     const tempDir = setupTempPosts({
       target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags:\n  - "AI"\n  - "Systems"\nseries: "notes"\n---\nBody`,
       strong: `---\ntitle: "Strong"\ndate: "2026-02-15"\ntags:\n  - "AI"\n  - "Systems"\nseries: "notes"\n---\nBody`,
+      newer: `---\ntitle: "Newer"\ndate: "2026-02-15"\ntags:\n  - "AI"\n---\nBody`,
       medium: `---\ntitle: "Medium"\ndate: "2026-02-14"\ntags:\n  - "AI"\n---\nBody`,
-      weak: `---\ntitle: "Weak"\ndate: "2025-01-01"\ntags:\n  - "Other"\n---\nBody`,
+      older: `---\ntitle: "Older"\ndate: "2025-01-01"\ntags:\n  - "AI"\n---\nBody`,
     });
 
     const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
 
     expect(getRelatedPosts("target").map((post) => post.slug)).toEqual([
       "strong",
+      "newer",
       "medium",
-      "weak",
     ]);
+    expect(
+      getRelatedPosts("target", { limit: 2 }).map((post) => post.slug)
+    ).toEqual(["strong", "newer"]);
   });
 
-  test("falls back to newest posts when no candidate has a positive score", async () => {
+  test("does not use recent or older unrelated posts as a fallback", async () => {
     const tempDir = setupTempPosts({
       target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags:\n  - "AI"\n---\nBody`,
-      newest: `---\ntitle: "Newest"\ndate: "2024-03-02"\ntags:\n  - "X"\n---\nBody`,
+      newest: `---\ntitle: "Newest"\ndate: "2026-02-15"\ntags:\n  - "X"\n---\nBody`,
       older: `---\ntitle: "Older"\ndate: "2024-03-01"\ntags:\n  - "Y"\n---\nBody`,
-      oldest: `---\ntitle: "Oldest"\ndate: "2024-02-20"\ntags:\n  - "Z"\n---\nBody`,
     });
 
     const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
 
-    expect(
-      getRelatedPosts("target", { limit: 2 }).map((post) => post.slug)
-    ).toEqual(["newest", "older"]);
+    expect(getRelatedPosts("target")).toEqual([]);
+  });
+
+  test("returns a single topic match without padding the remaining slots", async () => {
+    const tempDir = setupTempPosts({
+      target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags: ["AI"]\n---\nBody`,
+      related: `---\ntitle: "Related"\ndate: "2024-03-01"\ntags: ["AI"]\n---\nBody`,
+      recent: `---\ntitle: "Recent"\ndate: "2026-02-15"\ntags: ["Travel"]\n---\nBody`,
+      older: `---\ntitle: "Older"\ndate: "2024-02-20"\ntags: ["Hardware"]\n---\nBody`,
+    });
+
+    const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getRelatedPosts("target").map((post) => post.slug)).toEqual([
+      "related",
+    ]);
+  });
+
+  test.each(["Reflection", "Book Notes", "Review", "Learning"])(
+    "does not treat %s alone as a shared topic",
+    async (genericTag) => {
+      const tempDir = setupTempPosts({
+        target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags: ["AI", "${genericTag}"]\n---\nBody`,
+        candidate: `---\ntitle: "Candidate"\ndate: "2026-02-15"\ntags: ["Travel", "${genericTag}"]\n---\nBody`,
+      });
+
+      const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
+
+      expect(getRelatedPosts("target")).toEqual([]);
+    }
+  );
+
+  test("includes posts in the same series without a shared tag", async () => {
+    const tempDir = setupTempPosts({
+      target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags: ["AI"]\nseries: "Notes"\n---\nBody`,
+      related: `---\ntitle: "Related"\ndate: "2024-03-01"\ntags: ["Systems"]\nseries: "Notes"\n---\nBody`,
+    });
+
+    const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getRelatedPosts("target").map((post) => post.slug)).toEqual([
+      "related",
+    ]);
   });
 
   test("does not include drafts by default", async () => {

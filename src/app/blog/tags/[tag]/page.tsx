@@ -53,7 +53,7 @@ function getPostsForTag(tagName: string) {
 }
 
 const TAG_DESCRIPTIONS: Record<string, string> = {
-  ai: "Posts on coding agents, AI-assisted prototypes, and verification.",
+  ai: "Notes on coding agents, AI-assisted projects, and questions about AI’s future.",
   architecture:
     "How this static Next.js site stores Markdown, generates responsive images, and keeps build-time conventions in one place.",
   "book-notes": "Reading notes on dropout and regularization in Deep Learning.",

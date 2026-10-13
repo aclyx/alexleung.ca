@@ -28,7 +28,7 @@ Plans were often overbuilt for the actual problem, and the agent would report "d
 
 A lot of bad output came from missing repository context, so I keep architecture preferences, testing requirements, and coding conventions in the repository guidance. That gives the agent a baseline to work from, while the task brief supplies the specific constraints and non-goals.
 
-I often split planning and implementation into separate passes, turning the brief into checkpoints and running build, lint, and tests at each one. I still review the design, scope, and edge cases.
+I often split planning and implementation into separate passes, turning the brief into checkpoints and running build, lint, and tests at each one.
 
 ## Costs and limits
 

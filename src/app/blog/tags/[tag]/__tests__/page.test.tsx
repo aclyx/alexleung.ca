@@ -88,7 +88,9 @@ describe("TagArchivePage", () => {
     );
     expect(screen.queryByText("Deep Learning Review")).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Posts on coding agents, AI-assisted prototypes/i)
+      screen.getByText(
+        "Notes on coding agents, AI-assisted projects, and questions about AI’s future."
+      )
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute(
       "href",

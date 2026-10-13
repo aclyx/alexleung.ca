@@ -292,16 +292,26 @@ type GetRelatedPostsOptions = {
   includeDrafts?: boolean;
 };
 
+const NON_TOPIC_TAGS = new Set([
+  "Reflection",
+  "Book Notes",
+  "Review",
+  "Learning",
+]);
+
 function getRelatedScore(target: Post, candidate: Post): number {
   const targetTags = new Set(target.tags);
-  const sharedTagCount = candidate.tags.filter((tag) =>
-    targetTags.has(tag)
-  ).length;
-  const tagScore = sharedTagCount * 4;
+  const sharedTags = candidate.tags.filter((tag) => targetTags.has(tag));
+  const tagScore = sharedTags.length * 4;
   const seriesScore =
     target.series && candidate.series && target.series === candidate.series
       ? 2
       : 0;
+
+  if (!sharedTags.some((tag) => !NON_TOPIC_TAGS.has(tag)) && !seriesScore) {
+    return 0;
+  }
+
   const daysDiff =
     Math.abs(
       new Date(target.date).getTime() - new Date(candidate.date).getTime()
@@ -486,6 +496,7 @@ export function getRelatedPosts(
       post: candidate,
       score: getRelatedScore(target, candidate),
     }))
+    .filter((entry) => entry.score > 0)
     .sort((a, b) => {
       if (b.score !== a.score) {
         return b.score - a.score;
@@ -501,15 +512,7 @@ export function getRelatedPosts(
       return a.post.slug.localeCompare(b.post.slug);
     });
 
-  const hasNonZeroScore = scored.some((entry) => entry.score > 0);
-  const ranked = hasNonZeroScore
-    ? scored
-    : scored.sort(
-        (a, b) =>
-          new Date(b.post.date).getTime() - new Date(a.post.date).getTime()
-      );
-
-  return ranked.slice(0, limit).map(({ post }) => ({
+  return scored.slice(0, limit).map(({ post }) => ({
     slug: post.slug,
     title: post.title,
     date: post.date,

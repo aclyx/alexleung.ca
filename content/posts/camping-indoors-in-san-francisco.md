@@ -17,7 +17,7 @@ My furniture is still in transit, so most of my day-to-day setup is on the floor
 We used a pet taxi service so the cats could stay together and neither had to travel in cargo.
 It also gave me time to set up their trees and beds. Once they arrived, the apartment felt occupied.
 
-Amazon is much better here than it was in Waterloo, which has been useful while most of my things are still in transit. The tap water also tastes better than I expected.
+Amazon is much better here than it was in Waterloo. The tap water also tastes better than I expected.
 I have been enjoying outdoor runs, especially along the Bay Trail, between errands and setup tasks.
 
 ![San Francisco skyline viewed from Corona Heights Park on a clear afternoon](/assets/blog/camping-indoors-in-san-francisco/corona-heights-view.webp)

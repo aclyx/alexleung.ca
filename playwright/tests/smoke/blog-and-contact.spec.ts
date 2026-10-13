@@ -53,6 +53,27 @@ test("blog index navigates into a post and renders article metadata", async ({
   ).toBeVisible();
 });
 
+test("related posts show only matching topics without filling empty slots", async ({
+  page,
+}) => {
+  await gotoAndStabilize(page, "/blog/boring-blog-architecture/");
+  const related = page.getByRole("region", { name: "Related posts" });
+  await expect(related.getByRole("link")).toHaveCount(1);
+  await expect(related.getByRole("link")).toHaveAttribute(
+    "href",
+    "/blog/making-responsive-images-just-work/"
+  );
+
+  await gotoAndStabilize(page, "/blog/dropout-as-implicit-bagging/");
+  await expect(related).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Dropout as Shared-Parameter Bagging",
+    })
+  ).toBeVisible();
+});
+
 test("contact page shows email, profile links, and subscription", async ({
   page,
 }) => {
