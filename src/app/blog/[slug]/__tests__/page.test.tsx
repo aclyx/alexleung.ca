@@ -1,8 +1,12 @@
 import { render, screen, within } from "@testing-library/react";
 
-import { getRelatedPosts, getSeriesNavigation } from "@/lib/blogApi";
+import {
+  getAllPosts,
+  getRelatedPosts,
+  getSeriesNavigation,
+} from "@/lib/blogApi";
 
-import Post from "../page";
+import Post, { generateMetadata, generateStaticParams } from "../page";
 
 jest.mock("next/link", () => {
   return function MockLink({
@@ -35,6 +39,7 @@ jest.mock("@/lib/blogApi", () => ({
       coverAlt: "A laptop beside a notebook on a desk.",
       excerpt: "A short summary.",
       tags: [],
+      unlisted: slug === "unlisted",
     };
 
     if (!fields) {
@@ -60,6 +65,39 @@ describe("Blog post page", () => {
   beforeEach(() => {
     mockedGetSeriesNavigation.mockReturnValue(null);
     mockedGetRelatedPosts.mockReturnValue([]);
+  });
+
+  it("exports unlisted URLs and marks them noindex without removing their canonical URL", async () => {
+    jest.mocked(getAllPosts).mockReturnValueOnce([
+      {
+        slug: "unlisted",
+        title: "Unlisted",
+        date: "2026-01-01",
+        tags: [],
+        content: "Body",
+        draft: false,
+        unlisted: true,
+      },
+    ]);
+    expect(await generateStaticParams()).toEqual([{ slug: "unlisted" }]);
+    expect(getAllPosts).toHaveBeenLastCalledWith(["slug"], {
+      includeUnlisted: true,
+    });
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "unlisted" }),
+    });
+    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.alternates?.canonical).toBe(
+      "https://alexleung.ca/blog/unlisted/"
+    );
+    render(await Post({ params: Promise.resolve({ slug: "unlisted" }) }));
+    expect(screen.getByText("Rendered body")).toBeInTheDocument();
+
+    const listedMetadata = await generateMetadata({
+      params: Promise.resolve({ slug: "listed" }),
+    });
+    expect(listedMetadata.robots).toBeUndefined();
   });
 
   it("renders related posts as title-and-date links in the supplied order", async () => {

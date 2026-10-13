@@ -53,6 +53,27 @@ test("blog index navigates into a post and renders article metadata", async ({
   ).toBeVisible();
 });
 
+test("related posts show only matching topics without filling empty slots", async ({
+  page,
+}) => {
+  await gotoAndStabilize(page, "/blog/boring-blog-architecture/");
+  const related = page.getByRole("region", { name: "Related posts" });
+  await expect(related.getByRole("link")).toHaveCount(1);
+  await expect(related.getByRole("link")).toHaveAttribute(
+    "href",
+    "/blog/making-responsive-images-just-work/"
+  );
+
+  await gotoAndStabilize(page, "/blog/dropout-as-implicit-bagging/");
+  await expect(related).toHaveCount(0);
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "Dropout as Shared-Parameter Bagging",
+    })
+  ).toBeVisible();
+});
+
 test("contact page shows email, profile links, and subscription", async ({
   page,
 }) => {
@@ -329,4 +350,81 @@ test("static export metadata artifacts are served", async ({ request }) => {
   expect(robotsText).toContain("Sitemap: https://alexleung.ca/sitemap.xml");
   expect(sitemapText).toContain("<urlset");
   expect(sitemapText).toContain("https://alexleung.ca/now/");
+});
+
+test("topic archives retain URLs and follow the indexing policy", async ({
+  request,
+}) => {
+  const [deepLearningResponse, aiResponse, sitemapResponse] = await Promise.all(
+    [
+      request.get("/blog/tags/deep-learning/"),
+      request.get("/blog/tags/ai/"),
+      request.get("/sitemap.xml"),
+    ]
+  );
+
+  expect(deepLearningResponse.status()).toBe(200);
+  expect(aiResponse.status()).toBe(200);
+  await expect(sitemapResponse).toBeOK();
+
+  const deepLearningHtml = await deepLearningResponse.text();
+  const aiHtml = await aiResponse.text();
+  const sitemapText = await sitemapResponse.text();
+  const deepLearningUrl = "https://alexleung.ca/blog/tags/deep-learning/";
+  const aiUrl = "https://alexleung.ca/blog/tags/ai/";
+
+  expect(deepLearningHtml).toContain(
+    `<link rel="canonical" href="${deepLearningUrl}"`
+  );
+  expect(deepLearningHtml).toContain(
+    '<meta name="robots" content="noindex, follow"'
+  );
+  expect(sitemapText).not.toContain(`<loc>${deepLearningUrl}</loc>`);
+
+  expect(aiHtml).toContain(`<link rel="canonical" href="${aiUrl}"`);
+  expect(aiHtml).not.toMatch(/<meta name="robots"[^>]*\bnoindex\b/);
+  expect(sitemapText).toContain(`<loc>${aiUrl}</loc>`);
+});
+
+test("unlisted posts retain public URLs but disappear from discovery", async ({
+  request,
+}) => {
+  const unlistedSlugs = [
+    "deep-learning-part-1-review",
+    "everyone-is-a-builder",
+    "medium-and-meaning",
+    "structural-reasoning-about-deep-networks",
+  ];
+
+  for (const slug of unlistedSlugs) {
+    const response = await request.get(`/blog/${slug}/`);
+    await expect(response).toBeOK();
+    const html = await response.text();
+    expect(html).toContain('id="post-title"');
+    expect(html).toContain('<meta name="robots" content="noindex, follow"');
+    expect(html).toContain(
+      `<link rel="canonical" href="https://alexleung.ca/blog/${slug}/"`
+    );
+  }
+
+  for (const path of [
+    "/",
+    "/blog/",
+    "/blog/tags/ai/",
+    "/blog/tags/deep-learning/",
+    "/blog/tags/book-notes/",
+    "/blog/dropout-as-implicit-bagging/",
+    "/blog/from-coder-to-orchestrator/",
+    "/feed.xml",
+    "/sitemap.xml",
+  ]) {
+    const response = await request.get(path);
+    await expect(response).toBeOK();
+    const text = await response.text();
+    for (const slug of unlistedSlugs) {
+      expect(text, `${path} should not promote ${slug}`).not.toContain(
+        `/blog/${slug}/`
+      );
+    }
+  }
 });

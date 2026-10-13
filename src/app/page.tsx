@@ -25,7 +25,7 @@ const path = "/";
 const selectedPostSlugs = [
   "humanitys-cosmic-endowment",
   "farming-expensive-coding-agent-sessions",
-  "dropout-as-implicit-bagging",
+  "making-responsive-images-just-work",
 ];
 
 export const metadata: Metadata = buildPageMetadata({
@@ -44,11 +44,15 @@ export const metadata: Metadata = buildPageMetadata({
 
 export default function Page() {
   const selectedPosts = selectedPostSlugs
-    .map((slug) => getPostBySlug(slug, ["slug", "title", "date", "excerpt"]))
-    .filter((post) => post !== null);
+    .map((slug) =>
+      getPostBySlug(slug, ["slug", "title", "date", "excerpt", "unlisted"])
+    )
+    .filter((post) => post !== null)
+    .filter((post) => !post.unlisted);
   const featuredPost = getPostBySlug("two-nights-in-desolation-wilderness", [
     "slug",
     "title",
+    "unlisted",
   ]);
   const photo = getStaticImageFallback("homeFeature");
 
@@ -86,7 +90,7 @@ export default function Page() {
             aria-label="More from this site"
             className="border-t border-line pt-6 md:border-t-0 md:pt-3"
           >
-            {featuredPost ? (
+            {featuredPost && !featuredPost.unlisted ? (
               <section aria-labelledby="featured-writing-heading">
                 <h2
                   id="featured-writing-heading"

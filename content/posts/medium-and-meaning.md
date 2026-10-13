@@ -10,6 +10,7 @@ tags:
   - "Reflection"
 series: "AI Tools and Workflows"
 seriesOrder: 2
+unlisted: true
 ---
 
 Codex has become part of how I maintain this site, often from my phone: fixing a layout bug, tightening a sentence, or adjusting spacing by a few pixels. I can make one precise change without waiting for a full work session at a desk.

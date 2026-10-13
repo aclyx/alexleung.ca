@@ -104,6 +104,7 @@ describe("sitemap", () => {
         date: "2026-10-20T00:00:00.000Z",
         tags: [],
         draft: false,
+        unlisted: false,
         content: "",
       },
     ]);

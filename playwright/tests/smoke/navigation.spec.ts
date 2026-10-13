@@ -23,6 +23,15 @@ test("home page introduces Alex, selected writing, and current interests", async
     page.getByRole("heading", { level: 2, name: "Selected writing" })
   ).toBeVisible();
   await expect(page.locator("#writing article")).toHaveCount(3);
+  expect(
+    await page
+      .locator("#writing article a")
+      .evaluateAll((links) => links.map((link) => link.getAttribute("href")))
+  ).toEqual([
+    "/blog/humanitys-cosmic-endowment/",
+    "/blog/farming-expensive-coding-agent-sessions/",
+    "/blog/making-responsive-images-just-work/",
+  ]);
   await expect(
     page.getByRole("link", { name: "All writing →" })
   ).toHaveAttribute("href", "/blog/");

@@ -1,7 +1,7 @@
 ---
 title: "Dropout as Shared-Parameter Bagging"
 date: "2026-03-07"
-updated: "2026-10-05"
+updated: "2026-10-12"
 excerpt: "A concrete way to understand dropout in deep learning: sampled subnetworks with shared weights, standing in for a much more expensive ensemble."
 coverImage: "/assets/blog/dropout-as-implicit-bagging/cover.webp"
 coverAlt: "Illustration of Alex drawing glowing neural network diagrams beside an open Deep Learning book"
@@ -13,11 +13,13 @@ series: "Deep Learning Notes"
 seriesOrder: 3
 ---
 
-I worked through [Chapter 7 of _Deep Learning_](https://www.deeplearningbook.org/contents/regularization.html) last week, and the bagging interpretation of dropout was the most useful part. The shortcut explanation treats dropout as random noise that helps regularization. Chapter 7 gives a more precise model: dropout works like a relatively inexpensive form of model averaging, close in spirit to bagging.
+When I worked through [Chapter 7 of _Deep Learning_](https://www.deeplearningbook.org/contents/regularization.html), the bagging interpretation of dropout was the most useful part. The shortcut explanation treats dropout as random noise that helps regularization. Chapter 7 gives a more precise model: dropout works like a relatively inexpensive form of model averaging, close in spirit to bagging.
 
 ## Dropout approximates model averaging
 
-Bagging is powerful because it reduces variance by averaging predictions from many models trained on perturbed data. The trade-off is straightforward: training and serving many separate models is expensive. Dropout gets part of the same effect by sampling a different thinned network for each training example while all of those subnetworks share parameters. During inference, scaling activations gives an efficient approximation to averaging over that family.
+Bagging reduces variance by averaging predictions from models trained on resampled data. Training and serving separate networks is expensive. Dropout instead samples thinned networks that share parameters, then uses the full network to approximate their combined predictions. These are not independently trained models, and the approximation is not generally an exact average.
+
+The [original dropout paper](https://www.jmlr.org/papers/v15/srivastava14a.html) scales weights at inference. Inverted dropout, used by [PyTorch](https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout), scales retained activations during training instead, so no dropout scaling is needed at inference.
 
 ## Changing masks discourages co-adaptation
 

@@ -14,7 +14,7 @@ My wife and I bought the 11-inch iPad Air M3, and the first thing we both notice
 
 Her main use case is studying, including prep for an upcoming machine learning course at Stanford. For that kind of work, she needs something fast to open, easy to carry, and comfortable for long reading and note-taking sessions. She does not need local development on the iPad.
 
-For tools that still need a full computer, she can connect to a remote machine. The iPad handles the interface, reading, writing, and navigation, while heavier compute and tooling stay elsewhere.
+For tools that still need a full computer, she can connect to a remote machine.
 
 A Bluetooth keyboard and an inexpensive $20 case with a built-in stand make a stable setup for longer desk sessions.
 

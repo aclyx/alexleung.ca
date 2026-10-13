@@ -20,40 +20,49 @@ jest.mock("next/link", () => {
 });
 
 jest.mock("@/lib/blogApi", () => ({
-  getAllPosts: jest.fn((fields?: string[]) => {
-    const posts = [
-      {
-        slug: "agent-notes",
-        title: "Agent Notes",
-        date: "2026-04-10T00:00:00.000Z",
-        excerpt: "Thinking through AI workflows.",
-        coverImage: "/assets/blog/cover.webp",
-        coverAlt: "Alex reviewing code at his desk.",
-        tags: ["AI", "Developer Workflow"],
-      },
-      {
-        slug: "deep-learning-review",
-        title: "Deep Learning Review",
-        date: "2026-03-01T00:00:00.000Z",
-        excerpt: "Notes on representation learning.",
-        coverImage: undefined,
-        tags: ["Deep Learning"],
-      },
-    ];
+  getAllPosts: jest.fn(
+    (fields?: string[], options?: { includeUnlisted?: boolean }) => {
+      const posts = [
+        {
+          slug: "unlisted",
+          title: "Unlisted post",
+          date: "2026-04-11T00:00:00.000Z",
+          tags: ["Retired Topic"],
+          unlisted: true,
+        },
+        {
+          slug: "agent-notes",
+          title: "Agent Notes",
+          date: "2026-04-10T00:00:00.000Z",
+          excerpt: "Thinking through AI workflows.",
+          coverImage: "/assets/blog/cover.webp",
+          coverAlt: "Alex reviewing code at his desk.",
+          tags: ["AI", "Developer Workflow"],
+        },
+        {
+          slug: "deep-learning-review",
+          title: "Deep Learning Review",
+          date: "2026-03-01T00:00:00.000Z",
+          excerpt: "Notes on representation learning.",
+          coverImage: undefined,
+          tags: ["Deep Learning"],
+        },
+      ].filter((post) => options?.includeUnlisted || !post.unlisted);
 
-    if (!fields) {
-      return posts;
+      if (!fields) {
+        return posts;
+      }
+
+      return posts.map((post) =>
+        Object.fromEntries(
+          fields.map((field) => {
+            const valuesByField: Record<string, unknown> = post;
+            return [field, valuesByField[field]];
+          })
+        )
+      );
     }
-
-    return posts.map((post) =>
-      Object.fromEntries(
-        fields.map((field) => {
-          const valuesByField: Record<string, unknown> = post;
-          return [field, valuesByField[field]];
-        })
-      )
-    );
-  }),
+  ),
 }));
 
 function getJsonLdEntries(container: HTMLElement) {
@@ -79,7 +88,9 @@ describe("TagArchivePage", () => {
     );
     expect(screen.queryByText("Deep Learning Review")).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Posts on coding agents, AI-assisted prototypes/i)
+      screen.getByText(
+        "Notes on coding agents, AI-assisted projects, and questions about AI’s future."
+      )
     ).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute(
       "href",
@@ -134,10 +145,28 @@ describe("TagArchivePage", () => {
 
   it("generates one static param per unique tag slug", () => {
     expect(generateStaticParams()).toEqual([
+      { tag: "retired-topic" },
       { tag: "ai" },
       { tag: "developer-workflow" },
       { tag: "deep-learning" },
     ]);
+  });
+
+  it("keeps an empty topic route available without displaying or indexing unlisted posts", async () => {
+    const params = Promise.resolve({ tag: "retired-topic" });
+    render(await TagArchivePage({ params }));
+
+    expect(
+      screen.getByRole("heading", { name: "Retired Topic" })
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("article")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/There are no listed posts in this topic/)
+    ).toBeInTheDocument();
+    expect((await generateMetadata({ params })).robots).toEqual({
+      index: false,
+      follow: true,
+    });
   });
 
   it("emits a tag-specific item list identifier", async () => {
