@@ -16,7 +16,7 @@ Implementation can run in parallel, but review and coordination still funnel bac
 
 In early 2024, I used AI mostly for autocomplete-level work: snippets, error explanations, and small refactors. By 2026, I was using agents for larger tasks. I still write code when needed, but more of my attention now goes to constraints, review, and the edge cases the tools miss.
 
-## From code review to plan review
+## Reviewing plans before implementation
 
 I started experimenting with Cline for straightforward tasks such as boilerplate, test scaffolding, and repetitive refactors. I avoided giving it larger tasks because it was easy to get code that looked fine but was wrong in non-obvious ways, and anything non-trivial took too much prompt back-and-forth.
 
@@ -28,10 +28,10 @@ Plans were often overbuilt for the actual problem, and the agent would report "d
 
 A lot of bad output came from missing repository context, so I keep architecture preferences, testing requirements, and coding conventions in the repository guidance. That gives the agent a baseline to work from, while the task brief supplies the specific constraints and non-goals.
 
-I often split planning and implementation into separate passes, turning the brief into checkpoints and running build, lint, and tests at each one. The checks are part of verification; reviewing the design, scope, and edge cases still requires my attention.
+I often split planning and implementation into separate passes, turning the brief into checkpoints and running build, lint, and tests at each one. I still review the design, scope, and edge cases.
 
 ## Costs and limits
 
-Frequent tool calls and retries add up, and agents struggle when a system relies on undocumented history. I also type less code directly than I used to. More of the work reaches me as a plan or a proposed change to assess.
+Frequent tool calls and retries add up, and agents struggle when a system relies on undocumented history.
 
-Parallel implementation does not make that assessment parallel. I can hand off more implementation, but I still have to decide whether the plans fit the problem and whether the resulting changes are ready.
+I can hand off more implementation, but I still have to decide whether the plans fit the problem and whether the resulting changes are ready.
