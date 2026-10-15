@@ -22,6 +22,9 @@ describe("EmailMe", () => {
     writeText.mockResolvedValue(undefined);
     render(<EmailMe />);
 
+    expect(
+      screen.getByRole("link", { name: "alex@alexleung.ca" })
+    ).toHaveAttribute("href", "mailto:alex@alexleung.ca");
     const copyButton = screen.getByRole("button", { name: "Copy email" });
 
     await act(async () => {

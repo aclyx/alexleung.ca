@@ -7,6 +7,7 @@ type LinkTextProps = {
   children: ReactNode;
   className?: string;
   external?: boolean;
+  standalone?: boolean;
 };
 
 const inlineLinkClassName =
@@ -17,14 +18,19 @@ export function LinkText({
   children,
   className = inlineLinkClassName,
   external = false,
+  standalone = false,
 }: LinkTextProps) {
+  const linkClassName = standalone
+    ? `${className} inline-flex min-h-11 min-w-11 items-center`
+    : className;
+
   if (external) {
     return (
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={className}
+        className={linkClassName}
       >
         {children}
       </a>
@@ -32,7 +38,7 @@ export function LinkText({
   }
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={linkClassName}>
       {children}
     </Link>
   );

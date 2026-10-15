@@ -8,7 +8,6 @@ import {
   TopicRevealList,
   type TopicLink,
 } from "@/app/blog/_components/TopicRevealList";
-import { BlogPostCard } from "@/components/BlogPostCard";
 import {
   DisclosureIndicator,
   disclosureSummaryClassNames,
@@ -18,6 +17,7 @@ import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Tag } from "@/components/Tag";
+import { WritingList } from "@/components/WritingList";
 import { getAllPosts, getSeriesSummaries } from "@/lib/blogApi";
 import { getCoverVariant } from "@/lib/coverVariants";
 import {
@@ -32,7 +32,7 @@ import {
   sortTagsByPopularity,
 } from "@/lib/tags";
 
-const title = "Blog | Alex Leung";
+const title = "Writing | Alex Leung";
 const description =
   "Essays and notes on software, AI tools, technical books, and life outside work.";
 const path = "/blog";
@@ -92,16 +92,7 @@ export function generateMetadata(): Metadata {
 }
 
 export default function BlogIndex() {
-  const allPosts = getAllPosts([
-    "title",
-    "date",
-    "slug",
-    "coverImage",
-    "coverAlt",
-    "excerpt",
-    "tags",
-  ]);
-  const [firstPost, ...remainingPosts] = allPosts;
+  const allPosts = getAllPosts(["title", "date", "slug", "excerpt"]);
   const topics: TopicLink[] = sortTagsByPopularity(
     getAllTags().filter(isIndexableTag)
   ).map((topic) => ({
@@ -115,44 +106,22 @@ export default function BlogIndex() {
       <PageShell
         title="Writing"
         titleId="writing"
-        eyebrow="Notes and essays"
         description="Software, AI tools, technical books, and life outside work."
         metadata={
-          <>
-            <div className="hidden space-y-3 md:block">
+          <details className="group border-y border-line text-left">
+            <summary className={disclosureSummaryClassNames()}>
+              <span>Browse topics and series</span>
+              <DisclosureIndicator />
+            </summary>
+            <div className="space-y-4 border-t border-line px-4 py-4">
               <TopicRevealList topics={topics} />
               <SeriesLinks seriesSummaries={seriesSummaries} />
             </div>
-            <details className="group rounded-lg border border-line bg-surface text-left md:hidden">
-              <summary className={disclosureSummaryClassNames()}>
-                <span>Browse topics and series</span>
-                <DisclosureIndicator />
-              </summary>
-              <div className="space-y-4 border-t border-line px-4 py-4">
-                <TopicRevealList
-                  listId="blog-topic-list-mobile"
-                  topics={topics}
-                />
-                <SeriesLinks seriesSummaries={seriesSummaries} />
-              </div>
-            </details>
-          </>
+          </details>
         }
       >
         <ResponsiveContainer className="space-y-8 md:space-y-10">
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-4">
-            {firstPost ? (
-              <BlogPostCard
-                key={firstPost.slug}
-                post={firstPost}
-                coverPriority
-                variant="dense"
-              />
-            ) : null}
-            {remainingPosts.map((post) => (
-              <BlogPostCard key={post.slug} post={post} variant="dense" />
-            ))}
-          </div>
+          <WritingList posts={allPosts} />
           <FollowItSubscribeForm
             analyticsPlacement="blog_index"
             className="my-6"
@@ -162,7 +131,7 @@ export default function BlogIndex() {
       <JsonLdBreadcrumbs
         items={[
           { name: "Home", item: "/" },
-          { name: "Blog", item: "/blog" },
+          { name: "Writing", item: "/blog" },
         ]}
       />
       <JsonLd<CollectionPage>

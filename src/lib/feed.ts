@@ -12,7 +12,7 @@ type FeedPost = {
   tags?: string[];
 };
 
-const FEED_TITLE = "Alex Leung's Blog";
+const FEED_TITLE = "Alex Leung's Writing";
 const FEED_DESCRIPTION =
   "Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.";
 const FEED_IMAGE_URL = `${BASE_URL}/icon4.png`;

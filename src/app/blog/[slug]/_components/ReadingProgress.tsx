@@ -53,21 +53,17 @@ export function ReadingProgress({
 
       if (needsMeasurement) {
         needsMeasurement = false;
-        const headerElement =
-          document.querySelector<HTMLElement>("header.fixed");
         const startElement = document.getElementById(startId);
         const endElement = document.querySelector<HTMLElement>(endSelector);
 
-        if (!headerElement || !startElement || !endElement) {
+        if (!startElement || !endElement) {
           progressElement.hidden = true;
           return;
         }
 
         const scrollPosition = window.scrollY;
         startPosition =
-          startElement.getBoundingClientRect().top +
-          scrollPosition -
-          headerElement.getBoundingClientRect().height;
+          startElement.getBoundingClientRect().top + scrollPosition;
         endPosition =
           endElement.getBoundingClientRect().bottom +
           scrollPosition -
@@ -123,7 +119,7 @@ export function ReadingProgress({
       aria-hidden="true"
       data-reading-progress
       hidden
-      className="pointer-events-none fixed inset-x-0 top-[var(--header-height)] z-50 h-0.5 origin-left bg-accent-link motion-reduce:hidden"
+      className="pointer-events-none fixed inset-x-0 top-0 z-50 h-0.5 origin-left bg-accent-link motion-reduce:hidden"
     />
   );
 }

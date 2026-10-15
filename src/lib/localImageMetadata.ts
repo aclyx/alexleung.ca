@@ -7,6 +7,12 @@ type StaticImageProfile = {
 };
 
 const staticImageProfiles = {
+  homeFeature: {
+    source:
+      "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning.webp",
+    orderedVariants: ["content-sm", "content"],
+    fallbackVariant: "content-sm",
+  },
   heroPortrait: {
     source: "/assets/alex_vibing.webp",
     orderedVariants: ["sm", "md", "lg"],

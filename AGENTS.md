@@ -83,7 +83,7 @@ yarn deploy           # Build and deploy to GitHub Pages
   - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
 - `yarn build` explicitly runs `yarn image:variants` before creating the static export.
-- `src/components/BlogPostCard.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
+- `src/app/blog/tags/[tag]/page.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
 - `src/lib/markdownToHtml.ts` resolves inline image variants from manifest profiles.
 - Pre-commit hook `.githooks/pre-commit` runs `yarn image:variants:stage` so generated variants and manifest stay in sync with staged content/image changes, but only after `prepare` has configured the hooks path and plain `yarn` is available on `PATH` as the pinned Yarn version. Treat the hook as best-effort automation; if hooks are not active or if the hook reports a skip because Yarn is unavailable, run `corepack yarn image:variants:stage` manually before commit when relevant.
 - Runtime has hard-failure checks for missing required manifest profiles (`profiles.cover.card`, `profiles.cover.hero`, `profiles.inlineContent`).

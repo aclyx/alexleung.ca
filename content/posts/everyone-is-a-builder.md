@@ -10,6 +10,7 @@ tags:
   - "Reflection"
 series: "AI Tools and Workflows"
 seriesOrder: 3
+unlisted: true
 ---
 
 Over drinks recently, a few colleagues and I kept circling a practical internal-tools problem: small workflow ideas often wait behind engineering capacity. The possibility we kept returning to was that AI tools could let someone who understands the workflow sketch a rough internal tool, automation, or prototype while the idea is still cheap to change or discard.

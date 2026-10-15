@@ -29,7 +29,7 @@ export function SocialLinkList({
   labelFormatter = (label) => label,
 }: SocialLinkListProps) {
   const links = linkIds
-    ? data.filter((link) => linkIds.includes(link.id))
+    ? linkIds.flatMap((id) => data.filter((link) => link.id === id))
     : data;
 
   return (

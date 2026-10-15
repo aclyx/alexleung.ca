@@ -49,7 +49,7 @@ describe("seo jsonld builders", () => {
       url: "https://alexleung.ca/",
       image: "https://alexleung.ca/assets/alex_vibing.webp",
       description:
-        "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance.",
+        "Alex Leung is a software engineer and writer. His previous work includes home electrification, AR and AI hardware, and consumer finance.",
     });
     expect(profile.description).toBe("Homepage description");
     expect(now.mainEntity).toBeUndefined();
@@ -140,9 +140,9 @@ describe("seo jsonld builders", () => {
     expect(hasPart).toEqual([
       {
         "@type": "SiteNavigationElement",
-        "@id": "https://alexleung.ca/#site-navigation-experience",
-        name: "Experience",
-        url: "https://alexleung.ca/#experience",
+        "@id": "https://alexleung.ca/#site-navigation-home",
+        name: "Home",
+        url: "https://alexleung.ca/",
       },
       {
         "@type": "SiteNavigationElement",
@@ -201,7 +201,7 @@ describe("seo jsonld builders", () => {
     expect(person.address).toBeUndefined();
     expect(person.disambiguatingDescription).toBeUndefined();
     expect(person.description).toBe(
-      "Alex Leung is a software engineer and writer in San Francisco. His previous work includes home electrification, AR and AI hardware, and consumer finance."
+      "Alex Leung is a software engineer and writer. His previous work includes home electrification, AR and AI hardware, and consumer finance."
     );
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([

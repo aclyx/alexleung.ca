@@ -73,8 +73,8 @@ describe("public discovery files", () => {
     ]);
     expect(JSON.stringify(manifest)).not.toContain("/experimental/");
     expect(manifest).toMatchObject({
-      theme_color: "#f4f1e9",
-      background_color: "#f4f1e9",
+      theme_color: "#faf9f5",
+      background_color: "#faf9f5",
     });
   });
 

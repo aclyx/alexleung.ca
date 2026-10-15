@@ -1,4 +1,3 @@
-import { BASE_URL } from "@/constants";
 import { getAllPosts } from "@/lib/blogApi";
 import { buildRssFeedXml } from "@/lib/feed";
 
@@ -14,7 +13,8 @@ export function GET() {
     "tags",
   ]);
   const xml = buildRssFeedXml(posts);
-  const stylesheetDeclaration = `<?xml-stylesheet type="text/xsl" href="${BASE_URL}/feed.xsl"?>`;
+  const stylesheetDeclaration =
+    '<?xml-stylesheet type="text/xsl" href="/feed.xsl"?>';
   const xmlWithStylesheet = xml.includes("<?xml")
     ? xml.replace(/^<\?xml[^>]*\?>/, `$&\n${stylesheetDeclaration}`)
     : `${stylesheetDeclaration}\n${xml}`;

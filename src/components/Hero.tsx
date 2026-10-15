@@ -1,74 +1,51 @@
-import Link from "next/link";
-
-import { ResponsiveImage } from "@/components/ResponsiveImage";
+import { LinkText } from "@/components/LinkText";
+import { NowEntry } from "@/components/NowEntry";
 import {
-  getStaticImageFallback,
-  getStaticImageSourceSet,
-} from "@/lib/localImageMetadata";
+  NOW_CONTENT,
+  NOW_PAGE_LAST_UPDATED_DISPLAY,
+  NOW_PAGE_LAST_UPDATED_ISO,
+} from "@/constants/now";
 
 export function Hero() {
-  const portraitSrcSet = getStaticImageSourceSet("heroPortrait");
-  const portraitFallback = getStaticImageFallback("heroPortrait");
-
   return (
-    <section
-      id="about"
-      aria-labelledby="home-title"
-      className="section-center pb-16 pt-[calc(var(--header-height)+3rem)] md:pb-24 md:pt-[calc(var(--header-height)+5rem)]"
-    >
-      <div className="grid items-center gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(18rem,0.9fr)] md:gap-16 lg:gap-24">
-        <div className="hero-enter order-2 max-w-2xl md:order-1">
-          <p className="text-hero-subtitle mb-5 font-semibold uppercase tracking-[0.14em] text-accent-link">
-            Software engineer and writer
-          </p>
-          <h1
-            id="home-title"
-            className="text-hero-title font-bold leading-[0.98] tracking-[-0.045em] text-ink"
-          >
+    <section id="about" aria-labelledby="home-title" className="section-center">
+      <div className="grid gap-7 border-b border-line py-8 md:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)] md:gap-16 md:py-11">
+        <div>
+          <h1 id="home-title" className="text-hero-title text-ink">
             Alex Leung
           </h1>
-          <p className="text-hero-description mt-7 max-w-xl leading-relaxed text-muted">
+          <p className="text-hero-description mt-5 max-w-xl leading-relaxed text-ink">
             I work on ChatGPT at OpenAI. I write about software, technical
             books, and life outside work.
           </p>
-          <Link
-            href="/now/"
-            className="link-arrow mt-5 inline-flex min-h-11 items-center gap-2 text-base font-medium text-ink underline decoration-line underline-offset-4 hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
-          >
-            Now — what I’m up to
-            <span aria-hidden="true">→</span>
-          </Link>
-          <div className="mt-8 flex flex-wrap gap-x-7 gap-y-3">
-            <Link
-              href="/blog/"
-              className="link-arrow inline-flex min-h-11 items-center gap-2 font-semibold text-accent-link underline decoration-accent-link/35 underline-offset-4 hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+        </div>
+        <aside
+          aria-labelledby="home-now-heading"
+          className="border-t border-line pt-6 md:border-t-0 md:border-l md:pt-0 md:pl-6"
+        >
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+            <h2 id="home-now-heading" className="text-editorial-label">
+              Now
+            </h2>
+            <time
+              dateTime={NOW_PAGE_LAST_UPDATED_ISO}
+              className="font-mono text-xs text-muted"
             >
-              Read my writing <span aria-hidden="true">→</span>
-            </Link>
-            <Link
-              href="/contact/"
-              className="link-arrow inline-flex min-h-11 items-center gap-2 font-semibold text-ink underline decoration-line underline-offset-4 hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
-            >
-              Get in touch <span aria-hidden="true">→</span>
-            </Link>
+              {NOW_PAGE_LAST_UPDATED_DISPLAY}
+            </time>
           </div>
-        </div>
-
-        <div className="order-1 md:order-2">
-          <ResponsiveImage
-            src={portraitFallback.path}
-            srcSet={portraitSrcSet}
-            alt="Alex Leung sitting in an art studio"
-            width={portraitFallback.width}
-            height={portraitFallback.height}
-            sizes="(min-width: 1120px) 430px, (min-width: 768px) 38vw, calc(100vw - 2.5rem)"
-            pictureClassName="block"
-            className="aspect-[3/2] w-full rounded-[1.5rem] border border-line object-cover shadow-[0_20px_50px_rgba(32,35,31,0.08)]"
-            priority
-            fetchPriority="high"
-            decoding="async"
+          <NowEntry
+            entry={NOW_CONTENT.entries[0]}
+            headingLevel="h3"
+            headingClassName="font-serif text-xl font-normal leading-snug"
+            className="text-sm leading-relaxed"
           />
-        </div>
+          <div className="mt-2 flex text-sm">
+            <LinkText href="/now/" standalone>
+              More on the Now page →
+            </LinkText>
+          </div>
+        </aside>
       </div>
     </section>
   );

@@ -3,21 +3,21 @@ import { render, screen } from "@testing-library/react";
 import { SocialMediaList } from "../SocialMediaList";
 
 describe("SocialMediaList", () => {
-  it("renders the Profiles subtitle", () => {
+  it("groups the profile links in a named navigation", () => {
     render(<SocialMediaList />);
-    expect(screen.getByText("Profiles")).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "Profiles" })
+    ).toBeInTheDocument();
   });
 
-  it("renders the primary professional links", () => {
+  it("renders the selected profile links", () => {
     render(<SocialMediaList />);
     expect(screen.getByLabelText("LinkedIn Profile")).toBeInTheDocument();
     expect(screen.getByLabelText("GitHub Profile")).toBeInTheDocument();
     expect(
       screen.queryByLabelText("Work GitHub Profile")
     ).not.toBeInTheDocument();
-    expect(
-      screen.queryByLabelText("X (Twitter) Profile")
-    ).not.toBeInTheDocument();
+    expect(screen.getByLabelText("X (Twitter) Profile")).toBeInTheDocument();
     expect(screen.queryByLabelText("Bluesky Profile")).not.toBeInTheDocument();
     expect(
       screen.queryByLabelText("Instagram Profile")
@@ -34,6 +34,10 @@ describe("SocialMediaList", () => {
       "href",
       "https://www.github.com/aclyx"
     );
+    expect(screen.getByLabelText("X (Twitter) Profile")).toHaveAttribute(
+      "href",
+      "https://www.x.com/aclyxpse"
+    );
   });
 
   it("opens links in new tab with security attributes", () => {
@@ -48,7 +52,7 @@ describe("SocialMediaList", () => {
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
     expect(screen.queryByText("Work GitHub")).not.toBeInTheDocument();
-    expect(screen.queryByText("X (Twitter)")).not.toBeInTheDocument();
+    expect(screen.getByText("X", { exact: true })).toBeInTheDocument();
     expect(screen.queryByText("Bluesky")).not.toBeInTheDocument();
     expect(screen.queryByText("Instagram")).not.toBeInTheDocument();
   });

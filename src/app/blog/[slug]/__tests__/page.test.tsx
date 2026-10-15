@@ -1,8 +1,12 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
-import { getSeriesNavigation } from "@/lib/blogApi";
+import {
+  getAllPosts,
+  getRelatedPosts,
+  getSeriesNavigation,
+} from "@/lib/blogApi";
 
-import Post from "../page";
+import Post, { generateMetadata, generateStaticParams } from "../page";
 
 jest.mock("next/link", () => {
   return function MockLink({
@@ -35,6 +39,7 @@ jest.mock("@/lib/blogApi", () => ({
       coverAlt: "A laptop beside a notebook on a desk.",
       excerpt: "A short summary.",
       tags: [],
+      unlisted: slug === "unlisted",
     };
 
     if (!fields) {
@@ -54,10 +59,90 @@ jest.mock("@/lib/blogApi", () => ({
 }));
 
 const mockedGetSeriesNavigation = jest.mocked(getSeriesNavigation);
+const mockedGetRelatedPosts = jest.mocked(getRelatedPosts);
 
 describe("Blog post page", () => {
   beforeEach(() => {
     mockedGetSeriesNavigation.mockReturnValue(null);
+    mockedGetRelatedPosts.mockReturnValue([]);
+  });
+
+  it("exports unlisted URLs and marks them noindex without removing their canonical URL", async () => {
+    jest.mocked(getAllPosts).mockReturnValueOnce([
+      {
+        slug: "unlisted",
+        title: "Unlisted",
+        date: "2026-01-01",
+        tags: [],
+        content: "Body",
+        draft: false,
+        unlisted: true,
+      },
+    ]);
+    expect(await generateStaticParams()).toEqual([{ slug: "unlisted" }]);
+    expect(getAllPosts).toHaveBeenLastCalledWith(["slug"], {
+      includeUnlisted: true,
+    });
+
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "unlisted" }),
+    });
+    expect(metadata.robots).toEqual({ index: false, follow: true });
+    expect(metadata.alternates?.canonical).toBe(
+      "https://alexleung.ca/blog/unlisted/"
+    );
+    render(await Post({ params: Promise.resolve({ slug: "unlisted" }) }));
+    expect(screen.getByText("Rendered body")).toBeInTheDocument();
+
+    const listedMetadata = await generateMetadata({
+      params: Promise.resolve({ slug: "listed" }),
+    });
+    expect(listedMetadata.robots).toBeUndefined();
+  });
+
+  it("renders related posts as title-and-date links in the supplied order", async () => {
+    const relatedPosts = ["First", "Second", "Third"].map((name, index) => ({
+      slug: `related-${index}`,
+      title: `${name} related post`,
+      date: "2026-02-01",
+      excerpt: `Excerpt for ${name}.`,
+      coverImage: "/assets/blog/related.webp",
+      tags: [],
+      draft: false,
+      content: "Related body",
+    }));
+    mockedGetRelatedPosts.mockReturnValue(relatedPosts);
+
+    const view = await Post({
+      params: Promise.resolve({ slug: "cover-alt-hero" }),
+    });
+
+    render(view);
+
+    const section = screen.getByRole("region", { name: "Related posts" });
+    const links = within(section).getAllByRole("link");
+    expect(links).toHaveLength(3);
+    links.forEach((link, index) => {
+      expect(link).toHaveAccessibleName(relatedPosts[index].title);
+      expect(link).toHaveAttribute(
+        "href",
+        `/blog/${relatedPosts[index].slug}/`
+      );
+      expect(
+        within(link).getByRole("heading", {
+          level: 3,
+          name: relatedPosts[index].title,
+        })
+      ).toBeInTheDocument();
+      expect(link.querySelector("time")).toHaveAttribute(
+        "datetime",
+        "2026-02-01"
+      );
+      expect(within(link).queryByRole("img")).not.toBeInTheDocument();
+      expect(
+        within(link).queryByText(relatedPosts[index].excerpt)
+      ).not.toBeInTheDocument();
+    });
   });
 
   it("uses custom cover alt text for the hero image", async () => {
