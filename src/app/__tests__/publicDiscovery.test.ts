@@ -132,7 +132,7 @@ describe("public discovery files", () => {
       "[Mandelbrot Explorer](https://alexleung.ca/experimental/mandelbrot/)"
     );
     expect(llmsText).toContain(
-      "[PID Controller Simulator Notes](https://alexleung.ca/experimental/pid-controller/)"
+      "[PID Controller Simulator](https://alexleung.ca/experimental/pid-controller/)"
     );
     expect(llmsText).not.toContain("/about/");
     expect(llmsText).not.toContain("[Experiments]");

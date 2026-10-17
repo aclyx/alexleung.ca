@@ -175,21 +175,19 @@ test("tag archive routes render and keep the writing nav item active", async ({
   ).toHaveAttribute("aria-current", "page");
 });
 
-test("PID controller notes preserve the retired simulator model", async ({
-  page,
-}) => {
-  await gotoAndStabilize(page, "/experimental/pid-controller/");
+test("PID simulator is discoverable from the homepage", async ({ page }) => {
+  await gotoAndStabilize(page, "/");
+  await page.getByRole("link", { name: "PID controller simulator →" }).click();
+  await waitForStablePage(page);
 
   await expect(
     page.getByRole("heading", {
       level: 1,
-      name: "PID Controller Simulator Notes",
+      name: "PID Controller Simulator",
     })
   ).toBeVisible();
-  await expect(page.getByText(/first-order process/)).toBeVisible();
-  await expect(
-    page.getByRole("link", { name: "controller and simulation modules" })
-  ).toHaveAttribute("href", /src\/features\/pid-simulator/);
+  await expect(page.getByText(/metal plate/)).toBeVisible();
+  await expect(page.getByLabel("Plant", { exact: true })).toHaveValue("plate");
 });
 
 test("legacy page URLs resolve to their canonical destinations", async ({

@@ -1,28 +1,27 @@
 import { render, screen } from "@testing-library/react";
 
-import PidControllerNotesPage from "../page";
+import PidControllerPage, { metadata } from "../page";
 
-describe("PidControllerNotesPage", () => {
-  it("renders the archived model and source links", () => {
-    render(<PidControllerNotesPage />);
+describe("PidControllerPage", () => {
+  it("renders the simulator and plant controls with canonical metadata", () => {
+    render(<PidControllerPage />);
 
     expect(
       screen.getByRole("heading", {
         level: 1,
-        name: "PID Controller Simulator Notes",
+        name: "PID Controller Simulator",
       })
     ).toBeInTheDocument();
-    expect(screen.getByText(/first-order process/)).toBeInTheDocument();
+    expect(screen.getByLabelText("Plant")).toHaveValue("plate");
+    expect(screen.getByText(/metal plate/)).toBeInTheDocument();
     expect(
-      screen.getByRole("link", {
-        name: "controller and simulation modules",
-      })
-    ).toHaveAttribute(
-      "href",
-      expect.stringContaining("/src/features/pid-simulator")
+      screen.queryByRole("link", { name: /Mandelbrot/ })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: /Proportional/ })
+    ).toBeInTheDocument();
+    expect(metadata.alternates?.canonical).toBe(
+      "https://alexleung.ca/experimental/pid-controller/"
     );
-    expect(
-      screen.getByRole("link", { name: "Mandelbrot explorer" })
-    ).toHaveAttribute("href", "/experimental/mandelbrot");
   });
 });

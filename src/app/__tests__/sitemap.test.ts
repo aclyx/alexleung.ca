@@ -38,7 +38,7 @@ describe("sitemap", () => {
         }),
         expect.objectContaining({
           url: "https://alexleung.ca/experimental/pid-controller/",
-          lastModified: new Date("2026-09-17"),
+          lastModified: new Date("2026-10-17"),
           priority: 0.5,
         }),
         expect.objectContaining({
