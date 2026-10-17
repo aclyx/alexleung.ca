@@ -28,9 +28,11 @@ export function PhysicalPlant({
   }, [plant, response]);
   const fraction = (value: number) =>
     (value - range.low) / Math.max(range.high - range.low, 1);
-  const position = (value: number) => 125 + fraction(value) * 180;
+  // Reserve room for a fixed cylinder, its full stroke, and a rigid piston rod.
+  const position = (value: number) => 205 + fraction(value) * 100;
   const mass = position(sample.value);
-  const coilEnd = mass - 30;
+  const coilEnd = mass - 28;
+  const piston = mass - 145;
   const spring = Array.from(
     { length: 13 },
     (_, i) =>
@@ -100,13 +102,32 @@ export function PhysicalPlant({
               fill="none"
               className="stroke-muted"
               strokeWidth="2"
+              data-testid="plant-spring"
             />
-            <path
-              d={`M25 133 H55 M55 125 V141 H80 V125 Z M65 129 V137 M65 133 H${coilEnd}`}
-              fill="none"
-              className="stroke-muted"
-              strokeWidth="2"
-            />
+            <g fill="none" className="stroke-muted" strokeWidth="2">
+              <path d="M25 133 H55" />
+              <rect
+                x="55"
+                y="125"
+                width="110"
+                height="16"
+                data-testid="damper-cylinder"
+              />
+              <line
+                x1={piston}
+                x2={piston}
+                y1="128"
+                y2="138"
+                data-testid="damper-piston"
+              />
+              <line
+                x1={piston}
+                x2={coilEnd}
+                y1="133"
+                y2="133"
+                data-testid="damper-rod"
+              />
+            </g>
             <g transform={`translate(${mass}, 0)`} data-testid="plant-mass">
               <rect
                 x="-28"

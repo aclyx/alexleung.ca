@@ -2,7 +2,7 @@ import sitemap from "@/app/sitemap";
 import { getAllPosts } from "@/lib/blogApi";
 
 jest.mock("@/constants/now", () => ({
-  NOW_PAGE_LAST_UPDATED_ISO: "2026-10-15",
+  NOW_PAGE_LAST_UPDATED_ISO: "2026-10-18",
 }));
 
 jest.mock("@/lib/blogApi", () => ({
@@ -59,7 +59,7 @@ describe("sitemap", () => {
     expect(
       entries.find((entry) => entry.url === "https://alexleung.ca/")
         ?.lastModified
-    ).toEqual(new Date("2026-10-15"));
+    ).toEqual(new Date("2026-10-18"));
     expect(
       entries.find((entry) => entry.url === "https://alexleung.ca/blog/")
         ?.lastModified
@@ -95,7 +95,7 @@ describe("sitemap", () => {
       (entry) => entry.url === "https://alexleung.ca/now/"
     );
 
-    expect(homeEntry?.lastModified).toEqual(new Date("2026-10-15"));
+    expect(homeEntry?.lastModified).toEqual(new Date("2026-10-18"));
     expect(nowEntry?.lastModified).toEqual(homeEntry?.lastModified);
   });
 

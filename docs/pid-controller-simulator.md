@@ -4,6 +4,14 @@ The standalone tool at `/experimental/pid-controller/` recomputes a deterministi
 20-second response when the gains or plant change. It adds no runtime dependencies.
 These are educational models, not tuning recommendations for real equipment.
 
+## Access and discovery
+
+The homepage's Browser tool section links directly to the simulator. Its original
+`/experimental/pid-controller/` URL is retained, so existing links and bookmarks
+need no migration. It has a self-canonical URL and entries in `sitemap.xml` and
+`llms.txt`; `robots.txt` allows crawling. No new global navigation item, experiment
+hub, or feed entry is required for this standalone tool.
+
 ## Plants
 
 Three fixed presets define dynamics, initial conditions, targets, units and
@@ -26,6 +34,8 @@ Playback controls precede the views so starting playback on a phone leaves the
 physical model in view.
 Drawings scale to the full current run, keeping the scale stable during playback.
 The tank's displayed scale is not a physical capacity.
+The spring's damper has a fixed cylinder and a constant-length rod attached to
+the mass; its piston travels inside the cylinder through the full plotted range.
 
 Play advances at real time through the precomputed samples and stops at 20 s.
 Pause and the keyboard-accessible time slider allow inspection without motion.

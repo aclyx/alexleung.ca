@@ -188,6 +188,20 @@ test("PID simulator is discoverable from the homepage", async ({ page }) => {
   ).toBeVisible();
   await expect(page.getByText(/metal plate/)).toBeVisible();
   await expect(page.getByLabel("Plant", { exact: true })).toHaveValue("plate");
+  await expect(
+    page.locator('meta[name="robots"][content*="noindex"]')
+  ).toHaveCount(0);
+  await expect(page.locator('meta[http-equiv="refresh"]')).toHaveCount(0);
+  const sitemap = await page.request.get("/sitemap.xml");
+  expect(sitemap.ok()).toBe(true);
+  expect(await sitemap.text()).toContain(
+    "<loc>https://alexleung.ca/experimental/pid-controller/</loc>"
+  );
+  const llms = await page.request.get("/llms.txt");
+  expect(llms.ok()).toBe(true);
+  expect(await llms.text()).toContain(
+    "[PID Controller Simulator](https://alexleung.ca/experimental/pid-controller/)"
+  );
 });
 
 test("legacy page URLs resolve to their canonical destinations", async ({

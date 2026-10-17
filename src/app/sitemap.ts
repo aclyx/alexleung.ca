@@ -21,7 +21,7 @@ const WEEKLY: SitemapEntry["changeFrequency"] = "weekly";
 const YEARLY: SitemapEntry["changeFrequency"] = "yearly";
 
 const PAGE_LAST_MODIFIED: Record<string, string> = {
-  home: "2026-08-29",
+  home: "2026-10-17",
   now: NOW_PAGE_LAST_UPDATED_ISO,
   blog: "2026-08-29",
   contact: "2026-08-29",
