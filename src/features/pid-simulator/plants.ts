@@ -53,7 +53,7 @@ export const PLANT_PRESETS: readonly PlantPreset[] = [
       name: "Spring–mass–damper",
       order: 2,
       description:
-        "Move a 1 kg mass against a spring. Inertia carries it past the target; damping removes energy.",
+        "Apply force to a 1 kg mass attached to a spring and damper.",
       equation: "u - 0.6*v - y",
       initialValue: 0,
       initialVelocity: 0,

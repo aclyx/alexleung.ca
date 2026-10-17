@@ -50,41 +50,7 @@ export function ResponsePlayback({
 
   return (
     <div className="mt-5">
-      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] md:gap-8">
-        <PhysicalPlant plant={plant} sample={sample} response={response} />
-        <figure className="min-w-0">
-          <div
-            className="mb-2 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted"
-            aria-hidden="true"
-          >
-            <span className="flex items-center gap-2">
-              <span className="w-5 border-t-[3px] border-accent-link" />
-              Output ({plant.unit})
-            </span>
-            <span className="flex items-center gap-2">
-              <span className="w-5 border-t-2 border-dashed border-ink" />
-              Target
-            </span>
-            {saved ? (
-              <span className="flex items-center gap-2">
-                <span className="w-5 border-t-2 border-dotted border-muted" />
-                Snapshot
-              </span>
-            ) : null}
-          </div>
-          <ResponseChart
-            response={response}
-            saved={saved}
-            plant={plant}
-            sample={sample}
-          />
-          <figcaption className="mt-2 text-xs leading-relaxed text-muted">
-            The dot and physical view show the same instant. Dashed lines mark
-            the target.
-          </figcaption>
-        </figure>
-      </div>
-      <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-2 border-t border-line pt-3">
+      <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2">
         <button
           type="button"
           className={actionClassNames({
@@ -131,6 +97,36 @@ export function ResponsePlayback({
             onInteract("scrub_response");
           }}
         />
+      </div>
+      <div className="grid items-start gap-6 md:grid-cols-[minmax(0,1fr)_minmax(0,1.6fr)] md:gap-8">
+        <PhysicalPlant plant={plant} sample={sample} response={response} />
+        <figure className="min-w-0">
+          <div
+            className="mb-2 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted"
+            aria-hidden="true"
+          >
+            <span className="flex items-center gap-2">
+              <span className="w-5 border-t-[3px] border-accent-link" />
+              Output ({plant.unit})
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-5 border-t-2 border-dashed border-ink" />
+              Target
+            </span>
+            {saved ? (
+              <span className="flex items-center gap-2">
+                <span className="w-5 border-t-2 border-dotted border-muted" />
+                Snapshot
+              </span>
+            ) : null}
+          </div>
+          <ResponseChart
+            response={response}
+            saved={saved}
+            plant={plant}
+            sample={sample}
+          />
+        </figure>
       </div>
     </div>
   );

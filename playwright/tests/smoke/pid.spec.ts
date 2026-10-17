@@ -18,9 +18,21 @@ test("PID presets, keyboard tuning, snapshots, and reset work", async ({
     page.getByRole("button", { name: "Steady offset" })
   ).toHaveAttribute("aria-pressed", "false");
   const numericGain = page.getByRole("spinbutton", { name: "Kp value" });
-  await numericGain.fill("25");
+  await numericGain.fill("20.13");
   await numericGain.press("Enter");
-  await expect(gain).toHaveValue("25");
+  await expect(gain).toHaveValue("20.13");
+  await gain.press("ArrowRight");
+  await expect(gain).toHaveValue("20.63");
+  await expect(numericGain).toHaveValue("20.63");
+  await gain.press("ArrowLeft");
+  await expect(gain).toHaveValue("20.13");
+  await numericGain.fill("-0.13");
+  await numericGain.press("Tab");
+  await expect(gain).toBeFocused();
+  await expect(gain).toHaveValue("-0.13");
+  await numericGain.fill("1001");
+  await numericGain.press("Tab");
+  await expect(numericGain).toHaveValue("-0.13");
   await page.getByRole("button", { name: "Reset gains" }).click();
   await expect(curve).toHaveAttribute("d", initial!);
   await expect(page.getByText(/Snapshot: Kp/)).toHaveCount(0);
@@ -103,5 +115,10 @@ for (const width of [360, 768, 1280]) {
     await expect(
       page.getByRole("img", { name: /PID step response/ })
     ).toBeVisible();
+    const play = await page
+      .getByRole("button", { name: "Play", exact: true })
+      .boundingBox();
+    const physical = await page.getByTestId("physical-plant").boundingBox();
+    expect(play!.y + play!.height).toBeLessThan(physical!.y);
   });
 }

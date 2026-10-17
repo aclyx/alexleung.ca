@@ -16,6 +16,34 @@ describe("plant simulation", () => {
     expect(result.riseTime).toBeNull();
     expect(result.settlingTime).toBeNull();
   });
+  it.each(PLANT_PRESETS)(
+    "$plant.name records the command for the same instant as its output",
+    ({ plant, controllers }) => {
+      const kp = controllers[0].kp;
+      const run = simulate({ kp, ki: 0, kd: 0, plant });
+      for (const sample of run.samples) {
+        const expected = Math.max(
+          plant.outputMin,
+          Math.min(plant.outputMax, kp * (plant.target - sample.value))
+        );
+        expect(sample.control).toBe(expected);
+      }
+      expect(run.samples[0].control).toBeGreaterThan(0);
+    }
+  );
+  it.each([
+    [0, 400],
+    [1, 1],
+    [2, 0.4],
+  ])(
+    "plant %s approaches the input needed to hold its target",
+    (index, input) => {
+      const { plant, controllers } = PLANT_PRESETS[index];
+      const run = simulate({ ...controllers[1], plant });
+      expect(run.samples.at(-1)!.value).toBeCloseTo(plant.target, 2);
+      expect(run.samples.at(-1)!.control).toBeCloseTo(input, 2);
+    }
+  );
   it("matches the damped mass's analytical free response", () => {
     const plant = {
       ...PLANT_PRESETS[1].plant,
@@ -59,7 +87,7 @@ describe("plant simulation", () => {
         );
       expect(crossings.length).toBeGreaterThan(5);
       for (const run of runs)
-        for (const sample of run.samples.slice(1)) {
+        for (const sample of run.samples) {
           expect(sample.control).toBeGreaterThanOrEqual(plant.outputMin);
           expect(sample.control).toBeLessThanOrEqual(plant.outputMax);
         }
@@ -72,7 +100,7 @@ describe("plant simulation", () => {
       kd: 0,
       plant: PLANT_PRESETS[2].plant,
     });
-    expect(run.samples[1].control).toBe(1);
+    expect(run.samples[0].control).toBe(1);
     expect(run.samples[1].value).toBeGreaterThan(0);
   });
   it("avoids derivative kick and handles a zero step", () => {

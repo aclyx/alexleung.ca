@@ -22,6 +22,8 @@ Oscillation, with tests for their behavior on each plant.
 The plate's thermometer and shading, mass position, and tank level use the same
 sample as the response chart's dot. Numeric output and actuator input readouts
 include units. Dashed markers indicate the target; color is not the only signal.
+Playback controls precede the views so starting playback on a phone leaves the
+physical model in view.
 Drawings scale to the full current run, keeping the scale stable during playback.
 The tank's displayed scale is not a physical capacity.
 
@@ -35,13 +37,16 @@ a snapshot preserves playback position.
 ## Solver and controller
 
 - Fixed 0.01 s controller period; RK4 advances the plant with input held constant.
+- Each sample pairs the current plant state with the newly computed command,
+  including at 0 s and 20 s. Displayed input never lags the displayed state.
 - Tank height is bounded at zero when an integration step crosses empty.
 - Parallel controller: `u = Kp*error + integral - Kd*d_filtered(y)/dt`.
 - Derivative filter: 0.1 s, backward Euler; derivative on measurement avoids kick.
 - Conditional integration rejects increments that deepen actuator saturation,
   but allows unwinding. Requested input is clamped to the preset's limits.
 - Numeric gains accept finite values from −1000 to 1000; sliders provide
-  convenient preset-specific ranges.
+  convenient preset-specific ranges. Numeric decimals remain exact on the slider;
+  arrow keys use preset-specific increments and dragging rounds to three decimals.
 - Nonfinite states or magnitudes above 1e6 abort with a visible error.
 - Noise and transport delay are not included. Extreme gains can exceed the
   useful accuracy of the fixed-step solver.
@@ -53,8 +58,9 @@ Overshoot is the excess beyond the target divided by the absolute step size.
 Settling is the first step after the last excursion outside the 2% band, provided
 at least one full second remains. These three metrics do not apply to a zero step.
 Final error is target minus output at 20 s, not necessarily steady-state error.
+The displayed final error is rounded to three decimal places.
 
-The chart draws every fifth sample; metrics and playback use all 2,001 samples.
+The chart, metrics and playback use all 2,001 samples.
 Chart bounds include the target, current curve and snapshot. Snapshots keep
 their gains and response in component state; plant changes and Reset gains
 clear them. Nothing is persisted or shared.
@@ -73,8 +79,9 @@ the site's build-time enable flag.
 ## Verification
 
 Unit tests cover analytical thermal, damped-mass and nonlinear tank responses,
-preset behavior, actuator limits, deterministic output, snapshots, synchronized
+steady-state input balances, same-time actuator readings, preset behavior,
+actuator limits, deterministic output, snapshots, synchronized
 scrubbing, playback lifecycle and bounded analytics. Browser tests cover
-keyboard controls, all plant views, playback, snapshots, discovery, canonical
+decimal gain synchronization, keyboard controls, all plant views, playback, snapshots, discovery, canonical
 metadata and 360/768/1280px layouts. Visual baselines cover desktop/mobile plate,
 snapshot comparison, mass and tank views.

@@ -54,7 +54,6 @@ export function ResponseChart({
         ((value - minimum) / (maximum - minimum)) * (height - top - bottom);
       const path = (samples: ResponseSample[]) =>
         samples
-          .filter((_, index) => index % 5 === 0)
           .map(
             (sample, index) =>
               `${index === 0 ? "M" : "L"}${x(sample.time).toFixed(2)},${y(sample.value).toFixed(2)}`

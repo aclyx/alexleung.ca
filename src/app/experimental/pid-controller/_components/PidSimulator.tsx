@@ -47,7 +47,6 @@ const seconds = (value: number | null) =>
   value === null ? "Not reached" : `${value.toFixed(2)} s`;
 const percent = (value: number | null) =>
   value === null ? "No step" : `${value.toFixed(1)}%`;
-const number = (value: number) => Number(value.toPrecision(4)).toString();
 type Snapshot = { config: SimulationConfig; response: SimulationResult };
 
 export function PidSimulator() {
@@ -93,8 +92,7 @@ export function PidSimulator() {
   }[] = [
     {
       label: "Rise time",
-      format: (run) =>
-        plant.target === plant.initialValue ? "No step" : seconds(run.riseTime),
+      format: (run) => seconds(run.riseTime),
       detail: "10–90% of requested step",
     },
     {
@@ -104,15 +102,12 @@ export function PidSimulator() {
     },
     {
       label: "Settling time",
-      format: (run) =>
-        plant.target === plant.initialValue
-          ? "No step"
-          : seconds(run.settlingTime),
+      format: (run) => seconds(run.settlingTime),
       detail: "Within the 2% band",
     },
     {
       label: "Final error",
-      format: (run) => `${number(run.finalError)} ${plant.unit}`.trim(),
+      format: (run) => `${Number(run.finalError.toFixed(3))} ${plant.unit}`,
       detail: "Target − output at 20 s",
     },
   ];
@@ -131,7 +126,7 @@ export function PidSimulator() {
             <select
               id="pid-plant"
               value={plant.id}
-              className="mt-2 block min-h-11 w-full rounded-sm border border-line bg-paper px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-link"
+              className="mt-2 block min-h-11 w-full rounded-sm border border-control-border bg-paper px-3 text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-link"
               onChange={(event) => {
                 const selected = PLANT_PRESETS.find(
                   (item) => item.plant.id === event.target.value
@@ -160,8 +155,8 @@ export function PidSimulator() {
               {plant.order === 1 ? "dy/dt" : "d²y/dt²"} = {plant.equation}
             </p>
             <p className="mt-2 text-xs leading-relaxed text-muted">
-              y: {plant.unit || "output"} · u: {plant.controlUnit || "input"} (
-              {plant.outputMin} to {plant.outputMax}) · t: seconds
+              y: {plant.unit} · u: {plant.controlUnit} ({plant.outputMin} to{" "}
+              {plant.outputMax}) · t: seconds
               {plant.order === 2 ? " · v = dy/dt" : ""}
             </p>
           </div>
@@ -192,11 +187,12 @@ export function PidSimulator() {
                 plant={plant}
                 onInteract={trackOnce}
               />
-              <p className="mt-4 text-sm leading-relaxed text-muted">
-                {snapshot
-                  ? `Snapshot: Kp ${snapshot.config.kp}, Ki ${snapshot.config.ki}, Kd ${snapshot.config.kd}.`
-                  : "Take a snapshot, then change the gains to compare."}
-              </p>
+              {snapshot ? (
+                <p className="mt-4 text-sm leading-relaxed text-muted">
+                  Snapshot: Kp {snapshot.config.kp}, Ki {snapshot.config.ki}, Kd{" "}
+                  {snapshot.config.kd}.
+                </p>
+              ) : null}
             </>
           ) : null}
           <div className="mt-5 flex flex-wrap gap-2">
@@ -303,7 +299,7 @@ export function PidSimulator() {
                     onKeyDown={(event) => {
                       if (event.key === "Enter") event.currentTarget.blur();
                     }}
-                    className="min-h-11 w-20 rounded-sm border border-line bg-paper px-2 font-mono text-sm"
+                    className="min-h-11 w-20 rounded-sm border border-control-border bg-paper px-2 font-mono text-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-link"
                   />
                 </div>
                 <input
@@ -312,9 +308,36 @@ export function PidSimulator() {
                   value={config[control.key]}
                   min={Math.min(0, config[control.key])}
                   max={Math.max(preset.gainMax, config[control.key])}
-                  step={preset.gainStep}
+                  step="any"
+                  onKeyDown={(event) => {
+                    const direction =
+                      event.key === "ArrowRight" || event.key === "ArrowUp"
+                        ? 1
+                        : event.key === "ArrowLeft" || event.key === "ArrowDown"
+                          ? -1
+                          : 0;
+                    if (!direction) return;
+                    event.preventDefault();
+                    const input = event.currentTarget;
+                    const next = Number(
+                      (
+                        config[control.key] +
+                        direction * preset.gainStep
+                      ).toFixed(10)
+                    );
+                    updateGain(
+                      control.key,
+                      Math.max(
+                        Number(input.min),
+                        Math.min(Number(input.max), next)
+                      )
+                    );
+                  }}
                   onChange={(event) =>
-                    updateGain(control.key, Number(event.target.value))
+                    updateGain(
+                      control.key,
+                      Number(Number(event.target.value).toFixed(3))
+                    )
                   }
                   aria-describedby={`pid-${control.key}-help`}
                   className="block h-11 w-full cursor-pointer accent-accent-link focus-visible:rounded-sm focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-link"
@@ -372,20 +395,19 @@ export function PidSimulator() {
         </summary>
         <div className="space-y-2 pb-5 text-sm leading-relaxed text-muted">
           <p>
-            The controller uses u = Kp·error + Ki·∫error dt − Kd·dy/dt, with a
-            0.1 s derivative filter and conditional anti-windup at the input
-            limits.
+            u = Kp·error + Ki·∫error dt − Kd·dy/dt. The derivative acts on
+            measured output with a 0.1 s filter; anti-windup limits integral
+            accumulation when the actuator saturates.
           </p>
           <p>
-            These are idealized models, not tuning advice for real equipment.
-            The plant runs for 20 s with a fixed 0.01 s RK4 step. No noise or
-            delay is added. The tank has no overflow limit. Drawings scale to
-            fit each run; playback does not change the calculation.
+            Idealized models: no noise, delay, or tank overflow. The controller
+            updates every 0.01 s; RK4 advances the plant between updates.
+            Extreme gains can make fixed-step results unreliable. Drawings scale
+            to each run. These presets are not tuning advice for real equipment.
           </p>
           <p>
-            Settling means staying within 2% of the requested step for the rest
-            of the run, for at least 1 s. Rise time, overshoot, and settling do
-            not apply when the target equals the initial output.
+            Settling requires staying within the 2% band through 20 s, for at
+            least 1 s. Final error is rounded to three decimal places.
           </p>
         </div>
       </details>

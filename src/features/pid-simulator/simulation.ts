@@ -40,9 +40,9 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
   let ninetyPercent: number | null = null;
   let lastOutsideBand = 0;
   const targetStep = plant.target - plant.initialValue;
-  const samples: ResponseSample[] = [{ time: 0, value, control: 0 }];
+  const samples: ResponseSample[] = [];
 
-  for (let step = 1; step <= DURATION / DT; step += 1) {
+  for (let step = 0; step <= DURATION / DT; step += 1) {
     const error = plant.target - value;
     derivative +=
       (DT / (DERIVATIVE_FILTER + DT)) *
@@ -63,6 +63,9 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
       plant.outputMin,
       Math.min(plant.outputMax, candidateOutput)
     );
+    // Record the command applied at this instant, not the previous interval's.
+    samples.push({ time: step * DT, value, control });
+    if (step === DURATION / DT) break;
 
     // RK4 advances the plant while controller output is held for this 10 ms step.
     const rate = (y: number, v: number) => {
@@ -77,7 +80,7 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
     // Stop at the tank floor if a numerical step crosses the empty boundary.
     if (plant.id === "tank") value = Math.max(0, value);
     velocity += (DT * (a.v + 2 * b.v + 2 * c.v + d.v)) / 6;
-    const nextTime = step * DT;
+    const nextTime = (step + 1) * DT;
     if (
       ![value, velocity].every(
         (state) => Number.isFinite(state) && Math.abs(state) <= 1e6
@@ -94,7 +97,6 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
     if (ninetyPercent === null && progress >= 0.9) ninetyPercent = nextTime;
     if (Math.abs(plant.target - value) > Math.abs(targetStep) * 0.02)
       lastOutsideBand = nextTime;
-    samples.push({ time: nextTime, value, control });
   }
   return {
     samples,
