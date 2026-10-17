@@ -5,6 +5,10 @@ import {
   MANDELBROT_PATH,
 } from "@/constants/mandelbrot";
 import { NOW_PAGE_LAST_UPDATED_ISO } from "@/constants/now";
+import {
+  PID_CONTROLLER_LAST_MODIFIED_ISO,
+  PID_CONTROLLER_PATH,
+} from "@/constants/pidController";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
 import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
@@ -17,7 +21,7 @@ const WEEKLY: SitemapEntry["changeFrequency"] = "weekly";
 const YEARLY: SitemapEntry["changeFrequency"] = "yearly";
 
 const PAGE_LAST_MODIFIED: Record<string, string> = {
-  home: "2026-08-29",
+  home: "2026-10-17",
   now: NOW_PAGE_LAST_UPDATED_ISO,
   blog: "2026-08-29",
   contact: "2026-08-29",
@@ -84,6 +88,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       lastModified: new Date(MANDELBROT_LAST_MODIFIED_ISO),
       changeFrequency: MONTHLY,
       priority: 0.6,
+    },
+    {
+      url: toCanonical(PID_CONTROLLER_PATH),
+      lastModified: new Date(PID_CONTROLLER_LAST_MODIFIED_ISO),
+      changeFrequency: YEARLY,
+      priority: 0.5,
     },
     {
       url: toCanonical("/contact"),

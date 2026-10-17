@@ -223,9 +223,11 @@ Tailwind's default breakpoints are in use. Mobile is the baseline; `md`
 
 ## Route And Asset Boundaries
 
-The Mandelbrot Explorer is the only active route in the former experiment
-namespace. It uses the shared warm interface tokens around its dark rendering
-canvas and remains a standalone tool rather than a navigation category or hub.
+The Mandelbrot Explorer and PID Controller Simulator are active routes in the
+former experiment namespace. They use the shared warm interface tokens, with a
+dark rendering canvas for Mandelbrot and a light response plot for PID. They
+remain standalone tools, not a navigation category or hub. The homepage links
+directly to the PID simulator.
 The static files under `public/about/` and the remaining retired routes under
 `public/experimental/` are intentional noindex bridges, not page templates to
 extend.
