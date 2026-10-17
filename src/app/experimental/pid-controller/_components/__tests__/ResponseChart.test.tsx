@@ -12,11 +12,15 @@ describe("ResponseChart", () => {
         ...DEFAULT_CONFIG.plant,
         initialValue: 0,
         target,
-        equation: "0",
       };
       const response = simulate({ kp: 0, ki: 0, kd: 0, plant });
       const { container } = render(
-        <ResponseChart response={response} saved={null} plant={plant} />
+        <ResponseChart
+          response={response}
+          saved={null}
+          plant={plant}
+          sample={response.samples[0]}
+        />
       );
       expect(
         screen.getByTestId("pid-response-curve").getAttribute("d")

@@ -1,4 +1,4 @@
-import { useId } from "react";
+import { useId, useMemo } from "react";
 
 import { Plant } from "@/features/pid-simulator/plants";
 import {
@@ -11,10 +11,12 @@ export function ResponseChart({
   response,
   saved,
   plant,
+  sample,
 }: {
   response: SimulationResult;
   saved: SimulationResult | null;
   plant: Plant;
+  sample: ResponseSample;
 }) {
   const titleId = useId();
   const descriptionId = useId();
@@ -24,34 +26,50 @@ export function ResponseChart({
     right = 16,
     top = 20,
     bottom = 36;
-  const values = [
-    plant.target,
-    ...response.samples.map((sample) => sample.value),
-    ...(saved?.samples.map((sample) => sample.value) ?? []),
-  ];
-  const low = Math.min(...values),
-    high = Math.max(...values);
-  const span = Math.max(high - low || Math.max(1, Math.abs(high) * 0.1), 1e-12);
-  const roughStep = (span * 1.1) / 4;
-  const magnitude = 10 ** Math.floor(Math.log10(roughStep));
-  const tickStep =
-    ([1, 2, 5, 10].find((factor) => factor * magnitude >= roughStep) ?? 10) *
-    magnitude;
-  const minimum = Math.floor((low - span * 0.05) / tickStep) * tickStep;
-  const maximum = Math.ceil((high + span * 0.05) / tickStep) * tickStep;
-  const x = (time: number) => left + (time / DURATION) * (width - left - right);
-  const y = (value: number) =>
-    height -
-    bottom -
-    ((value - minimum) / (maximum - minimum)) * (height - top - bottom);
-  const path = (samples: ResponseSample[]) =>
-    samples
-      .filter((_, index) => index % 5 === 0)
-      .map(
-        (sample, index) =>
-          `${index === 0 ? "M" : "L"}${x(sample.time).toFixed(2)},${y(sample.value).toFixed(2)}`
-      )
-      .join(" ");
+  const { minimum, maximum, tickStep, x, y, currentPath, savedPath } =
+    useMemo(() => {
+      const values = [
+        plant.target,
+        ...response.samples.map((sample) => sample.value),
+        ...(saved?.samples.map((sample) => sample.value) ?? []),
+      ];
+      const low = Math.min(...values),
+        high = Math.max(...values);
+      const span = Math.max(
+        high - low || Math.max(1, Math.abs(high) * 0.1),
+        1e-12
+      );
+      const roughStep = (span * 1.1) / 4;
+      const magnitude = 10 ** Math.floor(Math.log10(roughStep));
+      const tickStep =
+        ([1, 2, 5, 10].find((factor) => factor * magnitude >= roughStep) ??
+          10) * magnitude;
+      const minimum = Math.floor((low - span * 0.05) / tickStep) * tickStep;
+      const maximum = Math.ceil((high + span * 0.05) / tickStep) * tickStep;
+      const x = (time: number) =>
+        left + (time / DURATION) * (width - left - right);
+      const y = (value: number) =>
+        height -
+        bottom -
+        ((value - minimum) / (maximum - minimum)) * (height - top - bottom);
+      const path = (samples: ResponseSample[]) =>
+        samples
+          .filter((_, index) => index % 5 === 0)
+          .map(
+            (sample, index) =>
+              `${index === 0 ? "M" : "L"}${x(sample.time).toFixed(2)},${y(sample.value).toFixed(2)}`
+          )
+          .join(" ");
+      return {
+        minimum,
+        maximum,
+        tickStep,
+        x,
+        y,
+        currentPath: path(response.samples),
+        savedPath: saved ? path(saved.samples) : null,
+      };
+    }, [plant, response, saved]);
   const format = (value: number) => Number(value.toPrecision(3)).toString();
   return (
     <svg
@@ -85,7 +103,7 @@ export function ResponseChart({
                 x={left - 10}
                 y={y(value) + 4}
                 textAnchor="end"
-                className="fill-muted font-mono text-[22px] sm:text-[14px]"
+                className="fill-muted font-mono text-[22px] lg:text-[14px]"
               >
                 {format(value)}
               </text>
@@ -99,7 +117,7 @@ export function ResponseChart({
           x={x(time)}
           y={height - 10}
           textAnchor={time === 20 ? "end" : time === 0 ? "start" : "middle"}
-          className="fill-muted font-mono text-[22px] sm:text-[14px]"
+          className="fill-muted font-mono text-[22px] lg:text-[14px]"
         >
           {time}s
         </text>
@@ -115,7 +133,7 @@ export function ResponseChart({
       />
       {saved ? (
         <path
-          d={path(saved.samples)}
+          d={savedPath!}
           fill="none"
           className="stroke-muted"
           strokeWidth="2.5"
@@ -124,11 +142,29 @@ export function ResponseChart({
       ) : null}
       <path
         data-testid="pid-response-curve"
-        d={path(response.samples)}
+        d={currentPath}
         fill="none"
         className="stroke-accent-link"
         strokeWidth="3"
         strokeLinejoin="round"
+      />
+      <line
+        x1={x(sample.time)}
+        x2={x(sample.time)}
+        y1={top}
+        y2={height - bottom}
+        className="stroke-control-border"
+        strokeDasharray="3 4"
+      />
+      <circle
+        data-testid="response-playhead"
+        data-time={sample.time}
+        data-value={sample.value}
+        cx={x(sample.time)}
+        cy={y(sample.value)}
+        r="5"
+        className="fill-accent-link stroke-paper"
+        strokeWidth="2"
       />
     </svg>
   );

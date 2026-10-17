@@ -1,56 +1,44 @@
-import { Plant, PLANT_PRESETS } from "../plants";
-import { DEFAULT_CONFIG, simulate, validatePlant } from "../simulation";
+import { PLANT_PRESETS } from "../plants";
+import { DEFAULT_CONFIG, simulate } from "../simulation";
 
-const custom = (changes: Partial<Plant>): Plant => ({
-  ...DEFAULT_CONFIG.plant,
-  id: "custom",
-  equation: "-y + u",
-  initialValue: 0,
-  target: 1,
-  outputMin: -100,
-  outputMax: 100,
-  ...changes,
-});
 const openLoop = { kp: 0, ki: 0, kd: 0 };
 
 describe("plant simulation", () => {
-  it("matches the proportional first-order analytical response", () => {
-    const result = simulate({ kp: 2, ki: 0, kd: 0, plant: custom({}) });
-    // The controller is held constant for each 0.01 s plant integration.
-    const decay = 3 * Math.exp(-0.01) - 2;
+  it("matches the sampled proportional thermal response", () => {
+    const result = simulate({ ...DEFAULT_CONFIG, kp: 20, ki: 0, kd: 0 });
+    // Exact held-input solution for 20 J/K capacity and 10 W/K heat loss.
+    const decay = 3 * Math.exp(-0.005) - 2;
     expect(result.samples[100].value).toBeCloseTo(
-      (2 / 3) * (1 - decay ** 100),
+      20 + (80 / 3) * (1 - decay ** 100),
       8
     );
-    expect(result.finalError).toBeCloseTo(1 / 3, 8);
+    expect(result.finalError).toBeCloseTo(40 / 3, 8);
     expect(result.riseTime).toBeNull();
     expect(result.settlingTime).toBeNull();
   });
-  it("integrates position and velocity for a second-order plant", () => {
-    const result = simulate({
-      ...openLoop,
-      plant: custom({
-        order: 2,
-        equation: "-y",
-        initialValue: 1,
-        initialVelocity: 0,
-        target: 0,
-      }),
-    });
-    expect(result.samples[100].value).toBeCloseTo(Math.cos(1), 8);
-    expect(result.samples[2000].value).toBeCloseTo(Math.cos(20), 7);
-    const moving = simulate({
-      ...openLoop,
-      plant: custom({ order: 2, equation: "0", initialVelocity: 2 }),
-    });
-    expect(moving.samples[100].value).toBeCloseTo(2, 10);
+  it("matches the damped mass's analytical free response", () => {
+    const plant = {
+      ...PLANT_PRESETS[1].plant,
+      initialValue: 1,
+      initialVelocity: 0,
+      target: 0,
+    };
+    const result = simulate({ ...openLoop, plant });
+    const frequency = Math.sqrt(1 - 0.3 ** 2);
+    for (const time of [1, 5, 20]) {
+      const expected =
+        Math.exp(-0.3 * time) *
+        (Math.cos(frequency * time) +
+          (0.3 / frequency) * Math.sin(frequency * time));
+      expect(result.samples[time * 100].value).toBeCloseTo(expected, 8);
+    }
   });
-  it("supports time-dependent nonlinear equations", () => {
-    const result = simulate({
-      ...openLoop,
-      plant: custom({ equation: "cos(t)" }),
-    });
-    expect(result.samples[100].value).toBeCloseTo(Math.sin(1), 9);
+  it("matches square-root tank drainage before reaching empty", () => {
+    const plant = { ...PLANT_PRESETS[2].plant, initialValue: 1, target: 0 };
+    const result = simulate({ ...openLoop, plant });
+    expect(result.samples[100].value).toBeCloseTo((1 - 0.2) ** 2, 8);
+    expect(result.samples[400].value).toBeCloseTo((1 - 0.8) ** 2, 8);
+    expect(result.samples.every(({ value }) => value >= 0)).toBe(true);
   });
   it.each(PLANT_PRESETS)(
     "$plant.name presets match their named behavior",
@@ -82,50 +70,36 @@ describe("plant simulation", () => {
       kp: 0,
       ki: 1000,
       kd: 0,
-      plant: custom({ equation: "u", target: 100, outputMin: 0, outputMax: 1 }),
+      plant: PLANT_PRESETS[2].plant,
     });
     expect(run.samples[1].control).toBe(1);
-    expect(run.samples.at(-1)!.value).toBeCloseTo(20);
+    expect(run.samples[1].value).toBeGreaterThan(0);
   });
-  it("avoids derivative kick and treats a zero step as undefined step metrics", () => {
+  it("avoids derivative kick and handles a zero step", () => {
     const run = simulate({
       kp: 0,
       ki: 0,
       kd: 100,
-      plant: custom({ equation: "u", initialValue: 3, target: 3 }),
+      plant: { ...DEFAULT_CONFIG.plant, target: 20 },
     });
     expect(
-      run.samples.every((sample) => sample.value === 3 && sample.control === 0)
+      run.samples.every((sample) => sample.value === 20 && sample.control === 0)
     ).toBe(true);
     expect(run.riseTime).toBeNull();
     expect(run.overshoot).toBeNull();
     expect(run.settlingTime).toBeNull();
   });
-  it("measures downward steps in the requested direction", () => {
+  it("measures a downward thermal step in the requested direction", () => {
     const down = simulate({
       ...openLoop,
-      plant: custom({ equation: "-y", initialValue: 1, target: 0 }),
+      plant: { ...DEFAULT_CONFIG.plant, initialValue: 60, target: 20 },
     });
-    expect(down.riseTime).toBeCloseTo(Math.log(9), 1);
-    expect(down.settlingTime).toBeCloseTo(-Math.log(0.02), 1);
+    expect(down.riseTime).toBeCloseTo(2 * Math.log(9), 1);
+    expect(down.settlingTime).toBeCloseTo(-2 * Math.log(0.02), 1);
     expect(down.overshoot).toBe(0);
   });
-  it("rejects invalid settings and unusable numerical responses", () => {
-    for (const changes of [
-      { equation: "sqrt(-1)" },
-      { equation: "1/0" },
-      { equation: "1000*y + 1" },
-      { target: NaN },
-      { outputMin: 100, outputMax: 1 },
-    ]) {
-      expect(() => simulate({ ...openLoop, plant: custom(changes) })).toThrow();
-    }
-    expect(() => validatePlant(custom({ equation: "v + u" }))).toThrow(
-      /second-order/
-    );
-    expect(() => simulate({ ...DEFAULT_CONFIG, kp: Infinity })).toThrow(
-      /gains/
-    );
+  it.each([NaN, Infinity, 1001])("rejects invalid gain %s", (kp) => {
+    expect(() => simulate({ ...DEFAULT_CONFIG, kp })).toThrow(/gains/);
   });
   it("is deterministic and retains the full 20-second sample window", () => {
     const result = simulate(DEFAULT_CONFIG);

@@ -1,16 +1,15 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import { act, fireEvent, render, screen } from "@testing-library/react";
 
+import { DEFAULT_CONFIG, simulate } from "@/features/pid-simulator/simulation";
 import { trackExperimentInteraction } from "@/lib/analytics";
 
 import { PidSimulator } from "../PidSimulator";
 
 jest.mock("@/lib/analytics", () => ({ trackExperimentInteraction: jest.fn() }));
 
-function editPlant() {
-  fireEvent.click(screen.getByText("Edit plant equation & settings"));
-}
 describe("PidSimulator", () => {
   beforeEach(() => jest.clearAllMocks());
+  afterEach(() => jest.useRealTimers());
   it("updates gains and retains a snapshot until the plant changes", () => {
     render(<PidSimulator />);
     const initial = screen.getByTestId("pid-response-curve").getAttribute("d");
@@ -26,81 +25,125 @@ describe("PidSimulator", () => {
       target: { value: "spring" },
     });
     expect(screen.queryByText(/Snapshot: Kp/)).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("img", { name: /Spring–mass–damper/ })
-    ).toBeInTheDocument();
+    expect(screen.getByTestId("physical-plant")).toHaveAttribute(
+      "data-plant",
+      "spring"
+    );
     expect(screen.getByRole("button", { name: "Smooth" })).toHaveAttribute(
       "aria-pressed",
       "true"
     );
   });
-  it("validates a custom equation without replacing the current curve on syntax errors", () => {
+  it("offers only the three physical presets, without custom settings", () => {
     render(<PidSimulator />);
-    editPlant();
-    const equation = screen.getByLabelText("dy/dt =");
-    fireEvent.change(equation, { target: { value: "window.alert(1)" } });
-    fireEvent.click(screen.getByRole("button", { name: "Apply plant" }));
-    expect(screen.getByRole("alert")).toBeInTheDocument();
-    expect(screen.getByTestId("pid-response-curve")).toBeInTheDocument();
-    fireEvent.change(equation, { target: { value: "(u - y)/3" } });
-    fireEvent.click(screen.getByRole("button", { name: "Apply plant" }));
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(screen.getByLabelText("Plant")).toHaveValue("custom");
-    expect(
-      screen.queryByRole("group", { name: "Controller presets" })
-    ).not.toBeInTheDocument();
+    expect(screen.getAllByRole("option")).toHaveLength(3);
+    expect(screen.queryByText(/Edit plant equation/)).not.toBeInTheDocument();
+    for (const id of ["spring", "tank", "plate"]) {
+      fireEvent.change(screen.getByLabelText("Plant"), {
+        target: { value: id },
+      });
+      expect(screen.getByTestId("physical-plant")).toHaveAttribute(
+        "data-plant",
+        id
+      );
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    }
   });
-  it("shows a numerical failure instead of a stale curve, then recovers", () => {
+  it("scrubs both views to the same sample and resets when tuning changes", () => {
     render(<PidSimulator />);
-    editPlant();
-    fireEvent.change(screen.getByLabelText("dy/dt ="), {
-      target: { value: "sqrt(-1)" },
+    fireEvent.change(screen.getByRole("slider", { name: "Time" }), {
+      target: { value: "3.42" },
     });
-    fireEvent.click(screen.getByRole("button", { name: "Apply plant" }));
-    expect(screen.getByRole("alert")).toHaveTextContent(/undefined/);
-    expect(screen.queryByTestId("pid-response-curve")).not.toBeInTheDocument();
-    expect(
-      screen.getByRole("button", { name: "Take snapshot" })
-    ).toBeDisabled();
+    const sample = simulate(DEFAULT_CONFIG).samples[342];
+    expect(screen.getByTestId("response-playhead")).toHaveAttribute(
+      "data-time",
+      "3.42"
+    );
+    expect(screen.getByTestId("response-playhead")).toHaveAttribute(
+      "data-value",
+      String(sample.value)
+    );
+    expect(screen.getByTestId("plant-output")).toHaveTextContent(
+      `${Number(sample.value.toPrecision(3))} °C`
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Take snapshot" }));
+    expect(screen.getByTestId("playback-time")).toHaveTextContent(
+      "3.42 / 20 s"
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Overshoot" }));
+    expect(screen.getByTestId("playback-time")).toHaveTextContent(
+      "0.00 / 20 s"
+    );
+  });
+  it.each([
+    ["spring", "plant-mass", "transform"],
+    ["tank", "plant-waterline", "y1"],
+    ["plate", "plant-temperature", "opacity"],
+  ])("updates the %s drawing when scrubbing", (plant, element, attribute) => {
+    render(<PidSimulator />);
     fireEvent.change(screen.getByLabelText("Plant"), {
-      target: { value: "tank" },
+      target: { value: plant },
     });
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
-    expect(screen.getByTestId("pid-response-curve")).toBeInTheDocument();
+    const initial = screen.getByTestId(element).getAttribute(attribute);
+    fireEvent.change(screen.getByRole("slider", { name: "Time" }), {
+      target: { value: "20" },
+    });
+    expect(screen.getByTestId(element).getAttribute(attribute)).not.toBe(
+      initial
+    );
   });
-  it("applies a second-order equation and initial velocity", () => {
-    render(<PidSimulator />);
-    editPlant();
-    fireEvent.change(screen.getByLabelText("Equation order"), {
-      target: { value: "2" },
+  it("plays on request, pauses, finishes, replays, and cancels on unmount", () => {
+    jest.useFakeTimers();
+    const { unmount } = render(<PidSimulator />);
+    act(() => jest.advanceTimersByTime(1000));
+    expect(screen.getByTestId("playback-time")).toHaveTextContent(
+      "0.00 / 20 s"
+    );
+    fireEvent.click(screen.getByRole("button", { name: "Play" }));
+    act(() => jest.advanceTimersByTime(1000));
+    expect(
+      Number(screen.getByRole("slider", { name: "Time" }).getAttribute("value"))
+    ).toBeGreaterThan(0.8);
+    fireEvent.click(screen.getByRole("button", { name: "Pause" }));
+    const paused = screen.getByTestId("playback-time").textContent;
+    act(() => jest.advanceTimersByTime(1000));
+    expect(screen.getByTestId("playback-time").textContent).toBe(paused);
+    fireEvent.change(screen.getByRole("slider", { name: "Time" }), {
+      target: { value: "19.9" },
     });
-    fireEvent.change(screen.getByLabelText("d²y/dt² ="), {
-      target: { value: "u - 0.6*v - y" },
-    });
-    fireEvent.change(screen.getByLabelText("Initial velocity · v(0)"), {
-      target: { value: "1" },
-    });
-    fireEvent.click(screen.getByRole("button", { name: "Apply plant" }));
-    expect(screen.getByText("d²y/dt² = u - 0.6*v - y")).toBeInTheDocument();
-    expect(screen.queryByRole("alert")).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Play" }));
+    act(() => jest.advanceTimersByTime(200));
+    expect(screen.getByRole("button", { name: "Replay" })).toBeInTheDocument();
+    fireEvent.click(screen.getByRole("button", { name: "Replay" }));
+    expect(screen.getByTestId("playback-time")).toHaveTextContent(
+      "0.00 / 20 s"
+    );
+    unmount();
+    expect(jest.getTimerCount()).toBe(0);
+    expect(
+      jest
+        .mocked(trackExperimentInteraction)
+        .mock.calls.filter(([, action]) => action === "play_response")
+    ).toHaveLength(1);
   });
-  it("emits no automatic events and counts each intentional action once per mount", () => {
+  it("counts each intentional action once, never playback frames", () => {
     render(<PidSimulator />);
     expect(trackExperimentInteraction).not.toHaveBeenCalled();
-    for (const value of [3, 4, 5])
+    for (const value of [3, 4, 5]) {
       fireEvent.change(screen.getByRole("slider", { name: /Proportional/ }), {
         target: { value: String(value) },
       });
+      fireEvent.change(screen.getByRole("slider", { name: "Time" }), {
+        target: { value: String(value) },
+      });
+    }
     fireEvent.click(screen.getByRole("button", { name: "Take snapshot" }));
     fireEvent.click(screen.getByRole("button", { name: "Update snapshot" }));
-    expect(trackExperimentInteraction).toHaveBeenCalledTimes(2);
-    expect(trackExperimentInteraction).toHaveBeenCalledWith(
-      "pid-controller",
-      "adjust_kp"
-    );
-    expect(trackExperimentInteraction).toHaveBeenCalledWith(
-      "pid-controller",
-      "take_snapshot"
-    );
+    expect(trackExperimentInteraction).toHaveBeenCalledTimes(3);
+    for (const action of ["adjust_kp", "scrub_response", "take_snapshot"])
+      expect(trackExperimentInteraction).toHaveBeenCalledWith(
+        "pid-controller",
+        action
+      );
   });
 });

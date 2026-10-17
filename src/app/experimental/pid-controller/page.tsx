@@ -42,7 +42,7 @@ export default function PidControllerPage() {
       <PageShell
         title={PID_CONTROLLER_TITLE}
         titleId="pid-controller"
-        description="Choose a physical system, tune its controller, and take snapshots to compare the response."
+        description="Pick a plant, tune its controller, and watch the response. Take snapshots to compare tunings."
       >
         <ResponsiveContainer>
           <PidSimulator />

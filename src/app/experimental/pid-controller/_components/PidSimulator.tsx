@@ -7,11 +7,7 @@ import {
   DisclosureIndicator,
   disclosureSummaryClassNames,
 } from "@/components/Disclosure";
-import {
-  PidGains,
-  Plant,
-  PLANT_PRESETS,
-} from "@/features/pid-simulator/plants";
+import { PidGains, PLANT_PRESETS } from "@/features/pid-simulator/plants";
 import {
   DEFAULT_CONFIG,
   simulate,
@@ -20,8 +16,7 @@ import {
 } from "@/features/pid-simulator/simulation";
 import { trackExperimentInteraction } from "@/lib/analytics";
 
-import { PlantEditor } from "./PlantEditor";
-import { ResponseChart } from "./ResponseChart";
+import { ResponsePlayback } from "./ResponsePlayback";
 
 const gainControls: readonly {
   key: keyof PidGains;
@@ -58,7 +53,6 @@ type Snapshot = { config: SimulationConfig; response: SimulationResult };
 export function PidSimulator() {
   const [config, setConfig] = useState<SimulationConfig>(DEFAULT_CONFIG);
   const [snapshot, setSnapshot] = useState<Snapshot | null>(null);
-  const [plantRevision, setPlantRevision] = useState(0);
   const trackedActions = useRef(new Set<string>());
   const result = useMemo(() => {
     try {
@@ -75,18 +69,12 @@ export function PidSimulator() {
   }, [config]);
   const { response, error } = result;
   const { plant } = config;
-  const preset = PLANT_PRESETS.find((item) => item.plant.id === plant.id);
+  const preset = PLANT_PRESETS.find((item) => item.plant.id === plant.id)!;
 
   function trackOnce(action: string) {
     if (trackedActions.current.has(action)) return;
     trackedActions.current.add(action);
     trackExperimentInteraction("pid-controller", action);
-  }
-  function applyPlant(next: Plant) {
-    setConfig({ ...config, plant: next });
-    setSnapshot(null);
-    setPlantRevision((revision) => revision + 1);
-    trackOnce("apply_custom_plant");
   }
   function updateGain(key: keyof PidGains, value: number) {
     if (
@@ -134,7 +122,7 @@ export function PidSimulator() {
       aria-label="Interactive PID simulator"
       className="border-y border-line"
     >
-      <div className="pt-6">
+      <div className="py-6">
         <div className="grid items-start gap-4 md:grid-cols-[15rem_minmax(0,1fr)]">
           <div>
             <label htmlFor="pid-plant" className="text-sm font-medium">
@@ -154,7 +142,6 @@ export function PidSimulator() {
                   plant: selected.plant,
                 });
                 setSnapshot(null);
-                setPlantRevision((revision) => revision + 1);
                 trackOnce(`plant_${selected.plant.id}`);
               }}
             >
@@ -163,9 +150,6 @@ export function PidSimulator() {
                   {item.plant.name}
                 </option>
               ))}
-              {plant.id === "custom" ? (
-                <option value="custom">Custom plant</option>
-              ) : null}
             </select>
           </div>
           <div>
@@ -182,10 +166,9 @@ export function PidSimulator() {
             </p>
           </div>
         </div>
-        <PlantEditor key={plantRevision} plant={plant} onApply={applyPlant} />
       </div>
-      <div className="grid border-t border-line lg:grid-cols-[minmax(0,1fr)_19rem]">
-        <div id="pid-response" className="min-w-0 py-6 lg:pr-8">
+      <div className="grid border-t border-line">
+        <div id="pid-response" className="min-w-0 py-6">
           <div className="flex flex-wrap items-baseline justify-between gap-3">
             <h2 className="text-editorial-heading">Step response</h2>
             <p className="font-mono text-xs text-muted">
@@ -201,37 +184,20 @@ export function PidSimulator() {
             </p>
           ) : null}
           {response ? (
-            <figure className="mt-5">
-              <div
-                className="mb-2 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted"
-                aria-hidden="true"
-              >
-                <span className="flex items-center gap-2">
-                  <span className="w-5 border-t-[3px] border-accent-link" />
-                  Output{plant.unit ? ` (${plant.unit})` : ""}
-                </span>
-                <span className="flex items-center gap-2">
-                  <span className="w-5 border-t-2 border-dashed border-ink" />
-                  Target
-                </span>
-                {snapshot ? (
-                  <span className="flex items-center gap-2">
-                    <span className="w-5 border-t-2 border-dotted border-muted" />
-                    Snapshot
-                  </span>
-                ) : null}
-              </div>
-              <ResponseChart
+            <>
+              <ResponsePlayback
+                key={`${plant.id}-${config.kp}-${config.ki}-${config.kd}`}
                 response={response}
                 saved={snapshot?.response ?? null}
                 plant={plant}
+                onInteract={trackOnce}
               />
-              <figcaption className="mt-2 text-sm leading-relaxed text-muted">
+              <p className="mt-4 text-sm leading-relaxed text-muted">
                 {snapshot
                   ? `Snapshot: Kp ${snapshot.config.kp}, Ki ${snapshot.config.ki}, Kd ${snapshot.config.kd}.`
                   : "Take a snapshot, then change the gains to compare."}
-              </figcaption>
-            </figure>
+              </p>
+            </>
           ) : null}
           <div className="mt-5 flex flex-wrap gap-2">
             <button
@@ -257,7 +223,7 @@ export function PidSimulator() {
             ) : null}
           </div>
         </div>
-        <div className="border-t border-line py-6 lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:border-t-0 lg:border-l lg:pl-7">
+        <div className="border-t border-line py-6">
           <div className="flex items-baseline justify-between gap-4">
             <h2 className="text-editorial-heading">Controller</h2>
             <button
@@ -265,7 +231,7 @@ export function PidSimulator() {
               className={actionClassNames({ variant: "quiet", size: "sm" })}
               onClick={() => {
                 setConfig({
-                  ...(preset?.controllers[1] ?? { kp: 1, ki: 0, kd: 0 }),
+                  ...preset.controllers[1],
                   plant,
                 });
                 setSnapshot(null);
@@ -275,43 +241,36 @@ export function PidSimulator() {
               Reset gains
             </button>
           </div>
-          {preset ? (
-            <div
-              role="group"
-              aria-label="Controller presets"
-              className="mt-3 grid grid-cols-2 gap-2"
-            >
-              {preset.controllers.map((controller) => (
-                <button
-                  type="button"
-                  key={controller.name}
-                  aria-pressed={gainControls.every(
-                    ({ key }) => config[key] === controller[key]
-                  )}
-                  className={actionClassNames({
-                    variant: "secondary",
-                    size: "sm",
-                    className:
-                      "min-w-11 aria-pressed:border-accent-link aria-pressed:bg-accent-secondary-soft aria-pressed:text-accent-link",
-                  })}
-                  onClick={() => {
-                    setConfig({ ...controller, plant });
-                    trackOnce(
-                      `preset_${controller.name.toLowerCase().replaceAll(" ", "_")}`
-                    );
-                  }}
-                >
-                  {controller.name}
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className="mt-3 text-sm text-muted">
-              Tune the gains for your equation. Negative gains support
-              reverse-acting plants.
-            </p>
-          )}
-          <div className="mt-6 space-y-5">
+          <div
+            role="group"
+            aria-label="Controller presets"
+            className="mt-3 grid grid-cols-2 gap-2 sm:grid-cols-4"
+          >
+            {preset.controllers.map((controller) => (
+              <button
+                type="button"
+                key={controller.name}
+                aria-pressed={gainControls.every(
+                  ({ key }) => config[key] === controller[key]
+                )}
+                className={actionClassNames({
+                  variant: "secondary",
+                  size: "sm",
+                  className:
+                    "min-w-11 aria-pressed:border-accent-link aria-pressed:bg-accent-secondary-soft aria-pressed:text-accent-link",
+                })}
+                onClick={() => {
+                  setConfig({ ...controller, plant });
+                  trackOnce(
+                    `preset_${controller.name.toLowerCase().replaceAll(" ", "_")}`
+                  );
+                }}
+              >
+                {controller.name}
+              </button>
+            ))}
+          </div>
+          <div className="mt-6 grid gap-6 md:grid-cols-3 md:gap-8">
             {gainControls.map((control) => (
               <div key={control.key}>
                 <div className="flex items-center justify-between gap-3">
@@ -351,9 +310,9 @@ export function PidSimulator() {
                   id={`pid-${control.key}`}
                   type="range"
                   value={config[control.key]}
-                  min={Math.min(preset ? 0 : -100, config[control.key])}
-                  max={Math.max(preset?.gainMax ?? 100, config[control.key])}
-                  step={preset?.gainStep ?? 0.05}
+                  min={Math.min(0, config[control.key])}
+                  max={Math.max(preset.gainMax, config[control.key])}
+                  step={preset.gainStep}
                   onChange={(event) =>
                     updateGain(control.key, Number(event.target.value))
                   }
@@ -374,14 +333,14 @@ export function PidSimulator() {
             className={actionClassNames({
               variant: "quiet",
               size: "sm",
-              className: "mt-4 lg:hidden",
+              className: "mt-4 md:hidden",
             })}
           >
             View response ↑
           </a>
         </div>
         {response ? (
-          <div className="border-t border-line py-6 lg:col-start-1 lg:row-start-2 lg:mr-8">
+          <div className="border-t border-line py-6">
             <dl
               aria-label="Response metrics"
               className="grid grid-cols-2 gap-x-4 gap-y-5 sm:grid-cols-4"
@@ -418,9 +377,10 @@ export function PidSimulator() {
             limits.
           </p>
           <p>
+            These are idealized models, not tuning advice for real equipment.
             The plant runs for 20 s with a fixed 0.01 s RK4 step. No noise or
-            delay is added. Very fast or stiff systems may need a smaller step
-            than this tool supports.
+            delay is added. The tank has no overflow limit. Drawings scale to
+            fit each run; playback does not change the calculation.
           </p>
           <p>
             Settling means staying within 2% of the requested step for the rest

@@ -1,6 +1,6 @@
 export type PidGains = { kp: number; ki: number; kd: number };
 export type Plant = {
-  id: string;
+  id: "plate" | "spring" | "tank";
   name: string;
   description: string;
   order: 1 | 2;

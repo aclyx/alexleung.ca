@@ -1,4 +1,3 @@
-import { compileEquation } from "./expression";
 import { PidGains, Plant, PLANT_PRESETS } from "./plants";
 
 export type SimulationConfig = PidGains & { plant: Plant };
@@ -11,34 +10,18 @@ const DT = 0.01;
 const DERIVATIVE_FILTER = 0.1;
 export type ResponseSample = { time: number; value: number; control: number };
 
-export function validatePlant(plant: Plant) {
-  for (const value of [
-    plant.initialValue,
-    plant.initialVelocity,
-    plant.target,
-    plant.outputMin,
-    plant.outputMax,
-  ]) {
-    if (!Number.isFinite(value) || Math.abs(value) > 10000)
-      throw new Error(
-        "Initial conditions, target, and limits must be finite numbers between −10000 and 10000."
-      );
+function plantRate(plant: Plant, y: number, v: number, u: number) {
+  switch (plant.id) {
+    case "plate":
+      return (20 - y + u / 10) / 2;
+    case "spring":
+      return u - 0.6 * v - y;
+    case "tank":
+      return u - 0.4 * Math.sqrt(Math.max(y, 0));
   }
-  if (plant.outputMin >= plant.outputMax)
-    throw new Error(
-      "The lower actuator limit must be less than the upper limit."
-    );
-  if (plant.order !== 1 && plant.order !== 2)
-    throw new Error("Choose a first- or second-order plant.");
-  if (plant.order === 1 && /\bv\b/.test(plant.equation))
-    throw new Error(
-      "Velocity v is only available in second-order plants. Use y for a first-order state."
-    );
-  return compileEquation(plant.equation);
 }
 
 export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
-  const equation = validatePlant(plant);
   if (
     ![kp, ki, kd].every(
       (gain) => Number.isFinite(gain) && Math.abs(gain) <= 1000
@@ -60,7 +43,6 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
   const samples: ResponseSample[] = [{ time: 0, value, control: 0 }];
 
   for (let step = 1; step <= DURATION / DT; step += 1) {
-    const time = (step - 1) * DT;
     const error = plant.target - value;
     derivative +=
       (DT / (DERIVATIVE_FILTER + DT)) *
@@ -83,23 +65,17 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
     );
 
     // RK4 advances the plant while controller output is held for this 10 ms step.
-    const rate = (y: number, v: number, t: number) => {
-      const result = equation({ y, v, u: control, t });
+    const rate = (y: number, v: number) => {
+      const result = plantRate(plant, y, v, control);
       return plant.order === 1 ? { y: result, v: 0 } : { y: v, v: result };
     };
-    const a = rate(value, velocity, time);
-    const b = rate(
-      value + (a.y * DT) / 2,
-      velocity + (a.v * DT) / 2,
-      time + DT / 2
-    );
-    const c = rate(
-      value + (b.y * DT) / 2,
-      velocity + (b.v * DT) / 2,
-      time + DT / 2
-    );
-    const d = rate(value + c.y * DT, velocity + c.v * DT, time + DT);
+    const a = rate(value, velocity);
+    const b = rate(value + (a.y * DT) / 2, velocity + (a.v * DT) / 2);
+    const c = rate(value + (b.y * DT) / 2, velocity + (b.v * DT) / 2);
+    const d = rate(value + c.y * DT, velocity + c.v * DT);
     value += (DT * (a.y + 2 * b.y + 2 * c.y + d.y)) / 6;
+    // Stop at the tank floor if a numerical step crosses the empty boundary.
+    if (plant.id === "tank") value = Math.max(0, value);
     velocity += (DT * (a.v + 2 * b.v + 2 * c.v + d.v)) / 6;
     const nextTime = step * DT;
     if (
@@ -108,7 +84,7 @@ export function simulate({ kp, ki, kd, plant }: SimulationConfig) {
       )
     ) {
       throw new Error(
-        `The response diverged or became undefined at ${nextTime.toFixed(2)} s. Check the equation or reduce the gains; this fixed-step solver is not suitable for every system.`
+        `The response diverged at ${nextTime.toFixed(2)} s. Reduce the gains or choose a controller preset.`
       );
     }
     const progress =

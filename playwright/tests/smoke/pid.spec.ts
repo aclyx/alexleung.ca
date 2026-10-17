@@ -17,6 +17,10 @@ test("PID presets, keyboard tuning, snapshots, and reset work", async ({
   await expect(
     page.getByRole("button", { name: "Steady offset" })
   ).toHaveAttribute("aria-pressed", "false");
+  const numericGain = page.getByRole("spinbutton", { name: "Kp value" });
+  await numericGain.fill("25");
+  await numericGain.press("Enter");
+  await expect(gain).toHaveValue("25");
   await page.getByRole("button", { name: "Reset gains" }).click();
   await expect(curve).toHaveAttribute("d", initial!);
   await expect(page.getByText(/Snapshot: Kp/)).toHaveCount(0);
@@ -27,56 +31,49 @@ test("PID presets, keyboard tuning, snapshots, and reset work", async ({
   await expect(page.getByRole("link", { name: /Mandelbrot/ })).toHaveCount(0);
 });
 
-test("physical plants and custom equations work with visible validation", async ({
+test("physical presets move with the playhead and playback pauses and restarts", async ({
   page,
 }) => {
   await gotoAndStabilize(page, "/experimental/pid-controller/");
-  const error = page
-    .getByRole("region", { name: "Interactive PID simulator" })
-    .getByRole("alert");
-  await page.getByLabel("Plant", { exact: true }).selectOption("spring");
+  const time = page.getByRole("slider", { name: "Time", exact: true });
+  const cursor = page.getByTestId("response-playhead");
+  const plant = page.getByLabel("Plant", { exact: true });
+  await expect(plant.locator("option")).toHaveCount(3);
+  await expect(page.getByText(/Edit plant equation/)).toHaveCount(0);
+  for (const id of ["plate", "spring", "tank"]) {
+    await plant.selectOption(id);
+    await expect(page.getByTestId("physical-plant")).toHaveAttribute(
+      "data-plant",
+      id
+    );
+    await expect(cursor).toHaveAttribute("data-time", "0");
+    const initial = await page.getByTestId("plant-output").textContent();
+    await time.focus();
+    await time.press("End");
+    await expect(cursor).toHaveAttribute("data-time", "20");
+    await expect(page.getByTestId("plant-output")).not.toHaveText(initial!);
+    await expect(page.getByRole("button", { name: "Replay" })).toBeVisible();
+  }
+  await page.getByRole("button", { name: "Replay" }).click();
+  await expect
+    .poll(async () => Number(await cursor.getAttribute("data-time")))
+    .toBeGreaterThan(0.1);
+  await page.getByRole("button", { name: "Pause" }).click();
+  const paused = await cursor.getAttribute("data-time");
+  await expect(page.getByRole("button", { name: "Play" })).toBeVisible();
+  await expect(cursor).toHaveAttribute("data-time", paused!);
+  await time.focus();
+  await time.press("End");
+  await time.press("ArrowLeft");
+  await page.getByRole("button", { name: "Play" }).click();
+  await expect(page.getByRole("button", { name: "Replay" })).toBeVisible();
+  await page.getByRole("button", { name: "Overshoot" }).click();
+  await expect(cursor).toHaveAttribute("data-time", "0");
   await expect(
-    page.getByRole("img", { name: /Spring–mass–damper/ })
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Take snapshot" }).click();
-  await page
-    .locator("summary")
-    .filter({ hasText: "Edit plant equation" })
-    .click();
-  const equation = page.getByLabel("d²y/dt² =", { exact: true });
-  await equation.fill("window.alert(1)");
-  await page.getByRole("button", { name: "Apply plant" }).click();
-  await expect(error).toBeVisible();
-  await expect(page.getByText(/Snapshot: Kp/)).toBeVisible();
-  await equation.fill("u - 0.8*v - 2*y");
-  await page.getByLabel("Initial velocity · v(0)").fill("0.2");
-  await page.getByRole("button", { name: "Apply plant" }).click();
-  await expect(page.getByLabel("Plant", { exact: true })).toHaveValue("custom");
-  await expect(error).toHaveCount(0);
-  await expect(page.getByText(/Snapshot: Kp/)).toHaveCount(0);
-  await expect(
-    page.getByRole("group", { name: "Controller presets" })
+    page
+      .getByRole("region", { name: "Interactive PID simulator" })
+      .getByRole("alert")
   ).toHaveCount(0);
-  const numericGain = page.getByRole("spinbutton", { name: "Kp value" });
-  await numericGain.fill("-0.5");
-  await numericGain.press("Enter");
-  await expect(page.getByRole("slider", { name: /Proportional/ })).toHaveValue(
-    "-0.5"
-  );
-  await page
-    .locator("summary")
-    .filter({ hasText: "Edit plant equation" })
-    .click();
-  await page.getByLabel("d²y/dt² =", { exact: true }).fill("sqrt(-1)");
-  await page.getByRole("button", { name: "Apply plant" }).click();
-  await expect(error).toContainText("undefined");
-  await expect(page.getByTestId("pid-response-curve")).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "Take snapshot" })
-  ).toBeDisabled();
-  await page.getByLabel("Plant", { exact: true }).selectOption("tank");
-  await expect(page.getByRole("img", { name: /Draining tank/ })).toBeVisible();
-  await expect(error).toHaveCount(0);
 });
 
 for (const width of [360, 768, 1280]) {
@@ -85,11 +82,17 @@ for (const width of [360, 768, 1280]) {
   }) => {
     await page.setViewportSize({ width, height: 900 });
     await gotoAndStabilize(page, "/experimental/pid-controller/");
-    await page
-      .locator("summary")
-      .filter({ hasText: "Edit plant equation" })
-      .click();
-    await page.getByLabel("Equation order").selectOption("2");
+    for (const id of ["plate", "spring", "tank"]) {
+      await page.getByLabel("Plant", { exact: true }).selectOption(id);
+      expect(
+        await page.evaluate(
+          () => document.documentElement.scrollWidth <= innerWidth
+        )
+      ).toBe(true);
+      await expect(
+        page.getByRole("img", { name: /Physical view/ })
+      ).toBeVisible();
+    }
     for (const control of await page
       .locator("main button, main input, main select, main summary")
       .all()) {
@@ -97,11 +100,6 @@ for (const width of [360, 768, 1280]) {
       expect(bounds?.height).toBeGreaterThanOrEqual(44);
       expect(bounds?.width).toBeGreaterThanOrEqual(44);
     }
-    expect(
-      await page.evaluate(
-        () => document.documentElement.scrollWidth <= innerWidth
-      )
-    ).toBe(true);
     await expect(
       page.getByRole("img", { name: /PID step response/ })
     ).toBeVisible();
