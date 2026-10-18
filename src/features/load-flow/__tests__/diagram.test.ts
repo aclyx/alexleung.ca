@@ -1,10 +1,55 @@
 import {
   branchCurve,
   DIAGRAM_COLORS,
+  flowAnimationDuration,
+  layoutDiagram,
+  placeFlowLabels,
   terminalDirection,
   voltageColor,
 } from "../diagram";
-import { BusNode, LineEdge } from "../state/loadFlowStore";
+import { getReferenceScenarioById } from "../solver/referenceScenarios";
+import {
+  BusNode,
+  LineEdge,
+  replaceEditorStateFromLoadFlowCase,
+} from "../state/loadFlowStore";
+
+test("14-bus flow labels avoid bus/device panels and one another", () => {
+  const state = layoutDiagram(
+    replaceEditorStateFromLoadFlowCase(
+      getReferenceScenarioById("ieee-14-bus")!.loadFlowCase
+    )
+  );
+  const buses = Object.values(state.busesById);
+  const positions = [
+    ...placeFlowLabels(Object.values(state.branchesById), buses).values(),
+  ].map((item) => item.position);
+  expect(positions).toHaveLength(20);
+  positions.forEach((position, index) => {
+    for (const bus of buses) {
+      expect({
+        label: index,
+        bus: bus.id,
+        clear:
+          Math.abs(position.x - bus.x) >= 146 ||
+          Math.abs(position.y - bus.y) >= 124,
+      }).toEqual({ label: index, bus: bus.id, clear: true });
+    }
+    for (const previous of positions.slice(0, index)) {
+      expect(
+        Math.abs(position.x - previous.x) >= 116 ||
+          Math.abs(position.y - previous.y) >= 60
+      ).toBe(true);
+    }
+  });
+});
+
+test("motion speed is proportional to magnitude on a fixed scale", () => {
+  expect(flowAnimationDuration(50)).toBe(1.04);
+  expect(flowAnimationDuration(100)).toBe(0.52);
+  expect(flowAnimationDuration(-100)).toBe(flowAnimationDuration(100));
+  expect(flowAnimationDuration(0.5)).toBe(104);
+});
 
 test("terminal directions are independent, including line charging and absorption", () => {
   expect(terminalDirection(20, "from")).toBe(1);

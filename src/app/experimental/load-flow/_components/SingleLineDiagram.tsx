@@ -13,13 +13,16 @@ import { actionClassNames } from "@/components/controlStyles";
 import {
   branchCurve,
   DIAGRAM_COLORS,
+  flowAnimationDuration,
   FlowMode,
   flowWidth,
+  placeFlowLabels,
   Point,
   pointOnCurve,
   terminalDirection,
   voltageColor,
 } from "@/features/load-flow/diagram";
+import { Generator, Load } from "@/features/load-flow/model/types";
 import {
   BranchFlowSolution,
   BusSolution,
@@ -27,6 +30,38 @@ import {
 import { BusNode, LineEdge } from "@/features/load-flow/state/loadFlowStore";
 
 const TERMINALS: Array<"from" | "to"> = ["from", "to"];
+const DEVICE_LABELS = {
+  generator: "Generator",
+  load: "Load",
+  grid: "Grid supply",
+};
+type DeviceKind = keyof typeof DEVICE_LABELS;
+
+function DeviceSymbol({ kind }: { kind: DeviceKind }) {
+  return (
+    <g
+      fill="white"
+      stroke="currentColor"
+      strokeWidth="1.8"
+      strokeLinejoin="round"
+    >
+      {kind === "generator" ? (
+        <>
+          <circle r="14" />
+          <path d="M -9 0 C -6 -10 -3 -10 0 0 S 6 10 9 0" fill="none" />
+        </>
+      ) : kind === "load" ? (
+        <path d="M -12 -8 H 12 L 0 12 Z" />
+      ) : (
+        <path
+          d="M -10 14 L -3 -14 H 3 L 10 14 M -10 -7 H 10 M -13 1 H 13 M -7 14 L 7 1 M 7 14 L -7 1"
+          fill="none"
+        />
+      )}
+    </g>
+  );
+}
+
 const compactQuery = "(max-width: 600px)";
 function subscribeViewport(callback: () => void) {
   const media = window.matchMedia(compactQuery);
@@ -37,6 +72,9 @@ function subscribeViewport(callback: () => void) {
 interface Props {
   buses: BusNode[];
   branches: LineEdge[];
+  generators: Generator[];
+  loads: Load[];
+  baseMVA: number;
   selectedElementId: string | null;
   selectedElementType: "BUS" | "BRANCH" | null;
   onBusSelect: (id: string) => void;
@@ -46,11 +84,15 @@ interface Props {
   branchFlowsById: Map<string, BranchFlowSolution>;
   mode: FlowMode;
   animate: boolean;
+  showAmounts: boolean;
 }
 
 export function SingleLineDiagram({
   buses: sourceBuses,
   branches,
+  generators,
+  loads,
+  baseMVA,
   selectedElementId,
   selectedElementType,
   onBusSelect,
@@ -60,8 +102,18 @@ export function SingleLineDiagram({
   branchFlowsById,
   mode,
   animate,
+  showAmounts,
 }: Props) {
   const titleId = useId();
+  const components: Array<"p" | "q"> = mode === "both" ? ["p", "q"] : [mode];
+  const generatorBuses = new Set(
+    generators
+      .filter((generator) => generator.status === "ON")
+      .map((generator) => generator.busId)
+  );
+  const loadBuses = new Set(
+    loads.filter((load) => load.status === "ON").map((load) => load.busId)
+  );
   const compact = useSyncExternalStore(
     subscribeViewport,
     () => window.matchMedia(compactQuery).matches,
@@ -87,6 +139,9 @@ export function SingleLineDiagram({
     x: bus.x + offsets[index].x,
     y: bus.y + offsets[index].y,
   }));
+  const amountPositions = showAmounts
+    ? placeFlowLabels(branches, buses)
+    : new Map<string, { position: Point; anchor: Point }>();
   function moveBus(id: string, x: number, y: number) {
     const offset = offsets[sourceBuses.findIndex((bus) => bus.id === id)];
     onBusMove(id, x - offset.x, y - offset.y);
@@ -102,7 +157,7 @@ export function SingleLineDiagram({
   } | null>(null);
   function bounds() {
     const minX = Math.min(0, ...buses.map((bus) => bus.x - 100));
-    const minY = Math.min(0, ...buses.map((bus) => bus.y - 70));
+    const minY = Math.min(0, ...buses.map((bus) => bus.y - 115));
     return {
       minX,
       minY,
@@ -110,7 +165,8 @@ export function SingleLineDiagram({
         Math.max(compact ? 390 : 780, ...buses.map((bus) => bus.x + 100)) -
         minX,
       height:
-        Math.max(compact ? 580 : 520, ...buses.map((bus) => bus.y + 70)) - minY,
+        Math.max(compact ? 580 : 520, ...buses.map((bus) => bus.y + 105)) -
+        minY,
     };
   }
   const [camera, setCamera] = useState(bounds);
@@ -253,8 +309,6 @@ export function SingleLineDiagram({
           const offline = branch.status === "OUT_OF_SERVICE";
           const flow = offline ? undefined : branchFlowsById.get(branch.id);
           const center = pointOnCurve(a, b, c, 0.5);
-          const components: Array<"p" | "q"> =
-            mode === "both" ? ["p", "q"] : [mode];
           return (
             <g
               key={branch.id}
@@ -350,6 +404,7 @@ export function SingleLineDiagram({
                                 strokeWidth="2"
                                 strokeDasharray="3 23"
                                 style={{
+                                  animationDuration: `${flowAnimationDuration(value)}s`,
                                   animationDirection:
                                     direction > 0 ? "normal" : "reverse",
                                 }}
@@ -368,59 +423,100 @@ export function SingleLineDiagram({
                     </g>
                   );
                 })}
-              {(buses.length <= 9 || selected) && (
-                <g pointerEvents="none">
-                  <rect
-                    x={center.x - 53}
-                    y={center.y - (flow ? 25 : 12)}
-                    width="106"
-                    height={flow ? 50 : 24}
-                    rx="4"
-                    fill="white"
-                    stroke={selected ? "#202936" : "#d3d5d5"}
-                  />
-                  <text
-                    x={center.x}
-                    y={center.y + (flow ? -10 : 4)}
-                    textAnchor="middle"
-                    fill="#58616d"
-                    fontSize="10"
-                  >
-                    {branch.id.replace(/^line-/, "L ")}
-                  </text>
-                  {flow &&
-                    components.map((component, index) => (
-                      <text
-                        key={component}
-                        x={center.x}
-                        y={center.y + 5 + index * 14}
-                        textAnchor="middle"
-                        fill={DIAGRAM_COLORS[component]}
-                        fontSize="12"
-                      >
-                        {component === "p"
-                          ? `${flow.pFromToMW.toFixed(1)} MW`
-                          : `${flow.qFromToMVar.toFixed(1)} MVAr`}
-                      </text>
-                    ))}
-                </g>
-              )}
             </g>
           );
         })}
+        {showAmounts &&
+          branches.map((branch) => {
+            const flow =
+              branch.status === "OUT_OF_SERVICE"
+                ? undefined
+                : branchFlowsById.get(branch.id);
+            const selected =
+              selectedElementType === "BRANCH" &&
+              selectedElementId === branch.id;
+            const { position: center, anchor } = amountPositions.get(
+              branch.id
+            )!;
+            return (
+              <g key={branch.id} pointerEvents="none" data-testid="line-amount">
+                <path
+                  d={`M ${anchor.x} ${anchor.y} L ${center.x} ${center.y}`}
+                  stroke="#858c95"
+                  strokeWidth="1"
+                />
+                <rect
+                  x={center.x - 53}
+                  y={center.y - (flow ? 25 : 12)}
+                  width="106"
+                  height={flow ? 50 : 24}
+                  rx="4"
+                  fill="white"
+                  stroke={selected ? "#202936" : "#d3d5d5"}
+                />
+                <text
+                  x={center.x}
+                  y={center.y + (flow ? -10 : 4)}
+                  textAnchor="middle"
+                  fill="#58616d"
+                  fontSize="10"
+                >
+                  {branch.id.replace(/^line-/, "L ")}
+                </text>
+                {flow &&
+                  components.map((component, index) => (
+                    <text
+                      key={component}
+                      x={center.x}
+                      y={center.y + 5 + index * 14}
+                      textAnchor="middle"
+                      fill={DIAGRAM_COLORS[component]}
+                      fontSize="12"
+                    >
+                      {component === "p"
+                        ? `${flow.pFromToMW.toFixed(1)} MW`
+                        : `${flow.qFromToMVar.toFixed(1)} MVAr`}
+                    </text>
+                  ))}
+              </g>
+            );
+          })}
         {buses.map((bus) => {
           const solution = busSolutionsById.get(bus.id);
           const angle = solution ? solution.voltageAngleDeg - slackAngle : 0;
           const selected =
             selectedElementType === "BUS" && selectedElementId === bus.id;
           const color = voltageColor(solution?.voltageMagnitudePu);
+          const devices: DeviceKind[] = [];
+          if (generatorBuses.has(bus.id)) devices.push("generator");
+          else if (bus.type === "SLACK") devices.push("grid");
+          if (loadBuses.has(bus.id)) devices.push("load");
+          const demand = loads
+            .filter((load) => load.busId === bus.id && load.status === "ON")
+            .reduce(
+              (total, load) => ({ p: total.p + load.p, q: total.q + load.q }),
+              { p: 0, q: 0 }
+            );
+          const supply = solution
+            ? {
+                p: solution.pInjectionPu * baseMVA + demand.p,
+                q: solution.qInjectionPu * baseMVA + demand.q,
+              }
+            : undefined;
+          const deviceDescription = devices
+            .map((kind) => {
+              const power = kind === "load" ? demand : supply;
+              return `${DEVICE_LABELS[kind]}${showAmounts && solution && power ? `: ${power.p.toFixed(1)} MW, ${power.q.toFixed(1)} MVAr` : ""}`;
+            })
+            .join("; ");
           return (
             <g
               key={bus.id}
               role="button"
               tabIndex={0}
-              aria-label={`Bus ${bus.name}, ${bus.type}${solution ? `, ${solution.voltageMagnitudePu.toFixed(3)} per unit, ${angle.toFixed(2)} degrees relative to slack` : ", unsolved"}`}
+              aria-label={`Bus ${bus.name}, ${bus.type}${devices.length ? `, ${devices.map((kind) => DEVICE_LABELS[kind]).join(", ")}` : ""}${solution ? `, ${solution.voltageMagnitudePu.toFixed(3)} per unit, ${angle.toFixed(2)} degrees relative to slack` : ", unsolved"}`}
               aria-pressed={selected}
+              aria-description={deviceDescription || undefined}
               className="cursor-grab outline-none active:cursor-grabbing"
               transform={`translate(${bus.x} ${bus.y})`}
               onPointerDown={(event) => startDrag(event, bus)}
@@ -446,6 +542,54 @@ export function SingleLineDiagram({
                 }
               }}
             >
+              {devices.map((kind) => {
+                const power = kind === "load" ? demand : supply;
+                return (
+                  <g
+                    key={kind}
+                    data-device={kind}
+                    color="#58616d"
+                    aria-hidden="true"
+                  >
+                    <title>{`${DEVICE_LABELS[kind]} at ${bus.name}`}</title>
+                    <path
+                      d={kind === "load" ? "M 55 43 V 64" : "M 55 -43 V -59"}
+                      stroke="currentColor"
+                      strokeWidth="1.8"
+                    />
+                    <g
+                      transform={`translate(55 ${kind === "load" ? 72 : -73})`}
+                    >
+                      <DeviceSymbol kind={kind} />
+                      {showAmounts && solution && power && (
+                        <g data-testid="device-amount">
+                          <rect
+                            x="-131"
+                            y="-17"
+                            width="113"
+                            height="34"
+                            rx="3"
+                            fill="white"
+                            opacity="0.95"
+                          />
+                          {components.map((component, index) => (
+                            <text
+                              key={component}
+                              x="-127"
+                              y={components.length === 1 ? 4 : -3 + index * 14}
+                              fill={DIAGRAM_COLORS[component]}
+                              fontSize="11"
+                            >
+                              {power[component].toFixed(1)}{" "}
+                              {component === "p" ? "MW" : "MVAr"}
+                            </text>
+                          ))}
+                        </g>
+                      )}
+                    </g>
+                  </g>
+                );
+              })}
               <rect
                 className="load-flow-bus-focus"
                 x="-81"
@@ -473,11 +617,7 @@ export function SingleLineDiagram({
                 {bus.name.length > 16 ? `${bus.name.slice(0, 15)}…` : bus.name}
               </text>
               <text x="-63" y="-5" fill="#58616d" fontSize="10">
-                {bus.type === "SLACK"
-                  ? "Slack · reference"
-                  : bus.type === "PV"
-                    ? "PV · generation"
-                    : "PQ · load"}
+                {bus.type === "SLACK" ? "Slack · reference" : bus.type}
               </text>
               <text x="-63" y="16" fill={color} fontSize="14" fontWeight="600">
                 {solution
@@ -514,16 +654,25 @@ export function SingleLineDiagram({
         <span style={{ color: DIAGRAM_COLORS.low }}>● V &lt; 0.95 pu</span>
         <span style={{ color: DIAGRAM_COLORS.normal }}>● 0.95–1.05 pu</span>
         <span style={{ color: DIAGRAM_COLORS.high }}>● V &gt; 1.05 pu</span>
+        {(["generator", "load", "grid"] satisfies DeviceKind[]).map((kind) => (
+          <span key={kind} className="inline-flex items-center gap-1">
+            <svg viewBox="-18 -18 36 36" className="h-5 w-5" aria-hidden="true">
+              <DeviceSymbol kind={kind} />
+            </svg>
+            {DEVICE_LABELS[kind]}
+          </span>
+        ))}
       </div>
       <p className="mt-2 text-xs leading-relaxed text-muted">
         Arrows show flow at each end; labels are signed values at the from end.
         Thicker lines mean larger magnitudes. Voltage bands are visual guides,
         not equipment limits. Phasors show angle relative to the slack bus, at
-        true scale. Crossings are not connections.
+        true scale. Crossings are not connections. Device values show total
+        generation or demand at each bus.
       </p>
       <p className="mt-1 text-xs text-muted">
-        Motion shows steady-state direction only—not AC waveforms or transient
-        behavior. Reduced-motion settings keep it still.
+        Motion speed is proportional to power magnitude on a fixed scale—not AC
+        wave speed or transient behavior. Reduced-motion settings keep it still.
       </p>
     </div>
   );

@@ -13,15 +13,22 @@ function inspect(id: string) {
   fireEvent.click(screen.getByText("Edit selected element"));
 }
 
-test("starts with a converged three-bus network and motion off", () => {
+test("starts with a converged three-bus network and motion on, with pause and resume", () => {
   render(<LoadFlowWorkspace />);
   expect(screen.getByLabelText("Network")).toHaveValue("three-bus-with-pv");
   expect(screen.getByRole("status")).toHaveTextContent("Converged");
-  expect(screen.getByRole("button", { name: "Animate flow" })).toHaveAttribute(
+  expect(screen.getByRole("button", { name: "Pause motion" })).toHaveAttribute(
     "aria-pressed",
-    "false"
+    "true"
   );
+  expect(screen.getAllByTestId("flow-motion").length).toBeGreaterThan(0);
+  expect(
+    screen.getByRole("button", { name: /Bus Gen Bus, PV, Generator, Load/ })
+  ).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Pause motion" }));
   expect(screen.queryByTestId("flow-motion")).not.toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Animate flow" }));
+  expect(screen.getAllByTestId("flow-motion").length).toBeGreaterThan(0);
 });
 
 test("keeps the original branch results table tied to solved terminal values", () => {
@@ -51,6 +58,16 @@ test("keeps the original branch results table tied to solved terminal values", (
     expect(table.getAllByText(value.toFixed(2)).length).toBeGreaterThan(0);
 });
 
+test("shows amounts on larger networks and can hide them", () => {
+  render(<LoadFlowWorkspace />);
+  chooseNetwork("ieee-14-bus");
+  expect(screen.getAllByTestId("line-amount")).toHaveLength(20);
+  fireEvent.click(screen.getByRole("button", { name: "Hide amounts" }));
+  expect(screen.queryByTestId("line-amount")).toBeNull();
+  fireEvent.click(screen.getByRole("button", { name: "Show amounts" }));
+  expect(screen.getAllByTestId("line-amount")).toHaveLength(20);
+});
+
 test("scales loads, switches overlays, and resets without losing selection", () => {
   const { container } = render(<LoadFlowWorkspace />);
   fireEvent.change(screen.getByRole("slider"), { target: { value: "150" } });
@@ -71,7 +88,6 @@ test("scales loads, switches overlays, and resets without losing selection", () 
 test("hides stale flow/voltage overlays and tables when a line outage islands a load", () => {
   const { container } = render(<LoadFlowWorkspace />);
   chooseNetwork("two-bus-radial");
-  fireEvent.click(screen.getByRole("button", { name: "Animate flow" }));
   expect(screen.getAllByTestId("flow-motion").length).toBeGreaterThan(0);
   inspect("BRANCH:line-1");
   fireEvent.change(screen.getByLabelText("Line status"), {

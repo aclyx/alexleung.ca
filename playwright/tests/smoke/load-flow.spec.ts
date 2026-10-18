@@ -1,3 +1,5 @@
+import { getReferenceScenarioById } from "../../../src/features/load-flow/solver/referenceScenarios";
+import { runLoadFlow } from "../../../src/features/load-flow/solver/runLoadFlow";
 import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
 
 test("load flow hydrates, scales demand, and inspects terminal power", async ({
@@ -10,6 +12,22 @@ test("load flow hydrates, scales demand, and inspects terminal power", async ({
     page.getByRole("heading", { name: "Load Flow Analysis", exact: true })
   ).toBeVisible();
   await expect(page.getByRole("status")).toContainText("Converged");
+  const generatorBus = page.getByRole("button", {
+    name: /^Bus Gen Bus, PV, Generator, Load/,
+  });
+  await expect(generatorBus.locator('[data-device="generator"]')).toBeVisible();
+  await expect(generatorBus.locator('[data-device="load"]')).toBeVisible();
+  await expect(page.locator('[data-device="grid"]')).toBeVisible();
+  await expect(page.getByTestId("device-amount")).toHaveCount(4);
+  await expect(generatorBus).toHaveAttribute(
+    "aria-description",
+    /Generator: 50.0 MW, 7.0 MVAr; Load: 20.0 MW, 10.0 MVAr/
+  );
+  await page.getByRole("button", { name: "Hide amounts" }).click();
+  await expect(page.getByTestId("device-amount")).toHaveCount(0);
+  await expect(page.getByTestId("line-amount")).toHaveCount(0);
+  await page.getByRole("button", { name: "Show amounts" }).click();
+  await expect(page.getByTestId("line-amount")).toHaveCount(3);
   const slider = page.getByRole("slider");
   await slider.focus();
   await slider.press("ArrowRight");
@@ -40,14 +58,37 @@ test("line outages hide results and animation respects reduced motion", async ({
     .getByRole("combobox", { name: "Network", exact: true })
     .selectOption("two-bus-radial");
   await page.emulateMedia({ reducedMotion: "no-preference" });
-  await page.getByRole("button", { name: "Animate flow" }).click();
+  await expect(
+    page.getByRole("button", { name: "Pause motion" })
+  ).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByTestId("flow-motion").first()).toHaveCSS(
     "animation-name",
     "load-flow-travel"
   );
+  const motion = page
+    .locator(
+      '[data-component="p"] [data-terminal="from"] [data-testid="flow-motion"]'
+    )
+    .first();
+  const initialDuration = await motion.evaluate((node) =>
+    parseFloat(getComputedStyle(node).animationDuration)
+  );
+  const scenario = getReferenceScenarioById("two-bus-radial")!.loadFlowCase;
+  const flow = runLoadFlow(scenario).branchFlows![0];
+  expect(initialDuration).toBeCloseTo(52 / Math.abs(flow.pFromToMW), 4);
+  await page.getByRole("slider").focus();
+  for (let step = 0; step < 10; step++)
+    await page.getByRole("slider").press("ArrowRight");
+  const largerDuration = await motion.evaluate((node) =>
+    parseFloat(getComputedStyle(node).animationDuration)
+  );
+  expect(largerDuration).toBeLessThan(initialDuration);
+  await page.getByRole("button", { name: "Pause motion" }).click();
+  await expect(page.getByTestId("flow-motion")).toHaveCount(0);
+  await page.getByRole("button", { name: "Animate flow" }).click();
   await expect(page.getByTestId("flow-motion").first()).toHaveCSS(
-    "animation-duration",
-    "1.2s"
+    "animation-name",
+    "load-flow-travel"
   );
   await page.emulateMedia({ reducedMotion: "reduce" });
   await expect(page.getByTestId("flow-motion").first()).toBeHidden();

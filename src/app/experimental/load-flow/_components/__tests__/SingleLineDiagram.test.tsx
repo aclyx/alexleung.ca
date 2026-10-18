@@ -32,6 +32,10 @@ const onBusMove = jest.fn();
 const props = {
   buses,
   branches: [branch],
+  generators: [],
+  loads: [],
+  baseMVA: 100,
+  showAmounts: true,
   selectedElementId: null,
   selectedElementType: null,
   onBusSelect: jest.fn(),
@@ -40,6 +44,80 @@ const props = {
   busSolutionsById: new Map(),
   branchFlowsById: new Map([["line", flow]]),
 };
+
+test("shows connected devices, including generation and load on the same bus", () => {
+  const { container, rerender } = render(
+    <SingleLineDiagram
+      {...props}
+      generators={[
+        {
+          id: "gen",
+          busId: "b",
+          pSet: 20,
+          vSet: 1,
+          qMin: -10,
+          qMax: 10,
+          status: "ON",
+        },
+      ]}
+      loads={[{ id: "load", busId: "b", p: 0, q: 0, status: "ON" }]}
+      mode="both"
+      animate={true}
+    />
+  );
+  const bus = screen.getByRole("button", {
+    name: /Bus B, PQ, Generator, Load/,
+  });
+  expect(bus.querySelector('[data-device="generator"]')).not.toBeNull();
+  expect(bus.querySelector('[data-device="load"]')).not.toBeNull();
+  expect(container.querySelectorAll('[data-device="grid"]')).toHaveLength(1);
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      generators={[
+        {
+          id: "gen",
+          busId: "b",
+          pSet: 20,
+          vSet: 1,
+          qMin: -10,
+          qMax: 10,
+          status: "OFF",
+        },
+      ]}
+      loads={[{ id: "load", busId: "b", p: 10, q: 5, status: "OFF" }]}
+      mode="both"
+      animate={true}
+    />
+  );
+  expect(bus.querySelector("[data-device]")).toBeNull();
+});
+
+test("does not invent a load at an empty PQ bus or a second source at a slack generator", () => {
+  const { container } = render(
+    <SingleLineDiagram
+      {...props}
+      generators={[
+        {
+          id: "gen",
+          busId: "a",
+          pSet: 20,
+          vSet: 1,
+          qMin: -10,
+          qMax: 10,
+          status: "ON",
+        },
+      ]}
+      mode="both"
+      animate={false}
+    />
+  );
+  expect(container.querySelectorAll('[data-device="generator"]')).toHaveLength(
+    1
+  );
+  expect(container.querySelector('[data-device="grid"]')).toBeNull();
+  expect(container.querySelector('[data-device="load"]')).toBeNull();
+});
 
 test("draws reverse P and Q leaving both ends without conflating directions", () => {
   const { container, rerender } = render(
@@ -58,8 +136,99 @@ test("draws reverse P and Q leaving both ends without conflating directions", ()
     container.querySelector('[data-component="q"] [data-terminal="to"]')
   ).toHaveAttribute("data-direction", "1");
   expect(screen.getAllByTestId("flow-motion")).toHaveLength(4);
+  expect(screen.getAllByTestId("flow-motion")[0]).toHaveStyle({
+    animationDuration: "5.2s",
+    animationDirection: "reverse",
+  });
   rerender(<SingleLineDiagram {...props} mode="p" animate={false} />);
   expect(container.querySelector('[data-component="q"]')).toBeNull();
+  expect(screen.queryByTestId("flow-motion")).toBeNull();
+});
+
+test("amounts can be hidden without hiding flow arrows", () => {
+  const { container } = render(
+    <SingleLineDiagram
+      {...props}
+      mode="both"
+      animate={true}
+      showAmounts={false}
+    />
+  );
+  expect(screen.queryByTestId("line-amount")).toBeNull();
+  expect(container.querySelector('[data-component="p"]')).not.toBeNull();
+});
+
+test("source amounts add local demand to solved injections, not generator setpoints", () => {
+  const { rerender } = render(
+    <SingleLineDiagram
+      {...props}
+      mode="both"
+      animate={false}
+      generators={[
+        {
+          id: "g",
+          busId: "b",
+          pSet: 50,
+          vSet: 1,
+          qMin: -100,
+          qMax: 100,
+          status: "ON",
+        },
+      ]}
+      loads={[{ id: "l", busId: "b", p: 20, q: 10, status: "ON" }]}
+      busSolutionsById={
+        new Map([
+          [
+            "b",
+            {
+              busId: "b",
+              voltageMagnitudePu: 1,
+              voltageAngleDeg: 0,
+              pInjectionPu: 0.3,
+              qInjectionPu: -0.03,
+            },
+          ],
+        ])
+      }
+    />
+  );
+  const bus = screen.getByRole("button", { name: /Bus B,/ });
+  expect(bus).toHaveAttribute(
+    "aria-description",
+    "Generator: 50.0 MW, 7.0 MVAr; Load: 20.0 MW, 10.0 MVAr"
+  );
+  expect(bus.querySelector('[data-device="generator"]')).toHaveTextContent(
+    "50.0 MW"
+  );
+  expect(bus.querySelector('[data-device="generator"]')).toHaveTextContent(
+    "7.0 MVAr"
+  );
+  rerender(<SingleLineDiagram {...props} mode="both" animate={false} />);
+  expect(screen.queryByTestId("device-amount")).toBeNull();
+});
+
+test("zero flows do not animate", () => {
+  render(
+    <SingleLineDiagram
+      {...props}
+      mode="both"
+      animate={true}
+      branchFlowsById={
+        new Map([
+          [
+            "line",
+            {
+              ...flow,
+              pFromToMW: 0,
+              pToFromMW: 0,
+              qFromToMVar: 0,
+              qToFromMVar: 0,
+            },
+          ],
+        ])
+      }
+    />
+  );
   expect(screen.queryByTestId("flow-motion")).toBeNull();
 });
 

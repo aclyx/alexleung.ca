@@ -31,6 +31,11 @@ export function flowWidth(value: number) {
   return 2 + Math.min(5, Math.sqrt(Math.abs(value) / 100) * 3);
 }
 
+// A 26-unit dash period at 0.5 diagram units/s per MW or MVAr.
+export function flowAnimationDuration(value: number) {
+  return 52 / Math.abs(value);
+}
+
 export function pointOnCurve(a: Point, b: Point, c: Point, t: number): Point {
   return {
     x: (1 - t) ** 2 * a.x + 2 * (1 - t) * t * c.x + t * t * b.x,
@@ -64,6 +69,58 @@ export function branchCurve(
       y: (from.y + to.y) / 2 + ((to.x - from.x) / length) * offset,
     },
   };
+}
+
+export function placeFlowLabels(branches: LineEdge[], buses: BusNode[]) {
+  const occupied = buses.map(({ x, y }) => ({
+    x,
+    y,
+    halfWidth: 88,
+    halfHeight: 94,
+  }));
+  const placements = new Map<string, { position: Point; anchor: Point }>();
+  const minX = Math.min(...buses.map((bus) => bus.x)) - 95;
+  const maxX = Math.max(...buses.map((bus) => bus.x)) + 95;
+  const minY = Math.min(...buses.map((bus) => bus.y)) - 105;
+  const maxY = Math.max(...buses.map((bus) => bus.y)) + 95;
+  for (const branch of branches) {
+    const { a, b, c } = branchCurve(branch, branches, buses);
+    const center = pointOnCurve(a, b, c, 0.5);
+    let placement = { position: center, anchor: center };
+    search: for (let radius = 0; radius <= 720; radius += 24) {
+      for (let step = 0; step < (radius ? 16 : 1); step++) {
+        const angle = (step * Math.PI) / 8;
+        const position = {
+          x: center.x + Math.cos(angle) * radius,
+          y: center.y + Math.sin(angle) * radius,
+        };
+        if (
+          position.x - 58 < minX ||
+          position.x + 58 > maxX ||
+          position.y - 30 < minY ||
+          position.y + 30 > maxY
+        )
+          continue;
+        if (
+          occupied.some(
+            (box) =>
+              Math.abs(position.x - box.x) < box.halfWidth + 58 &&
+              Math.abs(position.y - box.y) < box.halfHeight + 30
+          )
+        )
+          continue;
+        placement = { position, anchor: center };
+        break search;
+      }
+    }
+    placements.set(branch.id, placement);
+    occupied.push({
+      ...placement.position,
+      halfWidth: 58,
+      halfHeight: 30,
+    });
+  }
+  return placements;
 }
 
 export function layoutDiagram(state: LoadFlowEditorState): LoadFlowEditorState {

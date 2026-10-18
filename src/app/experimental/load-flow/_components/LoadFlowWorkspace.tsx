@@ -90,7 +90,8 @@ export function LoadFlowWorkspace() {
   const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO);
   const [loadPercent, setLoadPercent] = useState(100);
   const [mode, setMode] = useState<FlowMode>("both");
-  const [animate, setAnimate] = useState(false);
+  const [animate, setAnimate] = useState(true);
+  const [showAmounts, setShowAmounts] = useState(true);
   const [diagramRevision, setDiagramRevision] = useState(0);
   const [fromId, setFromId] = useState("");
   const [toId, setToId] = useState("");
@@ -300,6 +301,13 @@ export function LoadFlowWorkspace() {
             </div>
             <button
               className={buttonClass}
+              aria-pressed={showAmounts}
+              onClick={() => setShowAmounts(!showAmounts)}
+            >
+              {showAmounts ? "Hide amounts" : "Show amounts"}
+            </button>
+            <button
+              className={buttonClass}
               aria-pressed={animate}
               onClick={() => {
                 setAnimate(!animate);
@@ -314,6 +322,9 @@ export function LoadFlowWorkspace() {
           key={`${scenarioId}:${diagramRevision}`}
           buses={editor.busOrder.map((id) => editor.busesById[id])}
           branches={editor.branchOrder.map((id) => editor.branchesById[id])}
+          generators={model.generators}
+          loads={model.loads}
+          baseMVA={model.baseMVA}
           selectedElementId={editor.selectedElementId}
           selectedElementType={editor.selectedElementType}
           onBusSelect={(id) =>
@@ -329,6 +340,7 @@ export function LoadFlowWorkspace() {
           branchFlowsById={branchFlows}
           mode={mode}
           animate={animate && solved}
+          showAmounts={showAmounts}
         />
       </div>
       <section
