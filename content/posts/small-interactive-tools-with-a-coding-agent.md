@@ -1,7 +1,7 @@
 ---
 title: "Load Flow and Mandelbrot in the Browser"
 date: "2026-04-10"
-updated: "2026-10-12"
+updated: "2026-10-17"
 excerpt: "A browser-based load-flow solver and Mandelbrot explorer let me revisit power-system analysis, numerical precision, and the limits of small client-side tools."
 coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.webp"
 coverAlt: "Illustration of Alex using load-flow and Mandelbrot tools across three screens"
@@ -37,4 +37,4 @@ To keep the workload bounded, I limited resolution at deep zooms and capped the 
 
 Changing a bus input and seeing the voltage and branch-flow results made load flow easier to reason about. Zooming into the Mandelbrot set exposed precision and rendering limits directly. In both cases, the tool gave me something concrete to vary and inspect instead of leaving the model at the level of equations or notes.
 
-Update: Load Flow is no longer hosted. The Mandelbrot section describes an earlier version of the explorer.
+Update: [Load Flow is available again](/experimental/load-flow/), with a redesigned single-line diagram. The Mandelbrot section describes an earlier version of the explorer.

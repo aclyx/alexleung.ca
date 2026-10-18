@@ -83,7 +83,7 @@ describe("sitemap", () => {
     expect(urls).toContain("https://alexleung.ca/experimental/mandelbrot/");
     expect(urls).toContain("https://alexleung.ca/experimental/pid-controller/");
     expect(urls).not.toContain("https://alexleung.ca/experimental/");
-    expect(urls).not.toContain("https://alexleung.ca/experimental/load-flow/");
+    expect(urls).toContain("https://alexleung.ca/experimental/load-flow/");
   });
 
   it("updates the homepage and Now lastModified values when Now is newer than the posts", () => {
