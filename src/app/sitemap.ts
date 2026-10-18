@@ -25,7 +25,7 @@ const WEEKLY: SitemapEntry["changeFrequency"] = "weekly";
 const YEARLY: SitemapEntry["changeFrequency"] = "yearly";
 
 const PAGE_LAST_MODIFIED: Record<string, string> = {
-  home: "2026-10-17",
+  home: "2026-10-18",
   now: NOW_PAGE_LAST_UPDATED_ISO,
   blog: "2026-08-29",
   contact: "2026-08-29",
@@ -108,6 +108,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: toCanonical("/contact"),
       lastModified: new Date(PAGE_LAST_MODIFIED.contact),
+      changeFrequency: YEARLY,
+      priority: 0.5,
+    },
+    {
+      url: toCanonical("/experimental/ray-tracing/"),
+      lastModified: new Date("2026-10-18"),
+      changeFrequency: YEARLY,
+      priority: 0.5,
+    },
+    {
+      url: toCanonical("/experimental/seam-carving/"),
+      lastModified: new Date("2026-10-18"),
       changeFrequency: YEARLY,
       priority: 0.5,
     },

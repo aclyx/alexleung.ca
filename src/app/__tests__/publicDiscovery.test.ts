@@ -45,7 +45,13 @@ describe("public discovery files", () => {
   });
 
   it("does not shadow active experiment routes with redirect bridges", () => {
-    const activeRoutes = ["mandelbrot", "pid-controller", "load-flow"];
+    const activeRoutes = [
+      "mandelbrot",
+      "pid-controller",
+      "load-flow",
+      "ray-tracing",
+      "seam-carving",
+    ];
 
     for (const route of activeRoutes) {
       expect(
@@ -135,5 +141,13 @@ describe("public discovery files", () => {
       "[Load Flow Analysis](https://alexleung.ca/experimental/load-flow/)"
     );
     expect(llmsText).not.toContain("[Experiments]");
+    expect(llmsText).toContain(
+      "[Ray-tracing Room](https://alexleung.ca/experimental/ray-tracing/)"
+    );
+    expect(llmsText).toContain(
+      "[Content-aware Resizing](https://alexleung.ca/experimental/seam-carving/)"
+    );
+    expect(llmsText).not.toContain("/town-builder/");
+    expect(llmsText).not.toContain("/memory-allocator/");
   });
 });

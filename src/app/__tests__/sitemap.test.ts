@@ -84,6 +84,21 @@ describe("sitemap", () => {
     expect(urls).toContain("https://alexleung.ca/experimental/pid-controller/");
     expect(urls).not.toContain("https://alexleung.ca/experimental/");
     expect(urls).toContain("https://alexleung.ca/experimental/load-flow/");
+    for (const route of ["ray-tracing", "seam-carving"]) {
+      expect(entries).toContainEqual(
+        expect.objectContaining({
+          url: `https://alexleung.ca/experimental/${route}/`,
+          lastModified: new Date("2026-10-18"),
+          priority: 0.5,
+        })
+      );
+    }
+    expect(urls).not.toContain(
+      "https://alexleung.ca/experimental/town-builder/"
+    );
+    expect(urls).not.toContain(
+      "https://alexleung.ca/experimental/memory-allocator/"
+    );
   });
 
   it("updates the homepage and Now lastModified values when Now is newer than the posts", () => {

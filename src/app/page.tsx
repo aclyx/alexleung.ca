@@ -151,6 +151,16 @@ export default function Page() {
                     Mandelbrot explorer →
                   </LinkText>
                 </li>
+                <li>
+                  <LinkText href="/experimental/ray-tracing/" standalone>
+                    Ray-tracing room →
+                  </LinkText>
+                </li>
+                <li>
+                  <LinkText href="/experimental/seam-carving/" standalone>
+                    Content-aware resizing →
+                  </LinkText>
+                </li>
               </ul>
             </section>
           </aside>
