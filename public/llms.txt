@@ -10,6 +10,8 @@
 - [Mandelbrot Explorer](https://alexleung.ca/experimental/mandelbrot/): an interactive fractal explorer with arbitrary-precision viewport coordinates and bounded deep zoom
 - [PID Controller Simulator](https://alexleung.ca/experimental/pid-controller/): tune a heated plate, spring–mass system, or draining tank; watch its motion alongside the response curve and compare snapshots
 - [Load Flow Analysis](https://alexleung.ca/experimental/load-flow/): adjust electrical loads and inspect active/reactive power, bus voltages, and phase angles on a single-line diagram
+- [Ray-tracing Room](https://alexleung.ca/experimental/ray-tracing/): move a light, change materials, and inspect sampled paths through reflections and refractions
+- [Content-aware Resizing](https://alexleung.ca/experimental/seam-carving/): compare seam carving with scaling and cropping, with painted protection and local image uploads
 - [Contact](https://alexleung.ca/contact/): ways to reach Alex and follow new writing
 
 ## Writing
