@@ -5,12 +5,12 @@ import {
   ComplexPoint,
   PixelSize,
   PreciseViewport,
-  SelectionRect,
 } from "@/features/mandelbrot/types";
 
 const DEFAULT_PRECISION = 72;
 const PRECISION_PADDING = 24;
-const MIN_PIXEL_SPAN = 4;
+const MIN_RENDERABLE_VIEWPORT_WIDTH = new Decimal("1e-40");
+const MAX_RENDERABLE_VIEWPORT_WIDTH = new Decimal(8);
 
 type ViewportInput = {
   centerX: Decimal.Value;
@@ -73,14 +73,27 @@ export function createViewport({
   size,
 }: ViewportInput): PreciseViewport {
   const preciseWidth = precise(width);
-  if (!preciseWidth.isFinite() || preciseWidth.lte(0)) {
-    throw new Error("Viewport width must be finite and greater than zero.");
+  const preciseCenterX = precise(centerX);
+  const preciseCenterY = precise(centerY);
+
+  if (!preciseCenterX.isFinite() || !preciseCenterY.isFinite()) {
+    throw new Error("Viewport center coordinates must be finite.");
+  }
+
+  if (
+    !preciseWidth.isFinite() ||
+    preciseWidth.lt(MIN_RENDERABLE_VIEWPORT_WIDTH) ||
+    preciseWidth.gt(MAX_RENDERABLE_VIEWPORT_WIDTH)
+  ) {
+    throw new Error(
+      `Viewport width must be between ${MIN_RENDERABLE_VIEWPORT_WIDTH.toString()} and ${MAX_RENDERABLE_VIEWPORT_WIDTH.toString()}.`
+    );
   }
   configurePrecisionForWidth(preciseWidth);
 
   return {
-    centerX: precise(centerX),
-    centerY: precise(centerY),
+    centerX: preciseCenterX,
+    centerY: preciseCenterY,
     width: preciseWidth,
     height: viewportHeightForSize(preciseWidth, size),
   };
@@ -157,8 +170,13 @@ export function zoomViewportAtPoint(
   const safeHeight = Math.max(1, Math.round(size.height));
   const relativeX = precise(point.x).div(safeWidth);
   const relativeY = precise(point.y).div(safeHeight);
-  const nextWidth = viewport.width.mul(safeMultiplier);
-  const nextHeight = viewport.height.mul(safeMultiplier);
+  const requestedWidth = viewport.width.mul(safeMultiplier);
+  const nextWidth = Decimal.min(
+    MAX_RENDERABLE_VIEWPORT_WIDTH,
+    Decimal.max(MIN_RENDERABLE_VIEWPORT_WIDTH, requestedWidth)
+  );
+  const effectiveMultiplier = nextWidth.div(viewport.width);
+  const nextHeight = viewport.height.mul(effectiveMultiplier);
   const nextLeft = target.real.sub(nextWidth.mul(relativeX));
   const nextTop = target.imaginary.add(nextHeight.mul(relativeY));
 
@@ -186,82 +204,6 @@ export function panViewport(
     width: precise(viewport.width),
     height: precise(viewport.height),
   };
-}
-
-export function constrainSelectionToAspect(
-  anchor: CanvasPoint,
-  current: CanvasPoint,
-  size: PixelSize
-): SelectionRect {
-  const deltaX = current.x - anchor.x;
-  const deltaY = current.y - anchor.y;
-  const rawWidth = Math.abs(deltaX);
-  const rawHeight = Math.abs(deltaY);
-
-  if (rawWidth === 0 || rawHeight === 0) {
-    return {
-      x: anchor.x,
-      y: anchor.y,
-      width: rawWidth,
-      height: rawHeight,
-    };
-  }
-
-  const aspect = size.width / size.height;
-  let nextWidth = rawWidth;
-  let nextHeight = rawHeight;
-
-  if (rawWidth / rawHeight > aspect) {
-    nextWidth = rawHeight * aspect;
-  } else {
-    nextHeight = rawWidth / aspect;
-  }
-
-  return {
-    x: deltaX >= 0 ? anchor.x : anchor.x - nextWidth,
-    y: deltaY >= 0 ? anchor.y : anchor.y - nextHeight,
-    width: nextWidth,
-    height: nextHeight,
-  };
-}
-
-export function boxZoomViewport(
-  viewport: PreciseViewport,
-  size: PixelSize,
-  anchor: CanvasPoint,
-  current: CanvasPoint
-): PreciseViewport {
-  const selection = constrainSelectionToAspect(anchor, current, size);
-
-  if (selection.width < MIN_PIXEL_SPAN || selection.height < MIN_PIXEL_SPAN) {
-    return cloneViewport(viewport);
-  }
-
-  configurePrecisionForWidth(viewport.width);
-
-  const nextCenter = mapViewportPoint(viewport, size, {
-    x: selection.x + selection.width / 2,
-    y: selection.y + selection.height / 2,
-  });
-  const nextWidth = viewport.width.mul(selection.width).div(size.width);
-  const nextHeight = viewport.height.mul(selection.height).div(size.height);
-
-  return {
-    centerX: nextCenter.real,
-    centerY: nextCenter.imaginary,
-    width: nextWidth,
-    height: nextHeight,
-  };
-}
-
-export function selectionIsLargeEnough(
-  selection: SelectionRect | null
-): boolean {
-  return Boolean(
-    selection &&
-    selection.width >= MIN_PIXEL_SPAN &&
-    selection.height >= MIN_PIXEL_SPAN
-  );
 }
 
 export function magnificationFromViewport(

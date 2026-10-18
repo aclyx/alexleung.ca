@@ -1,4 +1,5 @@
 import {
+  getCoverVariant,
   getCoverVariantPath,
   getCoverVariantSourceSet,
 } from "@/lib/coverVariants";
@@ -21,6 +22,16 @@ describe("coverVariants", () => {
         "hero"
       )
     ).toBe("/assets/blog/everyone-is-a-builder/cover-hero.webp");
+  });
+
+  test("returns selected variant metadata when generated asset exists", () => {
+    expect(
+      getCoverVariant("/assets/blog/everyone-is-a-builder/cover.webp", "hero")
+    ).toEqual({
+      path: "/assets/blog/everyone-is-a-builder/cover-hero.webp",
+      width: 1280,
+      height: 854,
+    });
   });
 
   test("returns responsive source set when multiple generated variants exist", () => {

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Site Copy Editor"
+  short_description: "Write clear, understated alexleung.ca copy"
+  default_prompt: "Use $site-copy-editor to revise this alexleung.ca copy into the site’s calm, direct, understated voice."

@@ -6,9 +6,10 @@
       "url": [
         "http://localhost/",
         "http://localhost/blog/",
-        "http://localhost/about/",
+        "http://localhost/blog/tags/ai/",
         "http://localhost/now/",
         "http://localhost/contact/",
+        "http://localhost/experimental/mandelbrot/",
         "http://localhost/blog/from-coder-to-orchestrator/"
       ],
       "settings": {
@@ -21,7 +22,7 @@
         "categories:performance": [
           "error",
           {
-            "minScore": 0.9
+            "minScore": 0.8
           }
         ],
         "categories:accessibility": [

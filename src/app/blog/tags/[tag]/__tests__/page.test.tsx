@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 
 import TagArchivePage, {
   generateMetadata,
@@ -20,39 +20,49 @@ jest.mock("next/link", () => {
 });
 
 jest.mock("@/lib/blogApi", () => ({
-  getAllPosts: jest.fn((fields?: string[]) => {
-    const posts = [
-      {
-        slug: "agent-notes",
-        title: "Agent Notes",
-        date: "2026-04-10T00:00:00.000Z",
-        excerpt: "Thinking through AI workflows.",
-        coverImage: undefined,
-        tags: ["AI", "Developer Workflow"],
-      },
-      {
-        slug: "deep-learning-review",
-        title: "Deep Learning Review",
-        date: "2026-03-01T00:00:00.000Z",
-        excerpt: "Notes on representation learning.",
-        coverImage: undefined,
-        tags: ["Deep Learning"],
-      },
-    ];
+  getAllPosts: jest.fn(
+    (fields?: string[], options?: { includeUnlisted?: boolean }) => {
+      const posts = [
+        {
+          slug: "unlisted",
+          title: "Unlisted post",
+          date: "2026-04-11T00:00:00.000Z",
+          tags: ["Retired Topic"],
+          unlisted: true,
+        },
+        {
+          slug: "agent-notes",
+          title: "Agent Notes",
+          date: "2026-04-10T00:00:00.000Z",
+          excerpt: "Thinking through AI workflows.",
+          coverImage: "/assets/blog/cover.webp",
+          coverAlt: "Alex reviewing code at his desk.",
+          tags: ["AI", "Developer Workflow"],
+        },
+        {
+          slug: "deep-learning-review",
+          title: "Deep Learning Review",
+          date: "2026-03-01T00:00:00.000Z",
+          excerpt: "Notes on representation learning.",
+          coverImage: undefined,
+          tags: ["Deep Learning"],
+        },
+      ].filter((post) => options?.includeUnlisted || !post.unlisted);
 
-    if (!fields) {
-      return posts;
+      if (!fields) {
+        return posts;
+      }
+
+      return posts.map((post) =>
+        Object.fromEntries(
+          fields.map((field) => {
+            const valuesByField: Record<string, unknown> = post;
+            return [field, valuesByField[field]];
+          })
+        )
+      );
     }
-
-    return posts.map((post) =>
-      Object.fromEntries(
-        fields.map((field) => {
-          const valuesByField: Record<string, unknown> = post;
-          return [field, valuesByField[field]];
-        })
-      )
-    );
-  }),
+  ),
 }));
 
 function getJsonLdEntries(container: HTMLElement) {
@@ -78,16 +88,85 @@ describe("TagArchivePage", () => {
     );
     expect(screen.queryByText("Deep Learning Review")).not.toBeInTheDocument();
     expect(
-      screen.getByText(/Posts about AI tools, coding agents, creativity/i)
+      screen.getByText(
+        "Notes on coding agents, AI-assisted projects, and questions about AI’s future."
+      )
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "All writing" })).toHaveAttribute(
+      "href",
+      "/blog/"
+    );
+
+    const article = screen.getByRole("article");
+    const row = within(article).getByRole("link", { name: "Agent Notes" });
+    expect(within(article).getAllByRole("link")).toHaveLength(1);
+    expect(
+      within(row).getByRole("heading", { level: 2, name: "Agent Notes" })
+    ).toBeInTheDocument();
+    expect(
+      within(row).getByRole("img", { name: "Alex reviewing code at his desk." })
+    ).toHaveAttribute("src", "/assets/blog/cover.webp");
+    expect(row.querySelector("time")).toHaveAttribute(
+      "datetime",
+      "2026-04-10T00:00:00.000Z"
+    );
+    expect(
+      within(row).getByText("Thinking through AI workflows.")
+    ).toBeVisible();
+  });
+
+  it("keeps posts without a cover readable without an empty image placeholder", async () => {
+    const view = await TagArchivePage({
+      params: Promise.resolve({ tag: "deep-learning" }),
+    });
+
+    render(view);
+
+    const row = screen.getByRole("link", { name: "Deep Learning Review" });
+    expect(within(row).queryByRole("img")).not.toBeInTheDocument();
+    expect(
+      within(row).getByText("Notes on representation learning.")
+    ).toBeVisible();
+  });
+
+  it("describes developer workflow beyond coding-agent work", async () => {
+    const view = await TagArchivePage({
+      params: Promise.resolve({ tag: "developer-workflow" }),
+    });
+
+    render(view);
+
+    expect(
+      screen.getByText(
+        /Posts on software tooling, coding agents, verification/i
+      )
     ).toBeInTheDocument();
   });
 
   it("generates one static param per unique tag slug", () => {
     expect(generateStaticParams()).toEqual([
+      { tag: "retired-topic" },
       { tag: "ai" },
       { tag: "developer-workflow" },
       { tag: "deep-learning" },
     ]);
+  });
+
+  it("keeps an empty topic route available without displaying or indexing unlisted posts", async () => {
+    const params = Promise.resolve({ tag: "retired-topic" });
+    render(await TagArchivePage({ params }));
+
+    expect(
+      screen.getByRole("heading", { name: "Retired Topic" })
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("article")).not.toBeInTheDocument();
+    expect(
+      screen.getByText(/There are no listed posts in this topic/)
+    ).toBeInTheDocument();
+    expect((await generateMetadata({ params })).robots).toEqual({
+      index: false,
+      follow: true,
+    });
   });
 
   it("emits a tag-specific item list identifier", async () => {

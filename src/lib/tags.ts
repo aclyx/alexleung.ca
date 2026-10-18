@@ -20,8 +20,10 @@ export function getTagPath(tag: string): string {
   return `/blog/tags/${toTagSlug(tag)}/`;
 }
 
-export function getAllTags(): TagEntry[] {
-  const posts = getAllPosts(["tags", "date", "updated"]);
+export function getAllTags({ includeEmpty = false } = {}): TagEntry[] {
+  const posts = getAllPosts(["tags", "date", "updated", "unlisted"], {
+    includeUnlisted: includeEmpty,
+  });
   const tagMap = new Map<string, TagEntry>();
 
   for (const post of posts) {
@@ -35,7 +37,7 @@ export function getAllTags(): TagEntry[] {
         tagMap.set(slug, {
           name: tag,
           slug,
-          count: 1,
+          count: post.unlisted ? 0 : 1,
           latestModified,
         });
         continue;
@@ -47,11 +49,16 @@ export function getAllTags(): TagEntry[] {
         );
       }
 
+      if (post.unlisted) {
+        continue;
+      }
+
       existing.count += 1;
 
       if (
+        existing.count === 1 ||
         new Date(latestModified).getTime() >
-        new Date(existing.latestModified).getTime()
+          new Date(existing.latestModified).getTime()
       ) {
         existing.latestModified = latestModified;
       }
@@ -61,10 +68,22 @@ export function getAllTags(): TagEntry[] {
   return [...tagMap.values()];
 }
 
+export function sortTagsByPopularity<
+  T extends Pick<TagEntry, "count" | "name">,
+>(tags: readonly T[]): T[] {
+  return [...tags].sort(
+    (tagA, tagB) =>
+      tagB.count - tagA.count || tagA.name.localeCompare(tagB.name)
+  );
+}
+
 export function isIndexableTag(tag: Pick<TagEntry, "count">): boolean {
   return tag.count >= INDEXABLE_TAG_MIN_POST_COUNT;
 }
 
 export function getTagBySlug(tagSlug: string): TagEntry | null {
-  return getAllTags().find((tag) => tag.slug === tagSlug) ?? null;
+  return (
+    getAllTags({ includeEmpty: true }).find((tag) => tag.slug === tagSlug) ??
+    null
+  );
 }

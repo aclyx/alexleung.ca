@@ -7,44 +7,43 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  LOAD_FLOW_DESCRIPTION,
+  LOAD_FLOW_PATH,
+  LOAD_FLOW_TITLE,
+} from "@/constants/loadFlow";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 import { LoadFlowWorkspace } from "./_components/LoadFlowWorkspace";
 
-const title = "Load Flow | Alex Leung";
-const description =
-  "A browser AC load flow workspace for editing one-line models and solving bus voltages and branch flows.";
-const path = "/experimental/load-flow/";
-
 export const metadata: Metadata = buildPageMetadata({
-  title,
-  description,
-  path,
+  title: `${LOAD_FLOW_TITLE} | Alex Leung`,
+  description: LOAD_FLOW_DESCRIPTION,
+  path: LOAD_FLOW_PATH,
 });
 
 export default function LoadFlowPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("Load Flow", path)}
+        items={[
+          { name: "Home", item: "/" },
+          { name: LOAD_FLOW_TITLE, item: LOAD_FLOW_PATH },
+        ]}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
-          path,
-          title,
-          description,
+          path: LOAD_FLOW_PATH,
+          title: LOAD_FLOW_TITLE,
+          description: LOAD_FLOW_DESCRIPTION,
         })}
       />
-
-      <PageShell title="Load Flow" titleId="load-flow">
-        <ResponsiveContainer element="section" className="space-y-6">
-          <p className="text-body text-gray-300">
-            This workspace uses a Newton-Raphson AC load flow engine with
-            reference scenarios, bus-voltage results, and branch-flow outputs.
-            You can start from a standard benchmark case or build and tune a
-            custom one-line model directly in the browser.
-          </p>
+      <PageShell
+        title={LOAD_FLOW_TITLE}
+        titleId="load-flow"
+        description="Change the load. See where power flows and how voltages respond."
+      >
+        <ResponsiveContainer>
           <LoadFlowWorkspace />
         </ResponsiveContainer>
       </PageShell>

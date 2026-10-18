@@ -8,41 +8,22 @@
     "inlineContent": ["content-sm", "content"]
   },
   "sources": {
-    "/assets/about_portrait.webp": {
+    "/assets/alex_vibing.webp": {
       "variants": {
         "lg": {
-          "path": "/assets/about_portrait-lg.webp",
-          "width": 1280,
-          "height": 960
-        },
-        "md": {
-          "path": "/assets/about_portrait-md.webp",
-          "width": 900,
-          "height": 675
-        },
-        "sm": {
-          "path": "/assets/about_portrait-sm.webp",
-          "width": 480,
-          "height": 360
-        }
-      }
-    },
-    "/assets/background.webp": {
-      "variants": {
-        "desktop": {
-          "path": "/assets/background-desktop.webp",
-          "width": 1600,
-          "height": 1068
-        },
-        "mobile": {
-          "path": "/assets/background-mobile.webp",
-          "width": 768,
-          "height": 513
-        },
-        "tablet": {
-          "path": "/assets/background-tablet.webp",
+          "path": "/assets/alex_vibing-lg.webp",
           "width": 1280,
           "height": 854
+        },
+        "md": {
+          "path": "/assets/alex_vibing-md.webp",
+          "width": 900,
+          "height": 600
+        },
+        "sm": {
+          "path": "/assets/alex_vibing-sm.webp",
+          "width": 480,
+          "height": 320
         }
       }
     },
@@ -72,6 +53,20 @@
           "path": "/assets/blog/boring-blog-architecture/cover-hero-sm.webp",
           "width": 640,
           "height": 427
+        }
+      }
+    },
+    "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/camping-indoors-in-san-francisco/corona-heights-view-content-sm.webp",
+          "width": 640,
+          "height": 480
         }
       }
     },
@@ -191,6 +186,35 @@
         }
       }
     },
+    "/assets/blog/farming-expensive-coding-agent-sessions/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card.webp",
+          "width": 768,
+          "height": 432
+        },
+        "card-md": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card-md.webp",
+          "width": 640,
+          "height": 360
+        },
+        "card-sm": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-card-sm.webp",
+          "width": 480,
+          "height": 270
+        },
+        "hero": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-hero.webp",
+          "width": 1280,
+          "height": 720
+        },
+        "hero-sm": {
+          "path": "/assets/blog/farming-expensive-coding-agent-sessions/cover-hero-sm.webp",
+          "width": 640,
+          "height": 360
+        }
+      }
+    },
     "/assets/blog/from-coder-to-orchestrator/cover.webp": {
       "variants": {
         "card": {
@@ -220,45 +244,32 @@
         }
       }
     },
-    "/assets/blog/from-coder-to-orchestrator/ralph-loop.webp": {
+    "/assets/blog/humanitys-cosmic-endowment/cover.webp": {
       "variants": {
-        "content": {
-          "path": "/assets/blog/from-coder-to-orchestrator/ralph-loop-content.webp",
-          "width": 1024,
-          "height": 547
+        "card": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-card.webp",
+          "width": 768,
+          "height": 433
         },
-        "content-sm": {
-          "path": "/assets/blog/from-coder-to-orchestrator/ralph-loop-content-sm.webp",
+        "card-md": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-card-md.webp",
           "width": 640,
-          "height": 342
-        }
-      }
-    },
-    "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution.webp": {
-      "variants": {
-        "content": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution-content.webp",
-          "width": 1024,
-          "height": 559
+          "height": 361
         },
-        "content-sm": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-effort-evolution-content-sm.webp",
-          "width": 640,
-          "height": 350
-        }
-      }
-    },
-    "/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution.webp": {
-      "variants": {
-        "content": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution-content.webp",
-          "width": 1024,
-          "height": 559
+        "card-sm": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-card-sm.webp",
+          "width": 480,
+          "height": 271
         },
-        "content-sm": {
-          "path": "/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution-content-sm.webp",
+        "hero": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-hero.webp",
+          "width": 1280,
+          "height": 721
+        },
+        "hero-sm": {
+          "path": "/assets/blog/humanitys-cosmic-endowment/cover-hero-sm.webp",
           "width": 640,
-          "height": 350
+          "height": 361
         }
       }
     },
@@ -349,7 +360,7 @@
         }
       }
     },
-    "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png": {
+    "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.webp": {
       "variants": {
         "card": {
           "path": "/assets/blog/small-interactive-tools-with-a-coding-agent/cover-card.webp",
@@ -402,6 +413,232 @@
         },
         "hero-sm": {
           "path": "/assets/blog/structural-reasoning-about-deep-networks/cover-hero-sm.webp",
+          "width": 640,
+          "height": 427
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-amphitheater-overlook.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-amphitheater-overlook-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-amphitheater-overlook-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-hoodoo-columns.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-columns-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-columns-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-hoodoo-wall.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-wall-content.webp",
+          "width": 1024,
+          "height": 512
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoo-wall-content-sm.webp",
+          "width": 640,
+          "height": 320
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/bryce-hoodoos-clouds.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoos-clouds-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/bryce-hoodoos-clouds-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-card.webp",
+          "width": 768,
+          "height": 384
+        },
+        "card-md": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-card-md.webp",
+          "width": 640,
+          "height": 320
+        },
+        "card-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-card-sm.webp",
+          "width": 480,
+          "height": 240
+        },
+        "hero": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-hero.webp",
+          "width": 1280,
+          "height": 640
+        },
+        "hero-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/cover-hero-sm.webp",
+          "width": 640,
+          "height": 320
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/lower-calf-creek.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/lower-calf-creek-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/lower-calf-creek-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/mossy-cave.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/mossy-cave-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/mossy-cave-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/ofland-airstream.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/ofland-airstream-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/ofland-airstream-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/red-canyon-pink-ridge-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/trip-to-southern-utah/zion-watchman.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/trip-to-southern-utah/zion-watchman-content.webp",
+          "width": 1024,
+          "height": 1366
+        },
+        "content-sm": {
+          "path": "/assets/blog/trip-to-southern-utah/zion-watchman-content-sm.webp",
+          "width": 640,
+          "height": 854
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-card.webp",
+          "width": 768,
+          "height": 433
+        },
+        "card-md": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-card-md.webp",
+          "width": 640,
+          "height": 361
+        },
+        "card-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-card-sm.webp",
+          "width": 480,
+          "height": 271
+        },
+        "hero": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-hero.webp",
+          "width": 1280,
+          "height": 721
+        },
+        "hero-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/cover-hero-sm.webp",
+          "width": 640,
+          "height": 361
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp-content.webp",
+          "width": 1024,
+          "height": 768
+        },
+        "content-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp-content-sm.webp",
+          "width": 640,
+          "height": 480
+        }
+      }
+    },
+    "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning-content.webp",
+          "width": 1024,
+          "height": 683
+        },
+        "content-sm": {
+          "path": "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning-content-sm.webp",
           "width": 640,
           "height": 427
         }

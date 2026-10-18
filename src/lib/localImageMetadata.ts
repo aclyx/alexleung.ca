@@ -7,15 +7,16 @@ type StaticImageProfile = {
 };
 
 const staticImageProfiles = {
-  aboutPortrait: {
-    source: "/assets/about_portrait.webp",
+  homeFeature: {
+    source:
+      "/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning.webp",
+    orderedVariants: ["content-sm", "content"],
+    fallbackVariant: "content-sm",
+  },
+  heroPortrait: {
+    source: "/assets/alex_vibing.webp",
     orderedVariants: ["sm", "md", "lg"],
     fallbackVariant: "md",
-  },
-  background: {
-    source: "/assets/background.webp",
-    orderedVariants: ["mobile", "tablet", "desktop"],
-    fallbackVariant: "tablet",
   },
 } satisfies Record<string, StaticImageProfile>;
 

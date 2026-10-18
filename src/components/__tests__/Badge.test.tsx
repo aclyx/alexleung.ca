@@ -8,7 +8,7 @@ describe("Badge", () => {
 
     const badge = screen.getByText("Status");
 
-    expect(badge).toHaveClass("text-white");
+    expect(badge).toHaveClass("text-accent-info");
     expect(
       badge.className
         .split(/\s+/)

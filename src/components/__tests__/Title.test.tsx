@@ -16,4 +16,13 @@ describe("Title", () => {
     const heading = screen.getByText("Section Title");
     expect(heading).toHaveAttribute("id", "section-anchor");
   });
+
+  it("renders only the heading primitive and accepts caller classes", () => {
+    const { container } = render(
+      <Title title="Pure heading" className="max-w-2xl" />
+    );
+
+    expect(container.firstElementChild?.tagName).toBe("H1");
+    expect(screen.getByRole("heading")).toHaveClass("max-w-2xl");
+  });
 });

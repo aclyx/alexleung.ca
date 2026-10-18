@@ -8,7 +8,7 @@ Assume the worktree may already contain unrelated user changes. Inspect `git sta
 
 ## Project Overview
 
-Personal portfolio website for Alex Leung. Multi-page static-export site for GitHub Pages deployment. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
+Personal website and writing hub for Alex Leung. Multi-page static-export site for GitHub Pages deployment. Built with Next.js 16, React 19, TypeScript, and Tailwind CSS.
 
 ## Package Manager
 
@@ -38,8 +38,10 @@ yarn dev              # Start development server (port 3000)
 yarn prepare          # Configure repo Git hooks path (.githooks)
 yarn image:variants   # Generate image variants and refresh image variant manifest
 yarn image:variants:stage  # Generate variants for staged changes and git-add outputs
-yarn build            # Build static export to out/ (runs prebuild)
-yarn lint             # Run ESLint and Prettier checks
+yarn build            # Generate image variants and build static export to out/
+yarn lint             # Run ESLint, Prettier, Knip, and harness checks
+yarn lint:harness     # Validate skill metadata and local link file targets
+yarn lint:unused      # Run the pinned Knip unused-code check
 yarn lint:fix         # Auto-fix lint issues
 yarn test             # Run Jest tests
 yarn test:e2e         # Run Playwright smoke tests in Docker
@@ -63,24 +65,25 @@ yarn deploy           # Build and deploy to GitHub Pages
 - `trailingSlash: true` for GitHub Pages compatibility
 - `.nojekyll` in public/ prevents Jekyll processing of `_next/` assets
 - Images are unoptimized (required for static export)
-- Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/about/` and `/blog/post-slug/`, not `/about` or `/blog/post-slug`)
+- Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/now/` and `/blog/post-slug/`, not `/now` or `/blog/post-slug`)
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`
+- `public/about/index.html` and `public/experimental/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/`, `/experimental/pid-controller/`, and `/experimental/load-flow/` are active Next.js routes and must not have public redirect bridges. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
 
 ### Component Organization
 
 - `src/app/` - Next.js App Router pages with route-specific `_components/` subdirectories
-- `src/components/` - Shared components (Header, Footer, SocialLinks, etc.)
-- `src/constants/` - Data files (skills.ts, socialLinks.tsx)
+- `src/components/` - Shared components (Header, Footer, SocialLinkList, etc.)
+- `src/constants/` - Static data and configuration (`index.ts`, `navigation.ts`, `socialLinks.tsx`)
 
 ### Image Variant Workflow
 
 - Build-time script `scripts/generate-image-variants.mjs` generates responsive variants and manifest metadata:
-  - cover variants: `*-card-sm.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
+  - cover variants: `*-card-sm.webp`, `*-card-md.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
   - inline markdown variants: `*-content-sm.webp`, `*-content.webp`
-  - static asset variants for background and about portrait
+  - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
-- `yarn build` runs `prebuild`, which runs `yarn image:variants`.
-- `src/components/BlogPostCard.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
+- `yarn build` explicitly runs `yarn image:variants` before creating the static export.
+- `src/app/blog/tags/[tag]/page.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
 - `src/lib/markdownToHtml.ts` resolves inline image variants from manifest profiles.
 - Pre-commit hook `.githooks/pre-commit` runs `yarn image:variants:stage` so generated variants and manifest stay in sync with staged content/image changes, but only after `prepare` has configured the hooks path and plain `yarn` is available on `PATH` as the pinned Yarn version. Treat the hook as best-effort automation; if hooks are not active or if the hook reports a skip because Yarn is unavailable, run `corepack yarn image:variants:stage` manually before commit when relevant.
 - Runtime has hard-failure checks for missing required manifest profiles (`profiles.cover.card`, `profiles.cover.hero`, `profiles.inlineContent`).
@@ -88,9 +91,10 @@ yarn deploy           # Build and deploy to GitHub Pages
 ### Adding Images (Agent Guidance)
 
 - Always add source images under `public/assets/...`.
+- Every served raster blog source and generated variant must use a `.webp` extension and contain genuine RIFF/WEBP bytes. Convert camera exports, screenshots, and generated images to metadata-stripped WebP instead of renaming them, and do not keep temporary JPEG/PNG exports in the repo. Playwright PNG baselines under `playwright/**-snapshots/` are test artifacts and are exempt.
 - For blog covers: update frontmatter `coverImage` in `content/posts/*.md`.
 - For inline blog images: add standard markdown image references.
-- After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit) and ensure the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json` are included.
+- After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit). The command verifies blog-image extensions and file signatures before updating variants and the manifest; include the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json`.
 
 ### SEO and Structured Data
 
@@ -102,7 +106,6 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 - Jest with React Testing Library
 - Playwright E2E coverage runs in Docker via `docker compose` by default, with host-mode wrappers available for environments where Docker is unavailable: `yarn test:e2e:host`, `yarn test:e2e:visual:host`, and `yarn test:e2e:visual:update:host`
-- Temporary Windows/WSL exception: until the Windows Docker/Playwright harness issue is fixed, agents running from a Windows host against this WSL checkout may treat Playwright smoke/visual coverage as environment-blocked and skip those suites automatically, but they must say that explicitly in the handoff and must not claim those suites passed.
 - Jest tests live in `__tests__/` subdirectories alongside source files
 - Playwright tests live under `playwright/tests/` with shared setup in `playwright.config.ts` and `playwright/fixtures/`
 - `yarn test:e2e` covers smoke flows across desktop/mobile Chrome and Safari/WebKit
@@ -113,9 +116,10 @@ yarn deploy           # Build and deploy to GitHub Pages
 ### Verification Guardrails (Agent Guidance)
 
 - Do not claim the repo is clean or that changes are verified unless you have run the relevant checks in this workspace and seen them pass.
-- During normal iteration, run `yarn lint`, `yarn typecheck`, `yarn test`, and `yarn build` for any repository change unless the user explicitly asked for a narrower verification scope.
+- During iteration, run checks that can detect failures from the change: scoped formatting and `yarn lint:harness` for guidance edits, relevant unit/type checks for code, and build/browser checks for affected runtime or layout behavior. Expand verification when new failures or risks justify it. The full pre-commit/pre-PR gate below still applies to every change.
+- For editorial rubric changes, also run the relevant isolated cases linked from the blog skill. Structural validation and application tests do not establish editorial quality.
 - For Playwright verification, use the Docker commands when Docker is available. If `docker` is missing or the daemon is unavailable, run the corresponding host-mode wrappers instead of skipping E2E coverage, and state which path you used.
-- Temporary Windows/WSL exception: if the agent is running from Windows against this WSL repo and the known Docker/Playwright harness issue applies, the agent may skip `yarn test:e2e`, `yarn test:e2e:visual`, and the host-mode Playwright wrappers without retrying alternate Playwright paths. Treat those suites as environment-blocked, still run the non-Playwright gate, and state the skip explicitly.
+- For Windows-launched WSL checkouts, consult the narrowly scoped [environment exception](docs/agent-environments.md#windowswsl-playwright-exception) before classifying Playwright as blocked. It includes evidence requirements and a retirement condition.
 - If typography classes, prose sizing, or breakpoint-sensitive copy/layout are changed, also verify the affected UI at both mobile and `md`+ breakpoints via local browser inspection or relevant Playwright coverage.
 - If a failure is only formatting, fix it and rerun the failing command rather than reporting partial success.
 - Prefer file-scoped fixes over repo-wide autofix commands. In a dirty worktree, do not run repo-wide mutating commands such as `yarn lint:fix` unless the user explicitly wants that broader scope.
@@ -140,18 +144,15 @@ yarn deploy           # Build and deploy to GitHub Pages
 - When creating a pull request, default to a regular ready-for-review PR rather than a draft PR unless the user explicitly asks for draft status or the work is intentionally incomplete/blocking on follow-up.
 - Do not add PR labels/tags by default. If a tool or workflow offers labels such as `codex`, leave them off unless the user explicitly requests specific labels or the repository requires them.
 - For any request path that creates commits or pull requests (including the yeet skill), keep wording tool-agnostic: do not mention Codex or any other AI agent/model by name.
+- After pushing a commit or PR branch, do not watch or wait for remote CI by default. Check current status once only if useful for the handoff, then stop unless the user explicitly asks you to wait, watch, or fix a failing check.
 
-### Windows / WSL Worktrees (Agent Guidance)
+### Environment Troubleshooting
 
-- If a WSL worktree was created by Windows git, the worktree `.git` file may point at a Windows-style `//wsl.localhost/...` gitdir that WSL git cannot resolve automatically.
-- When WSL-only tooling such as `node`, `yarn`, or `gh` must operate on that worktree, run from WSL with explicit environment variables that point at your own checkout metadata: `GIT_DIR=<path-to-main-repo>/.git/worktrees/<worktree-name>` and `GIT_WORK_TREE=<path-to-this-worktree>`.
-- The worktree name is usually visible in the worktree `.git` file. Use the WSL path to the primary checkout that owns the shared `.git/worktrees/` directory for `<path-to-main-repo>`, and use `pwd` for `<path-to-this-worktree>`. Validate the setup with `git status --short --branch` before running other WSL git commands.
-- When pushing a rebased PR branch from one of these worktrees, prefer WSL `git` / WSL `gh` with those explicit `GIT_DIR` / `GIT_WORK_TREE` values, because Windows-side SSH auth may be unavailable even when WSL GitHub auth works.
-- When updating an existing remote PR branch after a rebase, prefer `git push --force-with-lease` over plain `--force`.
+See [agent environments](docs/agent-environments.md) for Windows/WSL worktree metadata, Playwright startup failures, and the supported Docker build fallback.
 
 ### Typography and Prose Guardrails (Agent Guidance)
 
-- Reference audit: `docs/typography-audit.md`.
+- Prose-sizing decision record: `docs/typography-audit.md`.
 - Prefer semantic typography utilities for body/headline copy:
   - body: `text-body-sm`, `text-body`, `text-body-lg`
   - headings: `text-heading-sm`, `text-heading`
@@ -160,24 +161,23 @@ yarn deploy           # Build and deploy to GitHub Pages
 - `ProseContent` defaults to base prose sizing. Use `size="lg"` for `md:prose-lg`; for small notes/footers, explicitly set `size="sm"` so both `prose-sm` and `md:prose-sm` are applied.
 - When editing typography classes, verify rendered size at both mobile and `md`+ breakpoints via local browser inspection or the relevant Playwright coverage. Do not claim breakpoint verification unless you actually performed one of those checks.
 
+### Writing and Design Guidance
+
+- Canonical writing voice: [docs/writing-voice.md](docs/writing-voice.md). Apply it to visible copy and machine-facing summaries; keep skill instructions focused on their workflow.
+- Use [blog-post-creator](.agents/skills/blog-post-creator/SKILL.md) for blog prose, [site-copy-editor](.agents/skills/site-copy-editor/SKILL.md) for other site writing, and [site-taste-audit](.agents/skills/site-taste-audit/SKILL.md) for visual or tone critique.
+- Follow [docs/design-system.md](docs/design-system.md) for visual implementation. Verify affected mobile and desktop layouts; typography-specific rules are above.
+
 ### Copy Editing Guardrails (Agent Guidance)
 
-- Target site voice: first-person where appropriate; humble, grounded, and clearly experienced; warm but understated; professional without becoming sterile. Confidence should come from evidence, specific work, and concrete observations rather than self-description or positioning claims.
-- Tone should be thoughtful, understated, concrete, and mildly warm. Prefer clear first-person language and specific descriptions over polished positioning copy.
 - Prefer revising existing copy over rewriting from scratch unless the current structure is actively causing clarity or tone problems.
 - Prefer site-representative language over recruiter-optimized phrasing in top-level labels such as homepage headlines, page titles, section names, metadata descriptions, `public/manifest.json`, `public/llms.txt`, RSS/feed text, and JSON-LD descriptions.
 - Treat visible pages and machine-facing summaries as one editorial system: navigation labels, CTA labels, blog titles/excerpts/intros, metadata, RSS/feed text, manifest text, `llms.txt`, and JSON-LD/schema text should feel consistent without becoming copy-pasted.
-- Preserve warmth and voice before adding positioning language. Avoid recruiter-buzzy or self-promotional filler such as `thought leader`, `world-class`, `high-impact`, `passionate`, `results-driven`, or similar phrasing. Avoid inflated claims or interpretive self-assessments when a simpler factual description will do.
+- Before finalizing, read the affected surfaces together and remove deviations from the canonical voice.
 - Do not force SEO phrases into headings when they fit better in supporting copy or metadata descriptions.
 - Avoid repeating the same positioning claim across hero, section intros, metadata, manifest text, RSS text, `llms.txt`, and JSON-LD. Keep them directionally consistent without making them all identical.
 - For metadata and machine-facing summaries, prefer durable wording over quickly stale current-state details unless the surface is intentionally time-stamped, such as the body of the Now page.
 - Use credentials, project history, and domain experience as factual context when relevant, but avoid turning them into a pitch.
-- Prefer direct, literal phrasing over abstract framing when editing prose. If the concrete mechanism, limitation, UI behavior, or comparison can be named directly, name it.
-- For personal reflections and lifestyle posts, open from concrete lived details before interpretation. Avoid polished thesis scaffolding, rhetorical contrast templates, and decorative atmosphere labels unless the user explicitly asks for a more essayistic style.
-- If the user corrects tone more than once, stop making local sentence swaps. Reread the whole section, name the repeated pattern, and revise from the user-provided facts outward.
-- Avoid draft-scaffolding phrases such as `the third thread`, `interesting middle ground`, or similar meta-organizing language when the actual point can be stated plainly.
-- Avoid rhetorical contrast templates like `it is one thing ... it is another ...` unless the user explicitly wants a more essayistic style.
-- Avoid pairing near-synonyms in the same sentence just for polish; if two clauses do not add distinct meaning, collapse them.
+- In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
 - Keep experiential claims tightly bounded. Do not introduce phrases like `over time`, `in practice`, or other duration/usage claims unless the user explicitly established that scope.
 - Before changing labels or short copy in response to a brief user instruction like `do it`, state the chosen interpretation in a short update before editing if there were multiple plausible options in the immediately preceding discussion.
 - Do not add emphasis styling such as bold inline links unless the existing page already uses that pattern or the user asked for stronger emphasis.

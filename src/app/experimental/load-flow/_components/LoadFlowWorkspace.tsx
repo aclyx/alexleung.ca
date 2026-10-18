@@ -1,10 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
-import { SingleLineDiagram } from "@/app/experimental/load-flow/_components/SingleLineDiagram";
+import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
+import { FlowMode, layoutDiagram } from "@/features/load-flow/diagram";
 import { toLoadFlowCase } from "@/features/load-flow/graph/toLoadFlowCase";
-import { Branch, BusType } from "@/features/load-flow/model/types";
+import { LoadFlowCase } from "@/features/load-flow/model/types";
 import {
   getReferenceScenarioById,
   LOAD_FLOW_REFERENCE_SCENARIOS,
@@ -13,7 +14,6 @@ import { runLoadFlow } from "@/features/load-flow/solver/runLoadFlow";
 import {
   addBranch,
   addBus,
-  autoLayoutBuses,
   createInitialLoadFlowEditorState,
   replaceEditorStateFromLoadFlowCase,
   selectElement,
@@ -22,791 +22,652 @@ import {
 } from "@/features/load-flow/state/loadFlowStore";
 import { trackExperimentInteraction } from "@/lib/analytics";
 
-const BUS_TYPE_OPTIONS: BusType[] = ["SLACK", "PV", "PQ"];
-const EXPERIMENT_ID = "load_flow_workspace";
-type BranchStatus = NonNullable<Branch["status"]>;
-const BRANCH_STATUS_OPTIONS: readonly BranchStatus[] = [
-  "IN_SERVICE",
-  "OUT_OF_SERVICE",
+import { LoadFlowResults } from "./LoadFlowResults";
+import { SingleLineDiagram } from "./SingleLineDiagram";
+
+const DEFAULT_SCENARIO = "three-bus-with-pv";
+const FLOW_MODES: FlowMode[] = ["both", "p", "q"];
+const LOAD_COMPONENTS: Array<"p" | "q"> = ["p", "q"];
+const BRANCH_FIELDS: Array<{
+  key: "r" | "x" | "bHalf" | "tapRatio" | "phaseShiftDeg";
+  label: string;
+  fallback: number;
+}> = [
+  { key: "r", label: "R (pu)", fallback: 0 },
+  { key: "x", label: "X (pu)", fallback: 0 },
+  { key: "bHalf", label: "B/2 (pu)", fallback: 0 },
+  { key: "tapRatio", label: "Tap ratio", fallback: 1 },
+  { key: "phaseShiftDeg", label: "Phase shift (°)", fallback: 0 },
 ];
+const buttonClass = actionClassNames({ variant: "secondary", size: "sm" });
 
-const parseFiniteNumber = (value: string): number | null => {
-  const parsed = Number.parseFloat(value);
-  return Number.isFinite(parsed) ? parsed : null;
-};
+function NumberField({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+}) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => {
+    setDraft(String(value));
+  }, [value]);
+  return (
+    <label className="grid gap-1 text-sm text-muted">
+      {label}
+      <input
+        className={fieldClassNames()}
+        type="number"
+        step="any"
+        value={draft}
+        onChange={(event) => setDraft(event.target.value)}
+        onBlur={() => {
+          const parsed = Number(draft);
+          if (draft.trim() && Number.isFinite(parsed)) onChange(parsed);
+          else setDraft(String(value));
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Enter") event.currentTarget.blur();
+        }}
+      />
+    </label>
+  );
+}
 
-const isBusType = (value: string): value is BusType =>
-  BUS_TYPE_OPTIONS.some((type) => type === value);
-
-const isBranchStatus = (value: string): value is BranchStatus =>
-  BRANCH_STATUS_OPTIONS.some((status) => status === value);
-
-const formatBranchFlowValue = (value: number) => value.toFixed(2);
-
-export function LoadFlowWorkspace() {
-  const defaultReferenceScenario = getReferenceScenarioById("ieee-14-bus");
-  const [editorState, setEditorState] = useState(() =>
-    defaultReferenceScenario
-      ? replaceEditorStateFromLoadFlowCase(
-          defaultReferenceScenario.loadFlowCase
-        )
+function initialState(id: string) {
+  const scenario = getReferenceScenarioById(id);
+  return layoutDiagram(
+    scenario
+      ? replaceEditorStateFromLoadFlowCase(scenario.loadFlowCase)
       : createInitialLoadFlowEditorState()
   );
-  const [selectedReferenceScenarioId, setSelectedReferenceScenarioId] =
-    useState<string | null>(defaultReferenceScenario?.id ?? null);
+}
 
+export function LoadFlowWorkspace() {
+  const [editor, setEditor] = useState(() => initialState(DEFAULT_SCENARIO));
+  const [scenarioId, setScenarioId] = useState(DEFAULT_SCENARIO);
+  const [loadPercent, setLoadPercent] = useState(100);
+  const [mode, setMode] = useState<FlowMode>("both");
+  const [animate, setAnimate] = useState(false);
+  const [diagramRevision, setDiagramRevision] = useState(0);
+  const [fromId, setFromId] = useState("");
+  const [toId, setToId] = useState("");
+  const scenario = getReferenceScenarioById(scenarioId);
+  // Selection and diagram coordinates do not belong to the electrical model.
+  const modelKey = JSON.stringify(toLoadFlowCase(editor));
+  const model = useMemo(() => {
+    const network: LoadFlowCase = JSON.parse(modelKey);
+    return {
+      ...network,
+      loads: network.loads.map((load) => ({
+        ...load,
+        p: (load.p * loadPercent) / 100,
+        q: (load.q * loadPercent) / 100,
+      })),
+    };
+  }, [modelKey, loadPercent]);
+  const result = useMemo(() => runLoadFlow(model), [model]);
+  const solved = result.diagnostics.converged;
+  const busSolutions = new Map(
+    (solved ? (result.buses ?? []) : []).map((bus) => [bus.busId, bus])
+  );
+  const branchFlows = new Map(
+    (solved ? (result.branchFlows ?? []) : []).map((flow) => [
+      flow.branchId,
+      flow,
+    ])
+  );
   const selectedBus =
-    editorState.selectedElementType === "BUS" && editorState.selectedElementId
-      ? editorState.busesById[editorState.selectedElementId]
-      : null;
+    editor.selectedElementType === "BUS"
+      ? editor.busesById[editor.selectedElementId ?? ""]
+      : undefined;
   const selectedBranch =
-    editorState.selectedElementType === "BRANCH" &&
-    editorState.selectedElementId
-      ? editorState.branchesById[editorState.selectedElementId]
-      : null;
-
-  const serializedCase = useMemo(
-    () => toLoadFlowCase(editorState),
-    [editorState]
-  );
-  const selectedReferenceScenario = selectedReferenceScenarioId
-    ? getReferenceScenarioById(selectedReferenceScenarioId)
+    editor.selectedElementType === "BRANCH"
+      ? editor.branchesById[editor.selectedElementId ?? ""]
+      : undefined;
+  const selectedSolution = selectedBus
+    ? busSolutions.get(selectedBus.id)
     : undefined;
-
-  const solveResult = useMemo(
-    () => runLoadFlow(serializedCase),
-    [serializedCase]
+  const selectedFlow = selectedBranch
+    ? branchFlows.get(selectedBranch.id)
+    : undefined;
+  const loads = model.loads.filter((load) => load.status === "ON");
+  const totalP = loads.reduce((sum, load) => sum + load.p, 0);
+  const totalQ = loads.reduce((sum, load) => sum + load.q, 0);
+  const lossP = [...branchFlows.values()].reduce(
+    (sum, flow) => sum + flow.pLossMW,
+    0
   );
-  const busSolutionsById = useMemo(
-    () =>
-      new Map(
-        (solveResult.buses ?? []).map((busSolution) => [
-          busSolution.busId,
-          busSolution,
-        ])
-      ),
-    [solveResult.buses]
+  const voltages = [...busSolutions.values()].map(
+    (bus) => bus.voltageMagnitudePu
   );
-  const branchFlowsById = useMemo(
-    () =>
-      new Map(
-        (solveResult.branchFlows ?? []).map((branchFlow) => [
-          branchFlow.branchId,
-          branchFlow,
-        ])
-      ),
-    [solveResult.branchFlows]
-  );
-
-  const trackLoadFlowInteraction = (
+  const track = (
     action: string,
     params: Record<string, string | number> = {}
-  ) => {
-    trackExperimentInteraction(EXPERIMENT_ID, action, params);
-  };
-
-  const resetActiveReferenceCase = () => {
-    if (!selectedReferenceScenario) {
-      return;
-    }
-
-    trackLoadFlowInteraction("reset_reference_case", {
-      scenario_id: selectedReferenceScenario.id,
+  ) =>
+    trackExperimentInteraction("load_flow_workspace", action, {
+      scenario_id: scenarioId,
+      ...params,
     });
-    setEditorState((previousState) => {
-      const resetState = replaceEditorStateFromLoadFlowCase(
-        selectedReferenceScenario.loadFlowCase
-      );
 
-      const selectedElementStillExists =
-        previousState.selectedElementType === "BUS"
-          ? previousState.selectedElementId !== null &&
-            Boolean(resetState.busesById[previousState.selectedElementId])
-          : previousState.selectedElementType === "BRANCH"
-            ? previousState.selectedElementId !== null &&
-              Boolean(resetState.branchesById[previousState.selectedElementId])
-            : false;
-
-      if (!selectedElementStillExists) {
-        return resetState;
-      }
-
-      return selectElement(
-        resetState,
-        previousState.selectedElementType,
-        previousState.selectedElementId
-      );
+  function reset(id: string) {
+    setDiagramRevision((value) => value + 1);
+    setEditor((previous) => {
+      const next = initialState(id);
+      if (
+        id === scenarioId &&
+        previous.selectedElementId &&
+        (previous.selectedElementType === "BUS"
+          ? next.busesById[previous.selectedElementId]
+          : next.branchesById[previous.selectedElementId])
+      )
+        return selectElement(
+          next,
+          previous.selectedElementType,
+          previous.selectedElementId
+        );
+      return next;
     });
-  };
+    setScenarioId(id);
+    setLoadPercent(100);
+    setFromId("");
+    setToId("");
+  }
 
   return (
-    <section className="rounded-xl border border-gray-700 bg-gray-900/60 p-6 shadow-sm">
-      <h2 className="text-heading-sm text-white">Workspace</h2>
-      <p className="text-body mt-2 text-gray-300">
-        Build a one-line model, run an AC load flow solve, and inspect voltage
-        and branch flow outputs.
-      </p>
-
-      <div className="mt-4 rounded-lg border border-emerald-700/70 bg-emerald-950/30 p-4">
-        <h3 className="font-semibold text-emerald-200">Reference scenarios</h3>
-        <p className="mt-1 text-sm text-emerald-100/90">
-          Solve against standard benchmark cases, or switch back to the current
-          editor graph model.
-        </p>
-        <div className="mt-3 flex flex-wrap gap-2">
-          <button
-            type="button"
-            className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
-            onClick={() => {
-              trackLoadFlowInteraction("reset_editor_model");
-              setSelectedReferenceScenarioId(null);
-              setEditorState(createInitialLoadFlowEditorState());
+    <section aria-label="Interactive load-flow tool" className="space-y-6">
+      <div className="grid items-end gap-5 md:grid-cols-[1fr_1fr_auto]">
+        <label className="grid gap-2 text-sm font-semibold">
+          Network
+          <select
+            className={fieldClassNames({ kind: "select" })}
+            value={scenarioId}
+            onChange={(event) => {
+              reset(event.target.value);
+              track("load_reference_case", { scenario_id: event.target.value });
             }}
           >
-            Reset editor model
-          </button>
-          {LOAD_FLOW_REFERENCE_SCENARIOS.map((scenario) => (
+            {LOAD_FLOW_REFERENCE_SCENARIOS.map((item) => (
+              <option key={item.id} value={item.id}>
+                {item.name}
+              </option>
+            ))}
+            <option value="custom">Empty network</option>
+          </select>
+        </label>
+        <label
+          className="grid gap-2 text-sm font-semibold"
+          htmlFor="load-scale"
+        >
+          Load · {loadPercent}%
+          <input
+            id="load-scale"
+            className="min-h-11 w-full accent-accent-link"
+            type="range"
+            min="0"
+            max="200"
+            step="5"
+            value={loadPercent}
+            onChange={(event) => setLoadPercent(Number(event.target.value))}
+            onPointerUp={() =>
+              track("change_load", { load_percent: loadPercent })
+            }
+            onKeyUp={() => track("change_load", { load_percent: loadPercent })}
+          />
+        </label>
+        <button
+          className={buttonClass}
+          onClick={() => {
+            reset(scenarioId);
+            track("reset_reference_case");
+          }}
+        >
+          Reset network
+        </button>
+      </div>
+      <p className="text-sm text-muted">
+        {scenario?.description ??
+          "Add buses and lines in the network editor below."}{" "}
+        The load slider scales P and Q together; generator P setpoints stay
+        fixed.
+      </p>
+      <div
+        className="grid grid-cols-2 gap-4 border-y border-line py-4 md:grid-cols-4"
+        aria-label="Network summary"
+      >
+        <div>
+          <p className="text-xs text-muted">Total demand</p>
+          <p className="mt-1 font-mono text-sm">
+            {totalP.toFixed(1)} MW / {totalQ.toFixed(1)} MVAr
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-muted">Voltage range</p>
+          <p className="mt-1 font-mono text-sm">
+            {solved && voltages.length
+              ? `${Math.min(...voltages).toFixed(3)}–${Math.max(...voltages).toFixed(3)} pu`
+              : "—"}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-muted">Active power loss</p>
+          <p className="mt-1 font-mono text-sm">
+            {solved ? `${lossP.toFixed(2)} MW` : "—"}
+          </p>
+        </div>
+        <div>
+          <p className="text-xs text-muted">Solution</p>
+          <p role="status" className="mt-1 text-sm">
+            {solved
+              ? `Converged · ${result.diagnostics.iterationsCompleted} iterations`
+              : "No converged solution"}
+          </p>
+        </div>
+      </div>
+      {!solved && (
+        <p role="alert" className="border-l-2 border-accent-link pl-4 text-sm">
+          {result.diagnostics.message} Flow and voltage overlays are hidden
+          until the network converges.
+        </p>
+      )}
+      <div>
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-heading-sm">Single-line diagram</h2>
+          <div className="flex flex-wrap gap-2">
+            <div role="group" aria-label="Power overlay" className="flex gap-1">
+              {FLOW_MODES.map((item) => (
+                <button
+                  key={item}
+                  aria-pressed={mode === item}
+                  className={actionClassNames({
+                    variant: mode === item ? "primary" : "secondary",
+                    size: "sm",
+                  })}
+                  onClick={() => {
+                    setMode(item);
+                    track("change_overlay", { overlay: item });
+                  }}
+                >
+                  {item === "both"
+                    ? "P + Q"
+                    : item === "p"
+                      ? "P · MW"
+                      : "Q · MVAr"}
+                </button>
+              ))}
+            </div>
             <button
-              key={scenario.id}
-              type="button"
-              className="rounded-md border border-emerald-500 px-3 py-2 text-sm text-emerald-100 hover:bg-emerald-900/50"
+              className={buttonClass}
+              aria-pressed={animate}
               onClick={() => {
-                trackLoadFlowInteraction("load_reference_case", {
-                  scenario_id: scenario.id,
-                });
-                setSelectedReferenceScenarioId(scenario.id);
-                setEditorState(
-                  replaceEditorStateFromLoadFlowCase(scenario.loadFlowCase)
-                );
+                setAnimate(!animate);
+                track("toggle_motion", { enabled: Number(!animate) });
               }}
             >
-              {scenario.name}
+              {animate ? "Pause motion" : "Animate flow"}
             </button>
-          ))}
-          {selectedReferenceScenario ? (
-            <button
-              type="button"
-              className="rounded-md border border-emerald-400 bg-emerald-900/30 px-3 py-2 text-sm text-emerald-50 hover:bg-emerald-900/50"
-              onClick={resetActiveReferenceCase}
-            >
-              Reset active reference case
-            </button>
-          ) : null}
+          </div>
         </div>
-        {selectedReferenceScenario ? (
-          <p className="mt-2 text-xs text-emerald-100/80">
-            Active solve case: {selectedReferenceScenario.name} —{" "}
-            {selectedReferenceScenario.description}
-          </p>
-        ) : (
-          <p className="mt-2 text-xs text-emerald-100/80">
-            Active solve case: editor graph serialization.
-          </p>
-        )}
-      </div>
-
-      <div className="mt-6 rounded-lg border border-gray-700 p-4">
-        <h3 className="font-semibold text-white">Single-line diagram</h3>
-        <p className="mt-1 text-sm text-gray-300">
-          Interactive topology view of buses and branches.
-        </p>
         <SingleLineDiagram
-          buses={editorState.busOrder.map(
-            (busId) => editorState.busesById[busId]
-          )}
-          branches={editorState.branchOrder.map(
-            (branchId) => editorState.branchesById[branchId]
-          )}
-          selectedElementId={editorState.selectedElementId}
-          selectedElementType={editorState.selectedElementType}
-          onBusSelect={(busId) =>
-            setEditorState((prev) => selectElement(prev, "BUS", busId))
+          key={`${scenarioId}:${diagramRevision}`}
+          buses={editor.busOrder.map((id) => editor.busesById[id])}
+          branches={editor.branchOrder.map((id) => editor.branchesById[id])}
+          selectedElementId={editor.selectedElementId}
+          selectedElementType={editor.selectedElementType}
+          onBusSelect={(id) =>
+            setEditor((state) => selectElement(state, "BUS", id))
           }
-          onBusMove={(busId, x, y) =>
-            setEditorState((prev) => updateBus(prev, busId, { x, y }))
+          onBusMove={(id, x, y) =>
+            setEditor((state) => updateBus(state, id, { x, y }))
           }
-          onBranchSelect={(branchId) =>
-            setEditorState((prev) => selectElement(prev, "BRANCH", branchId))
+          onBranchSelect={(id) =>
+            setEditor((state) => selectElement(state, "BRANCH", id))
           }
-          busSolutionsById={busSolutionsById}
-          branchFlowsById={branchFlowsById}
+          busSolutionsById={busSolutions}
+          branchFlowsById={branchFlows}
+          mode={mode}
+          animate={animate && solved}
         />
       </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-2">
-        <div className="rounded-lg border border-gray-700 p-4">
-          <h3 className="font-semibold text-white">Palette</h3>
-          <p className="mt-1 text-sm text-gray-300">
-            Add buses, then connect them with line elements.
+      <section
+        aria-label="Selected element"
+        className="border-t border-line pt-5"
+      >
+        <label className="grid max-w-md gap-2 text-sm font-semibold">
+          Inspect
+          <select
+            className={fieldClassNames({ kind: "select" })}
+            value={
+              editor.selectedElementType && editor.selectedElementId
+                ? `${editor.selectedElementType}:${editor.selectedElementId}`
+                : ""
+            }
+            onChange={(event) => {
+              const [type, ...id] = event.target.value.split(":");
+              if (type === "BUS" || type === "BRANCH")
+                setEditor((state) => selectElement(state, type, id.join(":")));
+            }}
+          >
+            <option value="" disabled>
+              Select a bus or line
+            </option>
+            <optgroup label="Buses">
+              {editor.busOrder.map((id) => (
+                <option key={id} value={`BUS:${id}`}>
+                  {editor.busesById[id].name} · {editor.busesById[id].type}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Lines">
+              {editor.branchOrder.map((id) => (
+                <option key={id} value={`BRANCH:${id}`}>
+                  {id} ·{" "}
+                  {editor.busesById[editor.branchesById[id].fromBusId].name} →{" "}
+                  {editor.busesById[editor.branchesById[id].toBusId].name}
+                </option>
+              ))}
+            </optgroup>
+          </select>
+        </label>
+        {selectedSolution && (
+          <p className="mt-3 text-sm">
+            {selectedSolution.voltageMagnitudePu.toFixed(4)} pu ∠{" "}
+            {selectedSolution.voltageAngleDeg.toFixed(3)}° · Net injection{" "}
+            {(selectedSolution.pInjectionPu * model.baseMVA).toFixed(2)} MW /{" "}
+            {(selectedSolution.qInjectionPu * model.baseMVA).toFixed(2)} MVAr
           </p>
-          <button
-            type="button"
-            className="mt-3 rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
-            onClick={() => {
-              trackLoadFlowInteraction("add_bus");
-              setEditorState((prev) => addBus(prev));
-            }}
-          >
-            Add bus
-          </button>
-          <button
-            type="button"
-            className="ml-2 mt-3 rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
-            onClick={() => {
-              trackLoadFlowInteraction("auto_layout");
-              setEditorState((prev) => autoLayoutBuses(prev));
-            }}
-          >
-            Auto-layout SLD
-          </button>
-
-          <div className="mt-3 space-y-2 text-sm text-gray-200">
-            {editorState.busOrder.length < 2 ? (
-              <p>Add at least two buses to create a line.</p>
-            ) : (
-              <button
-                type="button"
-                className="rounded-md border border-gray-500 px-3 py-2 text-sm text-white hover:bg-gray-800"
-                onClick={() => {
-                  const [fromBusId, toBusId] = editorState.busOrder;
-                  trackLoadFlowInteraction("add_branch");
-                  setEditorState((prev) => addBranch(prev, fromBusId, toBusId));
-                }}
-              >
-                Connect first two buses
-              </button>
-            )}
+        )}
+        {selectedBranch && (
+          <div className="mt-3 grid gap-3 text-sm md:grid-cols-3">
+            <p>
+              <span className="block text-xs text-muted">
+                From end · {editor.busesById[selectedBranch.fromBusId].name}
+              </span>
+              {selectedFlow
+                ? `${selectedFlow.pFromToMW.toFixed(2)} MW / ${selectedFlow.qFromToMVar.toFixed(2)} MVAr`
+                : "—"}
+            </p>
+            <p>
+              <span className="block text-xs text-muted">
+                To end · {editor.busesById[selectedBranch.toBusId].name}
+              </span>
+              {selectedFlow
+                ? `${selectedFlow.pToFromMW.toFixed(2)} MW / ${selectedFlow.qToFromMVar.toFixed(2)} MVAr`
+                : "—"}
+            </p>
+            <p>
+              <span className="block text-xs text-muted">
+                Net absorbed · positive into line
+              </span>
+              {selectedFlow
+                ? `${selectedFlow.pLossMW.toFixed(2)} MW / ${selectedFlow.qLossMVar.toFixed(2)} MVAr`
+                : "—"}
+            </p>
           </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-700 p-4">
-          <h3 className="font-semibold text-white">Topology selection</h3>
-          <div className="mt-3 space-y-2 text-sm text-gray-200">
-            {editorState.busOrder.map((busId) => {
-              const bus = editorState.busesById[busId];
-              const isSelected =
-                editorState.selectedElementType === "BUS" &&
-                editorState.selectedElementId === bus.id;
-              return (
-                <button
-                  key={bus.id}
-                  type="button"
-                  className={`block w-full rounded-md border px-3 py-2 text-left transition ${
-                    isSelected
-                      ? "border-emerald-300 bg-emerald-900/40 text-emerald-100"
-                      : "border-gray-600 hover:bg-gray-800"
-                  }`}
-                  onClick={() => {
-                    trackLoadFlowInteraction("select_bus", { bus_id: bus.id });
-                    setEditorState((prev) =>
-                      selectElement(prev, "BUS", bus.id)
-                    );
-                  }}
-                >
-                  {bus.name} • {bus.type} • {bus.baseKV} kV
-                </button>
-              );
-            })}
-
-            {editorState.branchOrder.map((branchId) => {
-              const branch = editorState.branchesById[branchId];
-              const isSelected =
-                editorState.selectedElementType === "BRANCH" &&
-                editorState.selectedElementId === branch.id;
-              return (
-                <button
-                  key={branch.id}
-                  type="button"
-                  className={`block w-full rounded-md border px-3 py-2 text-left transition ${
-                    isSelected
-                      ? "border-emerald-300 bg-emerald-900/40 text-emerald-100"
-                      : "border-blue-800 text-blue-200 hover:bg-gray-800"
-                  }`}
-                  onClick={() => {
-                    trackLoadFlowInteraction("select_branch", {
-                      branch_id: branch.id,
-                    });
-                    setEditorState((prev) =>
-                      selectElement(prev, "BRANCH", branch.id)
-                    );
-                  }}
-                >
-                  {branch.id}: {branch.fromBusId} → {branch.toBusId}
-                </button>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="rounded-lg border border-gray-700 p-4">
-          <h3 className="font-semibold text-white">Properties</h3>
-          {selectedBus ? (
-            <div className="mt-3 space-y-2 text-sm text-gray-200">
-              <label className="block">
-                <span>Name</span>
+        )}
+        <details
+          key={`${editor.selectedElementType}:${editor.selectedElementId}`}
+          className="mt-3"
+        >
+          <summary className="min-h-11 cursor-pointer py-2 text-sm font-semibold">
+            Edit selected element
+          </summary>
+          <p className="mb-3 text-xs text-muted">
+            Numeric edits apply on Enter or when you leave the field. Load
+            values below are before the global load multiplier.
+          </p>
+          {selectedBus && (
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              <label className="grid gap-1 text-sm text-muted">
+                Name
                 <input
+                  className={fieldClassNames()}
                   value={selectedBus.name}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
                   onChange={(event) =>
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
+                    setEditor((state) =>
+                      updateBus(state, selectedBus.id, {
                         name: event.target.value,
                       })
                     )
                   }
                 />
               </label>
-              <label className="block">
-                <span>Base kV</span>
-                <input
-                  type="number"
-                  value={selectedBus.baseKV}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    const parsedBaseKV = parseFiniteNumber(event.target.value);
-                    if (parsedBaseKV === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
-                        baseKV: parsedBaseKV,
-                      })
-                    );
-                  }}
-                />
-              </label>
-
-              <label className="block">
-                <span>Voltage setpoint |V| (pu)</span>
-                <input
-                  type="number"
-                  value={selectedBus.voltageMagnitudeSetpoint ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    if (event.target.value.trim() === "") {
-                      setEditorState((prev) =>
-                        updateBus(prev, selectedBus.id, {
-                          voltageMagnitudeSetpoint: undefined,
-                        })
-                      );
-                      return;
-                    }
-
-                    const parsedSetpoint = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedSetpoint === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
-                        voltageMagnitudeSetpoint: parsedSetpoint,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>Voltage angle setpoint θ (deg)</span>
-                <input
-                  type="number"
-                  value={selectedBus.voltageAngleSetpointDeg ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    if (event.target.value.trim() === "") {
-                      setEditorState((prev) =>
-                        updateBus(prev, selectedBus.id, {
-                          voltageAngleSetpointDeg: undefined,
-                        })
-                      );
-                      return;
-                    }
-
-                    const parsedAngleSetpoint = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedAngleSetpoint === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
-                        voltageAngleSetpointDeg: parsedAngleSetpoint,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>Voltage min |V| (pu)</span>
-                <input
-                  type="number"
-                  value={selectedBus.voltageMagnitudeMin ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    if (event.target.value.trim() === "") {
-                      setEditorState((prev) =>
-                        updateBus(prev, selectedBus.id, {
-                          voltageMagnitudeMin: undefined,
-                        })
-                      );
-                      return;
-                    }
-
-                    const parsedVoltageMin = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedVoltageMin === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
-                        voltageMagnitudeMin: parsedVoltageMin,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>Voltage max |V| (pu)</span>
-                <input
-                  type="number"
-                  value={selectedBus.voltageMagnitudeMax ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    if (event.target.value.trim() === "") {
-                      setEditorState((prev) =>
-                        updateBus(prev, selectedBus.id, {
-                          voltageMagnitudeMax: undefined,
-                        })
-                      );
-                      return;
-                    }
-
-                    const parsedVoltageMax = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedVoltageMax === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
-                        voltageMagnitudeMax: parsedVoltageMax,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>Type</span>
+              <label className="grid gap-1 text-sm text-muted">
+                Bus type
                 <select
+                  className={fieldClassNames({ kind: "select" })}
                   value={selectedBus.type}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
                   onChange={(event) => {
-                    const nextType = event.target.value;
-                    if (!isBusType(nextType)) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBus(prev, selectedBus.id, {
-                        type: nextType,
-                      })
-                    );
-                  }}
-                >
-                  {BUS_TYPE_OPTIONS.map((type) => (
-                    <option key={type} value={type}>
-                      {type}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            </div>
-          ) : null}
-
-          {selectedBranch ? (
-            <div className="mt-3 space-y-2 text-sm text-gray-200">
-              <label className="block">
-                <span>R (pu)</span>
-                <input
-                  type="number"
-                  value={selectedBranch.r}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    const parsedResistance = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedResistance === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBranch(prev, selectedBranch.id, {
-                        r: parsedResistance,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>X (pu)</span>
-                <input
-                  type="number"
-                  value={selectedBranch.x}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    const parsedReactance = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedReactance === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBranch(prev, selectedBranch.id, {
-                        x: parsedReactance,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>B/2 (pu)</span>
-                <input
-                  type="number"
-                  value={selectedBranch.bHalf}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    const parsedBHalf = parseFiniteNumber(event.target.value);
-                    if (parsedBHalf === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBranch(prev, selectedBranch.id, {
-                        bHalf: parsedBHalf,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>Thermal limit (MVA)</span>
-                <input
-                  type="number"
-                  value={selectedBranch.thermalLimitMVA ?? ""}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    if (event.target.value.trim() === "") {
-                      setEditorState((prev) =>
-                        updateBranch(prev, selectedBranch.id, {
-                          thermalLimitMVA: undefined,
-                        })
+                    const type = event.target.value;
+                    if (type === "SLACK" || type === "PV" || type === "PQ")
+                      setEditor((state) =>
+                        updateBus(state, selectedBus.id, { type })
                       );
-                      return;
-                    }
-
-                    const parsedThermalLimit = parseFiniteNumber(
-                      event.target.value
-                    );
-                    if (parsedThermalLimit === null) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBranch(prev, selectedBranch.id, {
-                        thermalLimitMVA: parsedThermalLimit,
-                      })
-                    );
-                  }}
-                />
-              </label>
-              <label className="block">
-                <span>Status</span>
-                <select
-                  value={selectedBranch.status ?? "IN_SERVICE"}
-                  className="mt-1 w-full rounded border border-gray-600 bg-gray-950 px-2 py-1"
-                  onChange={(event) => {
-                    const nextStatus = event.target.value;
-                    if (!isBranchStatus(nextStatus)) {
-                      return;
-                    }
-
-                    setEditorState((prev) =>
-                      updateBranch(prev, selectedBranch.id, {
-                        status: nextStatus,
-                      })
-                    );
                   }}
                 >
-                  {BRANCH_STATUS_OPTIONS.map((status) => (
-                    <option key={status} value={status}>
-                      {status}
-                    </option>
+                  {["SLACK", "PV", "PQ"].map((type) => (
+                    <option key={type}>{type}</option>
                   ))}
                 </select>
               </label>
+              <NumberField
+                label="Base kV"
+                value={selectedBus.baseKV}
+                onChange={(value) =>
+                  setEditor((state) =>
+                    updateBus(state, selectedBus.id, { baseKV: value })
+                  )
+                }
+              />
+              {selectedBus.type !== "PQ" && (
+                <NumberField
+                  label="Voltage setpoint (pu)"
+                  value={selectedBus.voltageMagnitudeSetpoint ?? 1}
+                  onChange={(value) =>
+                    setEditor((state) =>
+                      updateBus(state, selectedBus.id, {
+                        voltageMagnitudeSetpoint: value,
+                      })
+                    )
+                  }
+                />
+              )}
+              {selectedBus.type === "SLACK" && (
+                <NumberField
+                  label="Reference angle (°)"
+                  value={selectedBus.voltageAngleSetpointDeg ?? 0}
+                  onChange={(value) =>
+                    setEditor((state) =>
+                      updateBus(state, selectedBus.id, {
+                        voltageAngleSetpointDeg: value,
+                      })
+                    )
+                  }
+                />
+              )}
+              {LOAD_COMPONENTS.map((component) => (
+                <NumberField
+                  key={component}
+                  label={`Load ${component === "p" ? "P (MW)" : "Q (MVAr)"}`}
+                  value={editor.loads
+                    .filter(
+                      (load) =>
+                        load.busId === selectedBus.id && load.status === "ON"
+                    )
+                    .reduce((sum, load) => sum + load[component], 0)}
+                  onChange={(value) =>
+                    setEditor((state) => {
+                      const active = state.loads.filter(
+                        (load) =>
+                          load.busId === selectedBus.id && load.status === "ON"
+                      );
+                      const other = component === "p" ? "q" : "p";
+                      return {
+                        ...state,
+                        loads: [
+                          ...state.loads.filter(
+                            (load) =>
+                              load.busId !== selectedBus.id ||
+                              load.status !== "ON"
+                          ),
+                          {
+                            id: `edited-load-${selectedBus.id}`,
+                            busId: selectedBus.id,
+                            status: "ON",
+                            p: 0,
+                            q: 0,
+                            [other]: active.reduce(
+                              (sum, load) => sum + load[other],
+                              0
+                            ),
+                            [component]: value,
+                          },
+                        ],
+                      };
+                    })
+                  }
+                />
+              ))}
+              {selectedBus.type === "PV" && (
+                <NumberField
+                  label="Generation P (MW)"
+                  value={editor.generators
+                    .filter(
+                      (gen) =>
+                        gen.busId === selectedBus.id && gen.status === "ON"
+                    )
+                    .reduce((sum, gen) => sum + gen.pSet, 0)}
+                  onChange={(value) =>
+                    setEditor((state) => ({
+                      ...state,
+                      generators: [
+                        ...state.generators.filter(
+                          (gen) =>
+                            gen.busId !== selectedBus.id || gen.status !== "ON"
+                        ),
+                        {
+                          id: `edited-gen-${selectedBus.id}`,
+                          busId: selectedBus.id,
+                          status: "ON",
+                          pSet: value,
+                          vSet: selectedBus.voltageMagnitudeSetpoint ?? 1,
+                          qMin: -9999,
+                          qMax: 9999,
+                        },
+                      ],
+                    }))
+                  }
+                />
+              )}
             </div>
-          ) : null}
-
-          {!selectedBus && !selectedBranch ? (
-            <p className="mt-3 text-sm text-gray-300">
-              Select a bus or line to edit properties.
-            </p>
-          ) : null}
+          )}
+          {selectedBranch && (
+            <div className="grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+              {BRANCH_FIELDS.map((field) => (
+                <NumberField
+                  key={field.key}
+                  label={field.label}
+                  value={selectedBranch[field.key] ?? field.fallback}
+                  onChange={(value) =>
+                    setEditor((state) =>
+                      updateBranch(state, selectedBranch.id, {
+                        [field.key]: value,
+                      })
+                    )
+                  }
+                />
+              ))}
+              <label className="grid gap-1 text-sm text-muted">
+                Line status
+                <select
+                  className={fieldClassNames({ kind: "select" })}
+                  value={selectedBranch.status ?? "IN_SERVICE"}
+                  onChange={(event) => {
+                    const status = event.target.value;
+                    if (status === "IN_SERVICE" || status === "OUT_OF_SERVICE")
+                      setEditor((state) =>
+                        updateBranch(state, selectedBranch.id, { status })
+                      );
+                  }}
+                >
+                  <option value="IN_SERVICE">In service</option>
+                  <option value="OUT_OF_SERVICE">Out of service</option>
+                </select>
+              </label>
+            </div>
+          )}
+        </details>
+      </section>
+      <LoadFlowResults result={result} baseMVA={model.baseMVA} />
+      <details className="border-t border-line py-5">
+        <summary className="min-h-11 cursor-pointer text-heading-sm">
+          Network editor & model
+        </summary>
+        <div className="my-4 flex flex-wrap gap-3">
+          <button
+            className={buttonClass}
+            onClick={() => setEditor((state) => addBus(state))}
+          >
+            Add bus
+          </button>
+          <button
+            className={buttonClass}
+            onClick={() => {
+              setEditor(layoutDiagram);
+              setDiagramRevision((value) => value + 1);
+            }}
+          >
+            Arrange buses
+          </button>
         </div>
-      </div>
-
-      <div className="mt-6 rounded-lg border border-gray-700 p-4">
-        <h3 className="font-semibold text-white">Solve results</h3>
-        <p className="mt-2 text-sm text-gray-300">
-          {solveResult.diagnostics.message}
+        <div className="grid items-end gap-3 sm:grid-cols-3">
+          {[
+            { label: "From bus", value: fromId, set: setFromId },
+            { label: "To bus", value: toId, set: setToId },
+          ].map((field) => (
+            <label key={field.label} className="grid gap-1 text-sm text-muted">
+              {field.label}
+              <select
+                className={fieldClassNames({ kind: "select" })}
+                value={field.value}
+                onChange={(event) => field.set(event.target.value)}
+              >
+                <option value="">Select bus</option>
+                {editor.busOrder.map((id) => (
+                  <option key={id} value={id}>
+                    {editor.busesById[id].name}
+                  </option>
+                ))}
+              </select>
+            </label>
+          ))}
+          <button
+            className={buttonClass}
+            disabled={!fromId || !toId || fromId === toId}
+            onClick={() => setEditor((state) => addBranch(state, fromId, toId))}
+          >
+            Connect buses
+          </button>
+        </div>
+        <p className="mt-5 text-sm leading-relaxed text-muted">
+          Balanced, steady-state AC power flow using Newton–Raphson on a{" "}
+          {model.baseMVA} MVA base. Loads are constant P/Q. Lines use a π model
+          with charging at both ends; transformers support taps and phase
+          shifts. Slack fixes voltage and angle; PV fixes active generation and
+          voltage. Generator reactive-power limits and thermal limits are not
+          enforced. Convergence is not a claim of safe operation.
         </p>
-        {solveResult.buses ? (
-          <div className="mt-4">
-            <h4 className="text-sm font-semibold text-gray-100">
-              Bus voltages and injections
-            </h4>
-            <div className="mt-3 overflow-auto rounded-md border border-gray-700">
-              <table className="min-w-full text-left text-xs text-gray-200">
-                <caption className="sr-only">
-                  Bus voltages and injections
-                </caption>
-                <thead className="bg-gray-950/70 text-gray-300">
-                  <tr>
-                    <th className="px-3 py-2">Bus</th>
-                    <th className="px-3 py-2">|V| (pu)</th>
-                    <th className="px-3 py-2">θ (deg)</th>
-                    <th className="px-3 py-2">P inj (pu)</th>
-                    <th className="px-3 py-2">Q inj (pu)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-800">
-                  {solveResult.buses.map((bus) => (
-                    <tr key={bus.busId}>
-                      <td className="px-3 py-2 font-medium text-white">
-                        {bus.busId}
-                      </td>
-                      <td className="px-3 py-2 tabular-nums">
-                        {bus.voltageMagnitudePu.toFixed(4)}
-                      </td>
-                      <td className="px-3 py-2 tabular-nums">
-                        {bus.voltageAngleDeg.toFixed(3)}
-                      </td>
-                      <td className="px-3 py-2 tabular-nums">
-                        {bus.pInjectionPu.toFixed(4)}
-                      </td>
-                      <td className="px-3 py-2 tabular-nums">
-                        {bus.qInjectionPu.toFixed(4)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : null}
-        {solveResult.branchFlows?.length ? (
-          <div className="mt-5">
-            <h4 className="text-sm font-semibold text-gray-100">
-              Branch flows and losses
-            </h4>
-            <p className="mt-1 text-xs text-gray-400">
-              Positive direction follows each configured from-bus → to-bus path;
-              reverse columns show the solved receiving-end flow.
-            </p>
-            <div className="mt-3 overflow-auto rounded-md border border-gray-700">
-              <table className="min-w-full text-left text-xs text-gray-200">
-                <caption className="sr-only">Branch flows and losses</caption>
-                <thead className="text-gray-300">
-                  <tr>
-                    <th
-                      rowSpan={2}
-                      className="bg-gray-950/70 px-3 py-2 align-bottom"
-                    >
-                      Branch
-                    </th>
-                    <th
-                      rowSpan={2}
-                      className="bg-gray-950/70 px-3 py-2 align-bottom"
-                    >
-                      Path
-                    </th>
-                    <th
-                      colSpan={2}
-                      className="bg-gray-950/70 px-3 py-2 text-center"
-                    >
-                      From → To
-                    </th>
-                    <th
-                      colSpan={2}
-                      className="bg-gray-950/70 px-3 py-2 text-center"
-                    >
-                      To → From
-                    </th>
-                    <th
-                      colSpan={2}
-                      className="bg-gray-950/70 px-3 py-2 text-center"
-                    >
-                      Loss
-                    </th>
-                  </tr>
-                  <tr className="bg-gray-950/70 text-gray-300">
-                    <th className="px-3 py-2 text-right">MW</th>
-                    <th className="px-3 py-2 text-right">MVar</th>
-                    <th className="px-3 py-2 text-right">MW</th>
-                    <th className="px-3 py-2 text-right">MVar</th>
-                    <th className="px-3 py-2 text-right">MW</th>
-                    <th className="px-3 py-2 text-right">MVar</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-800">
-                  {solveResult.branchFlows.map((branchFlow) => (
-                    <tr key={branchFlow.branchId}>
-                      <td className="whitespace-nowrap px-3 py-2 font-medium text-white">
-                        {branchFlow.branchId}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-2 text-gray-300">
-                        {branchFlow.fromBusId} → {branchFlow.toBusId}
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
-                        {formatBranchFlowValue(branchFlow.pFromToMW)}
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
-                        {formatBranchFlowValue(branchFlow.qFromToMVar)}
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
-                        {formatBranchFlowValue(branchFlow.pToFromMW)}
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums">
-                        {formatBranchFlowValue(branchFlow.qToFromMVar)}
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-emerald-100">
-                        {formatBranchFlowValue(branchFlow.pLossMW)}
-                      </td>
-                      <td className="px-3 py-2 text-right tabular-nums text-emerald-100">
-                        {formatBranchFlowValue(branchFlow.qLossMVar)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        ) : null}
-      </div>
-
-      <div className="mt-6 rounded-lg border border-gray-700 p-4">
-        <h3 className="font-semibold text-white">Serialized case preview</h3>
-        <pre className="mt-2 overflow-auto text-xs text-gray-300">
-          {JSON.stringify(serializedCase, null, 2)}
-        </pre>
-      </div>
+        <details className="mt-4">
+          <summary className="min-h-11 cursor-pointer py-2 text-sm">
+            Case JSON
+          </summary>
+          <pre className="max-h-96 overflow-auto bg-white p-3 text-xs">
+            {JSON.stringify(model, null, 2)}
+          </pre>
+        </details>
+      </details>
     </section>
   );
 }

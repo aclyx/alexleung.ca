@@ -1,5 +1,4 @@
 import {
-  ColoringMode,
   MandelbrotSettings,
   PaletteId,
   PixelSize,
@@ -15,22 +14,48 @@ const VALID_PALETTES: Readonly<Record<PaletteId, true>> = {
   ember: true,
   glacier: true,
 };
-const VALID_COLORING_MODES: Readonly<Record<ColoringMode, true>> = {
-  smooth: true,
-  bands: true,
-};
 const VALID_RENDER_BACKENDS: Readonly<Record<RenderBackendPreference, true>> = {
   auto: true,
   webgpu: true,
   cpu: true,
 };
+const MAX_DECIMAL_QUERY_LENGTH = 128;
+const DECIMAL_QUERY_PATTERN = /^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i;
+const VALID_RESOLUTION_SCALES = new Set([0.5, 0.75, 1]);
+
+function isStrictDecimalQuery(value: unknown): value is string {
+  return (
+    typeof value === "string" &&
+    value.length > 0 &&
+    value.length <= MAX_DECIMAL_QUERY_LENGTH &&
+    DECIMAL_QUERY_PATTERN.test(value)
+  );
+}
+
+function parseStrictInteger(value: unknown): number | null {
+  if (typeof value !== "string" || !/^\d+$/.test(value)) {
+    return null;
+  }
+
+  const parsed = Number(value);
+
+  return Number.isSafeInteger(parsed) ? parsed : null;
+}
+
+function parseStrictResolutionScale(value: unknown): number | null {
+  if (typeof value !== "string" || !DECIMAL_QUERY_PATTERN.test(value)) {
+    return null;
+  }
+
+  const parsed = Number(value);
+
+  return Number.isFinite(parsed) && VALID_RESOLUTION_SCALES.has(parsed)
+    ? parsed
+    : null;
+}
 
 function isPaletteId(value: string): value is PaletteId {
   return Object.hasOwn(VALID_PALETTES, value);
-}
-
-function isColoringMode(value: string): value is ColoringMode {
-  return Object.hasOwn(VALID_COLORING_MODES, value);
 }
 
 function isRenderBackendPreference(
@@ -48,9 +73,9 @@ export function parseViewportFromQuery(
   const width = searchParams.w;
 
   if (
-    typeof centerX !== "string" ||
-    typeof centerY !== "string" ||
-    typeof width !== "string"
+    !isStrictDecimalQuery(centerX) ||
+    !isStrictDecimalQuery(centerY) ||
+    !isStrictDecimalQuery(width)
   ) {
     return null;
   }
@@ -71,29 +96,22 @@ export function parseSettingsFromQuery(
   searchParams: QueryRecord,
   fallback: MandelbrotSettings
 ): MandelbrotSettings {
-  const maxIterations = Number.parseInt(String(searchParams.iter ?? ""), 10);
-  const resolutionScale = Number.parseFloat(String(searchParams.quality ?? ""));
+  const maxIterations = parseStrictInteger(searchParams.iter);
+  const resolutionScale = parseStrictResolutionScale(searchParams.quality);
   const paletteId = searchParams.palette;
-  const coloringMode = searchParams.mode;
   const renderBackendPreference = searchParams.backend;
 
   return {
     maxIterations:
-      Number.isFinite(maxIterations) && maxIterations >= 25
+      maxIterations !== null && maxIterations >= 25
         ? Math.min(maxIterations, 4000)
         : fallback.maxIterations,
     paletteId:
       typeof paletteId === "string" && isPaletteId(paletteId)
         ? paletteId
         : fallback.paletteId,
-    coloringMode:
-      typeof coloringMode === "string" && isColoringMode(coloringMode)
-        ? coloringMode
-        : fallback.coloringMode,
     resolutionScale:
-      Number.isFinite(resolutionScale) && resolutionScale >= 0.25
-        ? Math.min(resolutionScale, 1)
-        : fallback.resolutionScale,
+      resolutionScale !== null ? resolutionScale : fallback.resolutionScale,
     renderBackendPreference:
       typeof renderBackendPreference === "string" &&
       isRenderBackendPreference(renderBackendPreference)

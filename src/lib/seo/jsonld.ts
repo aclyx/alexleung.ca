@@ -4,8 +4,6 @@ import type {
   CollectionPage,
   ContactPage,
   ItemList,
-  Occupation,
-  Organization,
   Person,
   ProfilePage,
   SiteNavigationElement,
@@ -15,12 +13,13 @@ import type {
 } from "schema-dts";
 
 import { NAV_LINKS } from "@/constants/navigation";
+import { getCoverVariantPath } from "@/lib/coverVariants";
 import { toAbsoluteUrl, toCanonical } from "@/lib/seo/url";
 
 const PERSON_ID = "/#person";
 const WEBSITE_ID = "/#website";
 const SITE_NAVIGATION_ID = "/#site-navigation";
-const ABOUT_PATH = "/about";
+const PROFILE_PATH = "/";
 const SITE_ROOT = toAbsoluteUrl("/").replace(/\/$/, "");
 const SCHEMA_CONTEXT: "https://schema.org" = "https://schema.org";
 const PERSON_TYPE: "Person" = "Person";
@@ -28,19 +27,18 @@ const WEBSITE_TYPE: "WebSite" = "WebSite";
 const WEBPAGE_TYPE: "WebPage" = "WebPage";
 const SITE_NAVIGATION_ELEMENT_TYPE: "SiteNavigationElement" =
   "SiteNavigationElement";
+const PERSON_DESCRIPTION =
+  "Alex Leung is a software engineer and writer. His previous work includes home electrification, AR and AI hardware, and consumer finance.";
 const SOCIAL_PROFILES = [
   "https://www.linkedin.com/in/aclyx",
+  "https://ca.linkedin.com/in/aclyx",
   "https://github.com/aclyx",
+  "https://github.com/aclyx-oai",
   "https://www.x.com/aclyxpse",
   "https://bsky.app/profile/alexleung.ca",
   "https://www.instagram.com/rootpanda",
   "https://scholar.google.ca/citations?user=NcOOsPIAAAAJ",
 ];
-const OPENAI_ORGANIZATION: Organization = {
-  "@type": "Organization",
-  name: "OpenAI",
-  url: "https://openai.com/",
-};
 type PersonReference = {
   "@type": "Person";
   "@id": string;
@@ -82,8 +80,8 @@ const PERSON_REFERENCE: PersonReference = {
   "@type": PERSON_TYPE,
   "@id": toAbsoluteUrl(PERSON_ID),
   name: "Alex Leung",
-  url: toCanonical(ABOUT_PATH),
-  image: toAbsoluteUrl("/assets/about_portrait.webp"),
+  url: toCanonical(PROFILE_PATH),
+  image: toAbsoluteUrl("/assets/alex_vibing.webp"),
   sameAs: SOCIAL_PROFILES,
 };
 
@@ -123,6 +121,26 @@ function buildBasePageSchema<TPageType extends string>({
   };
 }
 
+function buildPostImageUrls(
+  coverImage: string | undefined
+): string[] | undefined {
+  if (!coverImage) {
+    return undefined;
+  }
+
+  return Array.from(
+    new Set(
+      [
+        coverImage,
+        getCoverVariantPath(coverImage, "hero"),
+        getCoverVariantPath(coverImage, "card"),
+      ]
+        .filter((imageUrl): imageUrl is string => Boolean(imageUrl))
+        .map(toAbsoluteUrl)
+    )
+  );
+}
+
 function buildBasePostSchema(input: PostSchemaInput): BasePostSchema {
   const canonicalPostUrl = toCanonical(`/blog/${input.slug}`);
 
@@ -133,7 +151,7 @@ function buildBasePostSchema(input: PostSchemaInput): BasePostSchema {
       headline: input.title,
       description: input.description,
       keywords: input.tags.length > 0 ? input.tags.join(", ") : undefined,
-      image: input.coverImage ? [toAbsoluteUrl(input.coverImage)] : undefined,
+      image: buildPostImageUrls(input.coverImage),
       datePublished: new Date(input.date).toISOString(),
       dateModified: new Date(input.updated ?? input.date).toISOString(),
       author: PERSON_REFERENCE,
@@ -156,7 +174,7 @@ export function buildProfilePageSchema(input: {
     ...buildBasePageSchema({ ...input, pageType: "ProfilePage" }),
     mainEntity: {
       ...PERSON_REFERENCE,
-      description: input.description,
+      description: PERSON_DESCRIPTION,
     },
   };
 }
@@ -180,13 +198,7 @@ export function buildWebPageSchema(input: {
   path: string;
   title: string;
 }): WithContext<WebPage> {
-  return {
-    ...buildBasePageSchema({ ...input, pageType: "WebPage" }),
-    mainEntity: {
-      "@type": "Person",
-      "@id": toAbsoluteUrl(PERSON_ID),
-    },
-  };
+  return buildBasePageSchema({ ...input, pageType: "WebPage" });
 }
 
 export function buildCollectionPageSchema(input: {
@@ -196,28 +208,6 @@ export function buildCollectionPageSchema(input: {
 }): WithContext<CollectionPage> {
   return {
     ...buildBasePageSchema({ ...input, pageType: "CollectionPage" }),
-  };
-}
-
-export function buildHomePageSchema(input: {
-  description: string;
-  path: string;
-  title: string;
-}): WithContext<WebPage> {
-  return {
-    ...buildBasePageSchema({ ...input, pageType: "WebPage" }),
-    about: {
-      "@id": toAbsoluteUrl(PERSON_ID),
-    },
-    mainEntity: {
-      "@type": "Person",
-      "@id": toAbsoluteUrl(PERSON_ID),
-    },
-    primaryImageOfPage: {
-      "@type": "ImageObject",
-      url: toAbsoluteUrl("/assets/alex_vibing.webp"),
-      caption: "Alex Leung",
-    },
   };
 }
 
@@ -231,7 +221,7 @@ export function buildBlogCollectionPageSchema(input: {
     mainEntity: {
       "@type": "Blog",
       "@id": toAbsoluteUrl("/blog/#blog"),
-      name: "Alex Leung's Blog",
+      name: "Alex Leung's Writing",
       description: input.description,
       publisher: {
         "@id": toAbsoluteUrl(PERSON_ID),
@@ -271,7 +261,7 @@ export function buildBlogPostingSchema(
     isPartOf: {
       "@type": "Blog",
       "@id": toAbsoluteUrl("/blog/#blog"),
-      name: "Blog | Alex Leung",
+      name: "Writing | Alex Leung",
     },
   };
 }
@@ -289,20 +279,7 @@ export function buildArticleSchema(
   };
 }
 
-export function buildPersonSchema(input: {
-  description: string;
-}): WithContext<Person> {
-  const currentOccupation: Occupation = {
-    "@type": "Occupation",
-    name: "Software Engineer",
-    occupationLocation: {
-      "@type": "City",
-      name: "San Francisco, California, United States",
-    },
-    skills:
-      "Software engineering, systems design, AI-assisted software workflows, distributed systems, backend reliability, product engineering, and technical writing",
-  };
-
+export function buildPersonSchema(): WithContext<Person> {
   return {
     "@context": SCHEMA_CONTEXT,
     "@type": "Person",
@@ -319,6 +296,7 @@ export function buildPersonSchema(input: {
       "acl",
       "aclyxpse",
       "aclyx",
+      "aclyx-oai",
       "yattaro",
       "rootpanda",
     ],
@@ -330,29 +308,19 @@ export function buildPersonSchema(input: {
     image: [
       {
         "@type": "ImageObject",
-        url: toAbsoluteUrl("/assets/about_portrait.webp"),
-        caption: "Alex Leung",
+        url: toAbsoluteUrl("/assets/alex_vibing.webp"),
+        caption: "Alex Leung in an art studio",
       },
       {
         "@type": "ImageObject",
-        url: toAbsoluteUrl("/assets/about_portrait_mountain.webp"),
+        url: toAbsoluteUrl("/assets/alex_mountain.webp"),
         caption: "Alex Leung's portrait on a mountain",
       },
     ],
     jobTitle: "Software Engineer",
-    hasOccupation: currentOccupation,
-    worksFor: OPENAI_ORGANIZATION,
-    description: input.description,
-    disambiguatingDescription:
-      "San Francisco-based software engineer writing notes on software systems, AI tools, and small experiments.",
+    description: PERSON_DESCRIPTION,
     knowsLanguage: ["en-CA"],
     sameAs: SOCIAL_PROFILES,
-    address: {
-      "@type": "PostalAddress",
-      addressLocality: "San Francisco",
-      addressRegion: "California",
-      addressCountry: "United States",
-    },
     alumniOf: [
       {
         "@type": "CollegeOrUniversity",
@@ -367,11 +335,8 @@ export function buildPersonSchema(input: {
     ],
     knowsAbout: [
       "Software Engineering",
-      "AI-Assisted Software Development and Tools",
-      "AI-Assisted Software Workflows",
+      "AI Tools",
       "Distributed Systems",
-      "Backend Architecture and Reliability",
-      "Full-Stack Product Engineering",
       "Systems Design",
       "Embedded Systems",
       "Electrical Engineering",
@@ -439,24 +404,16 @@ export function buildWebsiteSchema(input: {
     },
     hasPart: [
       {
-        "@type": "WebPage",
-        "@id": toCanonical("/about"),
-      },
-      {
         "@type": "CollectionPage",
         "@id": toCanonical("/blog"),
       },
       {
-        "@type": "ContactPage",
-        "@id": toCanonical("/contact"),
-      },
-      {
-        "@type": "CollectionPage",
-        "@id": toCanonical("/experimental"),
-      },
-      {
         "@type": "WebPage",
         "@id": toCanonical("/now"),
+      },
+      {
+        "@type": "ContactPage",
+        "@id": toCanonical("/contact"),
       },
     ],
     inLanguage: "en-CA",
@@ -478,7 +435,7 @@ export function buildSiteNavigationSchema(): WithContext<SiteNavigationElement> 
       "@type": SITE_NAVIGATION_ELEMENT_TYPE,
       "@id": toAbsoluteUrl(`/#site-navigation-${item.id}`),
       name: item.label,
-      url: toCanonical(item.canonicalPath),
+      url: toAbsoluteUrl(item.href),
     })),
     inLanguage: "en-CA",
   };

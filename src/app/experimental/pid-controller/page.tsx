@@ -7,39 +7,45 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  PID_CONTROLLER_DESCRIPTION,
+  PID_CONTROLLER_PAGE_TITLE,
+  PID_CONTROLLER_PATH,
+  PID_CONTROLLER_TITLE,
+} from "@/constants/pidController";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
-import { PidSimulatorWorkspace } from "./_components/PidSimulatorWorkspace";
-
-const title = "PID Controller Simulator | Alex Leung";
-const description =
-  "Fixed-step PID simulation for trying gains and seeing rise time, overshoot, oscillation, and settling behavior.";
-const path = "/experimental/pid-controller/";
+import { PidSimulator } from "./_components/PidSimulator";
 
 export const metadata: Metadata = buildPageMetadata({
-  title,
-  description,
-  path,
+  title: PID_CONTROLLER_PAGE_TITLE,
+  description: PID_CONTROLLER_DESCRIPTION,
+  path: PID_CONTROLLER_PATH,
 });
 
 export default function PidControllerPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("PID Controller", path)}
+        items={[
+          { name: "Home", item: "/" },
+          { name: PID_CONTROLLER_TITLE, item: PID_CONTROLLER_PATH },
+        ]}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
-          path,
-          title,
-          description,
+          path: PID_CONTROLLER_PATH,
+          title: PID_CONTROLLER_PAGE_TITLE,
+          description: PID_CONTROLLER_DESCRIPTION,
         })}
       />
-
-      <PageShell title="PID Controller" titleId="pid-controller">
-        <ResponsiveContainer element="section" className="space-y-6">
-          <PidSimulatorWorkspace />
+      <PageShell
+        title={PID_CONTROLLER_TITLE}
+        titleId="pid-controller"
+        description="Choose a plant, tune the gains, and watch it respond."
+      >
+        <ResponsiveContainer>
+          <PidSimulator />
         </ResponsiveContainer>
       </PageShell>
     </>

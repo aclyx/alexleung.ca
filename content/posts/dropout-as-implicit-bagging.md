@@ -1,29 +1,28 @@
 ---
-title: "Dropout as Implicit Bagging in Deep Learning"
+title: "Dropout as Shared-Parameter Bagging"
 date: "2026-03-07"
-excerpt: "A concrete way to understand dropout in deep learning: shared-parameter ensemble training that approximates bagging without training separate models."
+updated: "2026-10-12"
+excerpt: "A concrete way to understand dropout in deep learning: sampled subnetworks with shared weights, standing in for a much more expensive ensemble."
 coverImage: "/assets/blog/dropout-as-implicit-bagging/cover.webp"
+coverAlt: "Illustration of Alex drawing glowing neural network diagrams beside an open Deep Learning book"
 tags:
   - "Deep Learning"
-  - "ML Theory"
   - "Book Notes"
   - "Regularization"
+series: "Deep Learning Notes"
+seriesOrder: 3
 ---
 
-I worked through Chapter 7 of _Deep Learning_ last week, and the most useful change in my thinking was the bagging interpretation of dropout. I had mostly treated dropout as a practical anti-overfitting trick that adds noise and often helps. The chapter gave me a more concrete model: dropout works like a relatively inexpensive form of model averaging, close in spirit to bagging.
+When I worked through [Chapter 7 of _Deep Learning_](https://www.deeplearningbook.org/contents/regularization.html), the bagging interpretation of dropout was the most useful part. The shortcut explanation treats dropout as random noise that helps regularization. Chapter 7 gives a more precise model: dropout works like a relatively inexpensive form of model averaging, close in spirit to bagging.
 
-## Bagging is the useful mental model
+## Dropout approximates model averaging
 
-Bagging is powerful because it reduces variance by averaging predictions from many models trained on perturbed data. The trade-off is straightforward: training and serving many separate models is expensive. Chapter 7 helped me see why dropout can help: each minibatch update samples a different thinned network via a dropout mask, and all of those subnetworks share parameters. During inference, scaling activations gives an efficient approximation to averaging over that family.
+Bagging reduces variance by averaging predictions from models trained on resampled data. Training and serving separate networks is expensive. Dropout instead samples thinned networks that share parameters, then uses the full network to approximate their combined predictions. These are not independently trained models, and the approximation is not generally an exact average.
 
-That makes dropout easier to explain. It is not just random noise for regularization. It is a cheap way to get some of the benefits of averaging over many related models without training each one separately.
+The [original dropout paper](https://www.jmlr.org/papers/v15/srivastava14a.html) scales weights at inference. Inverted dropout, used by [PyTorch](https://docs.pytorch.org/docs/stable/generated/torch.nn.Dropout), scales retained activations during training instead, so no dropout scaling is needed at inference.
 
-## Capacity and co-adaptation
+## Changing masks discourages co-adaptation
 
-The bagging interpretation also makes another part of dropout easier to think about: the apparent paradox that it can increase effective model capacity while still regularizing. If each mask defines a different subnetwork, the system explores a very large family of predictors. In that sense, capacity expands. At the same time, any one unit cannot rely on a specific partner always being present, so representations are pushed to be useful across many subnet configurations.
+The bagging interpretation also makes another part of dropout easier to think about: the apparent paradox that it can widen the set of subnetworks seen during training while still regularizing. Each binary mask defines a different thinned network, but those networks share weights. At the same time, any one unit cannot rely on a specific partner always being present, so representations are pushed to be useful across many subnet configurations.
 
-That pressure reduces fragile co-adaptation. Features that only work in one narrow pathway get penalized indirectly, while more robust features survive across many sampled masks. The result is a model that is both expressive and less brittle. I like this framing because it explains how dropout can support rich function classes without simply memorizing training data.
-
-## What changed for me
-
-I now think about dropout less as "noise" and more as shared-parameter ensemble training. That framing gives me a cleaner explanation for why it can regularize effectively without feeling mysterious. More broadly, it was a good reminder that some of the most useful ideas in deep learning are simple at the rule level but grounded in a more specific training setup than the shortcut explanation suggests.
+That pressure reduces fragile co-adaptation. Features that only work in one narrow pathway get penalized indirectly, while more robust features survive across many sampled masks. I like this framing because it explains dropout through the training setup itself, not just through the shortcut phrase "add noise."

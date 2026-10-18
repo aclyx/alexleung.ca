@@ -3,26 +3,24 @@ import { buildPageMetadata } from "@/lib/seo/metadata";
 describe("buildPageMetadata", () => {
   it("builds canonical, Open Graph, and Twitter metadata with defaults", () => {
     const metadata = buildPageMetadata({
-      title: "About Me | Alex Leung",
-      description: "Learn more about Alex Leung.",
-      keywords: ["software engineer", "AI systems"],
-      path: "/about",
+      title: "Now | Alex Leung",
+      description: "Current notes from Alex Leung.",
+      path: "/now",
     });
 
     const openGraph = metadata.openGraph;
     const twitter = metadata.twitter;
 
-    expect(metadata.alternates?.canonical).toBe("https://alexleung.ca/about/");
+    expect(metadata.alternates?.canonical).toBe("https://alexleung.ca/now/");
     expect(metadata.alternates?.types).toEqual({
       "application/rss+xml": [
         {
           url: "https://alexleung.ca/feed.xml",
-          title: "Alex Leung Blog RSS Feed",
+          title: "Alex Leung's Writing RSS Feed",
         },
       ],
     });
-    expect(metadata.keywords).toEqual(["software engineer", "AI systems"]);
-    expect(openGraph?.url).toBe("https://alexleung.ca/about/");
+    expect(openGraph?.url).toBe("https://alexleung.ca/now/");
 
     expect(openGraph).toMatchObject({ type: "website" });
 

@@ -47,6 +47,28 @@ describe("FollowItSubscribeForm", () => {
     ).toBeInTheDocument();
   });
 
+  it("supports a nested section heading level", () => {
+    render(<FollowItSubscribeForm headingLevel="h3" />);
+
+    expect(
+      screen.getByRole("heading", {
+        level: 3,
+        name: /get new posts by email/i,
+      })
+    ).toBeInTheDocument();
+  });
+
+  it("uses shared action and field styles", () => {
+    render(<FollowItSubscribeForm />);
+
+    expect(screen.getByRole("button", { name: /subscribe/i })).toHaveClass(
+      "bg-accent-primary"
+    );
+    expect(screen.getByPlaceholderText(/enter your email/i)).toHaveClass(
+      "border-control-border"
+    );
+  });
+
   it("shows submitting affordance after submit", () => {
     const { container } = render(<FollowItSubscribeForm />);
     const emailInput = screen.getByPlaceholderText(/enter your email/i);

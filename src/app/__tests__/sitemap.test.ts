@@ -1,7 +1,8 @@
 import sitemap from "@/app/sitemap";
+import { getAllPosts } from "@/lib/blogApi";
 
-jest.mock("@/app/now/page", () => ({
-  NOW_PAGE_LAST_UPDATED_ISO: "2026-01-15",
+jest.mock("@/constants/now", () => ({
+  NOW_PAGE_LAST_UPDATED_ISO: "2026-10-18",
 }));
 
 jest.mock("@/lib/blogApi", () => ({
@@ -15,23 +16,31 @@ jest.mock("@/lib/blogApi", () => ({
     {
       slug: "second-post",
       date: "2026-01-25T00:00:00.000Z",
-      updated: "2026-02-05T00:00:00.000Z",
+      updated: "2026-09-05T00:00:00.000Z",
       tags: ["Deep Learning"],
     },
   ]),
 }));
 
 describe("sitemap", () => {
-  it("emits canonical trailing-slash URLs for top-level, experiment, and indexable tag pages", () => {
+  it("emits canonical trailing-slash URLs for primary and indexable tag pages", () => {
     const entries = sitemap();
     expect(entries).toEqual(
       expect.arrayContaining([
         expect.objectContaining({ url: "https://alexleung.ca/" }),
-        expect.objectContaining({ url: "https://alexleung.ca/about/" }),
         expect.objectContaining({ url: "https://alexleung.ca/now/" }),
         expect.objectContaining({ url: "https://alexleung.ca/blog/" }),
-        expect.objectContaining({ url: "https://alexleung.ca/experimental/" }),
         expect.objectContaining({ url: "https://alexleung.ca/contact/" }),
+        expect.objectContaining({
+          url: "https://alexleung.ca/experimental/mandelbrot/",
+          lastModified: new Date("2026-08-29"),
+          priority: 0.6,
+        }),
+        expect.objectContaining({
+          url: "https://alexleung.ca/experimental/pid-controller/",
+          lastModified: new Date("2026-10-17"),
+          priority: 0.5,
+        }),
         expect.objectContaining({
           url: "https://alexleung.ca/blog/tags/deep-learning/",
         }),
@@ -41,17 +50,24 @@ describe("sitemap", () => {
     const blogPostEntry = entries.find(
       (entry) => entry.url === "https://alexleung.ca/blog/my-post/"
     );
-    const pidControllerEntry = entries.find(
-      (entry) =>
-        entry.url === "https://alexleung.ca/experimental/pid-controller/"
-    );
     const tagEntry = entries.find(
       (entry) => entry.url === "https://alexleung.ca/blog/tags/deep-learning/"
     );
 
     expect(blogPostEntry).toBeDefined();
-    expect(pidControllerEntry).toBeDefined();
     expect(tagEntry).toBeDefined();
+    expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/")
+        ?.lastModified
+    ).toEqual(new Date("2026-10-18"));
+    expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/blog/")
+        ?.lastModified
+    ).toEqual(new Date("2026-09-05"));
+    expect(
+      entries.find((entry) => entry.url === "https://alexleung.ca/contact/")
+        ?.lastModified
+    ).toEqual(new Date("2026-08-29"));
     expect(
       entries.some(
         (entry) => entry.url === "https://alexleung.ca/blog/tags/ai/"
@@ -59,26 +75,48 @@ describe("sitemap", () => {
     ).toBe(false);
   });
 
-  it("includes all crawlable experimental tools", () => {
+  it("omits retired routes while indexing active experiment pages", () => {
     const entries = sitemap();
-    expect(
-      entries.some((entry) => entry.url.includes("/experimental/event-loop/"))
-    ).toBe(true);
-    expect(
-      entries.some((entry) =>
-        entry.url.includes("/experimental/learning-dynamics/")
-      )
-    ).toBe(true);
+    const urls = entries.map((entry) => entry.url);
+
+    expect(urls.includes("https://alexleung.ca/about/")).toBe(false);
+    expect(urls).toContain("https://alexleung.ca/experimental/mandelbrot/");
+    expect(urls).toContain("https://alexleung.ca/experimental/pid-controller/");
+    expect(urls).not.toContain("https://alexleung.ca/experimental/");
+    expect(urls).toContain("https://alexleung.ca/experimental/load-flow/");
   });
 
-  it("uses the freshest post update as the homepage lastModified value", () => {
+  it("updates the homepage and Now lastModified values when Now is newer than the posts", () => {
     const entries = sitemap();
     const homeEntry = entries.find(
       (entry) => entry.url === "https://alexleung.ca/"
     );
+    const nowEntry = entries.find(
+      (entry) => entry.url === "https://alexleung.ca/now/"
+    );
+
+    expect(homeEntry?.lastModified).toEqual(new Date("2026-10-18"));
+    expect(nowEntry?.lastModified).toEqual(homeEntry?.lastModified);
+  });
+
+  it("uses a post update newer than Now for the homepage lastModified value", () => {
+    jest.mocked(getAllPosts).mockReturnValueOnce([
+      {
+        slug: "newer-post",
+        title: "Newer post",
+        date: "2026-10-20T00:00:00.000Z",
+        tags: [],
+        draft: false,
+        unlisted: false,
+        content: "",
+      },
+    ]);
+    const homeEntry = sitemap().find(
+      (entry) => entry.url === "https://alexleung.ca/"
+    );
 
     expect(homeEntry?.lastModified).toEqual(
-      new Date("2026-02-05T00:00:00.000Z")
+      new Date("2026-10-20T00:00:00.000Z")
     );
   });
 });

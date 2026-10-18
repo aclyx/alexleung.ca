@@ -1,42 +1,40 @@
 ---
-title: "Relearning Through Small Interactive Tools"
+title: "Load Flow and Mandelbrot in the Browser"
 date: "2026-04-10"
-excerpt: "Using a coding agent to build small browser tools turned out to be a good way to revisit concepts I had not touched in a while."
-coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.png"
+updated: "2026-10-17"
+excerpt: "A browser-based load-flow solver and Mandelbrot explorer let me revisit power-system analysis, numerical precision, and the limits of small client-side tools."
+coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.webp"
+coverAlt: "Illustration of Alex using load-flow and Mandelbrot tools across three screens"
 tags:
   - "AI"
   - "Learning"
   - "Reflection"
 ---
 
-I started building a small set of frontend-only interactive tools mostly out of curiosity. I wanted to see how coding agents would handle more involved static web applications without server-side components.
-
-So far, that set includes a [load flow tool](/experimental/load-flow/), an [event loop visualizer](/experimental/event-loop/), a [learning dynamics lab](/experimental/learning-dynamics/), and a [Mandelbrot explorer](/experimental/mandelbrot/).
-
-These were useful test cases because they are small enough to live entirely on the client side in a Next.js app, but they still involve interaction, visualization, timing, feedback, state, and sometimes numerical precision. The logic needs to live in the client. They also became a useful way to revisit concepts I had not touched closely in a while.
+I built two frontend-only tools to revisit technical problems I had studied before: a load-flow solver and a [Mandelbrot explorer](/experimental/mandelbrot/). Both ran entirely in the browser, but they put different pressure on it. Load Flow solved nonlinear equations over a small electrical network. The Mandelbrot explorer performed many per-pixel calculations while keeping viewport coordinates at higher precision than ordinary JavaScript numbers allow. A coding agent helped me get started and scaffold both interfaces; I used the running tools to check the models and find their limits.
 
 ## Load flow in the browser
 
-Earlier in my career, I was more drawn to electrical power engineering than to software. I was especially fascinated by power system analysis tools like PSS/E. The core problem itself was interesting: solve for voltages, phase angles, and power flows in a nonlinear system. Real models could also get very large, up to millions of nodes, so I carried the impression that the solvers themselves were heavy, specialized systems.
+Earlier in my career, I was more drawn to electrical power engineering than to software. I was especially fascinated by power-system analysis tools like PSS/E. The core problem was interesting: solve for voltages, phase angles, and power flows in a nonlinear system. The real utility models I had seen were much larger than the IEEE reference cases I used, so I carried the impression that the solvers themselves were heavy, specialized systems.
 
-That was part of what made building [Load Flow](/experimental/load-flow/) interesting. I liked the idea of implementing standard IEEE reference cases directly in the browser and seeing how far I could get in a browser-based version rather than a dedicated desktop application. Instead of treating load flow as something that only lived inside heavyweight desktop tooling, I could look at the network, change inputs, run the solver, and inspect the outputs in one place.
+The browser tool used a Newton–Raphson solver with [MATPOWER-adapted 9-, 14-, 30-, 57-, and 118-bus cases](https://github.com/aclyx/alexleung.ca/blob/1650d234d6fcd4ecc6b4f0b06c245d1a8eac3349/src/features/load-flow/solver/ieeeReferenceScenarios.ts). I put the network, editable inputs, solver, and results in one place. I could change a bus input, run the calculation, and inspect the resulting voltages and branch flows without moving between a model and a separate output view.
 
-It turns out the IEEE reference cases are relatively small compared to real models I have seen in the past with PSS/E, so they converge pretty quickly. It is still unclear how a bigger model would do in the browser.
+The reference cases converged quickly in my use, but they were small compared with the real models I had seen in PSS/E. I did not establish how a larger model would perform in the browser.
 
-Another gap that remains is the single-line diagram visualization. It did not turn out as well as I had hoped. The drag-and-drop behavior, auto-layout, and line-overlap handling all had issues. I suspect those are problems I could improve with more detailed prompting and more time and effort, but they were a useful reminder that getting the solver working is not the same thing as making the interface feel good to use.
+Convergence meant that the largest active- or reactive-power mismatch fell below the solver's tolerance. That is different from validating the voltages and branch flows against an independent solution. The [archived tests](https://github.com/aclyx/alexleung.ca/blob/1650d234d6fcd4ecc6b4f0b06c245d1a8eac3349/src/features/load-flow/solver/__tests__/runLoadFlow.test.ts) assert convergence and voltage checks for two- and three-bus examples; the larger benchmark tests check that cases load and run, without comparing their outputs with MATPOWER results. Reactive generator limit enforcement was also explicitly unsupported.
+
+The harder part for me was the single-line diagram. Its drag-and-drop behavior, automatic layout, and handling of overlapping lines all had problems. Those issues kept the interface from feeling finished even when a calculation converged.
 
 ## Mandelbrot and precision
 
-The [Mandelbrot Explorer](/experimental/mandelbrot/) came from a different source of curiosity. I originally explored this in a master's degree course, ECE 8893 at Georgia Tech. In that version, we used CUDA with one thread per pixel and GNU multiple precision arithmetic to draw the Mandelbrot set. What still feels satisfying about it is that each time I zoom in, I see something completely new and different, with patterns that feel similar but still distinct. The visible edges of the set are where most of the interesting complexity emerges, so that is a good place to try zooming in.
+The Mandelbrot explorer came from a master's degree course, ECE 8893 at Georgia Tech. In that version, we used CUDA with one thread per pixel and the GNU Multiple Precision Arithmetic Library to draw the set. I still like zooming into its edges, where each level reveals patterns that are related but not identical.
 
-What I wanted to see on the web was whether I could still handle those same two constraints in a simpler browser implementation: the sheer number of per-pixel computations and the need for multi-precision math. The browser version gets part of the way there by keeping the viewport coordinates in arbitrary-precision decimals, rendering asynchronously, and leaning on lower resolutions to keep interaction usable. That was enough to make deep zooming possible in the browser, even if it is slower than the earlier CUDA-based version.
+The earlier browser version had to handle the same two constraints with a simpler implementation: many per-pixel computations and viewport coordinates that need more precision as the view gets narrower. It kept those coordinates in arbitrary-precision decimals, rendered asynchronously, and used lower resolutions to keep interaction usable. That was enough for deep zooming in the browser, although it was slower than the earlier CUDA version.
 
-The current implementation still has a practical precision ceiling: if I zoom too far in, the browser can freeze. I do not remember running into issues at deeper zoom levels in my earlier C++ version using the GNU Multiple Precision Arithmetic Library.
+To keep the workload bounded, I limited resolution at deep zooms and capped the iteration setting at 4,000. I do not remember running into the same limits in my earlier C++ version using the GNU Multiple Precision Arithmetic Library.
 
-## Relearning through small models
+## What the tools exposed
 
-These tools also turned out to be a good way to refresh concepts I am actively revisiting. The [Learning Dynamics Lab](/experimental/learning-dynamics/) is useful for that because it makes optimizer behavior visible instead of leaving it at the level of equations or static notes. The [Event Loop Visualizer](/experimental/event-loop/) fits the same pattern. Queuing `Promise.then(...)` beside `setTimeout(..., 0)` and stepping the runtime forward makes the ordering much easier to see: the microtask queue drains before the next task starts.
+Changing a bus input and seeing the voltage and branch-flow results made load flow easier to reason about. Zooming into the Mandelbrot set exposed precision and rendering limits directly. In both cases, the tool gave me something concrete to vary and inspect instead of leaving the model at the level of equations or notes.
 
-That is also where the coding agent has been most useful. It is good at helping me get started, scaffolding the UI, and accelerating implementation. It can also explain concepts reasonably well. But a tool still teaches me something different. A chatbot is turn-based and less effective for sustained exploration. A tool gives me something inspectable. If the behavior looks wrong, I can inspect the code directly instead of stopping at the explanation.
-
-For now, the pattern that has felt most useful to me is simpler: use the agent to help build a small tool, then learn by pushing on the model directly.
+Update: [Load Flow is available again](/experimental/load-flow/), with a redesigned single-line diagram. The Mandelbrot section describes an earlier version of the explorer.

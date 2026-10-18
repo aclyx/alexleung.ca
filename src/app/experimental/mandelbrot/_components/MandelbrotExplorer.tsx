@@ -2,6 +2,12 @@
 
 import { useEffect, useState } from "react";
 
+import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
+import {
+  DisclosureIndicator,
+  disclosureSummaryClassNames,
+} from "@/components/Disclosure";
+import { LinkText } from "@/components/LinkText";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Surface } from "@/components/Surface";
 import {
@@ -12,20 +18,15 @@ import { detectWebGpuAvailability } from "@/features/mandelbrot/gpu";
 import {
   createViewportHistory,
   pushViewport,
-  redoViewport,
   replaceViewport,
   undoViewport,
   ViewportHistory,
 } from "@/features/mandelbrot/history";
 import { PALETTE_OPTIONS } from "@/features/mandelbrot/palettes";
 import {
-  ColoringMode,
-  ComplexPoint,
-  DragMode,
   MandelbrotSettings,
   PixelSize,
   PreciseViewport,
-  RenderBackendPreference,
 } from "@/features/mandelbrot/types";
 import {
   parseSettingsFromQuery,
@@ -34,6 +35,7 @@ import {
 import {
   createDefaultViewport,
   magnificationFromViewport,
+  panViewport,
   resizeViewport,
   zoomViewportAtPoint,
 } from "@/features/mandelbrot/viewport";
@@ -48,63 +50,33 @@ const DEFAULT_CANVAS_SIZE: PixelSize = {
 
 const DEFAULT_GPU_SETTINGS: MandelbrotSettings = {
   maxIterations: 2000,
-  paletteId: "oceanic",
-  coloringMode: "smooth",
+  paletteId: "ember",
   resolutionScale: 1,
   renderBackendPreference: "auto",
 };
 
 const DEFAULT_CPU_SETTINGS: MandelbrotSettings = {
   maxIterations: 180,
-  paletteId: "oceanic",
-  coloringMode: "smooth",
+  paletteId: "ember",
   resolutionScale: 0.5,
   renderBackendPreference: "auto",
 };
 
-const QUALITY_OPTIONS: ReadonlyArray<{
-  value: number;
-  label: string;
-}> = [
-  { value: 0.5, label: "50%" },
-  { value: 0.75, label: "75%" },
-  { value: 1, label: "100%" },
-];
-
-const BACKEND_OPTIONS: ReadonlyArray<{
-  value: RenderBackendPreference;
-  label: string;
-}> = [
-  { value: "auto", label: "Auto" },
-  { value: "webgpu", label: "WebGPU" },
-  { value: "cpu", label: "CPU" },
-];
-const COLORING_MODE_OPTIONS: ReadonlyArray<{
-  value: ColoringMode;
-  label: string;
-}> = [
-  { value: "smooth", label: "Smooth escape" },
-  { value: "bands", label: "Banding" },
-];
-
-const sectionTitleClass = "text-heading-sm text-white";
-const metaValueClass = "break-all text-sm text-cyan-100";
-const toolbarButtonClass =
-  "rounded-md border border-white/15 px-3 py-2 text-sm text-white transition hover:border-cyan-300 hover:text-cyan-100 disabled:cursor-not-allowed disabled:opacity-40";
+const metaValueClass = "break-all text-sm text-ink";
+const settingsInputClass = fieldClassNames({ className: "mt-1" });
+const settingsSelectClass = fieldClassNames({
+  kind: "select",
+  className: "mt-1",
+});
+const moveButtonClass = actionClassNames({
+  variant: "secondary",
+  size: "sm",
+  className: "min-w-11",
+});
 const EXPERIMENT_ID = "mandelbrot_explorer";
-
-function isRenderBackendPreference(
-  value: string
-): value is RenderBackendPreference {
-  return BACKEND_OPTIONS.some((option) => option.value === value);
-}
 
 function isPaletteId(value: string): value is MandelbrotSettings["paletteId"] {
   return PALETTE_OPTIONS.some((option) => option.id === value);
-}
-
-function isColoringMode(value: string): value is ColoringMode {
-  return COLORING_MODE_OPTIONS.some((option) => option.value === value);
 }
 
 export function MandelbrotExplorer() {
@@ -114,50 +86,51 @@ export function MandelbrotExplorer() {
   const [previewViewport, setPreviewViewport] =
     useState<PreciseViewport | null>(null);
   const [canvasSize, setCanvasSize] = useState(DEFAULT_CANVAS_SIZE);
-  const [dragMode, setDragMode] = useState<DragMode>("pan");
-  const [hoverPoint, setHoverPoint] = useState<ComplexPoint | null>(null);
   const [settings, setSettings] = useState(DEFAULT_CPU_SETTINGS);
 
   const activeViewport = previewViewport ?? history.present;
   const defaultViewport = createDefaultViewport(canvasSize);
-  const magnification = magnificationFromViewport(activeViewport);
+  const magnificationLabel = formatMagnification(
+    magnificationFromViewport(activeViewport)
+  );
 
   useEffect(() => {
     let isMounted = true;
 
-    async function initializeExplorerState() {
-      const currentSearchParams = Object.fromEntries(
-        new URLSearchParams(window.location.search).entries()
-      );
-      const parsedViewport = parseViewportFromQuery(
-        currentSearchParams,
-        DEFAULT_CANVAS_SIZE
-      );
-      let defaultSettings = DEFAULT_CPU_SETTINGS;
+    const currentSearchParams = Object.fromEntries(
+      new URLSearchParams(window.location.search).entries()
+    );
+    const parsedViewport = parseViewportFromQuery(
+      currentSearchParams,
+      DEFAULT_CANVAS_SIZE
+    );
 
-      try {
-        const gpuAvailability = await detectWebGpuAvailability();
+    setSettings(
+      parseSettingsFromQuery(currentSearchParams, DEFAULT_CPU_SETTINGS)
+    );
 
-        defaultSettings = gpuAvailability.isAvailable
-          ? DEFAULT_GPU_SETTINGS
-          : DEFAULT_CPU_SETTINGS;
-      } catch {
-        defaultSettings = DEFAULT_CPU_SETTINGS;
-      }
-
-      if (!isMounted) {
-        return;
-      }
-
-      setSettings(parseSettingsFromQuery(currentSearchParams, defaultSettings));
-
-      if (parsedViewport) {
-        setHistory(createViewportHistory(parsedViewport));
-        setPreviewViewport(null);
-      }
+    if (parsedViewport) {
+      setHistory(createViewportHistory(parsedViewport));
     }
 
-    void initializeExplorerState();
+    void detectWebGpuAvailability()
+      .then((gpuAvailability) => {
+        if (!isMounted) {
+          return;
+        }
+
+        setSettings(
+          parseSettingsFromQuery(
+            currentSearchParams,
+            gpuAvailability.isAvailable
+              ? DEFAULT_GPU_SETTINGS
+              : DEFAULT_CPU_SETTINGS
+          )
+        );
+      })
+      .catch(() => {
+        // The CPU defaults are already active.
+      });
 
     return () => {
       isMounted = false;
@@ -171,9 +144,6 @@ export function MandelbrotExplorer() {
         resizeViewport(currentHistory.present, canvasSize)
       ),
       past: currentHistory.past.map((viewport) =>
-        resizeViewport(viewport, canvasSize)
-      ),
-      future: currentHistory.future.map((viewport) =>
         resizeViewport(viewport, canvasSize)
       ),
     }));
@@ -208,22 +178,58 @@ export function MandelbrotExplorer() {
     trackExperimentInteraction(EXPERIMENT_ID, action, params);
   }
 
-  function handleZoom(multiplier: number, source: string) {
+  function handleZoom(multiplier: number) {
     trackMandelbrotInteraction(multiplier < 1 ? "zoom_in" : "zoom_out", {
-      source,
+      source: "canvas_toolbar",
     });
     zoomAroundCenter(multiplier);
   }
 
-  function handleReset(source: string) {
-    trackMandelbrotInteraction("reset_view", { source });
+  function handleReset() {
+    trackMandelbrotInteraction("reset_view", { source: "canvas_toolbar" });
     commitViewport(defaultViewport);
   }
 
-  function handleIterationsChange(value: string) {
-    const nextIterations = Number.parseInt(value, 10);
+  function handleBack() {
+    trackMandelbrotInteraction("back_view", { source: "canvas_toolbar" });
+    setPreviewViewport(null);
+    setHistory((currentHistory) => undoViewport(currentHistory));
+  }
 
-    if (!Number.isFinite(nextIterations)) {
+  function handlePaletteChange(paletteId: MandelbrotSettings["paletteId"]) {
+    if (!isPaletteId(paletteId)) {
+      return;
+    }
+
+    trackMandelbrotInteraction("change_palette", {
+      palette_id: paletteId,
+    });
+    setSettings((currentSettings) => ({
+      ...currentSettings,
+      paletteId,
+    }));
+  }
+
+  function handlePan(direction: "left" | "right" | "up" | "down") {
+    const step = 0.12;
+    const delta = {
+      left: { x: canvasSize.width * step, y: 0 },
+      right: { x: -canvasSize.width * step, y: 0 },
+      up: { x: 0, y: canvasSize.height * step },
+      down: { x: 0, y: -canvasSize.height * step },
+    }[direction];
+
+    trackMandelbrotInteraction("pan_view", {
+      direction,
+      source: "pan_controls",
+    });
+    commitViewport(panViewport(activeViewport, canvasSize, delta));
+  }
+
+  function handleIterationsChange(value: string) {
+    const nextIterations = Number(value);
+
+    if (!Number.isSafeInteger(nextIterations)) {
       return;
     }
 
@@ -233,380 +239,179 @@ export function MandelbrotExplorer() {
     }));
   }
 
-  function handleResolutionScaleChange(value: string) {
-    const nextScale = Number.parseFloat(value);
-
-    if (!Number.isFinite(nextScale)) {
-      return;
-    }
-
-    setSettings((currentSettings) => ({
-      ...currentSettings,
-      resolutionScale: nextScale,
-    }));
-  }
-
   return (
-    <ResponsiveContainer
-      element="section"
-      variant="wide"
-      className="space-y-6 px-5 py-8"
-    >
-      <div className="mx-auto max-w-4xl" data-testid="experiment-intro">
-        <p className="text-body text-gray-300 md:text-center">
-          This explorer keeps viewport coordinates in arbitrary-precision
-          decimals, then renders the escape-time field asynchronously so we can
-          zoom past ordinary floating-point precision without losing the exact
-          center or scale state.
+    <ResponsiveContainer element="section" className="space-y-6">
+      <div className="max-w-3xl" data-testid="experiment-intro">
+        <p className="text-body-lg leading-relaxed text-muted">
+          Explore the Mandelbrot set in your browser. It keeps precise
+          coordinates at every zoom level.{" "}
+          <LinkText href="/blog/small-interactive-tools-with-a-coding-agent/">
+            A short build note
+          </LinkText>
+          {" explains how it works."}
         </p>
       </div>
 
-      <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
-        <div className="space-y-4">
-          <MandelbrotCanvas
-            viewport={activeViewport}
-            settings={settings}
-            dragMode={dragMode}
-            onCanvasSizeChange={setCanvasSize}
-            onPreviewViewport={setPreviewViewport}
-            onCommitViewport={commitViewport}
-            onHoverPointChange={setHoverPoint}
-            onZoomIn={() => handleZoom(0.5, "canvas")}
-            onZoomOut={() => handleZoom(2, "canvas")}
-            onReset={() => handleReset("canvas")}
-          />
+      <div className="space-y-4">
+        <MandelbrotCanvas
+          viewport={activeViewport}
+          settings={settings}
+          canGoBack={history.past.length > 0}
+          magnificationLabel={magnificationLabel}
+          onCanvasSizeChange={setCanvasSize}
+          onPreviewViewport={setPreviewViewport}
+          onCommitViewport={commitViewport}
+          onBack={handleBack}
+          onZoomIn={() => handleZoom(0.5)}
+          onZoomOut={() => handleZoom(2)}
+          onReset={handleReset}
+        />
 
-          <Surface padding="md" className="grid gap-4 md:grid-cols-2">
-            <div>
-              <h2 className={sectionTitleClass}>Navigation</h2>
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className={`${toolbarButtonClass} ${
-                    dragMode === "pan"
-                      ? "border-cyan-300 bg-cyan-400/10 text-cyan-100"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    trackMandelbrotInteraction("change_drag_mode", {
-                      drag_mode: "pan",
-                    });
-                    setDragMode("pan");
+        <div className="grid gap-3 md:grid-cols-2 md:items-start">
+          <Surface
+            element="details"
+            padding="none"
+            className="group overflow-hidden"
+          >
+            <summary className={disclosureSummaryClassNames()}>
+              <span>Render settings</span>
+              <DisclosureIndicator />
+            </summary>
+            <div className="grid gap-3 border-t border-line p-4">
+              <label className="text-sm font-medium text-ink">
+                Palette
+                <select
+                  className={settingsSelectClass}
+                  aria-label="Color palette"
+                  value={settings.paletteId}
+                  onChange={(event) => {
+                    const value = event.target.value;
+
+                    if (!isPaletteId(value)) {
+                      return;
+                    }
+
+                    handlePaletteChange(value);
                   }}
                 >
-                  Pan mode
-                </button>
-                <button
-                  type="button"
-                  className={`${toolbarButtonClass} ${
-                    dragMode === "box-zoom"
-                      ? "border-cyan-300 bg-cyan-400/10 text-cyan-100"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    trackMandelbrotInteraction("change_drag_mode", {
-                      drag_mode: "box_zoom",
-                    });
-                    setDragMode("box-zoom");
-                  }}
-                >
-                  Box zoom mode
-                </button>
-              </div>
+                  {PALETTE_OPTIONS.map((option) => (
+                    <option key={option.id} value={option.id}>
+                      {option.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
 
-              <div className="mt-3 flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  className={toolbarButtonClass}
-                  onClick={() => handleZoom(0.5, "toolbar")}
-                >
-                  Zoom in
-                </button>
-                <button
-                  type="button"
-                  className={toolbarButtonClass}
-                  onClick={() => handleZoom(2, "toolbar")}
-                >
-                  Zoom out
-                </button>
-                <button
-                  type="button"
-                  className={toolbarButtonClass}
-                  onClick={() => handleReset("toolbar")}
-                >
-                  Reset view
-                </button>
-                <button
-                  type="button"
-                  className={toolbarButtonClass}
-                  onClick={() => {
-                    trackMandelbrotInteraction("undo_view");
-                    setPreviewViewport(null);
-                    setHistory((currentHistory) =>
-                      undoViewport(currentHistory)
-                    );
-                  }}
-                  disabled={history.past.length === 0}
-                >
-                  Undo
-                </button>
-                <button
-                  type="button"
-                  className={toolbarButtonClass}
-                  onClick={() => {
-                    trackMandelbrotInteraction("redo_view");
-                    setPreviewViewport(null);
-                    setHistory((currentHistory) =>
-                      redoViewport(currentHistory)
-                    );
-                  }}
-                  disabled={history.future.length === 0}
-                >
-                  Redo
-                </button>
-              </div>
-            </div>
-
-            <div>
-              <h2 className={sectionTitleClass}>Render settings</h2>
-              <div className="mt-3 grid gap-3">
-                <label className="text-sm text-gray-200">
-                  <span>Render backend</span>
-                  <select
-                    value={settings.renderBackendPreference}
-                    onChange={(event) => {
-                      const renderBackendPreference = event.target.value;
-
-                      if (!isRenderBackendPreference(renderBackendPreference)) {
-                        return;
-                      }
-
-                      trackMandelbrotInteraction("change_render_backend", {
-                        render_backend: renderBackendPreference,
-                      });
-                      setSettings((currentSettings) => ({
-                        ...currentSettings,
-                        renderBackendPreference,
-                      }));
-                    }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
-                  >
-                    {BACKEND_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="text-sm text-gray-200">
-                  <span>Max iterations</span>
+              <div>
+                <label className="text-sm font-medium text-ink">
+                  Maximum iterations
                   <input
                     type="number"
                     min={25}
                     max={4000}
                     step={25}
+                    className={settingsInputClass}
                     value={settings.maxIterations}
-                    onChange={(event) => {
-                      trackMandelbrotInteraction("change_max_iterations");
-                      handleIterationsChange(event.target.value);
-                    }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
+                    aria-describedby="mandelbrot-iteration-guidance"
+                    onChange={(event) =>
+                      handleIterationsChange(event.target.value)
+                    }
                   />
                 </label>
-                <label className="text-sm text-gray-200">
-                  <span>Color palette</span>
-                  <select
-                    value={settings.paletteId}
-                    onChange={(event) => {
-                      const paletteId = event.target.value;
-
-                      if (!isPaletteId(paletteId)) {
-                        return;
-                      }
-
-                      trackMandelbrotInteraction("change_palette", {
-                        palette_id: paletteId,
-                      });
-                      setSettings((currentSettings) => ({
-                        ...currentSettings,
-                        paletteId,
-                      }));
-                    }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
-                  >
-                    {PALETTE_OPTIONS.map((option) => (
-                      <option key={option.id} value={option.id}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="text-sm text-gray-200">
-                  <span>Coloring mode</span>
-                  <select
-                    value={settings.coloringMode}
-                    onChange={(event) => {
-                      const coloringMode = event.target.value;
-
-                      if (!isColoringMode(coloringMode)) {
-                        return;
-                      }
-
-                      trackMandelbrotInteraction("change_coloring_mode", {
-                        coloring_mode: coloringMode,
-                      });
-                      setSettings((currentSettings) => ({
-                        ...currentSettings,
-                        coloringMode,
-                      }));
-                    }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
-                  >
-                    {COLORING_MODE_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
-                <label className="text-sm text-gray-200">
-                  <span>Render quality</span>
-                  <select
-                    value={settings.resolutionScale}
-                    onChange={(event) => {
-                      trackMandelbrotInteraction("change_render_quality");
-                      handleResolutionScaleChange(event.target.value);
-                    }}
-                    className="mt-1 w-full rounded-md border border-white/15 bg-slate-950 px-3 py-2 text-white"
-                  >
-                    {QUALITY_OPTIONS.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </select>
-                </label>
+                <p
+                  id="mandelbrot-iteration-guidance"
+                  className="mt-2 text-xs font-normal text-muted"
+                >
+                  CPU rendering may use fewer iterations to keep navigation
+                  responsive.
+                </p>
               </div>
             </div>
           </Surface>
-        </div>
 
-        <div className="space-y-4">
-          <Surface padding="md">
-            <h2 className={sectionTitleClass}>View state</h2>
-            <dl className="mt-4 space-y-4">
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  Center X
-                </dt>
-                <dd
-                  className={metaValueClass}
-                  data-testid="mandelbrot-center-x"
-                  title={activeViewport.centerX.toString()}
-                >
-                  {formatPreciseDecimal(activeViewport.centerX, 30)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  Center Y
-                </dt>
-                <dd
-                  className={metaValueClass}
-                  data-testid="mandelbrot-center-y"
-                  title={activeViewport.centerY.toString()}
-                >
-                  {formatPreciseDecimal(activeViewport.centerY, 30)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  View width
-                </dt>
-                <dd
-                  className={metaValueClass}
-                  data-testid="mandelbrot-width"
-                  title={activeViewport.width.toString()}
-                >
-                  {formatPreciseDecimal(activeViewport.width, 30)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  View height
-                </dt>
-                <dd
-                  className={metaValueClass}
-                  title={activeViewport.height.toString()}
-                >
-                  {formatPreciseDecimal(activeViewport.height, 30)}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                  Magnification
-                </dt>
-                <dd
-                  className={metaValueClass}
-                  data-testid="mandelbrot-magnification"
-                >
-                  {formatMagnification(magnification)}
-                </dd>
-              </div>
-            </dl>
-          </Surface>
+          <Surface
+            element="details"
+            padding="none"
+            className="group overflow-hidden"
+          >
+            <summary className={disclosureSummaryClassNames()}>
+              <span>Coordinates</span>
+              <DisclosureIndicator />
+            </summary>
+            <div className="grid gap-4 border-t border-line p-4">
+              <fieldset>
+                <legend className="text-xs font-semibold uppercase tracking-wide text-muted">
+                  Move view
+                </legend>
+                <div className="mt-2 grid w-fit grid-cols-3 gap-2">
+                  <button
+                    type="button"
+                    aria-label="Pan up"
+                    className={`${moveButtonClass} col-start-2`}
+                    onClick={() => handlePan("up")}
+                  >
+                    ↑
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Pan left"
+                    className={`${moveButtonClass} row-start-2`}
+                    onClick={() => handlePan("left")}
+                  >
+                    ←
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Pan right"
+                    className={`${moveButtonClass} col-start-3 row-start-2`}
+                    onClick={() => handlePan("right")}
+                  >
+                    →
+                  </button>
+                  <button
+                    type="button"
+                    aria-label="Pan down"
+                    className={`${moveButtonClass} col-start-2 row-start-3`}
+                    onClick={() => handlePan("down")}
+                  >
+                    ↓
+                  </button>
+                </div>
+              </fieldset>
 
-          <Surface padding="md">
-            <h2 className={sectionTitleClass}>Hover inspector</h2>
-            {hoverPoint ? (
-              <dl className="mt-4 space-y-4">
+              <dl className="grid gap-3 border-t border-line pt-4">
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    Cursor real
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+                    Center X
                   </dt>
                   <dd
+                    data-testid="viewport-center-x"
                     className={metaValueClass}
-                    title={hoverPoint.real.toString()}
                   >
-                    {formatPreciseDecimal(hoverPoint.real, 26)}
+                    {formatPreciseDecimal(activeViewport.centerX, 18)}
                   </dd>
                 </div>
                 <div>
-                  <dt className="text-xs font-semibold uppercase tracking-wide text-gray-400">
-                    Cursor imaginary
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+                    Center Y
                   </dt>
                   <dd
+                    data-testid="viewport-center-y"
                     className={metaValueClass}
-                    title={hoverPoint.imaginary.toString()}
                   >
-                    {formatPreciseDecimal(hoverPoint.imaginary, 26)}
+                    {formatPreciseDecimal(activeViewport.centerY, 18)}
+                  </dd>
+                </div>
+                <div>
+                  <dt className="text-xs font-semibold uppercase tracking-wide text-muted">
+                    View width
+                  </dt>
+                  <dd data-testid="viewport-width" className={metaValueClass}>
+                    {formatPreciseDecimal(activeViewport.width, 18)}
                   </dd>
                 </div>
               </dl>
-            ) : (
-              <p className="mt-4 text-sm text-gray-300">
-                Move over the plot to inspect the current coordinate under the
-                cursor.
-              </p>
-            )}
-          </Surface>
-
-          <Surface padding="md">
-            <h2 className={sectionTitleClass}>Implementation notes</h2>
-            <ul className="mt-4 space-y-3 text-sm text-gray-300">
-              <li>
-                Viewport math uses <code>decimal.js</code> so center and scale
-                updates do not rely on standard floating-point arithmetic.
-              </li>
-              <li>
-                Rendering runs asynchronously in row chunks and cancels stale
-                frames whenever the view changes.
-              </li>
-              <li>
-                Query parameters can seed the initial center, width, backend,
-                palette, quality, and iteration budget.
-              </li>
-            </ul>
+            </div>
           </Surface>
         </div>
       </div>

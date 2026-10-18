@@ -53,18 +53,35 @@ describe("blogApi front matter validation", () => {
     expect(post?.title).toBe("Hello");
     expect(post?.tags).toEqual([]);
     expect(post?.draft).toBe(false);
+    expect(post?.unlisted).toBe(false);
   });
 
-  test("parses explicit tags and readingTimeMinutes", async () => {
+  test("parses explicit tags, cover alt text, and readingTimeMinutes", async () => {
     const tempDir = setupTempPosts({
-      tagged: `---\ntitle: "Tagged"\ndate: "2026-02-16"\ntags:\n  - "AI"\n  - "Systems"\nreadingTimeMinutes: 7\n---\nBody`,
+      tagged: `---\ntitle: "Tagged"\ndate: "2026-02-16"\ncoverAlt: "Descriptive cover image alt text"\ntags:\n  - "AI"\n  - "Systems"\nreadingTimeMinutes: 7\n---\nBody`,
     });
 
-    const { getPostBySlug } = await loadBlogApiAtCwd(tempDir);
+    const { getAllPosts, getPostBySlug } = await loadBlogApiAtCwd(tempDir);
     const post = getPostBySlug("tagged");
 
     expect(post?.tags).toEqual(["AI", "Systems"]);
+    expect(post?.coverAlt).toBe("Descriptive cover image alt text");
     expect(post?.readingTimeMinutes).toBe(7);
+    expect(getAllPosts(["coverAlt"])).toEqual([
+      { coverAlt: "Descriptive cover image alt text" },
+    ]);
+  });
+
+  test("parses optional cover alt text", async () => {
+    const tempDir = setupTempPosts({
+      "cover-alt": `---\ntitle: "Cover Alt"\ndate: "2026-02-16"\ncoverImage: "/assets/blog/cover.webp"\ncoverAlt: "A desk with a laptop and notebook."\n---\nBody`,
+    });
+
+    const { getPostBySlug } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getPostBySlug("cover-alt", ["coverAlt"])).toEqual({
+      coverAlt: "A desk with a laptop and notebook.",
+    });
   });
 
   test("throws when front matter contains invalid types", async () => {
@@ -145,6 +162,59 @@ describe("blogApi front matter validation", () => {
     expect(getPostBySlug("draft", ["slug"], { includeDrafts: true })).toEqual({
       slug: "draft",
     });
+  });
+
+  test("keeps unlisted posts public without publishing drafts or including them in discovery", async () => {
+    const tempDir = setupTempPosts({
+      listed: `---\ntitle: "Listed"\ndate: "2026-02-16"\n---\nBody`,
+      unlisted: `---\ntitle: "Unlisted"\ndate: "2026-02-17"\nunlisted: true\n---\nBody`,
+      draft: `---\ntitle: "Draft"\ndate: "2026-02-18"\ndraft: true\n---\nBody`,
+      "unlisted-draft": `---\ntitle: "Unlisted draft"\ndate: "2026-02-19"\ndraft: true\nunlisted: true\n---\nBody`,
+    });
+    const { getAllPosts, getPostBySlug } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getAllPosts(["slug"])).toEqual([{ slug: "listed" }]);
+    expect(getPostBySlug("unlisted", ["slug", "unlisted"])).toEqual({
+      slug: "unlisted",
+      unlisted: true,
+    });
+    expect(getAllPosts(["slug"], { includeUnlisted: true })).toEqual([
+      { slug: "unlisted" },
+      { slug: "listed" },
+    ]);
+    expect(
+      getAllPosts({ includeDrafts: true }).map((post) => post.slug)
+    ).toEqual(["draft", "listed"]);
+    expect(getPostBySlug("draft")).toBeNull();
+    expect(getPostBySlug("unlisted-draft")).toBeNull();
+    expect(
+      getAllPosts({ includeDrafts: true, includeUnlisted: true }).map(
+        (post) => post.slug
+      )
+    ).toEqual(["unlisted-draft", "draft", "unlisted", "listed"]);
+  });
+
+  test("omits unlisted posts from related posts and series navigation", async () => {
+    const tempDir = setupTempPosts({
+      first: `---\ntitle: "First"\ndate: "2026-02-16"\ntags: ["AI"]\nseries: "Notes"\nseriesOrder: 1\n---\nBody`,
+      unlisted: `---\ntitle: "Unlisted"\ndate: "2026-02-17"\ntags: ["AI"]\nseries: "Notes"\nseriesOrder: 2\nunlisted: true\n---\nBody`,
+      third: `---\ntitle: "Third"\ndate: "2026-02-18"\ntags: ["AI"]\nseries: "Notes"\nseriesOrder: 3\n---\nBody`,
+    });
+    const { getRelatedPosts, getSeriesNavigation, getSeriesSummaries } =
+      await loadBlogApiAtCwd(tempDir);
+
+    expect(getRelatedPosts("first").map((post) => post.slug)).toEqual([
+      "third",
+    ]);
+    expect(getSeriesNavigation("first")).toMatchObject({
+      currentPart: 1,
+      totalParts: 2,
+      nextPost: { slug: "third" },
+    });
+    expect(getSeriesNavigation("unlisted")).toBeNull();
+    expect(getSeriesSummaries()).toMatchObject([
+      { name: "Notes", count: 2, firstPost: { slug: "first" } },
+    ]);
   });
 
   test("supports options-only overload for getPostBySlug", async () => {
@@ -277,32 +347,75 @@ describe("getRelatedPosts", () => {
     const tempDir = setupTempPosts({
       target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags:\n  - "AI"\n  - "Systems"\nseries: "notes"\n---\nBody`,
       strong: `---\ntitle: "Strong"\ndate: "2026-02-15"\ntags:\n  - "AI"\n  - "Systems"\nseries: "notes"\n---\nBody`,
+      newer: `---\ntitle: "Newer"\ndate: "2026-02-15"\ntags:\n  - "AI"\n---\nBody`,
       medium: `---\ntitle: "Medium"\ndate: "2026-02-14"\ntags:\n  - "AI"\n---\nBody`,
-      weak: `---\ntitle: "Weak"\ndate: "2025-01-01"\ntags:\n  - "Other"\n---\nBody`,
+      older: `---\ntitle: "Older"\ndate: "2025-01-01"\ntags:\n  - "AI"\n---\nBody`,
     });
 
     const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
 
     expect(getRelatedPosts("target").map((post) => post.slug)).toEqual([
       "strong",
+      "newer",
       "medium",
-      "weak",
     ]);
+    expect(
+      getRelatedPosts("target", { limit: 2 }).map((post) => post.slug)
+    ).toEqual(["strong", "newer"]);
   });
 
-  test("falls back to newest posts when no candidate has a positive score", async () => {
+  test("does not use recent or older unrelated posts as a fallback", async () => {
     const tempDir = setupTempPosts({
       target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags:\n  - "AI"\n---\nBody`,
-      newest: `---\ntitle: "Newest"\ndate: "2024-03-02"\ntags:\n  - "X"\n---\nBody`,
+      newest: `---\ntitle: "Newest"\ndate: "2026-02-15"\ntags:\n  - "X"\n---\nBody`,
       older: `---\ntitle: "Older"\ndate: "2024-03-01"\ntags:\n  - "Y"\n---\nBody`,
-      oldest: `---\ntitle: "Oldest"\ndate: "2024-02-20"\ntags:\n  - "Z"\n---\nBody`,
     });
 
     const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
 
-    expect(
-      getRelatedPosts("target", { limit: 2 }).map((post) => post.slug)
-    ).toEqual(["newest", "older"]);
+    expect(getRelatedPosts("target")).toEqual([]);
+  });
+
+  test("returns a single topic match without padding the remaining slots", async () => {
+    const tempDir = setupTempPosts({
+      target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags: ["AI"]\n---\nBody`,
+      related: `---\ntitle: "Related"\ndate: "2024-03-01"\ntags: ["AI"]\n---\nBody`,
+      recent: `---\ntitle: "Recent"\ndate: "2026-02-15"\ntags: ["Travel"]\n---\nBody`,
+      older: `---\ntitle: "Older"\ndate: "2024-02-20"\ntags: ["Hardware"]\n---\nBody`,
+    });
+
+    const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getRelatedPosts("target").map((post) => post.slug)).toEqual([
+      "related",
+    ]);
+  });
+
+  test.each(["Reflection", "Book Notes", "Review", "Learning"])(
+    "does not treat %s alone as a shared topic",
+    async (genericTag) => {
+      const tempDir = setupTempPosts({
+        target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags: ["AI", "${genericTag}"]\n---\nBody`,
+        candidate: `---\ntitle: "Candidate"\ndate: "2026-02-15"\ntags: ["Travel", "${genericTag}"]\n---\nBody`,
+      });
+
+      const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
+
+      expect(getRelatedPosts("target")).toEqual([]);
+    }
+  );
+
+  test("includes posts in the same series without a shared tag", async () => {
+    const tempDir = setupTempPosts({
+      target: `---\ntitle: "Target"\ndate: "2026-02-16"\ntags: ["AI"]\nseries: "Notes"\n---\nBody`,
+      related: `---\ntitle: "Related"\ndate: "2024-03-01"\ntags: ["Systems"]\nseries: "Notes"\n---\nBody`,
+    });
+
+    const { getRelatedPosts } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getRelatedPosts("target").map((post) => post.slug)).toEqual([
+      "related",
+    ]);
   });
 
   test("does not include drafts by default", async () => {
@@ -366,5 +479,68 @@ Body`,
 
     expect(getRelatedPosts("missing")).toEqual([]);
     expect(getRelatedPosts("a", { limit: 0 })).toEqual([]);
+  });
+});
+
+describe("series helpers", () => {
+  test("returns ordered navigation for multi-post series", async () => {
+    const tempDir = setupTempPosts({
+      first: `---\ntitle: "First"\ndate: "2026-02-14"\nseries: "Notes"\nseriesOrder: 1\n---\nBody`,
+      second: `---\ntitle: "Second"\ndate: "2026-02-16"\nseries: "Notes"\nseriesOrder: 2\n---\nBody`,
+      third: `---\ntitle: "Third"\ndate: "2026-02-15"\nseries: "Notes"\nseriesOrder: 3\n---\nBody`,
+    });
+
+    const { getSeriesNavigation } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getSeriesNavigation("second")).toEqual({
+      name: "Notes",
+      currentPart: 2,
+      totalParts: 3,
+      previousPost: {
+        slug: "first",
+        title: "First",
+        seriesOrder: 1,
+      },
+      nextPost: {
+        slug: "third",
+        title: "Third",
+        seriesOrder: 3,
+      },
+    });
+  });
+
+  test("omits navigation for standalone and single-post series", async () => {
+    const tempDir = setupTempPosts({
+      standalone: `---\ntitle: "Standalone"\ndate: "2026-02-16"\n---\nBody`,
+      solo: `---\ntitle: "Solo"\ndate: "2026-02-15"\nseries: "Solo Series"\nseriesOrder: 1\n---\nBody`,
+    });
+
+    const { getSeriesNavigation } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getSeriesNavigation("standalone")).toBeNull();
+    expect(getSeriesNavigation("solo")).toBeNull();
+  });
+
+  test("returns multi-post series summaries linked to their first posts", async () => {
+    const tempDir = setupTempPosts({
+      "alpha-two": `---\ntitle: "Alpha Two"\ndate: "2026-02-16"\nseries: "Alpha"\nseriesOrder: 2\n---\nBody`,
+      "alpha-one": `---\ntitle: "Alpha One"\ndate: "2026-02-15"\nseries: "Alpha"\nseriesOrder: 1\n---\nBody`,
+      "beta-one": `---\ntitle: "Beta One"\ndate: "2026-02-14"\nseries: "Beta"\nseriesOrder: 1\n---\nBody`,
+      unlisted: `---\ntitle: "Unlisted"\ndate: "2026-02-13"\nseries: "Unlisted"\n---\nBody`,
+    });
+
+    const { getSeriesSummaries } = await loadBlogApiAtCwd(tempDir);
+
+    expect(getSeriesSummaries()).toEqual([
+      {
+        name: "Alpha",
+        count: 2,
+        firstPost: {
+          slug: "alpha-one",
+          title: "Alpha One",
+          seriesOrder: 1,
+        },
+      },
+    ]);
   });
 });

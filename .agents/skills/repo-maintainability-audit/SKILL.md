@@ -7,7 +7,7 @@ description: Broad repository audit for maintainability and correctness risks. U
 
 Execute this workflow when producing a high-signal engineering audit.
 
-Use this as the broad audit skill. If the user's request is mainly about vulnerabilities, dependency/framework versions, unused code, or a parallel PR review, use the matching specialized skill instead.
+Use this as the broad audit skill. If the user's request is mainly about vulnerabilities, dependency/framework versions, unused code, a parallel PR review, or site taste/style/tone, use the matching specialized skill instead.
 
 ## Workflow
 
@@ -43,10 +43,10 @@ Use this as the broad audit skill. If the user's request is mainly about vulnera
 Return findings in this structure:
 
 1. **Prioritized Issues**
-   - `[Px] Title`  
-     - Evidence: file paths + brief rationale  
-     - Impact: High/Medium/Low  
-     - Risk: High/Medium/Low  
+   - `[Px] Title`
+     - Evidence: file paths + brief rationale
+     - Impact: High/Medium/Low
+     - Risk: High/Medium/Low
      - Recommendation: concise fix summary
 
 2. **Suggested Code Changes (Diffs)**
@@ -61,4 +61,5 @@ Return findings in this structure:
 - Prefer evidence-backed claims over speculative concerns.
 - Distinguish confirmed issues from probable risks.
 - Align recommendations to existing project architecture and style.
+- When the audit touches visible site surfaces, follow the writing/design routing in `AGENTS.md` and use `site-taste-audit` for visual or tone critique.
 - Optimize for actionable, incremental changes that can be reviewed independently.

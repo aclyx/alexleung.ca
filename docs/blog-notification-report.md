@@ -1,13 +1,13 @@
 # Blog Notification Status
 
-Date: 2026-03-12
+Date: 2026-08-29
 
 ## Current Production Setup
 
 The notification stack is now implemented and no longer in planning mode.
 
 - **Canonical publish source:** RSS feed at `/feed.xml` generated during build.
-- **On-site subscribe UX:** `FollowItSubscribeForm` on `/contact` posts directly to follow.it.
+- **On-site subscribe UX:** `FollowItSubscribeForm` on `/contact/`, `/blog/`, and individual `/blog/<slug>/` pages posts directly to follow.it.
 - **Secondary feed channel:** Footer includes a `Subscribe via RSS` link for feed-reader users.
 - **Delivery model:** follow.it polls the RSS feed and sends email notifications to subscribers.
 

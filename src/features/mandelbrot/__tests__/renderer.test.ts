@@ -7,8 +7,10 @@ import {
 import {
   renderMandelbrotWithStrategy,
   shouldAttemptWebGpu,
+  toSafePixelCoordinateNumber,
 } from "@/features/mandelbrot/renderer";
 import { RenderRequest } from "@/features/mandelbrot/types";
+import { configurePrecisionForWidth } from "@/features/mandelbrot/viewport";
 
 jest.mock("@/features/mandelbrot/gpu", () => ({
   ...jest.requireActual("@/features/mandelbrot/gpu"),
@@ -36,12 +38,10 @@ function createRenderRequest(): RenderRequest {
     settings: {
       maxIterations: 32,
       paletteId: "oceanic",
-      coloringMode: "smooth",
       resolutionScale: 1,
       renderBackendPreference: "auto",
     },
     onChunk: jest.fn(),
-    onProgress: jest.fn(),
   };
 }
 
@@ -51,7 +51,7 @@ describe("renderMandelbrotWithStrategy", () => {
     mockedRenderMandelbrotWithWebGpu.mockReset();
   });
 
-  it("uses the WebGPU backend in auto mode when the viewport stays within the float32 cutoff", async () => {
+  it("uses WebGPU in auto mode when the viewport passes the precision guard", async () => {
     mockedDetectWebGpuAvailability.mockResolvedValue({
       isAvailable: true,
     });
@@ -61,33 +61,48 @@ describe("renderMandelbrotWithStrategy", () => {
     });
 
     const request = createRenderRequest();
-    const result = await renderMandelbrotWithStrategy(request);
+    const renderOnCpu = jest.fn(async () => true);
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "auto",
+      renderOnCpu
+    );
 
     expect(result).toEqual({
       completed: true,
       backend: "webgpu",
       gpuFallbackReason: undefined,
+      effectiveMaxIterations: 32,
+      cpuBudgetApplied: false,
     });
+    expect(renderOnCpu).not.toHaveBeenCalled();
   });
 
-  it("falls back to the CPU renderer in auto mode when WebGPU is unavailable", async () => {
+  it("reports the reason when unavailable WebGPU falls back to CPU", async () => {
     mockedDetectWebGpuAvailability.mockResolvedValue({
       isAvailable: false,
       reason: "No compatible WebGPU adapter was found.",
     });
 
     const request = createRenderRequest();
-    const result = await renderMandelbrotWithStrategy(request);
-
-    expect(result.backend).toBe("cpu");
-    expect(result.completed).toBe(true);
-    expect(result.gpuFallbackReason).toBe(
-      "No compatible WebGPU adapter was found."
+    const renderOnCpu = jest.fn(async () => true);
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "auto",
+      renderOnCpu
     );
-    expect(request.onChunk).toHaveBeenCalled();
+
+    expect(result).toEqual({
+      completed: true,
+      backend: "cpu",
+      gpuFallbackReason: "No compatible WebGPU adapter was found.",
+      effectiveMaxIterations: 32,
+      cpuBudgetApplied: false,
+    });
+    expect(renderOnCpu).toHaveBeenCalledWith(request);
   });
 
-  it("falls back to the CPU renderer when auto mode hits a WebGPU failure mid-render", async () => {
+  it("uses the injected CPU renderer after a WebGPU failure", async () => {
     mockedDetectWebGpuAvailability.mockResolvedValue({
       isAvailable: true,
     });
@@ -98,15 +113,24 @@ describe("renderMandelbrotWithStrategy", () => {
     });
 
     const request = createRenderRequest();
-    const result = await renderMandelbrotWithStrategy(request);
+    const renderOnCpu = jest.fn(async () => true);
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "auto",
+      renderOnCpu
+    );
 
-    expect(result.backend).toBe("cpu");
-    expect(result.completed).toBe(true);
-    expect(result.gpuFallbackReason).toBe("WebGPU device was lost.");
-    expect(request.onChunk).toHaveBeenCalled();
+    expect(result).toEqual({
+      completed: true,
+      backend: "cpu",
+      gpuFallbackReason: "WebGPU device was lost.",
+      effectiveMaxIterations: 32,
+      cpuBudgetApplied: false,
+    });
+    expect(renderOnCpu).toHaveBeenCalledWith(request);
   });
 
-  it("does not fall back to CPU after an aborted GPU render has already started", async () => {
+  it("does not start CPU fallback after an aborted GPU render", async () => {
     mockedDetectWebGpuAvailability.mockResolvedValue({
       isAvailable: true,
     });
@@ -117,71 +141,176 @@ describe("renderMandelbrotWithStrategy", () => {
 
     const abortController = new AbortController();
     const request = createRenderRequest();
+    const renderOnCpu = jest.fn(async () => true);
 
     abortController.abort();
     request.signal = abortController.signal;
 
-    const result = await renderMandelbrotWithStrategy(request);
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "auto",
+      renderOnCpu
+    );
 
     expect(result).toEqual({
       completed: false,
       backend: "webgpu",
       gpuFallbackReason: undefined,
+      effectiveMaxIterations: 32,
+      cpuBudgetApplied: false,
     });
-    expect(request.onChunk).not.toHaveBeenCalled();
+    expect(renderOnCpu).not.toHaveBeenCalled();
   });
 
-  it("uses the CPU renderer directly in auto mode once the float32 cutoff is exceeded", async () => {
+  it("uses CPU directly in auto mode beyond the WebGPU precision cutoff", async () => {
     const request = createRenderRequest();
+    const renderOnCpu = jest.fn(async () => true);
 
     request.viewport.width = new Decimal("1e-7");
     request.viewport.height = new Decimal("6.666666666666667e-8");
 
     expect(shouldAttemptWebGpu(request, "auto")).toBe(false);
 
-    const result = await renderMandelbrotWithStrategy(request, "auto");
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "auto",
+      renderOnCpu
+    );
 
     expect(result.backend).toBe("cpu");
     expect(result.completed).toBe(true);
     expect(mockedDetectWebGpuAvailability).not.toHaveBeenCalled();
     expect(mockedRenderMandelbrotWithWebGpu).not.toHaveBeenCalled();
-    expect(request.onChunk).toHaveBeenCalled();
+    expect(renderOnCpu).toHaveBeenCalledWith(request);
   });
 
-  it("uses the CPU renderer directly when CPU is explicitly selected", async () => {
+  it("uses CPU directly when CPU is explicitly selected", async () => {
     const request = createRenderRequest();
+    const renderOnCpu = jest.fn(async () => true);
+
     request.settings.renderBackendPreference = "cpu";
 
-    const result = await renderMandelbrotWithStrategy(request, "cpu");
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "cpu",
+      renderOnCpu
+    );
 
     expect(result.backend).toBe("cpu");
     expect(result.completed).toBe(true);
     expect(mockedDetectWebGpuAvailability).not.toHaveBeenCalled();
     expect(mockedRenderMandelbrotWithWebGpu).not.toHaveBeenCalled();
+    expect(renderOnCpu).toHaveBeenCalledWith(request);
   });
 
-  it("still attempts WebGPU when WebGPU is explicitly selected beyond the auto cutoff", async () => {
-    mockedDetectWebGpuAvailability.mockResolvedValue({
-      isAvailable: true,
-    });
-    mockedRenderMandelbrotWithWebGpu.mockResolvedValue({
-      completed: true,
-      rendered: true,
-    });
-
+  it("does not let explicit WebGPU bypass the precision guard", async () => {
     const request = createRenderRequest();
+    const renderOnCpu = jest.fn(async () => true);
 
     request.viewport.width = new Decimal("1e-7");
     request.viewport.height = new Decimal("6.666666666666667e-8");
     request.settings.renderBackendPreference = "webgpu";
 
-    expect(shouldAttemptWebGpu(request, "webgpu")).toBe(true);
+    expect(shouldAttemptWebGpu(request, "webgpu")).toBe(false);
 
-    const result = await renderMandelbrotWithStrategy(request, "webgpu");
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "webgpu",
+      renderOnCpu
+    );
 
-    expect(result.backend).toBe("webgpu");
-    expect(result.completed).toBe(true);
-    expect(mockedDetectWebGpuAvailability).toHaveBeenCalled();
-    expect(mockedRenderMandelbrotWithWebGpu).toHaveBeenCalledWith(request);
+    expect(result.backend).toBe("cpu");
+    expect(mockedDetectWebGpuAvailability).not.toHaveBeenCalled();
+    expect(mockedRenderMandelbrotWithWebGpu).not.toHaveBeenCalled();
+    expect(renderOnCpu).toHaveBeenCalledWith(request);
+  });
+
+  it("caps a 480x300 CPU render at 555 iterations", async () => {
+    const request = createRenderRequest();
+    const renderOnCpu = jest.fn(async () => true);
+
+    request.size = { width: 480, height: 300 };
+    request.settings = {
+      ...request.settings,
+      maxIterations: 4000,
+      renderBackendPreference: "cpu",
+    };
+
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "cpu",
+      renderOnCpu
+    );
+
+    expect(result).toEqual({
+      completed: true,
+      backend: "cpu",
+      gpuFallbackReason: undefined,
+      effectiveMaxIterations: 555,
+      cpuBudgetApplied: true,
+    });
+    expect(renderOnCpu).toHaveBeenCalledWith({
+      ...request,
+      settings: {
+        ...request.settings,
+        maxIterations: 555,
+      },
+    });
+    expect(request.settings.maxIterations).toBe(4000);
+  });
+
+  it("applies the CPU budget when a high-cost GPU frame falls back", async () => {
+    mockedDetectWebGpuAvailability.mockResolvedValue({ isAvailable: true });
+    mockedRenderMandelbrotWithWebGpu.mockResolvedValue({
+      completed: false,
+      rendered: false,
+      fallbackReason: "WebGPU device was lost.",
+    });
+
+    const request = createRenderRequest();
+    const renderOnCpu = jest.fn(async () => true);
+
+    request.size = { width: 1000, height: 1000 };
+    request.settings = {
+      ...request.settings,
+      maxIterations: 4000,
+    };
+
+    const result = await renderMandelbrotWithStrategy(
+      request,
+      "auto",
+      renderOnCpu
+    );
+
+    expect(result.cpuBudgetApplied).toBe(true);
+    expect(result.effectiveMaxIterations).toBe(80);
+    expect(renderOnCpu).toHaveBeenCalledWith({
+      ...request,
+      settings: {
+        ...request.settings,
+        maxIterations: 80,
+      },
+    });
+  });
+});
+
+describe("toSafePixelCoordinateNumber", () => {
+  it("keeps continuation coordinates when numeric rounding is small relative to the pixel step", () => {
+    const step = new Decimal("1e-6");
+
+    configurePrecisionForWidth(step);
+
+    expect(toSafePixelCoordinateNumber(new Decimal("0.125"), step)).toBe(0.125);
+  });
+
+  it("rejects continuation coordinates when numeric rounding swamps the pixel step", () => {
+    const step = new Decimal("1e-32");
+    const coordinate = new Decimal("-0.838782074550394572901608663741").add(
+      step
+    );
+
+    configurePrecisionForWidth(step);
+
+    expect(toSafePixelCoordinateNumber(coordinate, step)).toBeNull();
   });
 });

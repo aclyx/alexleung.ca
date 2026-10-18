@@ -16,4 +16,13 @@ describe("Subtitle", () => {
     const heading = screen.getByText("Section Subtitle");
     expect(heading).toHaveAttribute("id", "section-anchor");
   });
+
+  it("renders only the heading primitive and accepts caller classes", () => {
+    const { container } = render(
+      <Subtitle title="Pure subheading" className="mb-4" />
+    );
+
+    expect(container.firstElementChild?.tagName).toBe("H2");
+    expect(screen.getByRole("heading")).toHaveClass("mb-4");
+  });
 });

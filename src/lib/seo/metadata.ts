@@ -22,14 +22,13 @@ export function buildPageMetadata(input: SeoInput): Metadata {
   return {
     title: input.title,
     description: input.description,
-    keywords: input.keywords,
     alternates: {
       canonical: canonicalUrl,
       types: {
         "application/rss+xml": [
           {
             url: rssFeedUrl,
-            title: "Alex Leung Blog RSS Feed",
+            title: "Alex Leung's Writing RSS Feed",
           },
         ],
       },

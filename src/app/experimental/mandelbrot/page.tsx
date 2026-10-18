@@ -6,37 +6,40 @@ import { WebPage } from "schema-dts";
 
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
-import { buildExperimentBreadcrumbItems } from "@/constants/experiments";
+import {
+  MANDELBROT_DESCRIPTION,
+  MANDELBROT_PAGE_TITLE,
+  MANDELBROT_PATH,
+  MANDELBROT_TITLE,
+} from "@/constants/mandelbrot";
 import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 import { MandelbrotExplorer } from "./_components/MandelbrotExplorer";
 
-const title = "Mandelbrot Explorer | Alex Leung";
-const description =
-  "An in-browser Mandelbrot explorer with arbitrary-precision viewport math, progressive rendering, and shareable zoom state.";
-const path = "/experimental/mandelbrot/";
-
 export const metadata: Metadata = buildPageMetadata({
-  title,
-  description,
-  path,
+  title: MANDELBROT_PAGE_TITLE,
+  description: MANDELBROT_DESCRIPTION,
+  path: MANDELBROT_PATH,
 });
 
 export default function MandelbrotPage() {
   return (
     <>
       <JsonLdBreadcrumbs
-        items={buildExperimentBreadcrumbItems("Mandelbrot Explorer", path)}
+        items={[
+          { name: "Home", item: "/" },
+          { name: MANDELBROT_TITLE, item: MANDELBROT_PATH },
+        ]}
       />
       <JsonLd<WebPage>
         item={buildWebPageSchema({
-          path,
-          title,
-          description,
+          path: MANDELBROT_PATH,
+          title: MANDELBROT_PAGE_TITLE,
+          description: MANDELBROT_DESCRIPTION,
         })}
       />
 
-      <PageShell title="Mandelbrot Explorer" titleId="mandelbrot-explorer">
+      <PageShell title={MANDELBROT_TITLE} titleId="mandelbrot-explorer">
         <MandelbrotExplorer />
       </PageShell>
     </>

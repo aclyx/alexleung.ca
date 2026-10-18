@@ -3,18 +3,25 @@ import { render, screen } from "@testing-library/react";
 import { SocialMediaList } from "../SocialMediaList";
 
 describe("SocialMediaList", () => {
-  it("renders the Connect subtitle", () => {
+  it("groups the profile links in a named navigation", () => {
     render(<SocialMediaList />);
-    expect(screen.getByText("Connect")).toBeInTheDocument();
+    expect(
+      screen.getByRole("navigation", { name: "Profiles" })
+    ).toBeInTheDocument();
   });
 
-  it("renders all social media links", () => {
+  it("renders the selected profile links", () => {
     render(<SocialMediaList />);
     expect(screen.getByLabelText("LinkedIn Profile")).toBeInTheDocument();
     expect(screen.getByLabelText("GitHub Profile")).toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Work GitHub Profile")
+    ).not.toBeInTheDocument();
     expect(screen.getByLabelText("X (Twitter) Profile")).toBeInTheDocument();
-    expect(screen.getByLabelText("Bluesky Profile")).toBeInTheDocument();
-    expect(screen.getByLabelText("Instagram Profile")).toBeInTheDocument();
+    expect(screen.queryByLabelText("Bluesky Profile")).not.toBeInTheDocument();
+    expect(
+      screen.queryByLabelText("Instagram Profile")
+    ).not.toBeInTheDocument();
   });
 
   it("renders links with correct hrefs", () => {
@@ -26,6 +33,10 @@ describe("SocialMediaList", () => {
     expect(screen.getByLabelText("GitHub Profile")).toHaveAttribute(
       "href",
       "https://www.github.com/aclyx"
+    );
+    expect(screen.getByLabelText("X (Twitter) Profile")).toHaveAttribute(
+      "href",
+      "https://www.x.com/aclyxpse"
     );
   });
 
@@ -40,8 +51,9 @@ describe("SocialMediaList", () => {
     render(<SocialMediaList />);
     expect(screen.getByText("LinkedIn")).toBeInTheDocument();
     expect(screen.getByText("GitHub")).toBeInTheDocument();
-    expect(screen.getByText("X (Twitter)")).toBeInTheDocument();
-    expect(screen.getByText("Bluesky")).toBeInTheDocument();
-    expect(screen.getByText("Instagram")).toBeInTheDocument();
+    expect(screen.queryByText("Work GitHub")).not.toBeInTheDocument();
+    expect(screen.getByText("X", { exact: true })).toBeInTheDocument();
+    expect(screen.queryByText("Bluesky")).not.toBeInTheDocument();
+    expect(screen.queryByText("Instagram")).not.toBeInTheDocument();
   });
 });

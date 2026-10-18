@@ -13,8 +13,7 @@ const BUILTIN_REFERENCE_SCENARIOS: LoadFlowReferenceScenario[] = [
   {
     id: "two-bus-radial",
     name: "2-Bus Radial",
-    description:
-      "Slack source feeding a single PQ load through an inductive line.",
+    description: "Grid supply feeding one load through an inductive line.",
     loadFlowCase: {
       baseMVA: 100,
       buses: [
@@ -59,8 +58,7 @@ const BUILTIN_REFERENCE_SCENARIOS: LoadFlowReferenceScenario[] = [
   {
     id: "three-bus-with-pv",
     name: "3-Bus PV + PQ",
-    description:
-      "Classical small-system scenario with one slack, one PV generation bus, and one PQ load bus.",
+    description: "Grid supply and a local generator feeding two loads.",
     loadFlowCase: {
       baseMVA: 100,
       buses: [

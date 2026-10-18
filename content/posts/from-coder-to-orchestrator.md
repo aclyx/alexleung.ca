@@ -1,75 +1,37 @@
 ---
-title: "My AI Coding Workflow: Planning, Review, and Verification"
+title: "The Review Bottleneck in AI-Assisted Coding"
 date: "2026-02-03"
-updated: "2026-02-14"
-excerpt: "How my AI coding workflow moved from quick snippets to clearer briefs, agent review checkpoints, and build/lint/test verification."
+updated: "2026-10-12"
+excerpt: "Agents can implement tasks in parallel; reviewing plans, checking edge cases, and coordinating the work still fall to me."
 coverImage: "/assets/blog/from-coder-to-orchestrator/cover.webp"
+coverAlt: "Illustration of Alex reviewing code, test results, and a written plan at his desk"
 tags:
   - "AI"
   - "Developer Workflow"
-  - "Future of Work"
+series: "AI Tools and Workflows"
+seriesOrder: 1
 ---
 
-Over the past two years, my day-to-day coding workflow has moved from quick AI help toward clearer task definition and verification. In early 2024, I used AI mostly for autocomplete-level tasks such as snippets, error explanations, and small refactors. By 2026, I still write code when needed, but far more of my time goes to defining tasks clearly, checking outputs, and fixing edge cases the tools miss.
+Implementation can run in parallel, but review and coordination still funnel back through me. That is the limit I have not solved in my AI-assisted coding workflow.
 
-![Timeline diagram comparing software development workflow in 2024 versus 2026](/assets/blog/from-coder-to-orchestrator/swe-workflow-evolution.webp)
+In early 2024, I used AI mostly for autocomplete-level work: snippets, error explanations, and small refactors. By 2026, I was using agents for larger tasks. I still write code when needed, but more of my attention now goes to constraints, review, and the edge cases the tools miss.
 
-## 2024
+## Reviewing plans before implementation
 
-I started experimenting with **Cline** for straightforward tasks such as boilerplate, test scaffolding, and repetitive refactors. I avoided giving it larger tasks for two reasons. First, it was easy to get code that looked fine but was wrong in non-obvious ways. Second, anything non-trivial took too much prompt back-and-forth.
+I started experimenting with Cline for straightforward tasks such as boilerplate, test scaffolding, and repetitive refactors. I avoided giving it larger tasks because it was easy to get code that looked fine but was wrong in non-obvious ways, and anything non-trivial took too much prompt back-and-forth.
 
-## 2025
+In 2025, I switched to Claude Code and stopped asking for immediate implementation. Instead, I asked for a plan first and reviewed it.
 
-I switched to **Claude Code** and stopped asking for immediate implementation. Instead, I asked for a plan first and reviewed it.
+Plans were often overbuilt for the actual problem, and the agent would report "done" before handling edge cases. Plan review gave me a place to question the proposed scope before implementation; it did not remove the need to inspect the result.
 
-That improved outcomes, but two problems stayed persistent. Plans were often overbuilt for the actual problem, and the agent would report "done" before handling edge cases. The bottleneck moved from writing code to verification.
+## Making the work reviewable
 
-## What made the workflow more reliable
+A lot of bad output came from missing repository context, so I keep architecture preferences, testing requirements, and coding conventions in the repository guidance. That gives the agent a baseline to work from, while the task brief supplies the specific constraints and non-goals.
 
-Three changes made the workflow dependable enough for daily use.
+I often split planning and implementation into separate passes, turning the brief into checkpoints and running build, lint, and tests at each one.
 
-### Stronger model reasoning
+## Costs and limits
 
-For my use cases, newer models have been noticeably better at keeping constraints in context across longer tasks.
+Frequent tool calls and retries add up, and agents struggle when a system relies on undocumented history.
 
-### Better repo context
-
-A lot of bad output came from missing context, not missing capability. I now keep project expectations in `CLAUDE.md` so every new session starts with the same baseline: architecture preferences, testing requirements, and coding conventions.
-
-### A repeatable execution loop
-
-The biggest improvement was switching from one-pass execution to a repeatable loop:
-
-1. Plan
-2. Implement
-3. Verify with build/lint/tests
-4. Reflect and continue if needed
-
-![Ralph Loop flow chart showing Plan -> Implement -> Verify -> Reflect](/assets/blog/from-coder-to-orchestrator/ralph-loop.webp)
-
-## Current workflow
-
-I often split the work into planning and implementation passes. In practice, that means I write a short feature brief with constraints and non-goals, turn that into checkpoints, let the implementation run through the loop per checkpoint, and then review design and risk rather than just syntax.
-
-Example brief:
-
-> Add Google OAuth using existing `AuthService`. Store tokens in Redis, not SQL.
-
-## Trade-offs
-
-This workflow is productive, but it has clear costs:
-
-- **Cost:** Frequent tool calls and retries add up quickly.
-- **Legacy code friction:** Agents struggle when systems rely on undocumented history.
-- **Personal skill drift:** I type less code directly than I used to.
-- **Attention overhead:** Running multiple agents sounds parallel, but review and coordination still funnel through one person. Human attention is limited, and I still don't have a great system for managing that bottleneck consistently.
-
-## Where the work moved
-
-The useful part of my work has moved toward clearer requirements, tighter constraints, and stronger review discipline.
-
-Implementation still matters, but I now spend more attention on deciding what to build, writing clearer constraints, and checking whether the result is right.
-
-![Software engineering effort evolution from 2024 to 2026](/assets/blog/from-coder-to-orchestrator/swe-effort-evolution.webp)
-
-The biggest open question for me is this: if newer engineers spend less time in low-level debugging, how do they build the judgment needed to review AI-generated changes well?
+I can hand off more implementation, but I still have to decide whether the plans fit the problem and whether the resulting changes are ready.

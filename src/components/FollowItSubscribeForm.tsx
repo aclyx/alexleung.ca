@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-import { surfaceClassNames } from "@/components/Surface";
+import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
 import { trackNewsletterSubscribe } from "@/lib/analytics";
 
 const DEFAULT_FOLLOW_IT_ACTION =
@@ -12,50 +12,50 @@ type FollowItSubscribeFormProps = {
   className?: string;
   title?: string;
   description?: string;
+  note?: string;
   placeholder?: string;
   buttonLabel?: string;
   action?: string;
   analyticsPlacement?: string;
+  headingLevel?: "h2" | "h3";
 };
 
 export function FollowItSubscribeForm({
   className = "",
   title = "Get new posts by email",
-  description = "Subscribe for occasional updates when I publish something new.",
+  description = "Occasional updates when I publish something new.",
+  note = "Follow.it sends the emails and includes an unsubscribe link.",
   placeholder = "Enter your email",
   buttonLabel = "Subscribe",
   action = DEFAULT_FOLLOW_IT_ACTION,
   analyticsPlacement = "newsletter_form",
+  headingLevel = "h2",
 }: FollowItSubscribeFormProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const buttonClassName = [
-    "text-body inline-flex w-full items-center justify-center rounded-md bg-gradient-to-br from-blue-500 to-accent-primary px-5 py-2.5 font-bold text-white transition-all duration-200 ease-expo-out",
-    isSubmitting
-      ? "cursor-progress opacity-90"
-      : "cursor-pointer hover:from-blue-600 hover:to-accent-primary-hover",
-  ].join(" ");
+  const Heading = headingLevel;
+  const buttonClassName = actionClassNames({
+    className: `w-full sm:min-w-40 sm:w-auto ${isSubmitting ? "cursor-progress opacity-90" : "cursor-pointer"}`,
+  });
 
   return (
     <section
       aria-labelledby="follow-it-subscribe-title"
-      className={surfaceClassNames({
-        className: `mx-auto max-w-xl p-6 md:p-8 ${className}`.trim(),
-      })}
+      className={`max-w-[650px] border-t border-line pt-6 ${className}`.trim()}
     >
-      <header className="text-center">
-        <h2
+      <header>
+        <Heading
           id="follow-it-subscribe-title"
-          className="text-heading font-semibold text-white"
+          className="text-editorial-heading text-ink"
         >
           {title}
-        </h2>
-        <p className="text-body-sm mt-2 text-gray-300">{description}</p>
+        </Heading>
+        <p className="text-body-sm mt-2 text-muted">{description}</p>
       </header>
 
       <form
         action={action}
         method="post"
-        className="mt-5 space-y-3"
+        className="mt-4 flex flex-col gap-3 sm:flex-row"
         aria-busy={isSubmitting}
         onSubmit={() => {
           trackNewsletterSubscribe(analyticsPlacement);
@@ -73,7 +73,7 @@ export function FollowItSubscribeForm({
           autoComplete="email"
           placeholder={placeholder}
           readOnly={isSubmitting}
-          className="text-body w-full rounded-md border-2 border-white/15 bg-white/5 px-4 py-2.5 text-center text-white placeholder:text-gray-400 focus:border-accent-link focus:placeholder-transparent focus:outline-none"
+          className={fieldClassNames({ className: "min-w-0 sm:flex-1" })}
         />
         <button
           type="submit"
@@ -83,6 +83,7 @@ export function FollowItSubscribeForm({
           {isSubmitting ? "Subscribing..." : buttonLabel}
         </button>
       </form>
+      {note ? <p className="mt-3 text-xs text-muted">{note}</p> : null}
     </section>
   );
 }

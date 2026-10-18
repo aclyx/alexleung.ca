@@ -6,9 +6,11 @@ description: Perform focused repository security audits for web and application 
 # Security Audit
 
 ## Overview
+
 Run a focused code-and-dependency security review and return actionable findings with concrete remediations. Prefer reproducible evidence (file paths, line numbers, and commands) and include patch-ready code changes when feasible.
 
 ## Audit Workflow
+
 1. **Map attack surface**
    - Identify runtime stack, frameworks, auth boundaries, and input entry points.
    - Locate secrets handling, environment configuration, and dependency manifests.
@@ -32,18 +34,22 @@ Run a focused code-and-dependency security review and return actionable findings
    - Use the output contract exactly.
 
 ## Required Checks and Heuristics
+
 Use `references/security-audit-checklist.md` as the primary checklist and command quick-reference.
 
 ## Output Contract
+
 For each finding, include:
+
 - **Vulnerability description**: What is wrong, where it exists, and a realistic attack scenario.
 - **Risk severity**: `Critical`, `High`, `Medium`, or `Low` with a one-line justification.
 - **Suggested fix and patch**: Explain remediation and provide a concrete patch snippet or diff.
 
 Use this structure:
 
-```markdown
+````markdown
 ## Finding N: <short title>
+
 - Vulnerability description: ...
 - Risk severity: <Critical|High|Medium|Low> - <justification>
 - Suggested fix and patch:
@@ -51,9 +57,10 @@ Use this structure:
 ```diff
 <patch>
 ```
-```
+````
 
 ## Execution Notes
+
 - Prefer deterministic checks first (linters, dependency audit commands, targeted search patterns), then manual review.
 - Do not claim a vulnerability without evidence.
 - Keep recommendations framework-appropriate and least disruptive.

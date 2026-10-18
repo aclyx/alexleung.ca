@@ -7,24 +7,30 @@ type LinkTextProps = {
   children: ReactNode;
   className?: string;
   external?: boolean;
+  standalone?: boolean;
 };
 
-const defaultClassName =
-  "text-accent-link underline decoration-accent-link/50 transition-colors hover:text-accent-link-hover hover:decoration-accent-link-hover";
+const inlineLinkClassName =
+  "text-accent-link underline decoration-accent-link/40 underline-offset-2 transition-colors hover:text-accent-link-hover hover:decoration-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper";
 
 export function LinkText({
   href,
   children,
-  className = defaultClassName,
+  className = inlineLinkClassName,
   external = false,
+  standalone = false,
 }: LinkTextProps) {
+  const linkClassName = standalone
+    ? `${className} inline-flex min-h-11 min-w-11 items-center`
+    : className;
+
   if (external) {
     return (
       <a
         href={href}
         target="_blank"
         rel="noopener noreferrer"
-        className={className}
+        className={linkClassName}
       >
         {children}
       </a>
@@ -32,7 +38,7 @@ export function LinkText({
   }
 
   return (
-    <Link href={href} className={className}>
+    <Link href={href} className={linkClassName}>
       {children}
     </Link>
   );

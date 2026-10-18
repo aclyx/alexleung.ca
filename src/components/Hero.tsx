@@ -1,62 +1,51 @@
-import { HiOutlineArrowRight, HiOutlineUser } from "react-icons/hi";
-
-import { CTAButton } from "./CTAButton";
+import { LinkText } from "@/components/LinkText";
+import { NowEntry } from "@/components/NowEntry";
+import {
+  NOW_CONTENT,
+  NOW_PAGE_LAST_UPDATED_DISPLAY,
+  NOW_PAGE_LAST_UPDATED_ISO,
+} from "@/constants/now";
 
 export function Hero() {
   return (
-    <section
-      id="home"
-      className="flex flex-grow items-center justify-center pb-12 pt-[calc(var(--header-height)+1.5rem)] md:pb-12 md:pt-[calc(var(--header-height)+3rem)]"
-    >
-      <div className="section-center">
-        <div className="max-w-3xl">
-          <p className="text-hero-subtitle mb-4 tracking-wider">
-            Hi, my name is
-          </p>
-          <h1 className="text-hero-title mb-4 inline-block font-black uppercase leading-[0.9] tracking-[0.2rem] md:pb-4">
+    <section id="about" aria-labelledby="home-title" className="section-center">
+      <div className="grid gap-7 border-b border-line py-8 md:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)] md:gap-16 md:py-11">
+        <div>
+          <h1 id="home-title" className="text-hero-title text-ink">
             Alex Leung
           </h1>
-
-          <h2 className="text-hero-description">
-            Software Engineer and Occasional Writer.
-          </h2>
-          <p className="mt-3 text-sm italic text-gray-200 md:text-gray-300">
-            I build software, write notes, and make small tools for
-            understanding systems and AI.
+          <p className="text-hero-description mt-5 max-w-xl leading-relaxed text-ink">
+            I work on ChatGPT at OpenAI. I write about software, technical
+            books, and life outside work.
           </p>
-
-          <div className="mt-8 flex flex-wrap gap-4">
-            <CTAButton href="/blog/">
-              Read writing <HiOutlineArrowRight className="text-lg" />
-            </CTAButton>
-            <CTAButton href="/about/" variant="secondary">
-              <HiOutlineUser className="text-lg" /> About
-            </CTAButton>
-          </div>
-
-          <div className="mt-10">
-            <section
-              aria-labelledby="positioning-heading"
-              className="surface-static p-5 md:p-6"
-            >
-              <h2
-                id="positioning-heading"
-                className="text-heading font-semibold"
-              >
-                What you&apos;ll find here
-              </h2>
-              <p className="text-body mt-4 text-gray-200">
-                I keep essays, notes, and small project writeups here: software
-                engineering, system design, AI, product work, and learning.
-              </p>
-              <p className="text-body mt-3 text-gray-200">
-                I tend to write from the practical edge of those topics: what I
-                tried, what held up, where the tools helped, and where the rough
-                edges stayed visible.
-              </p>
-            </section>
-          </div>
         </div>
+        <aside
+          aria-labelledby="home-now-heading"
+          className="border-t border-line pt-6 md:border-t-0 md:border-l md:pt-0 md:pl-6"
+        >
+          <div className="mb-4 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2">
+            <h2 id="home-now-heading" className="text-editorial-label">
+              Now
+            </h2>
+            <time
+              dateTime={NOW_PAGE_LAST_UPDATED_ISO}
+              className="font-mono text-xs text-muted"
+            >
+              {NOW_PAGE_LAST_UPDATED_DISPLAY}
+            </time>
+          </div>
+          <NowEntry
+            entry={NOW_CONTENT.entries[0]}
+            headingLevel="h3"
+            headingClassName="font-serif text-xl font-normal leading-snug"
+            className="text-sm leading-relaxed"
+          />
+          <div className="mt-2 flex text-sm">
+            <LinkText href="/now/" standalone>
+              More on the Now page →
+            </LinkText>
+          </div>
+        </aside>
       </div>
     </section>
   );

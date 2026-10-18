@@ -8,57 +8,41 @@ const config = {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
-  darkMode: "class",
   theme: {
     extend: {
       colors: {
         white: "#fff",
-        hover: "#718093",
-        black: "#2f3640",
-        highlight: "#00D131",
+        black: "#202936",
+        paper: "#faf9f5",
+        surface: "#ffffff",
+        ink: "#202936",
+        muted: "#58616d",
+        line: "#d3d5d5",
+        "control-border": "#858c95",
+        canvas: "#030712",
         accent: {
-          link: "#60a5fa", // blue-400
-          "link-hover": "#93c5fd", // blue-300
-          success: "#86efac", // green-300
-          warning: "#fcd34d", // yellow-300
-          info: "#93c5fd", // blue-300
-          primary: "#2563eb", // blue-600
-          "primary-hover": "#1d4ed8", // blue-700
+          link: "#285296",
+          "link-hover": "#1d3d72",
+          secondary: "#58616d",
+          "secondary-hover": "#202936",
+          "secondary-soft": "#e8edf4",
+          success: "#39714c",
+          warning: "#80571d",
+          info: "#315f70",
+          primary: "#285296",
+          "primary-hover": "#1d3d72",
         },
       },
-      fontFamily: {
-        lato: ["Lato", "sans-serif"],
-      },
       maxWidth: {
-        content: "1170px",
+        content: "1120px",
       },
-      transitionProperty: {
-        all: "all",
-      },
-      transitionDuration: {
-        200: "0.2s",
-        500: "0.5s",
+      fontFamily: {
+        serif: ["Georgia", '"Times New Roman"', "serif"],
       },
       transitionTimingFunction: {
         linear: "linear",
         "expo-out": EXPO_OUT,
       },
-      keyframes: {
-        showTopText: {
-          "0%": {
-            transform: "translateY(20px)",
-            opacity: "0",
-          },
-          "100%": {
-            transform: "translateY(0)",
-            opacity: "1",
-          },
-        },
-      },
-      animation: {
-        showTopText: `showTopText 0.8s ${EXPO_OUT} forwards`,
-      },
-
       typography: {
         DEFAULT: {
           css: {

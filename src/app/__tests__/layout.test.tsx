@@ -36,7 +36,17 @@ describe("RootLayout", () => {
     );
 
     expect(screen.getByTestId("test-child")).toBeInTheDocument();
-    expect(container.querySelector("main")).toBeInTheDocument();
+    expect(document.documentElement).toHaveAttribute(
+      "data-scroll-behavior",
+      "smooth"
+    );
+    expect(container.querySelector("main")).toHaveAttribute(
+      "id",
+      "main-content"
+    );
+    expect(
+      screen.getByRole("link", { name: "Skip to main content" })
+    ).toHaveAttribute("href", "#main-content");
   });
 
   describe("JSON-LD Schema", () => {
@@ -58,6 +68,9 @@ describe("RootLayout", () => {
       expect(schema["@id"]).toBe("https://alexleung.ca/#person");
       expect(schema.name).toBe("Alex Leung");
       expect(schema.url).toBe("https://alexleung.ca");
+      expect(schema.description).toBe(
+        "Alex Leung is a software engineer and writer. His previous work includes home electrification, AR and AI hardware, and consumer finance."
+      );
     });
 
     it("should include professional credentials", () => {
@@ -84,7 +97,7 @@ describe("RootLayout", () => {
       );
     });
 
-    it("should include education and expertise information", () => {
+    it("should include education and durable expertise information", () => {
       const { container } = render(
         <RootLayout>
           <div>Content</div>
@@ -98,16 +111,11 @@ describe("RootLayout", () => {
 
       expect(schema.alumniOf).toBeDefined();
       expect(schema.alumniOf.length).toBe(2);
-      expect(schema.worksFor).toMatchObject({
-        "@type": "Organization",
-        name: "OpenAI",
-        url: "https://openai.com/",
-      });
+      expect(schema.worksFor).toBeUndefined();
+      expect(schema.hasOccupation).toBeUndefined();
+      expect(schema.address).toBeUndefined();
       expect(schema.knowsAbout).toEqual(
-        expect.arrayContaining([
-          "AI-Assisted Software Workflows",
-          "Distributed Systems",
-        ])
+        expect.arrayContaining(["AI Tools", "Distributed Systems"])
       );
     });
 
@@ -126,7 +134,9 @@ describe("RootLayout", () => {
       expect(schema.sameAs).toBeDefined();
       expect(schema.sameAs.length).toBeGreaterThan(0);
       expect(schema.sameAs).toContain("https://www.linkedin.com/in/aclyx");
+      expect(schema.sameAs).toContain("https://ca.linkedin.com/in/aclyx");
       expect(schema.sameAs).toContain("https://github.com/aclyx");
+      expect(schema.sameAs).toContain("https://github.com/aclyx-oai");
     });
   });
 });

@@ -1,49 +1,39 @@
 ---
-title: "The 'Boring' Architecture Behind This Blog"
+title: "Static Markdown Inside This Next.js Site"
 date: "2026-01-31"
-updated: "2026-02-14"
-excerpt: "How I added a fully static, markdown-based blog to my Next.js portfolio."
+updated: "2026-10-12"
+excerpt: "How repo-backed Markdown becomes static HTML without a CMS, database, or runtime admin surface."
 coverImage: "/assets/blog/boring-blog-architecture/cover.webp"
+coverAlt: "Illustration of Alex wearing headphones while working at a laptop under a desk lamp"
 tags:
   - "Next.js"
   - "Architecture"
-  - "Blogging"
 ---
 
-I recently added a blog to this site. Rather than reaching for a CMS, I decided to build it directly into the existing Next.js application using standard tools.
+I added the blog directly to the site's existing Next.js application so technical notes could live beside the rest of the site without another system to maintain. Posts are Markdown files, each route builds to static HTML, and publishing does not depend on a CMS or runtime admin surface.
 
-## Requirements
+## File-backed routes at build time
 
-I wanted a place to share technical thoughts without adding another system to maintain. The requirements were simple:
+`blogApi.ts` reads the post files and uses `gray-matter` to parse frontmatter. A separate `markdownToHtml.ts` pipeline converts post bodies with `remark` and `rehype`, including `rehype-pretty-code` for code blocks.
 
-1.  **Write in Markdown**: I want to write posts in VS Code.
-2.  **Zero Runtime Cost**: The blog should be statically generated.
-3.  **Fast**: It should feel instant.
-
-## Markdown files and static routes
-
-I created a simple utility, `blogApi.ts`, that reads directly from the file system. It uses `gray-matter` to parse frontmatter and a `remark`/`rehype` pipeline, including `rehype-pretty-code`, to process the content.
-
-Next.js makes it straightforward to turn a folder of markdown files into routes. I used `generateStaticParams` to tell Next.js which paths to build at compile time:
+The route's `generateStaticParams` function enumerates the post slugs, including unlisted posts whose URLs still need to work:
 
 ```typescript
 export async function generateStaticParams() {
-  const posts = getAllPosts(["slug"]);
+  const posts = getAllPosts(["slug"], { includeUnlisted: true });
   return posts.map((post) => ({
     slug: post.slug,
   }));
 }
 ```
 
-This ensures that `alexleung.ca/blog/boring-blog-architecture` is just a static HTML file at deploy time, not a dynamic request.
+Route enumeration is one part of the setup. `output: "export"` in `next.config.mjs` tells Next.js to write a [static export](https://nextjs.org/docs/app/guides/static-exports), and `trailingSlash: true` gives each post an `index.html` inside its route directory. The build writes this post to `out/blog/boring-blog-architecture/index.html`; GitHub Pages serves it without a Next.js server.
 
-## The details that made it usable
+## Publishing from the same files
 
-I also spent time on a few details that made the whole thing feel finished:
+The post files also supply the surrounding page data:
 
-- **Typography**: I used `@tailwindcss/typography` but customized it to remove the default backticks from inline code for a cleaner look.
 - **Metadata**: Each post automatically generates its own SEO tags and JSON-LD structured data.
-- **Syntax Highlighting**: I chose `rehype-pretty-code` (powered by Shiki). It uses the same TextMate grammars as VS Code, so the highlighting is close to what I am used to in the editor. Because it generates inline styles, there's no brittle CSS to import from `node_modules`.
-- **Sitemap**: A dynamic script crawls my posts directory to keep `sitemap.xml` up to date automatically.
+- **Sitemap**: A force-static Next.js metadata route uses the post loader to include listed posts and their publication or update dates in `sitemap.xml`.
 
-The result is simple on purpose. I can write in Markdown, keep everything in the repo, and ship a blog with a rendering path that is easy to understand.
+Prose uses `@tailwindcss/typography`, with the default backticks removed from inline code. Code highlighting is rendered during the build. Content changes follow the same path as code changes: edit the repository, rebuild, and deploy the resulting files.

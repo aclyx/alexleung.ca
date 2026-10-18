@@ -21,11 +21,13 @@ const POST_FIELDS = defineLiteralArray([
   "updated",
   "excerpt",
   "coverImage",
+  "coverAlt",
   "tags",
   "series",
   "seriesOrder",
   "readingTimeMinutes",
   "draft",
+  "unlisted",
   "content",
 ]);
 const POST_FIELD_SET: ReadonlySet<string> = new Set(POST_FIELDS);
@@ -36,6 +38,10 @@ type PostQueryOptions = {
   includeDrafts?: boolean;
 };
 
+type PostListQueryOptions = PostQueryOptions & {
+  includeUnlisted?: boolean;
+};
+
 export type Post = {
   slug: string;
   title: string;
@@ -43,11 +49,13 @@ export type Post = {
   updated?: string;
   excerpt?: string;
   coverImage?: string;
+  coverAlt?: string;
   tags: string[];
   series?: string;
   seriesOrder?: number;
   readingTimeMinutes?: number;
   draft: boolean;
+  unlisted: boolean;
   content: string;
 };
 
@@ -58,11 +66,13 @@ const PostFrontMatterSchema = z
     updated: z.string().trim().min(1).optional(),
     excerpt: z.string().trim().min(1).optional(),
     coverImage: z.string().trim().min(1).optional(),
+    coverAlt: z.string().trim().min(1).optional(),
     tags: z.array(z.string().trim().min(1)).default([]),
     series: z.string().trim().min(1).optional(),
     seriesOrder: z.number().int().positive().optional(),
     readingTimeMinutes: z.number().int().positive().optional(),
     draft: z.boolean().default(false),
+    unlisted: z.boolean().default(false),
   })
   .strict();
 
@@ -81,17 +91,17 @@ function assertValidDate(date: string, slug: string, key: "date" | "updated") {
 }
 
 function isFieldList(
-  value: readonly string[] | PostQueryOptions | undefined
+  value: readonly string[] | PostListQueryOptions | undefined
 ): value is readonly string[] {
   return Array.isArray(value);
 }
 
 function resolvePostQuery(
-  fieldsOrOptions?: readonly string[] | PostQueryOptions,
-  maybeOptions?: PostQueryOptions
+  fieldsOrOptions?: readonly string[] | PostListQueryOptions,
+  maybeOptions?: PostListQueryOptions
 ): {
   fields: readonly PostField[] | undefined;
-  options: PostQueryOptions | undefined;
+  options: PostListQueryOptions | undefined;
 } {
   if (!isFieldList(fieldsOrOptions)) {
     return {
@@ -184,11 +194,13 @@ function parsePostBySlug(slug: string): Post | null {
       : undefined,
     excerpt: frontMatter.excerpt,
     coverImage: frontMatter.coverImage,
+    coverAlt: frontMatter.coverAlt,
     tags: frontMatter.tags,
     series: frontMatter.series,
     seriesOrder: frontMatter.seriesOrder,
     readingTimeMinutes: frontMatter.readingTimeMinutes,
     draft: frontMatter.draft,
+    unlisted: frontMatter.unlisted,
     content,
   };
 }
@@ -256,24 +268,50 @@ function assertUniqueSeriesOrder(posts: readonly Post[]) {
 
 type RelatedPost = Pick<
   Post,
-  "slug" | "title" | "date" | "excerpt" | "coverImage" | "tags"
+  "slug" | "title" | "date" | "excerpt" | "coverImage" | "coverAlt" | "tags"
 >;
+
+type SeriesPost = Pick<Post, "slug" | "title" | "seriesOrder">;
+
+type SeriesNavigation = {
+  name: string;
+  currentPart: number;
+  totalParts: number;
+  previousPost?: SeriesPost;
+  nextPost?: SeriesPost;
+};
+
+type SeriesSummary = {
+  name: string;
+  count: number;
+  firstPost: SeriesPost;
+};
 
 type GetRelatedPostsOptions = {
   limit?: number;
   includeDrafts?: boolean;
 };
 
+const NON_TOPIC_TAGS = new Set([
+  "Reflection",
+  "Book Notes",
+  "Review",
+  "Learning",
+]);
+
 function getRelatedScore(target: Post, candidate: Post): number {
   const targetTags = new Set(target.tags);
-  const sharedTagCount = candidate.tags.filter((tag) =>
-    targetTags.has(tag)
-  ).length;
-  const tagScore = sharedTagCount * 4;
+  const sharedTags = candidate.tags.filter((tag) => targetTags.has(tag));
+  const tagScore = sharedTags.length * 4;
   const seriesScore =
     target.series && candidate.series && target.series === candidate.series
       ? 2
       : 0;
+
+  if (!sharedTags.some((tag) => !NON_TOPIC_TAGS.has(tag)) && !seriesScore) {
+    return 0;
+  }
+
   const daysDiff =
     Math.abs(
       new Date(target.date).getTime() - new Date(candidate.date).getTime()
@@ -290,6 +328,25 @@ function isPostField(field: string): field is PostField {
 
 function pickPostFields<T extends PostField>(post: Post, fields: readonly T[]) {
   return Object.fromEntries(fields.map((field) => [field, post[field]]));
+}
+
+function getOrderedSeriesPosts(
+  series: string,
+  options?: PostQueryOptions
+): SeriesPost[] {
+  return getAllPosts({
+    includeDrafts: options?.includeDrafts ?? false,
+  })
+    .filter(
+      (post): post is Post & { seriesOrder: number } =>
+        post.series === series && Boolean(post.seriesOrder)
+    )
+    .sort((post1, post2) => post1.seriesOrder - post2.seriesOrder)
+    .map((post) => ({
+      slug: post.slug,
+      title: post.title,
+      seriesOrder: post.seriesOrder,
+    }));
 }
 
 function getPostSlugs() {
@@ -326,19 +383,21 @@ export function getPostBySlug(
   return pickPostFields(post, fields);
 }
 
-export function getAllPosts(options?: PostQueryOptions): Post[];
+export function getAllPosts(options?: PostListQueryOptions): Post[];
 export function getAllPosts<T extends PostField>(
   fields: readonly T[],
-  options?: PostQueryOptions
+  options?: PostListQueryOptions
 ): Array<Pick<Post, T>>;
 export function getAllPosts(
-  fieldsOrOptions?: readonly string[] | PostQueryOptions,
-  maybeOptions?: PostQueryOptions
+  fieldsOrOptions?: readonly string[] | PostListQueryOptions,
+  maybeOptions?: PostListQueryOptions
 ) {
   const { fields, options } = resolvePostQuery(fieldsOrOptions, maybeOptions);
   const includeDrafts = options?.includeDrafts ?? false;
+  const includeUnlisted = options?.includeUnlisted ?? false;
   const posts = getCachedAllPosts().filter(
-    (post) => includeDrafts || !post.draft
+    (post) =>
+      (includeDrafts || !post.draft) && (includeUnlisted || !post.unlisted)
   );
 
   if (!fields || fields.length === 0) {
@@ -346,6 +405,70 @@ export function getAllPosts(
   }
 
   return posts.map((post) => pickPostFields(post, fields));
+}
+
+export function getSeriesNavigation(
+  slug: string,
+  options?: PostQueryOptions
+): SeriesNavigation | null {
+  const post = getPostBySlug(slug, {
+    includeDrafts: options?.includeDrafts ?? false,
+  });
+
+  if (!post?.series || !post.seriesOrder) {
+    return null;
+  }
+
+  const seriesPosts = getOrderedSeriesPosts(post.series, options);
+
+  if (seriesPosts.length <= 1) {
+    return null;
+  }
+
+  const currentIndex = seriesPosts.findIndex(
+    (seriesPost) => seriesPost.slug === post.slug
+  );
+
+  if (currentIndex === -1) {
+    return null;
+  }
+
+  return {
+    name: post.series,
+    currentPart: currentIndex + 1,
+    totalParts: seriesPosts.length,
+    previousPost: seriesPosts[currentIndex - 1],
+    nextPost: seriesPosts[currentIndex + 1],
+  };
+}
+
+export function getSeriesSummaries(
+  options?: PostQueryOptions
+): SeriesSummary[] {
+  const posts = getAllPosts({
+    includeDrafts: options?.includeDrafts ?? false,
+  });
+  const seriesNames = new Set(
+    posts.flatMap((post) =>
+      post.series && post.seriesOrder ? [post.series] : []
+    )
+  );
+
+  return [...seriesNames]
+    .map((series) => {
+      const seriesPosts = getOrderedSeriesPosts(series, options);
+
+      return {
+        name: series,
+        count: seriesPosts.length,
+        firstPost: seriesPosts[0],
+      };
+    })
+    .filter(
+      (summary): summary is SeriesSummary =>
+        summary.count > 1 && Boolean(summary.firstPost)
+    )
+    .sort((summary1, summary2) => summary1.name.localeCompare(summary2.name));
 }
 
 export function getRelatedPosts(
@@ -373,6 +496,7 @@ export function getRelatedPosts(
       post: candidate,
       score: getRelatedScore(target, candidate),
     }))
+    .filter((entry) => entry.score > 0)
     .sort((a, b) => {
       if (b.score !== a.score) {
         return b.score - a.score;
@@ -388,20 +512,13 @@ export function getRelatedPosts(
       return a.post.slug.localeCompare(b.post.slug);
     });
 
-  const hasNonZeroScore = scored.some((entry) => entry.score > 0);
-  const ranked = hasNonZeroScore
-    ? scored
-    : scored.sort(
-        (a, b) =>
-          new Date(b.post.date).getTime() - new Date(a.post.date).getTime()
-      );
-
-  return ranked.slice(0, limit).map(({ post }) => ({
+  return scored.slice(0, limit).map(({ post }) => ({
     slug: post.slug,
     title: post.title,
     date: post.date,
     excerpt: post.excerpt,
     coverImage: post.coverImage,
+    coverAlt: post.coverAlt,
     tags: post.tags,
   }));
 }

@@ -5,149 +5,96 @@ import { runLoadFlow } from "@/features/load-flow/solver/runLoadFlow";
 
 import { LoadFlowWorkspace } from "../LoadFlowWorkspace";
 
-const formatBranchFlowValue = (value: number) => value.toFixed(2);
+function chooseNetwork(id: string) {
+  fireEvent.change(screen.getByLabelText("Network"), { target: { value: id } });
+}
+function inspect(id: string) {
+  fireEvent.change(screen.getByLabelText("Inspect"), { target: { value: id } });
+  fireEvent.click(screen.getByText("Edit selected element"));
+}
 
-describe("LoadFlowWorkspace", () => {
-  it("loads IEEE 14-Bus by default", () => {
-    render(<LoadFlowWorkspace />);
+test("starts with a converged three-bus network and motion off", () => {
+  render(<LoadFlowWorkspace />);
+  expect(screen.getByLabelText("Network")).toHaveValue("three-bus-with-pv");
+  expect(screen.getByRole("status")).toHaveTextContent("Converged");
+  expect(screen.getByRole("button", { name: "Animate flow" })).toHaveAttribute(
+    "aria-pressed",
+    "false"
+  );
+  expect(screen.queryByTestId("flow-motion")).not.toBeInTheDocument();
+});
 
-    expect(
-      screen.getByText(/Active solve case: IEEE 14-Bus/i)
-    ).toBeInTheDocument();
-    expect(screen.getByText(/converged in/i)).toBeInTheDocument();
+test("keeps the original branch results table tied to solved terminal values", () => {
+  render(<LoadFlowWorkspace />);
+  chooseNetwork("two-bus-radial");
+  fireEvent.click(screen.getByText("Bus voltages & branch flows"));
+  const table = within(
+    screen.getByRole("table", { name: "Branch flows and losses" })
+  );
+  const flow = runLoadFlow(
+    getReferenceScenarioById("two-bus-radial")!.loadFlowCase
+  ).branchFlows![0];
+  expect(
+    table.getByRole("columnheader", { name: "From end" })
+  ).toBeInTheDocument();
+  expect(
+    table.getByRole("columnheader", { name: "To end" })
+  ).toBeInTheDocument();
+  for (const value of [
+    flow.pFromToMW,
+    flow.qFromToMVar,
+    flow.pToFromMW,
+    flow.qToFromMVar,
+    flow.pLossMW,
+    flow.qLossMVar,
+  ])
+    expect(table.getAllByText(value.toFixed(2)).length).toBeGreaterThan(0);
+});
+
+test("scales loads, switches overlays, and resets without losing selection", () => {
+  const { container } = render(<LoadFlowWorkspace />);
+  fireEvent.change(screen.getByRole("slider"), { target: { value: "150" } });
+  expect(screen.getByText("165.0 MW / 60.0 MVAr")).toBeInTheDocument();
+  fireEvent.click(screen.getByRole("button", { name: "Q · MVAr" }));
+  expect(container.querySelector('[data-component="p"]')).toBeNull();
+  expect(container.querySelector('[data-component="q"]')).not.toBeNull();
+  inspect("BRANCH:line-1-2");
+  const reactance = screen.getByLabelText("X (pu)");
+  fireEvent.change(reactance, { target: { value: "0.08" } });
+  fireEvent.blur(reactance);
+  fireEvent.click(screen.getByRole("button", { name: "Reset network" }));
+  expect(screen.getByLabelText("Inspect")).toHaveValue("BRANCH:line-1-2");
+  expect(screen.getByLabelText("X (pu)")).toHaveValue(0.06);
+  expect(screen.getByRole("slider")).toHaveValue("100");
+});
+
+test("hides stale flow/voltage overlays and tables when a line outage islands a load", () => {
+  const { container } = render(<LoadFlowWorkspace />);
+  chooseNetwork("two-bus-radial");
+  fireEvent.click(screen.getByRole("button", { name: "Animate flow" }));
+  expect(screen.getAllByTestId("flow-motion").length).toBeGreaterThan(0);
+  inspect("BRANCH:line-1");
+  fireEvent.change(screen.getByLabelText("Line status"), {
+    target: { value: "OUT_OF_SERVICE" },
   });
+  expect(screen.getByRole("alert")).toHaveTextContent("island");
+  expect(container.querySelector("[data-component]")).toBeNull();
+  expect(screen.queryByTestId("flow-motion")).not.toBeInTheDocument();
+  expect(
+    screen.queryByText("Bus voltages & branch flows")
+  ).not.toBeInTheDocument();
+  expect(screen.getAllByText("Unsolved")).toHaveLength(2);
+});
 
-  it("solves the selected reference scenario using full scenario data", () => {
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: "2-Bus Radial" }));
-
-    expect(screen.getByText(/converged in/i)).toBeInTheDocument();
-    expect(
-      screen.getByText(/Active solve case: 2-Bus Radial/i)
-    ).toBeInTheDocument();
-    expect(screen.getByText(/Grid • SLACK • 230 kV/i)).toBeInTheDocument();
-    expect(screen.getByText(/\"id\": \"load-1\"/i)).toBeInTheDocument();
-  });
-
-  it("shows branch MW, MVar, and loss results from the solver output", () => {
-    const scenario = getReferenceScenarioById("two-bus-radial");
-    expect(scenario).toBeDefined();
-
-    const branchFlow = runLoadFlow(scenario!.loadFlowCase).branchFlows?.[0];
-    expect(branchFlow).toBeDefined();
-
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: "2-Bus Radial" }));
-
-    const branchFlowTable = screen.getByRole("table", {
-      name: /branch flows and losses/i,
-    });
-    const branchFlowTableQueries = within(branchFlowTable);
-
-    expect(
-      branchFlowTableQueries.getByRole("columnheader", { name: "From → To" })
-    ).toBeInTheDocument();
-    expect(
-      branchFlowTableQueries.getByRole("columnheader", { name: "To → From" })
-    ).toBeInTheDocument();
-    expect(
-      branchFlowTableQueries.getByRole("columnheader", { name: "Loss" })
-    ).toBeInTheDocument();
-    expect(
-      branchFlowTableQueries.getAllByRole("columnheader", { name: "MW" })
-    ).toHaveLength(3);
-    expect(
-      branchFlowTableQueries.getAllByRole("columnheader", { name: "MVar" })
-    ).toHaveLength(3);
-    expect(
-      branchFlowTableQueries.getByText(
-        `${branchFlow!.fromBusId} → ${branchFlow!.toBusId}`
-      )
-    ).toBeInTheDocument();
-
-    [
-      branchFlow!.pFromToMW,
-      branchFlow!.qFromToMVar,
-      branchFlow!.pToFromMW,
-      branchFlow!.qToFromMVar,
-      branchFlow!.pLossMW,
-      branchFlow!.qLossMVar,
-    ].forEach((value) => {
-      expect(
-        branchFlowTableQueries.getAllByText(formatBranchFlowValue(value)).length
-      ).toBeGreaterThan(0);
-    });
-  });
-
-  it("keeps reference-bus setpoints when loading a scenario", () => {
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: "3-Bus PV + PQ" }));
-
-    expect(
-      screen.getByText(/"voltageMagnitudeSetpoint": 1.04/i)
-    ).toBeInTheDocument();
-    expect(
-      screen.getByText(/"voltageAngleSetpointDeg": 0/i)
-    ).toBeInTheDocument();
-  });
-
-  it("shows and edits branch reactance in the properties panel", () => {
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: /line-1-2-1/i }));
-
-    const xInput = screen.getByLabelText(/X \(pu\)/i);
-    expect(xInput).toHaveValue(0.05917);
-
-    fireEvent.change(xInput, { target: { value: "0.07" } });
-
-    expect(xInput).toHaveValue(0.07);
-  });
-
-  it("can reset an edited reference scenario back to source values", () => {
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: /Bus 1 • SLACK/i }));
-    const baseKVInput = screen.getByLabelText(/Base kV/i);
-    expect(baseKVInput).toHaveValue(0);
-
-    fireEvent.change(baseKVInput, { target: { value: "11" } });
-    expect(baseKVInput).toHaveValue(11);
-
-    fireEvent.click(
-      screen.getByRole("button", { name: /Reset active reference case/i })
-    );
-
-    expect(screen.getByLabelText(/Base kV/i)).toHaveValue(0);
-  });
-
-  it("preserves branch selection when resetting the active reference case", () => {
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: /line-1-2-1/i }));
-    const xInput = screen.getByLabelText(/X \(pu\)/i);
-    expect(xInput).toHaveValue(0.05917);
-
-    fireEvent.change(xInput, { target: { value: "0.09" } });
-    expect(screen.getByLabelText(/X \(pu\)/i)).toHaveValue(0.09);
-
-    fireEvent.click(
-      screen.getByRole("button", { name: /Reset active reference case/i })
-    );
-
-    expect(screen.getByLabelText(/X \(pu\)/i)).toHaveValue(0.05917);
-  });
-
-  it("shows additional branch fields for editing", () => {
-    render(<LoadFlowWorkspace />);
-
-    fireEvent.click(screen.getByRole("button", { name: /line-1-2-1/i }));
-
-    expect(screen.getByLabelText(/B\/2 \(pu\)/i)).toHaveValue(0.0264);
-    expect(screen.getByLabelText(/Thermal limit \(MVA\)/i)).toHaveValue(null);
-    expect(screen.getByLabelText(/Status/i)).toHaveValue("IN_SERVICE");
-  });
+test("supports signed load edits and keyboard diagram selection", () => {
+  render(<LoadFlowWorkspace />);
+  const bus = screen.getByRole("button", { name: /Bus Load Bus,/ });
+  fireEvent.keyDown(bus, { key: "Enter" });
+  expect(screen.getByLabelText("Inspect")).toHaveValue("BUS:bus-3");
+  fireEvent.click(screen.getByText("Edit selected element"));
+  const q = screen.getByLabelText("Load Q (MVAr)");
+  fireEvent.change(q, { target: { value: "-10" } });
+  fireEvent.blur(q);
+  expect(q).toHaveValue(-10);
+  expect(screen.getByRole("status")).toHaveTextContent("Converged");
 });

@@ -40,9 +40,9 @@ describe("buildRssFeedXml", () => {
     expect(xml).toBe("<rss>mock</rss>");
     expect(Feed).toHaveBeenCalledWith(
       expect.objectContaining({
-        title: "Alex Leung's Blog",
+        title: "Alex Leung's Writing",
         description:
-          "Notes on software systems, AI tools, learning, and small experiments.",
+          "Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.",
         id: "https://alexleung.ca/blog/",
         link: "https://alexleung.ca/blog/",
         image: "https://alexleung.ca/icon4.png",

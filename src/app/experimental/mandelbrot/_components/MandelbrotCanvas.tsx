@@ -1,57 +1,62 @@
 "use client";
 
-import { PointerEvent, useEffect, useRef, useState } from "react";
+import {
+  KeyboardEvent,
+  PointerEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
+import { actionClassNames } from "@/components/controlStyles";
 import {
   CanvasPoint,
-  ComplexPoint,
-  DragMode,
   MandelbrotSettings,
   PixelSize,
   PreciseViewport,
-  SelectionRect,
 } from "@/features/mandelbrot/types";
 import { useMandelbrotRender } from "@/features/mandelbrot/useMandelbrotRender";
 import {
-  boxZoomViewport,
-  constrainSelectionToAspect,
-  mapViewportPoint,
   panViewport,
-  selectionIsLargeEnough,
-  viewportsEqual,
   zoomViewportAtPoint,
 } from "@/features/mandelbrot/viewport";
 
 type MandelbrotCanvasProps = {
   viewport: PreciseViewport;
   settings: MandelbrotSettings;
-  dragMode: DragMode;
+  canGoBack: boolean;
+  magnificationLabel: string;
   onCanvasSizeChange: (size: PixelSize) => void;
   onPreviewViewport: (viewport: PreciseViewport | null) => void;
   onCommitViewport: (viewport: PreciseViewport) => void;
-  onHoverPointChange: (point: ComplexPoint | null) => void;
+  onBack: () => void;
   onZoomIn: () => void;
   onZoomOut: () => void;
   onReset: () => void;
 };
 
-type DragSession =
-  | {
-      kind: "pan";
-      anchor: CanvasPoint;
-      startViewport: PreciseViewport;
-      moved: boolean;
-    }
-  | {
-      kind: "box-zoom";
-      anchor: CanvasPoint;
-      moved: boolean;
-    };
+type DragSession = {
+  pointerId: number;
+  anchor: CanvasPoint;
+  startViewport: PreciseViewport;
+  latestViewport: PreciseViewport | null;
+  moved: boolean;
+};
 
 const DEFAULT_CANVAS_SIZE: PixelSize = {
   width: 960,
   height: 600,
 };
+
+const INITIAL_CANVAS_SIZE: PixelSize = {
+  width: 0,
+  height: 0,
+};
+
+const toolbarButtonClass = actionClassNames({
+  variant: "secondary",
+  size: "sm",
+});
 
 function pointsAreFarEnough(
   start: CanvasPoint,
@@ -82,27 +87,24 @@ function canvasPointFromClientPosition(
 export function MandelbrotCanvas({
   viewport,
   settings,
-  dragMode,
+  canGoBack,
+  magnificationLabel,
   onCanvasSizeChange,
   onPreviewViewport,
   onCommitViewport,
-  onHoverPointChange,
+  onBack,
   onZoomIn,
   onZoomOut,
   onReset,
 }: MandelbrotCanvasProps) {
   const cpuCanvasRef = useRef<HTMLCanvasElement>(null);
   const gpuCanvasRef = useRef<HTMLCanvasElement>(null);
+  const interactionCanvasRef = useRef<HTMLCanvasElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const viewportRef = useRef(viewport);
   const dragSessionRef = useRef<DragSession | null>(null);
-  const latestWheelViewportRef = useRef<PreciseViewport | null>(null);
-  const wheelTimerRef = useRef<number | null>(null);
-  const [canvasSize, setCanvasSize] = useState(DEFAULT_CANVAS_SIZE);
-  const canvasSizeRef = useRef(DEFAULT_CANVAS_SIZE);
-  const [selectionRect, setSelectionRect] = useState<SelectionRect | null>(
-    null
-  );
+  const [canvasSize, setCanvasSize] = useState(INITIAL_CANVAS_SIZE);
+  const canvasSizeRef = useRef(INITIAL_CANVAS_SIZE);
 
   viewportRef.current = viewport;
   canvasSizeRef.current = canvasSize;
@@ -114,6 +116,13 @@ export function MandelbrotCanvas({
     settings,
     size: canvasSize,
   });
+  const iterationLimitMessage =
+    renderState.phase === "ready" &&
+    renderState.requestedMaxIterations !== undefined &&
+    renderState.effectiveMaxIterations !== undefined &&
+    renderState.effectiveMaxIterations < renderState.requestedMaxIterations
+      ? `${renderState.backend === "cpu" ? "CPU render" : "Render"} used ${renderState.effectiveMaxIterations.toLocaleString("en-CA")} of ${renderState.requestedMaxIterations.toLocaleString("en-CA")} requested iterations.`
+      : null;
 
   useEffect(() => {
     const element = containerRef.current;
@@ -125,10 +134,7 @@ export function MandelbrotCanvas({
     const measure = () => {
       const rect = element.getBoundingClientRect();
       const nextSize = {
-        width: Math.max(
-          320,
-          Math.round(rect.width || DEFAULT_CANVAS_SIZE.width)
-        ),
+        width: Math.max(1, Math.round(rect.width || DEFAULT_CANVAS_SIZE.width)),
         height: Math.max(
           240,
           Math.round(rect.height || DEFAULT_CANVAS_SIZE.height)
@@ -169,45 +175,10 @@ export function MandelbrotCanvas({
     };
   }, [onCanvasSizeChange]);
 
-  useEffect(() => {
-    return () => {
-      cancelPendingWheelCommit();
-    };
-  }, []);
-
-  function cancelPendingWheelCommit() {
-    if (wheelTimerRef.current !== null) {
-      window.clearTimeout(wheelTimerRef.current);
-      wheelTimerRef.current = null;
-    }
-
-    latestWheelViewportRef.current = null;
-  }
-
-  function finalizeWheelPreview() {
-    if (!latestWheelViewportRef.current) {
-      return;
-    }
-
-    onCommitViewport(latestWheelViewportRef.current);
-    latestWheelViewportRef.current = null;
-  }
-
-  useEffect(() => {
-    if (
-      latestWheelViewportRef.current &&
-      !viewportsEqual(viewport, latestWheelViewportRef.current)
-    ) {
-      cancelPendingWheelCommit();
-    }
-  }, [viewport]);
-
   function handlePointerDown(event: PointerEvent<HTMLCanvasElement>) {
-    if (event.button !== 0) {
+    if (event.button !== 0 || dragSessionRef.current) {
       return;
     }
-
-    cancelPendingWheelCommit();
 
     const point = canvasPointFromClientPosition(
       event.currentTarget,
@@ -215,280 +186,251 @@ export function MandelbrotCanvas({
       event.clientY
     );
 
-    if (dragMode === "pan") {
-      dragSessionRef.current = {
-        kind: "pan",
-        anchor: point,
-        startViewport: viewportRef.current,
-        moved: false,
-      };
-    } else {
-      dragSessionRef.current = {
-        kind: "box-zoom",
-        anchor: point,
-        moved: false,
-      };
-      setSelectionRect({
-        x: point.x,
-        y: point.y,
-        width: 0,
-        height: 0,
-      });
-    }
+    dragSessionRef.current = {
+      pointerId: event.pointerId,
+      anchor: point,
+      startViewport: viewportRef.current,
+      latestViewport: null,
+      moved: false,
+    };
 
     event.currentTarget.setPointerCapture?.(event.pointerId);
   }
 
   function handlePointerMove(event: PointerEvent<HTMLCanvasElement>) {
+    const dragSession = dragSessionRef.current;
+
+    if (!dragSession || dragSession.pointerId !== event.pointerId) {
+      return;
+    }
+
     const point = canvasPointFromClientPosition(
       event.currentTarget,
       event.clientX,
       event.clientY
     );
-    onHoverPointChange(
-      mapViewportPoint(viewportRef.current, canvasSize, point)
-    );
-
-    const dragSession = dragSessionRef.current;
-
-    if (!dragSession) {
-      return;
-    }
-
-    if (dragSession.kind === "pan") {
-      const nextViewport = panViewport(dragSession.startViewport, canvasSize, {
-        x: point.x - dragSession.anchor.x,
-        y: point.y - dragSession.anchor.y,
-      });
-
-      dragSessionRef.current = {
-        ...dragSession,
-        moved: pointsAreFarEnough(dragSession.anchor, point),
-      };
-      onPreviewViewport(nextViewport);
-      return;
-    }
-
-    const nextSelection = constrainSelectionToAspect(
-      dragSession.anchor,
-      point,
-      canvasSize
-    );
+    const moved =
+      dragSession.moved || pointsAreFarEnough(dragSession.anchor, point);
+    const latestViewport = moved
+      ? panViewport(dragSession.startViewport, canvasSize, {
+          x: point.x - dragSession.anchor.x,
+          y: point.y - dragSession.anchor.y,
+        })
+      : null;
 
     dragSessionRef.current = {
       ...dragSession,
-      moved: pointsAreFarEnough(dragSession.anchor, point),
+      latestViewport,
+      moved,
     };
-    setSelectionRect(nextSelection);
+
+    if (latestViewport) {
+      onPreviewViewport(latestViewport);
+    }
   }
 
   function handlePointerUp(event: PointerEvent<HTMLCanvasElement>) {
     const dragSession = dragSessionRef.current;
+
+    if (!dragSession || dragSession.pointerId !== event.pointerId) {
+      return;
+    }
+
     const point = canvasPointFromClientPosition(
       event.currentTarget,
       event.clientX,
       event.clientY
     );
+    const moved =
+      dragSession.moved || pointsAreFarEnough(dragSession.anchor, point);
 
     dragSessionRef.current = null;
     event.currentTarget.releasePointerCapture?.(event.pointerId);
 
-    if (!dragSession) {
-      return;
-    }
-
-    if (dragSession.kind === "pan") {
-      if (dragSession.moved) {
-        cancelPendingWheelCommit();
-        onCommitViewport(
-          panViewport(dragSession.startViewport, canvasSize, {
-            x: point.x - dragSession.anchor.x,
-            y: point.y - dragSession.anchor.y,
-          })
-        );
-        return;
-      }
-
+    if (moved) {
       onPreviewViewport(null);
-      cancelPendingWheelCommit();
       onCommitViewport(
-        zoomViewportAtPoint(viewportRef.current, canvasSize, point, 0.5)
+        panViewport(dragSession.startViewport, canvasSize, {
+          x: point.x - dragSession.anchor.x,
+          y: point.y - dragSession.anchor.y,
+        })
       );
       return;
     }
 
-    const nextSelection = constrainSelectionToAspect(
-      dragSession.anchor,
-      point,
-      canvasSize
-    );
-
-    setSelectionRect(null);
-
-    if (selectionIsLargeEnough(nextSelection)) {
-      cancelPendingWheelCommit();
-      onCommitViewport(
-        boxZoomViewport(
-          viewportRef.current,
-          canvasSize,
-          dragSession.anchor,
-          point
-        )
-      );
-      return;
-    }
-
-    cancelPendingWheelCommit();
+    onPreviewViewport(null);
     onCommitViewport(
       zoomViewportAtPoint(viewportRef.current, canvasSize, point, 0.5)
     );
   }
 
-  function handlePointerLeave() {
-    onHoverPointChange(null);
-  }
+  function handlePointerCancel(event: PointerEvent<HTMLCanvasElement>) {
+    const dragSession = dragSessionRef.current;
 
-  useEffect(() => {
-    const canvas = cpuCanvasRef.current;
-
-    if (!canvas) {
+    if (!dragSession || dragSession.pointerId !== event.pointerId) {
       return;
     }
 
-    const handleWheel = (event: WheelEvent) => {
-      event.preventDefault();
+    dragSessionRef.current = null;
 
-      if (wheelTimerRef.current !== null) {
-        window.clearTimeout(wheelTimerRef.current);
-      }
+    if (event.currentTarget.hasPointerCapture?.(event.pointerId)) {
+      event.currentTarget.releasePointerCapture?.(event.pointerId);
+    }
 
-      const point = canvasPointFromClientPosition(
-        canvas,
-        event.clientX,
-        event.clientY
-      );
-      const zoomMultiplier = Math.exp(event.deltaY * 0.0015);
-      const nextViewport = zoomViewportAtPoint(
-        viewportRef.current,
+    onPreviewViewport(null);
+
+    if (dragSession.moved && dragSession.latestViewport) {
+      onCommitViewport(dragSession.latestViewport);
+    }
+  }
+
+  function handleKeyDown(event: KeyboardEvent<HTMLCanvasElement>) {
+    const currentViewport = viewportRef.current;
+    const horizontalStep = canvasSize.width * 0.12;
+    const verticalStep = canvasSize.height * 0.12;
+    let nextViewport: PreciseViewport | null = null;
+
+    if (event.key === "+" || event.key === "=") {
+      nextViewport = zoomViewportAtPoint(
+        currentViewport,
         canvasSize,
-        point,
-        zoomMultiplier
+        { x: canvasSize.width / 2, y: canvasSize.height / 2 },
+        0.5
       );
+    } else if (event.key === "-" || event.key === "_") {
+      nextViewport = zoomViewportAtPoint(
+        currentViewport,
+        canvasSize,
+        { x: canvasSize.width / 2, y: canvasSize.height / 2 },
+        2
+      );
+    } else if (event.key === "0" || event.key === "Home") {
+      event.preventDefault();
+      onReset();
+      return;
+    } else if (event.key === "ArrowLeft") {
+      nextViewport = panViewport(currentViewport, canvasSize, {
+        x: horizontalStep,
+        y: 0,
+      });
+    } else if (event.key === "ArrowRight") {
+      nextViewport = panViewport(currentViewport, canvasSize, {
+        x: -horizontalStep,
+        y: 0,
+      });
+    } else if (event.key === "ArrowUp") {
+      nextViewport = panViewport(currentViewport, canvasSize, {
+        x: 0,
+        y: verticalStep,
+      });
+    } else if (event.key === "ArrowDown") {
+      nextViewport = panViewport(currentViewport, canvasSize, {
+        x: 0,
+        y: -verticalStep,
+      });
+    }
 
-      latestWheelViewportRef.current = nextViewport;
-      onPreviewViewport(nextViewport);
+    if (!nextViewport) {
+      return;
+    }
 
-      wheelTimerRef.current = window.setTimeout(() => {
-        finalizeWheelPreview();
-        wheelTimerRef.current = null;
-      }, 140);
-    };
-
-    canvas.addEventListener("wheel", handleWheel, { passive: false });
-
-    return () => {
-      canvas.removeEventListener("wheel", handleWheel);
-    };
-  }, [canvasSize, onPreviewViewport]);
-
-  const selectionStyles = selectionRect
-    ? {
-        left: `${selectionRect.x}px`,
-        top: `${selectionRect.y}px`,
-        width: `${selectionRect.width}px`,
-        height: `${selectionRect.height}px`,
-      }
-    : undefined;
+    event.preventDefault();
+    onCommitViewport(nextViewport);
+  }
 
   return (
-    <div
-      ref={containerRef}
-      className="relative min-h-[24rem] overflow-hidden rounded-xl border border-cyan-500/20 bg-slate-950 shadow-[0_24px_80px_rgba(8,145,178,0.18)]"
-    >
-      <div className="absolute inset-0 z-0">
-        <canvas
-          ref={gpuCanvasRef}
-          className="pointer-events-none absolute inset-0 h-full w-full"
-          aria-hidden="true"
-        />
+    <div className="overflow-hidden rounded-xl border border-line bg-surface shadow-sm">
+      <div className="flex flex-col gap-3 border-b border-line px-4 py-3 lg:flex-row lg:items-center lg:justify-between">
+        <p id="mandelbrot-canvas-instructions" className="text-sm text-muted">
+          Click or tap to zoom. Drag to pan.
+        </p>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className={toolbarButtonClass}
+            disabled={!canGoBack}
+            onClick={onBack}
+          >
+            Undo view
+          </button>
+          <button
+            type="button"
+            className={toolbarButtonClass}
+            onClick={onZoomIn}
+          >
+            Zoom in
+          </button>
+          <button
+            type="button"
+            className={toolbarButtonClass}
+            onClick={onZoomOut}
+          >
+            Zoom out
+          </button>
+          <button
+            type="button"
+            className={toolbarButtonClass}
+            onClick={onReset}
+          >
+            Reset
+          </button>
+        </div>
+      </div>
+
+      <div
+        ref={containerRef}
+        className="relative min-h-[20rem] overflow-hidden bg-canvas sm:min-h-[28rem]"
+      >
+        <div className="pointer-events-none absolute inset-0">
+          <canvas
+            ref={gpuCanvasRef}
+            className="absolute inset-0 h-full w-full"
+            aria-hidden="true"
+          />
+
+          <canvas
+            ref={cpuCanvasRef}
+            data-testid="mandelbrot-render-canvas"
+            className="absolute inset-0 block h-full w-full"
+            aria-hidden="true"
+          />
+        </div>
 
         <canvas
-          ref={cpuCanvasRef}
-          className={`absolute inset-0 block h-full w-full touch-none ${
-            dragMode === "box-zoom"
-              ? "cursor-crosshair"
-              : "cursor-grab active:cursor-grabbing"
-          }`}
+          ref={interactionCanvasRef}
+          className="absolute inset-0 z-10 block h-full w-full touch-none cursor-grab bg-transparent outline-none active:cursor-grabbing focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-paper"
           onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
           onPointerUp={handlePointerUp}
-          onPointerLeave={handlePointerLeave}
-          aria-label="Mandelbrot set rendering canvas"
+          onPointerCancel={handlePointerCancel}
+          onLostPointerCapture={handlePointerCancel}
+          onKeyDown={handleKeyDown}
+          tabIndex={0}
+          aria-describedby="mandelbrot-canvas-instructions mandelbrot-render-status"
+          aria-label="Interactive Mandelbrot set. Arrow keys pan, plus and minus zoom, and zero resets the view."
         />
       </div>
 
-      <div className="pointer-events-none absolute inset-0 z-10 bg-[radial-gradient(circle_at_top,rgba(56,189,248,0.08),transparent_55%)]" />
-
-      {selectionRect ? (
-        <div
-          className="pointer-events-none absolute z-20 border border-cyan-200 bg-cyan-300/15 shadow-[0_0_0_1px_rgba(103,232,249,0.4)]"
-          style={selectionStyles}
-        />
-      ) : null}
-
-      <div className="pointer-events-none absolute left-4 top-4 z-30 rounded-md border border-white/10 bg-slate-950/80 px-3 py-2 text-xs text-gray-200 backdrop-blur-sm">
-        <p className="font-semibold text-cyan-100">Plot controls</p>
-        <p>Wheel to zoom at cursor.</p>
-        <p>
-          {dragMode === "pan"
-            ? "Click to zoom in, drag to pan."
-            : "Click to zoom in, drag a box to reframe."}
-        </p>
-      </div>
-
-      <div className="absolute right-4 top-4 z-30 flex gap-2">
-        <button
-          type="button"
-          className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
-          onClick={() => {
-            cancelPendingWheelCommit();
-            onZoomIn();
-          }}
-        >
-          Zoom in
-        </button>
-        <button
-          type="button"
-          className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
-          onClick={() => {
-            cancelPendingWheelCommit();
-            onZoomOut();
-          }}
-        >
-          Zoom out
-        </button>
-        <button
-          type="button"
-          className="rounded-md border border-white/15 bg-slate-950/80 px-3 py-2 text-sm text-white backdrop-blur-sm transition hover:border-cyan-300 hover:text-cyan-100"
-          onClick={() => {
-            cancelPendingWheelCommit();
-            onReset();
-          }}
-        >
-          Reset
-        </button>
-      </div>
-
-      <div className="pointer-events-none absolute bottom-4 left-4 z-30 rounded-md border border-white/10 bg-slate-950/80 px-3 py-2 text-xs text-gray-200 backdrop-blur-sm">
-        <p className="font-semibold text-cyan-100">
-          {renderState.phase === "ready"
-            ? "Render ready"
-            : renderState.phase === "error"
-              ? "Render error"
-              : "Rendering"}
-        </p>
-        <p>{renderState.message}</p>
-        <p>Backend: {renderState.backend === "webgpu" ? "WebGPU" : "CPU"}</p>
+      <div
+        id="mandelbrot-render-status"
+        role="status"
+        aria-live="polite"
+        className="border-t border-line px-4 py-3 text-xs text-muted"
+      >
+        {renderState.phase === "error" ? (
+          <p>
+            <span className="font-semibold text-ink">Render error. </span>
+            <span>{renderState.message}</span>
+          </p>
+        ) : renderState.phase === "ready" ? (
+          <p>
+            <span className="sr-only">{renderState.message} </span>
+            {magnificationLabel}
+            {iterationLimitMessage ? ` · ${iterationLimitMessage}` : null}
+          </p>
+        ) : (
+          <p>{renderState.message}</p>
+        )}
       </div>
     </div>
   );

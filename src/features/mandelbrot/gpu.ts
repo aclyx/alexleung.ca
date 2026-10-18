@@ -1,8 +1,4 @@
-import {
-  ColoringMode,
-  PaletteId,
-  RenderRequest,
-} from "@/features/mandelbrot/types";
+import { PaletteId, RenderRequest } from "@/features/mandelbrot/types";
 
 type WebGpu = {
   getPreferredCanvasFormat?: () => string;
@@ -36,6 +32,7 @@ type WebGpuDevice = {
 };
 
 type WebGpuQueue = {
+  onSubmittedWorkDone?: () => Promise<void>;
   submit: (commandBuffers: unknown[]) => void;
   writeBuffer: (
     buffer: WebGpuBuffer,
@@ -191,6 +188,8 @@ type WebGpuAvailability = {
   reason?: string;
 };
 
+const WEBGPU_DETECTION_TIMEOUT_MS = 1500;
+
 type WebGpuRenderResult = {
   completed: boolean;
   rendered: boolean;
@@ -224,11 +223,6 @@ const PALETTE_IDS: Readonly<Record<PaletteId, number>> = {
   oceanic: 0,
   ember: 1,
   glacier: 2,
-};
-
-const COLORING_MODE_IDS: Readonly<Record<ColoringMode, number>> = {
-  smooth: 0,
-  bands: 1,
 };
 
 function estimateFloat32Ulp(value: number): number {
@@ -365,7 +359,6 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
 
   let maxIterations = settings[2];
   let paletteIndex = settings[3];
-  let coloringMode = settings[4];
   let left = viewport[0];
   let top = viewport[1];
   let stepX = viewport[2];
@@ -413,12 +406,9 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
     return;
   }
 
-  var normalizedValue = smoothIteration / f32(maxIterations);
-
-  if (coloringMode == 1u) {
-    normalizedValue = f32(escapedIterations) / f32(maxIterations);
-  }
-
+  // Match normalizedEscapeValue in palettes.ts.
+  let iteration = clamp(smoothIteration, 0.0, f32(maxIterations));
+  let normalizedValue = 0.2 + 0.8 * (0.5 - 0.5 * cos(sqrt(iteration)));
   pixels[index] = packColor(paletteColorAt(paletteIndex, normalizedValue));
 }
 `;
@@ -739,12 +729,23 @@ export async function detectWebGpuAvailability(): Promise<WebGpuAvailability> {
     };
   }
 
-  const adapter = await gpu.requestAdapter();
+  let timedOut = false;
+  const adapter = await Promise.race([
+    gpu.requestAdapter(),
+    new Promise<null>((resolve) => {
+      setTimeout(() => {
+        timedOut = true;
+        resolve(null);
+      }, WEBGPU_DETECTION_TIMEOUT_MS);
+    }),
+  ]);
 
   if (!adapter) {
     return {
       isAvailable: false,
-      reason: "No compatible WebGPU adapter was found.",
+      reason: timedOut
+        ? "WebGPU adapter detection timed out."
+        : "No compatible WebGPU adapter was found.",
     };
   }
 
@@ -795,7 +796,6 @@ export async function renderMandelbrotWithWebGpu(
       safeHeight,
       renderRequest.settings.maxIterations,
       PALETTE_IDS[renderRequest.settings.paletteId],
-      COLORING_MODE_IDS[renderRequest.settings.coloringMode],
     ]);
     const viewportData = new Float32Array([left, top, stepX, stepY]);
     const outputBytes = safeWidth * safeHeight * Uint32Array.BYTES_PER_ELEMENT;
@@ -843,7 +843,6 @@ export async function renderMandelbrotWithWebGpu(
 
       device.queue.writeBuffer(settingsBuffer, 0, settingsData);
       device.queue.writeBuffer(viewportBuffer, 0, viewportData);
-      renderRequest.onProgress?.(0.15);
 
       const commandEncoder = device.createCommandEncoder();
       const passEncoder = commandEncoder.beginComputePass();
@@ -870,7 +869,19 @@ export async function renderMandelbrotWithWebGpu(
 
       if (presentedDirectly) {
         device.queue.submit([commandEncoder.finish()]);
-        renderRequest.onProgress?.(1);
+
+        if (device.queue.onSubmittedWorkDone) {
+          await device.queue.onSubmittedWorkDone();
+        } else {
+          await nextFrame();
+        }
+
+        if (renderRequest.signal?.aborted) {
+          return {
+            completed: false,
+            rendered: true,
+          };
+        }
 
         return {
           completed: true,
@@ -886,7 +897,6 @@ export async function renderMandelbrotWithWebGpu(
         outputBytes
       );
       device.queue.submit([commandEncoder.finish()]);
-      renderRequest.onProgress?.(0.45);
 
       await readbackBuffer.mapAsync(GPU_MAP_MODE_READ);
 
@@ -902,7 +912,6 @@ export async function renderMandelbrotWithWebGpu(
       const pixels = unpackPixels(packedPixels);
 
       readbackBuffer.unmap();
-      renderRequest.onProgress?.(0.75);
 
       for (
         let startRow = 0;
@@ -925,9 +934,6 @@ export async function renderMandelbrotWithWebGpu(
           rowCount,
           pixels: pixels.slice(pixelStart, pixelEnd),
         });
-        renderRequest.onProgress?.(
-          0.75 + ((startRow + rowCount) / safeHeight) * 0.25
-        );
 
         await nextFrame();
       }

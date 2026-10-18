@@ -1,25 +1,30 @@
 "use client";
 
-import { RefObject, useEffect, useState } from "react";
+import { RefObject, useEffect, useRef, useState } from "react";
 
+import { calculateViewportFramePlacement } from "@/features/mandelbrot/framePreview";
 import {
   renderMandelbrotWithStrategy,
   shouldAttemptWebGpu,
 } from "@/features/mandelbrot/renderer";
+import { createMandelbrotRenderPlan } from "@/features/mandelbrot/renderPlan";
 import {
   MandelbrotSettings,
   PixelSize,
   PreciseViewport,
-  RenderBackend,
 } from "@/features/mandelbrot/types";
+import { cloneViewport } from "@/features/mandelbrot/viewport";
+import { renderMandelbrotInWorker } from "@/features/mandelbrot/workerRenderer";
 
 type RenderPhase = "idle" | "preview" | "refining" | "ready" | "error";
 
 type RenderState = {
   phase: RenderPhase;
-  progress: number;
   message: string;
-  backend: RenderBackend;
+  backend?: Awaited<ReturnType<typeof renderMandelbrotWithStrategy>>["backend"];
+  requestedMaxIterations?: number;
+  effectiveMaxIterations?: number;
+  cpuBudgetApplied?: boolean;
 };
 
 type UseMandelbrotRenderInput = {
@@ -28,6 +33,12 @@ type UseMandelbrotRenderInput = {
   viewport: PreciseViewport;
   settings: MandelbrotSettings;
   size: PixelSize;
+};
+
+type CompletedFrame = {
+  canvas: HTMLCanvasElement;
+  size: PixelSize;
+  viewport: PreciseViewport;
 };
 
 function renderSizeForScale(size: PixelSize, scale: number): PixelSize {
@@ -46,10 +57,9 @@ export function useMandelbrotRender({
 }: UseMandelbrotRenderInput): RenderState {
   const [renderState, setRenderState] = useState<RenderState>({
     phase: "idle",
-    progress: 0,
     message: "Waiting for canvas size.",
-    backend: "cpu",
   });
+  const completedFrameRef = useRef<CompletedFrame | null>(null);
 
   useEffect(() => {
     const canvas = cpuCanvasRef.current;
@@ -64,81 +74,90 @@ export function useMandelbrotRender({
     if (!context) {
       setRenderState({
         phase: "error",
-        progress: 0,
         message: "Canvas 2D rendering is unavailable in this browser.",
-        backend: "cpu",
       });
       return;
     }
 
     const abortController = new AbortController();
-    const previewScale = Math.min(settings.resolutionScale * 0.5, 0.4);
-    const scales =
-      settings.resolutionScale - previewScale >= 0.15
-        ? [previewScale, settings.resolutionScale]
-        : [settings.resolutionScale];
+    const renderPlan = createMandelbrotRenderPlan(viewport, settings);
     const renderingCanvas = canvas;
     const renderingContext = context;
     const renderingGpuCanvas = gpuCanvas;
+    const previousFrame = completedFrameRef.current;
 
     let isMounted = true;
 
-    async function runRender() {
-      let activeBackend: RenderBackend = "cpu";
-      const previousFrame =
-        (renderingCanvas.width > 0 && renderingCanvas.height > 0) ||
-        (renderingGpuCanvas.width > 0 && renderingGpuCanvas.height > 0)
-          ? document.createElement("canvas")
-          : null;
+    function storeCompletedFrame() {
+      const completedCanvas = document.createElement("canvas");
 
-      if (previousFrame) {
-        previousFrame.width = Math.max(
-          renderingCanvas.width,
-          renderingGpuCanvas.width
-        );
-        previousFrame.height = Math.max(
-          renderingCanvas.height,
-          renderingGpuCanvas.height
-        );
-        const previousFrameContext = previousFrame.getContext("2d");
+      completedCanvas.width = size.width;
+      completedCanvas.height = size.height;
 
-        previousFrameContext?.drawImage(
-          renderingGpuCanvas,
-          0,
-          0,
-          previousFrame.width,
-          previousFrame.height
-        );
-        previousFrameContext?.drawImage(
-          renderingCanvas,
-          0,
-          0,
-          previousFrame.width,
-          previousFrame.height
-        );
+      const completedContext = completedCanvas.getContext("2d");
+
+      if (!completedContext) {
+        completedFrameRef.current = null;
+        return;
       }
+
+      completedContext.clearRect(0, 0, size.width, size.height);
+      completedContext.drawImage(
+        renderingGpuCanvas,
+        0,
+        0,
+        size.width,
+        size.height
+      );
+      completedContext.drawImage(
+        renderingCanvas,
+        0,
+        0,
+        size.width,
+        size.height
+      );
+      completedFrameRef.current = {
+        canvas: completedCanvas,
+        size: { ...size },
+        viewport: cloneViewport(viewport),
+      };
+    }
+
+    async function runRender() {
+      let finalRenderResult: Awaited<
+        ReturnType<typeof renderMandelbrotWithStrategy>
+      > | null = null;
 
       renderingCanvas.width = size.width;
       renderingCanvas.height = size.height;
       renderingGpuCanvas.width = size.width;
       renderingGpuCanvas.height = size.height;
 
+      renderingContext.fillStyle = "#030712";
+      renderingContext.fillRect(0, 0, size.width, size.height);
+
       if (previousFrame) {
-        renderingContext.drawImage(
-          previousFrame,
-          0,
-          0,
-          size.width,
-          size.height
-        );
-      } else {
-        renderingContext.fillStyle = "#030712";
-        renderingContext.fillRect(0, 0, size.width, size.height);
+        const placement = calculateViewportFramePlacement({
+          sourceSize: previousFrame.size,
+          sourceViewport: previousFrame.viewport,
+          targetSize: size,
+          targetViewport: viewport,
+        });
+
+        if (placement) {
+          renderingContext.imageSmoothingEnabled = true;
+          renderingContext.drawImage(
+            previousFrame.canvas,
+            placement.x,
+            placement.y,
+            placement.width,
+            placement.height
+          );
+        }
       }
 
-      for (let index = 0; index < scales.length; index += 1) {
-        const scale = scales[index];
-        const phase = index === 0 && scales.length > 1 ? "preview" : "refining";
+      for (const renderPass of renderPlan.passes) {
+        const { phase, scale } = renderPass;
         const buffer = document.createElement("canvas");
         const bufferSize = renderSizeForScale(size, scale);
         const bufferContext = buffer.getContext("2d");
@@ -147,7 +166,7 @@ export function useMandelbrotRender({
             viewport,
             size: bufferSize,
           },
-          settings.renderBackendPreference
+          renderPass.settings.renderBackendPreference
         );
 
         if (!bufferContext) {
@@ -165,31 +184,24 @@ export function useMandelbrotRender({
             bufferSize.width,
             bufferSize.height
           );
-        } else {
-          renderingContext.clearRect(0, 0, size.width, size.height);
         }
-
-        activeBackend = shouldUseGpu ? "webgpu" : "cpu";
 
         setRenderState({
           phase,
-          progress: 0,
-          message:
-            phase === "preview"
-              ? "Rendering preview..."
-              : `Rendering ${bufferSize.width}×${bufferSize.height} frame...`,
-          backend: activeBackend,
+          message: "Rendering…",
         });
 
         const renderResult = await renderMandelbrotWithStrategy(
           {
             viewport,
             size: bufferSize,
-            settings,
+            settings: renderPass.settings,
             gpuTargetCanvas: renderingGpuCanvas,
             signal: abortController.signal,
             onChunk: (chunk) => {
-              activeBackend = "cpu";
+              if (!isMounted || abortController.signal.aborted) {
+                return;
+              }
 
               const imageData = new ImageData(
                 new Uint8ClampedArray(chunk.pixels),
@@ -201,52 +213,46 @@ export function useMandelbrotRender({
               renderingContext.imageSmoothingEnabled = scale >= 0.75;
               renderingContext.drawImage(buffer, 0, 0, size.width, size.height);
             },
-            onProgress: (progress) => {
-              if (!isMounted) {
-                return;
-              }
-
-              setRenderState({
-                phase,
-                progress,
-                message:
-                  phase === "preview"
-                    ? "Rendering preview..."
-                    : `Rendering ${bufferSize.width}×${bufferSize.height} frame...`,
-                backend: activeBackend,
-              });
-            },
           },
-          settings.renderBackendPreference
+          renderPass.settings.renderBackendPreference,
+          renderMandelbrotInWorker
         );
-
-        activeBackend = renderResult.backend;
 
         if (!renderResult.completed || abortController.signal.aborted) {
           return;
         }
+
+        finalRenderResult = renderResult;
+
+        if (renderResult.backend === "webgpu") {
+          renderingContext.clearRect(0, 0, size.width, size.height);
+        }
       }
 
       if (isMounted) {
+        storeCompletedFrame();
         setRenderState({
           phase: "ready",
-          progress: 1,
-          message: `Ready at ${Math.round(settings.resolutionScale * 100)}% render scale.`,
-          backend: activeBackend,
+          message: "Render complete.",
+          backend: finalRenderResult?.backend,
+          requestedMaxIterations: settings.maxIterations,
+          effectiveMaxIterations: finalRenderResult?.effectiveMaxIterations,
+          cpuBudgetApplied: finalRenderResult?.cpuBudgetApplied,
         });
       }
     }
 
-    runRender().catch(() => {
+    runRender().catch((error: unknown) => {
       if (!isMounted || abortController.signal.aborted) {
         return;
       }
 
       setRenderState({
         phase: "error",
-        progress: 0,
-        message: "Rendering failed unexpectedly.",
-        backend: "cpu",
+        message:
+          error instanceof Error
+            ? error.message
+            : "Rendering failed unexpectedly.",
       });
     });
 

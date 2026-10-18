@@ -1,54 +1,31 @@
 import { render, screen } from "@testing-library/react";
 
+import { NOW_CONTENT, NOW_PAGE_LAST_UPDATED_ISO } from "@/constants/now";
+
 import { Hero } from "../Hero";
 
 describe("Hero", () => {
-  it("should render name and professional title", () => {
-    render(<Hero />);
-
+  it("introduces Alex and previews the first shared Now entry", () => {
+    const { container } = render(<Hero />);
     expect(screen.getByRole("heading", { level: 1 })).toHaveTextContent(
       "Alex Leung"
     );
-    expect(
-      screen.getByRole("heading", {
-        level: 2,
-        name: /Software Engineer and Occasional Writer\./i,
-      })
-    ).toBeInTheDocument();
-  });
-
-  it("should render friendly supporting copy", () => {
-    render(<Hero />);
-
-    expect(
-      screen.getByText(
-        /I build software, write notes, and make small tools for understanding systems and AI\./i
-      )
-    ).toBeInTheDocument();
-    expect(
-      screen.getByRole("heading", {
-        level: 2,
-        name: /What you'll find here/i,
-      })
-    ).toBeInTheDocument();
-  });
-
-  it("should render blog and about CTA links", () => {
-    render(<Hero />);
-
-    expect(screen.getByRole("link", { name: /read writing/i })).toHaveAttribute(
-      "href",
-      "/blog"
+    expect(screen.getByText(/I work on ChatGPT at OpenAI/)).toBeInTheDocument();
+    expect(screen.getByRole("heading", { level: 3 })).toHaveTextContent(
+      NOW_CONTENT.entries[0].title
     );
-    expect(screen.getByRole("link", { name: /about/i })).toHaveAttribute(
-      "href",
-      "/about"
+    expect(
+      screen.getByRole("link", { name: /Reinforcement Learning/ })
+    ).toHaveAttribute("href", "https://rlhfbook.com/");
+    expect(container.querySelector("time")).toHaveAttribute(
+      "datetime",
+      NOW_PAGE_LAST_UPDATED_ISO
     );
-  });
-
-  it('should have id="home" for anchor navigation', () => {
-    const { container } = render(<Hero />);
-
-    expect(container.querySelector("section")).toHaveAttribute("id", "home");
+    expect(
+      screen.getByRole("link", { name: /More on the Now page/ })
+    ).toHaveAttribute("href", expect.stringMatching(/^\/now\/?$/));
+    expect(
+      screen.queryByText(NOW_CONTENT.entries[1].title)
+    ).not.toBeInTheDocument();
   });
 });

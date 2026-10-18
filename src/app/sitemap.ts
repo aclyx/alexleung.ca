@@ -1,7 +1,18 @@
 import { MetadataRoute } from "next";
 
-import { NOW_PAGE_LAST_UPDATED_ISO } from "@/app/now/page";
-import { EXPERIMENTS, EXPERIMENTS_HUB } from "@/constants/experiments";
+import {
+  LOAD_FLOW_LAST_MODIFIED_ISO,
+  LOAD_FLOW_PATH,
+} from "@/constants/loadFlow";
+import {
+  MANDELBROT_LAST_MODIFIED_ISO,
+  MANDELBROT_PATH,
+} from "@/constants/mandelbrot";
+import { NOW_PAGE_LAST_UPDATED_ISO } from "@/constants/now";
+import {
+  PID_CONTROLLER_LAST_MODIFIED_ISO,
+  PID_CONTROLLER_PATH,
+} from "@/constants/pidController";
 import { getAllPosts } from "@/lib/blogApi";
 import { toCanonical } from "@/lib/seo/url";
 import { getAllTags, getTagPath, isIndexableTag } from "@/lib/tags";
@@ -14,9 +25,10 @@ const WEEKLY: SitemapEntry["changeFrequency"] = "weekly";
 const YEARLY: SitemapEntry["changeFrequency"] = "yearly";
 
 const PAGE_LAST_MODIFIED: Record<string, string> = {
-  about: "2026-02-14",
+  home: "2026-10-17",
   now: NOW_PAGE_LAST_UPDATED_ISO,
-  contact: "2026-02-14",
+  blog: "2026-08-29",
+  contact: "2026-08-29",
 };
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -26,15 +38,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const blogPosts = posts.map((post) => ({
     url: toCanonical(`/blog/${post.slug}`),
     lastModified: new Date(
-      post.updated || post.date || PAGE_LAST_MODIFIED.about
+      post.updated || post.date || PAGE_LAST_MODIFIED.blog
     ),
-    changeFrequency: MONTHLY,
-    priority: 0.7,
-  }));
-
-  const experimentalPages = EXPERIMENTS.map((experiment) => ({
-    url: toCanonical(experiment.path),
-    lastModified: new Date(experiment.lastModified),
     changeFrequency: MONTHLY,
     priority: 0.7,
   }));
@@ -46,29 +51,29 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.6,
   }));
 
-  const latestPostUpdate =
+  const latestPostUpdateIso =
     posts.length > 0
-      ? new Date(
-          posts
-            .map((post) => post.updated || post.date)
-            .filter((date): date is string => Boolean(date))
-            .sort()
-            .at(-1) || PAGE_LAST_MODIFIED.about
-        )
-      : new Date(PAGE_LAST_MODIFIED.about);
+      ? posts
+          .map((post) => post.updated || post.date)
+          .filter((date): date is string => Boolean(date))
+          .sort()
+          .at(-1) || PAGE_LAST_MODIFIED.blog
+      : PAGE_LAST_MODIFIED.blog;
+  const homeLastModified = new Date(
+    [PAGE_LAST_MODIFIED.home, NOW_PAGE_LAST_UPDATED_ISO, latestPostUpdateIso]
+      .sort()
+      .at(-1)!
+  );
+  const blogLastModified = new Date(
+    [PAGE_LAST_MODIFIED.blog, latestPostUpdateIso].sort().at(-1)!
+  );
 
   return [
     {
       url: toCanonical("/"),
-      lastModified: latestPostUpdate,
+      lastModified: homeLastModified,
       changeFrequency: MONTHLY,
       priority: 1,
-    },
-    {
-      url: toCanonical("/about"),
-      lastModified: new Date(PAGE_LAST_MODIFIED.about),
-      changeFrequency: MONTHLY,
-      priority: 0.8,
     },
     {
       url: toCanonical("/now"),
@@ -78,15 +83,27 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: toCanonical("/blog"),
-      lastModified: latestPostUpdate,
+      lastModified: blogLastModified,
       changeFrequency: WEEKLY,
       priority: 0.8,
     },
     {
-      url: toCanonical(EXPERIMENTS_HUB.path),
-      lastModified: new Date(EXPERIMENTS_HUB.lastModified),
+      url: toCanonical(MANDELBROT_PATH),
+      lastModified: new Date(MANDELBROT_LAST_MODIFIED_ISO),
       changeFrequency: MONTHLY,
-      priority: 0.7,
+      priority: 0.6,
+    },
+    {
+      url: toCanonical(PID_CONTROLLER_PATH),
+      lastModified: new Date(PID_CONTROLLER_LAST_MODIFIED_ISO),
+      changeFrequency: YEARLY,
+      priority: 0.5,
+    },
+    {
+      url: toCanonical(LOAD_FLOW_PATH),
+      lastModified: new Date(LOAD_FLOW_LAST_MODIFIED_ISO),
+      changeFrequency: YEARLY,
+      priority: 0.5,
     },
     {
       url: toCanonical("/contact"),
@@ -94,7 +111,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: YEARLY,
       priority: 0.5,
     },
-    ...experimentalPages,
     ...tagPages,
     ...blogPosts,
   ];

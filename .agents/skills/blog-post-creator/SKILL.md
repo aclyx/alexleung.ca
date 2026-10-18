@@ -1,84 +1,44 @@
 ---
 name: blog-post-creator
-description: Create or revise markdown blog posts for alexleung.ca in Alex Leung's established style, including frontmatter and optional cover-image prompts. Use when asked to draft a post, revise existing blog prose, expand notes into publish-ready prose, rewrite content to match house voice, or generate cover prompts for content/posts/*.md. Do not use for generic copy editing outside the blog.
+description: Draft, revise, or grade alexleung.ca blog posts, including frontmatter and cover or body imagery. Use for content/posts/*.md and blog writing requests; use site-copy-editor for non-blog copy and site-taste-audit for visual critique.
 ---
 
 # Blog Post Creator
 
-Use this skill to produce publish-ready markdown posts that match `content/posts/` and the site's understated, concrete voice.
+Write from Alex's facts and intent using the canonical [writing voice](../../../docs/writing-voice.md). Preserve the existing prose where it works. Use [voice-and-structure](references/voice-and-structure.md) for blog surfaces and genre choices, not as a fixed outline.
 
-Load references only when needed:
+## Capture the brief
 
-- [voice-and-structure](references/voice-and-structure.md): detailed voice, cadence, and post-shape guidance.
-- [post-template](references/post-template.md): frontmatter and file skeleton.
-- [cover-prompt-template](references/cover-prompt-template.md): primary and backup cover prompt format.
+Identify the subject, genre, audience, and requested depth. Record the main takeaway or question, its mechanism and scope, any future aspiration, and what remains unresolved. Do not turn a broader idea into only its most convenient example.
 
-## Core Voice
+Keep the source-fact ledger in the three parts defined in the grader's [intent and facts check](references/blog-post-grader.md#intent-and-facts). Preserve actors, values, precision, ownership, uncertainty, and stated relationships. Paraphrase meaning faithfully; do not invent biography, practice, chronology, metrics, or confidence. Verify outside factual claims against appropriate sources before including them.
 
-- Write in first person when the post draws on Alex's own experience, judgment, or learning.
-- Keep tone warm, direct, and measured; avoid hype, slogans, and recruiter-style positioning.
-- Show experience through concrete observations, trade-offs, mechanisms, and limits.
-- Prefer literal phrasing over abstract framing when the concrete system, UI behavior, or comparison can be named.
-- For personal reflections, lead with the lived detail before the interpretation. Do not manufacture thesis energy with polished setup phrases.
-- Let significance emerge from facts and consequences instead of declaring that something "matters" or is "important".
+Personal and travel posts need both a supported observation, condition, or scene and a supported reaction, preference, consequence, or trade-off. Reading and an intellectual reaction can provide that grounding. If necessary material is missing, ask one bundled question while continuing work that does not depend on it. An explicitly requested bare trip log or caption-led photo essay does not need added reflection.
 
-## Hard Constraints
+## Draft or revise
 
-1. Preserve user-provided facts exactly; do not invent anecdotes, metrics, timeline claims, ownership, or hands-on practice.
-2. Keep claims tightly bounded to what the user actually said.
-3. Avoid repeated one-sentence paragraphs as the dominant cadence.
-4. Prefer concise titles and specific excerpts over authority-oriented positioning.
-5. Use section headings that name the idea of the section, not generic scaffolds like `What`, `How`, `Why`, `The Goal`, or `The Implementation`.
-6. Do not turn learning notes, project writeups, or personal reflections into portfolio pitches.
-7. Avoid intro scaffolding that announces a thesis before showing the experience: rhetorical contrast, abstract significance framing, or decorative labels for mood/place/context.
-8. If the user corrects tone more than once, stop incremental patching. Reread the full piece, identify the repeated failure pattern, and revise the affected section from concrete facts outward.
-9. For new-post drafts, include cover prompts by default unless the user asks for post-only output.
+- Follow the subject's natural structure. Headings, lists, and a concluding paragraph are useful when they help the reader; none has a required count.
+- Explain the concepts needed to follow the piece. Make their relevance to its question visible instead of merely listing the source's topics. Keep conditions and uncertainty intact.
+- When feedback repeats, reread the whole piece and identify the missing question, reaction, or reasoning before adjusting phrasing. Preserve dry observations and unresolved questions.
+- Use [post-template](references/post-template.md) for frontmatter, tags, dates, and file placement. Start a new post at `draft: true`; use the editorial gate below before changing that status.
+- Before grading, apply the rubric's [review order and local clarity pass](references/blog-post-grader.md#review-order-and-local-clarity). Do not cut a necessary inference simply because it repeats a noun from a definition.
 
-## Workflow
+## Images
 
-1. Capture facts and intent.
-   - Identify topic, thesis, audience, and depth target: learning note, technical explainer, reflection, or compact reflective piece.
-   - Lock facts around actors, versions, decisions, ownership, and scope boundaries.
-   - Mark assumptions instead of filling gaps with invented detail.
+For new posts, include suitable generated imagery by default unless the user asks for post-only output or intentionally defers it. Use the [cover workflow](references/cover-prompt-template.md) to choose the subject before deciding whether a likeness reference is needed. If generation or a required reference is unavailable, provide a usable cover prompt and explain the specific limitation. Photos access is not a prerequisite for an image without Alex.
 
-2. Choose the shape.
-   - Open with context and a clear point of view in the first paragraph.
-   - Use 2-4 `##` sections when structure helps; short reflective pieces may omit headings.
-   - Make each section advance one concrete claim with supporting detail.
-   - End with synthesis, a changed understanding, or a specific forward point.
+Inline images are optional and should clarify a scene, example, or mechanism. Follow the image storage and variant requirements in [AGENTS.md](../../../AGENTS.md#adding-images-agent-guidance).
 
-3. Draft or revise in house voice.
-   - Prefer cohesive multi-sentence paragraphs.
-   - Replace broad framing with the exact constraint, mechanism, symptom, or comparison.
-   - For personal updates, keep the opening close to the actual scene, action, object, constraint, or observation before adding a conclusion.
-   - Use lists only when they improve scanning.
-   - Keep technical trade-offs and limitations explicit.
+## Editorial gate
 
-4. Apply repo format.
-   - Use [post-template](references/post-template.md) for new files under `content/posts/`.
-   - Keep filenames slug-safe: lowercase words joined by hyphens.
-   - Use 2-4 tags and prefer existing site tag language when possible.
-   - Include `updated` only when materially revising an existing post.
+Use the [blog-post-grader](references/blog-post-grader.md) for new posts and meaningful revisions unless the user asks for a rough draft only. Spelling, punctuation, and small wording edits that preserve meaning need a contextual reread, not the full editorial loop.
 
-5. Generate cover prompts when appropriate.
-   - Use [cover-prompt-template](references/cover-prompt-template.md).
-   - Default visual direction to Ghibli-style unless the user asks for another style.
-   - Include an instruction to use Alex's reference image for facial likeness.
-   - Keep the scene readable at thumbnail size and avoid text overlays.
+1. Prepare separate surface and body snapshots, the full target post and asset paths for the later format check, the current ledger, the rubric and canonical voice, and 3–5 other recent published posts. Include any explicit bare-log/photo-essay mode or editorial waiver.
+2. Start a fresh-context grading subagent with only those inputs and an output location. Do not pass the author's rationale, known weak spots, previous scores, or planned fixes. The rubric specifies the reading order and report.
+3. Address material findings, then grade meaningful revisions in a new context. If the same issue survives two passes, reconsider the structure and source material. Continue repairs supported by the brief; ask the user only when a missing fact or substantive direction choice blocks progress. Do not repeat cosmetic edits or solicit permission for ordinary editing.
+4. Accept the current prose only when it scores 90+ with no blockers and all applicable checks pass. An earlier revision's score or image-only review does not satisfy this gate. Optional preferences do not require another iteration.
+5. Set a new post to `draft: false` when the current prose passes and the user asks to publish or preview normally. Only an explicit editorial-gate waiver permits publishing before it passes.
 
-## Output Modes
+Run the repository verification required by `AGENTS.md` for file changes. Report the result and material limitations without reproducing the grader's entire report.
 
-- **Draft + cover prompt**: default for new-post creation.
-- **Full draft**: complete markdown with frontmatter and final prose.
-- **Revision pass**: edited markdown that preserves the user's facts.
-- **Outline-first**: frontmatter plus sectioned outline before drafting, when requested.
-
-## Final Checks
-
-- Argument is cohesive from opening to close.
-- Paragraph cadence is varied and mostly multi-sentence.
-- Titles, excerpts, headings, and intro copy are specific and modest.
-- No inferred facts, inflated claims, or unsupported practice claims were introduced.
-- No slogan-like phrasing, draft scaffolding, or repeated synonym pairs remain.
-- Personal-reflection openings begin with specific lived details, not abstract contrast or significance framing.
-- Cover prompt output includes both `Cover Prompt (Primary)` and `Cover Prompt (Backup)` unless waived.
+When asked to improve the harness, amend the rule that owns the demonstrated failure instead of adding another checklist. Run the relevant [isolated regression cases](references/coherence-regressions.md) for changes to editorial behavior. A revised rubric or higher score alone is not behavioral validation.

@@ -6,7 +6,6 @@ export {
   buildBlogItemListSchema,
   buildBlogPostingSchema,
   buildContactPageSchema,
-  buildHomePageSchema,
   buildPersonSchema,
   buildProfilePageSchema,
   buildSiteNavigationSchema,

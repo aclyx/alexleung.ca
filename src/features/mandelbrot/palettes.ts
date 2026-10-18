@@ -1,8 +1,4 @@
-import {
-  ColoringMode,
-  EscapeResult,
-  PaletteId,
-} from "@/features/mandelbrot/types";
+import { EscapeResult, PaletteId } from "@/features/mandelbrot/types";
 
 type Rgb = readonly [number, number, number];
 
@@ -57,25 +53,25 @@ function paletteColorAt(paletteId: PaletteId, value: number): Rgb {
 
 export function normalizedEscapeValue(
   result: EscapeResult,
-  maxIterations: number,
-  coloringMode: ColoringMode
+  maxIterations: number
 ): number {
   if (!result.escaped) {
     return 0;
   }
 
-  if (coloringMode === "bands") {
-    return result.iterations / maxIterations;
-  }
-
-  return result.smoothIteration / maxIterations;
+  // Cycle smoothly so deep zooms retain contrast; keep exterior colors above black.
+  // Keep this transfer function in sync with the compute shader in gpu.ts.
+  const iteration = Math.min(
+    Math.max(result.smoothIteration, 0),
+    maxIterations
+  );
+  return 0.2 + 0.8 * (0.5 - 0.5 * Math.cos(Math.sqrt(iteration)));
 }
 
 export function colorEscapeResult(
   result: EscapeResult,
   maxIterations: number,
-  paletteId: PaletteId,
-  coloringMode: ColoringMode
+  paletteId: PaletteId
 ): [number, number, number, number] {
   if (!result.escaped) {
     return [...INTERIOR_COLOR, 255];
@@ -83,7 +79,7 @@ export function colorEscapeResult(
 
   const [red, green, blue] = paletteColorAt(
     paletteId,
-    normalizedEscapeValue(result, maxIterations, coloringMode)
+    normalizedEscapeValue(result, maxIterations)
   );
 
   return [red, green, blue, 255];

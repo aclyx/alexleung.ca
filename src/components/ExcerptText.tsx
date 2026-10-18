@@ -19,7 +19,7 @@ export function ExcerptText({ text }: ExcerptTextProps) {
     nodes.push(
       <code
         key={`excerpt-code-${match.index}`}
-        className="rounded bg-white/10 px-1 py-0.5 font-mono text-[0.92em] text-gray-100"
+        className="rounded bg-accent-secondary-soft px-1 py-0.5 font-mono text-[0.92em] text-ink"
       >
         {match[1]}
       </code>

@@ -6,7 +6,6 @@ const MAX_HISTORY_LENGTH = 200;
 export type ViewportHistory = {
   past: PreciseViewport[];
   present: PreciseViewport;
-  future: PreciseViewport[];
 };
 
 export function createViewportHistory(
@@ -15,7 +14,6 @@ export function createViewportHistory(
   return {
     past: [],
     present: cloneViewport(initialViewport),
-    future: [],
   };
 }
 
@@ -42,7 +40,6 @@ export function pushViewport(
       -MAX_HISTORY_LENGTH
     ),
     present: cloneViewport(nextViewport),
-    future: [],
   };
 }
 
@@ -56,22 +53,5 @@ export function undoViewport(history: ViewportHistory): ViewportHistory {
   return {
     past: history.past.slice(0, -1),
     present: cloneViewport(previousViewport),
-    future: [cloneViewport(history.present), ...history.future],
-  };
-}
-
-export function redoViewport(history: ViewportHistory): ViewportHistory {
-  const [nextViewport, ...rest] = history.future;
-
-  if (!nextViewport) {
-    return history;
-  }
-
-  return {
-    past: [...history.past, cloneViewport(history.present)].slice(
-      -MAX_HISTORY_LENGTH
-    ),
-    present: cloneViewport(nextViewport),
-    future: rest,
   };
 }

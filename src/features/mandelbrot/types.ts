@@ -24,23 +24,13 @@ export type CanvasPoint = {
   y: number;
 };
 
-export type SelectionRect = {
-  x: number;
-  y: number;
-  width: number;
-  height: number;
-};
-
 export type PaletteId = "oceanic" | "ember" | "glacier";
-export type ColoringMode = "smooth" | "bands";
-export type DragMode = "pan" | "box-zoom";
 export type RenderBackend = "cpu" | "webgpu";
 export type RenderBackendPreference = "auto" | "cpu" | "webgpu";
 
 export type MandelbrotSettings = {
   maxIterations: number;
   paletteId: PaletteId;
-  coloringMode: ColoringMode;
   resolutionScale: number;
   renderBackendPreference: RenderBackendPreference;
 };
@@ -54,7 +44,7 @@ export type EscapeResult = {
 type RenderChunk = {
   startRow: number;
   rowCount: number;
-  pixels: Uint8ClampedArray;
+  pixels: Uint8ClampedArray<ArrayBuffer>;
 };
 
 export type RenderRequest = {
@@ -64,5 +54,4 @@ export type RenderRequest = {
   gpuTargetCanvas?: HTMLCanvasElement | null;
   signal?: AbortSignal;
   onChunk: (chunk: RenderChunk) => void;
-  onProgress?: (progress: number) => void;
 };

@@ -1,23 +1,27 @@
 import { render, screen } from "@testing-library/react";
 
-import PidControllerPage from "../page";
+import PidControllerPage, { metadata } from "../page";
 
 describe("PidControllerPage", () => {
-  it("renders the PID simulator page shell", () => {
+  it("renders the simulator and plant controls with canonical metadata", () => {
     render(<PidControllerPage />);
 
     expect(
-      screen.getByRole("heading", { level: 1, name: "PID Controller" })
-    ).toBeInTheDocument();
-    expect(
       screen.getByRole("heading", {
-        level: 2,
+        level: 1,
         name: "PID Controller Simulator",
       })
     ).toBeInTheDocument();
-    expect(screen.getByText(/u\(t\) = kp·e\(t\)/i)).toBeInTheDocument();
+    expect(screen.getByLabelText("Plant")).toHaveValue("plate");
+    expect(screen.getByText(/metal plate/)).toBeInTheDocument();
     expect(
-      screen.getByText(/changing gains or setpoint restarts the run/i)
+      screen.queryByRole("link", { name: /Mandelbrot/ })
+    ).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: /Proportional/ })
     ).toBeInTheDocument();
+    expect(metadata.alternates?.canonical).toBe(
+      "https://alexleung.ca/experimental/pid-controller/"
+    );
   });
 });

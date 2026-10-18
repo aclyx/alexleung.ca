@@ -1,109 +1,99 @@
 import { fireEvent, render, screen } from "@testing-library/react";
 
-import { SingleLineDiagram } from "@/app/experimental/load-flow/_components/SingleLineDiagram";
+import { BranchFlowSolution } from "@/features/load-flow/solver/types";
 import { BusNode, LineEdge } from "@/features/load-flow/state/loadFlowStore";
 
+import { SingleLineDiagram } from "../SingleLineDiagram";
+
 const buses: BusNode[] = [
-  { id: "bus-1", name: "Bus 1", type: "SLACK", baseKV: 230, x: 100, y: 100 },
-  { id: "bus-2", name: "Bus 2", type: "PQ", baseKV: 230, x: 300, y: 300 },
-  { id: "bus-3", name: "Bus 3", type: "PQ", baseKV: 230, x: 50, y: 20 },
-  { id: "bus-4", name: "Bus 4", type: "PQ", baseKV: 230, x: 250, y: 220 },
+  { id: "a", name: "A", type: "SLACK", baseKV: 230, x: 140, y: 200 },
+  { id: "b", name: "B", type: "PQ", baseKV: 230, x: 640, y: 200 },
 ];
+const branch: LineEdge = {
+  id: "line",
+  fromBusId: "a",
+  toBusId: "b",
+  r: 0.01,
+  x: 0.1,
+  bHalf: 0.02,
+};
+const flow: BranchFlowSolution = {
+  branchId: "line",
+  fromBusId: "a",
+  toBusId: "b",
+  pFromToMW: -10,
+  pToFromMW: 10.1,
+  qFromToMVar: -2,
+  qToFromMVar: -2,
+  pLossMW: 0.1,
+  qLossMVar: -4,
+};
+const onBusMove = jest.fn();
+const props = {
+  buses,
+  branches: [branch],
+  selectedElementId: null,
+  selectedElementType: null,
+  onBusSelect: jest.fn(),
+  onBusMove,
+  onBranchSelect: jest.fn(),
+  busSolutionsById: new Map(),
+  branchFlowsById: new Map([["line", flow]]),
+};
 
-const branches: LineEdge[] = [
-  {
-    id: "line-1",
-    fromBusId: "bus-1",
-    toBusId: "bus-2",
-    r: 0.01,
-    x: 0.1,
-    bHalf: 0,
-    status: "IN_SERVICE",
-  },
-  {
-    id: "line-2",
-    fromBusId: "bus-3",
-    toBusId: "bus-4",
-    r: 0.01,
-    x: 0.1,
-    bHalf: 0,
-    status: "IN_SERVICE",
-  },
-];
+test("draws reverse P and Q leaving both ends without conflating directions", () => {
+  const { container, rerender } = render(
+    <SingleLineDiagram {...props} mode="both" animate={true} />
+  );
+  expect(
+    container.querySelector('[data-component="p"] [data-terminal="from"]')
+  ).toHaveAttribute("data-direction", "-1");
+  expect(
+    container.querySelector('[data-component="p"] [data-terminal="to"]')
+  ).toHaveAttribute("data-direction", "-1");
+  expect(
+    container.querySelector('[data-component="q"] [data-terminal="from"]')
+  ).toHaveAttribute("data-direction", "-1");
+  expect(
+    container.querySelector('[data-component="q"] [data-terminal="to"]')
+  ).toHaveAttribute("data-direction", "1");
+  expect(screen.getAllByTestId("flow-motion")).toHaveLength(4);
+  rerender(<SingleLineDiagram {...props} mode="p" animate={false} />);
+  expect(container.querySelector('[data-component="q"]')).toBeNull();
+  expect(screen.queryByTestId("flow-motion")).toBeNull();
+});
 
-const reversedBranchOrder = [branches[1], branches[0]];
+test("never displays solved arrows for an out-of-service circuit", () => {
+  const { container } = render(
+    <SingleLineDiagram
+      {...props}
+      branches={[{ ...branch, status: "OUT_OF_SERVICE" }]}
+      mode="both"
+      animate={true}
+    />
+  );
+  expect(container.querySelector("[data-component]")).toBeNull();
+});
 
-describe("SingleLineDiagram", () => {
-  const onBusSelect = jest.fn();
-  const onBusMove = jest.fn();
-  const onBranchSelect = jest.fn();
-
-  beforeEach(() => {
-    jest.clearAllMocks();
+test("keeps the viewport fixed during keyboard moves, then fits on request", () => {
+  const { rerender } = render(
+    <SingleLineDiagram {...props} mode="both" animate={false} />
+  );
+  const diagram = screen.getByTestId("load-flow-diagram");
+  const before = diagram.getAttribute("viewBox");
+  fireEvent.keyDown(screen.getByRole("button", { name: /Bus A,/ }), {
+    key: "ArrowLeft",
   });
-
-  it("supports zoom controls and ctrl-wheel zooming", () => {
-    const { container } = render(
-      <SingleLineDiagram
-        buses={buses}
-        branches={branches}
-        selectedElementId={null}
-        selectedElementType={null}
-        onBusSelect={onBusSelect}
-        onBusMove={onBusMove}
-        onBranchSelect={onBranchSelect}
-      />
-    );
-
-    expect(screen.getByText("100% (Ctrl + wheel)")).toBeInTheDocument();
-
-    fireEvent.click(screen.getByRole("button", { name: /zoom in/i }));
-    expect(screen.getByText("120% (Ctrl + wheel)")).toBeInTheDocument();
-
-    const svg = container.querySelector("svg");
-    expect(svg).not.toBeNull();
-    if (!svg) {
-      return;
-    }
-
-    fireEvent.wheel(svg, { deltaY: -100 });
-    expect(screen.getByText("120% (Ctrl + wheel)")).toBeInTheDocument();
-
-    fireEvent.wheel(svg, { ctrlKey: true, deltaY: -100 });
-    expect(screen.getByText("140% (Ctrl + wheel)")).toBeInTheDocument();
-  });
-
-  it("renders hop markers when two line segments cross", () => {
-    const { container } = render(
-      <SingleLineDiagram
-        buses={buses}
-        branches={branches}
-        selectedElementId={null}
-        selectedElementType={null}
-        onBusSelect={onBusSelect}
-        onBusMove={onBusMove}
-        onBranchSelect={onBranchSelect}
-      />
-    );
-
-    const hopPaths = container.querySelectorAll('path[d*="A 10 10"]');
-    expect(hopPaths.length).toBeGreaterThan(0);
-  });
-
-  it("renders hop markers regardless of branch insertion order", () => {
-    const { container } = render(
-      <SingleLineDiagram
-        buses={buses}
-        branches={reversedBranchOrder}
-        selectedElementId={null}
-        selectedElementType={null}
-        onBusSelect={onBusSelect}
-        onBusMove={onBusMove}
-        onBranchSelect={onBranchSelect}
-      />
-    );
-
-    const hopPaths = container.querySelectorAll('path[d*="A 10 10"]');
-    expect(hopPaths.length).toBeGreaterThan(0);
-  });
+  expect(onBusMove).toHaveBeenCalledWith("a", 130, 200);
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      buses={[{ ...buses[0], x: -200 }, buses[1]]}
+      mode="both"
+      animate={false}
+    />
+  );
+  expect(diagram).toHaveAttribute("viewBox", before);
+  fireEvent.click(screen.getByRole("button", { name: "Fit diagram" }));
+  expect(diagram).not.toHaveAttribute("viewBox", before);
 });

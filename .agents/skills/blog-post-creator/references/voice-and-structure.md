@@ -1,56 +1,24 @@
-# Voice and Structure Patterns
+# Blog Voice and Structure
 
-## Voice Baseline
+Apply the canonical [writing voice](../../../../docs/writing-voice.md). This reference covers blog-specific choices; assessment criteria live in the [grader](blog-post-grader.md).
 
-- Use analytical, practical, and measured language.
-- Use first person singular when presenting experience and judgment.
-- Keep tone warm but restrained; avoid hype, slogans, and performative phrasing.
-- Keep the voice humble, grounded, and clearly experienced through concrete evidence rather than self-description.
-- Avoid recruiter-optimized or self-promotional framing; prefer factual context over authority claims.
-- Do not signal significance with lines like "this matters because"; make the stakes legible through concrete detail and consequence instead.
-- Explain trade-offs and constraints instead of presenting absolute claims.
-- Prefer direct mechanism over framing language; if a sentence can name the actual behavior, constraint, or operation, do that instead of abstract setup.
-- Avoid polished contrast templates or thesis-scaffolding phrases when a plain statement will carry the point more honestly.
-- In personal reflections, do not make the first paragraph carry a grand interpretive frame. Start with the actual scene, action, object, constraint, or observation, then let the interpretation arrive later.
+## Surfaces
 
-## Cadence Guardrails
+Titles and excerpts should identify the subject or question without requiring the body. A short active claim, concrete object, or named-tool contrast can work. Avoid `Why…` or `Using…` packaging when it adds formality without information. Choose headings that show a section's contribution; a concept name can hide why the section belongs in an argument.
 
-- Keep most paragraphs multi-sentence.
-- Avoid repeated one-sentence paragraph cadence.
-- Prefer cohesive argument flow over social-post pacing.
-- Use bullet lists only for genuinely scannable sets (steps, trade-offs, outcomes).
+Keep the title, excerpt, headings, and ending aligned with the user's meaning without repeating one takeaway formulation everywhere. Preserve an explicitly requested mechanism, scope, or aspiration wherever the reasoning needs it. A stated interest in AI workflows, for example, may depend on explaining the actual tests, prompts, graders, or feedback loop.
 
-## Personal Reflection Failure Modes
+When the user asks for plainer wording, name the subject directly rather than inventing a metaphor. A rejected phrase is evidence about that passage, not a universal word ban. Honest first encounters and changes of mind belong in learning notes; do not imply previous knowledge to make Alex sound experienced.
 
-- Avoid openings that summarize the essay's meaning before showing the experience. Personal reflections should earn interpretation through specific details.
-- Avoid rhetorical contrast or pivot templates when a plain statement would be more honest.
-- Avoid decorative labels for atmosphere, identity, or place when a sensory detail, object, action, limitation, or observed behavior can do the work.
-- If a user pushes back on tone repeatedly, treat it as evidence that the governing voice is wrong, not that one sentence needs a synonym swap.
-- For travel, lifestyle, career, project, or personal-update posts, prefer ordinary nouns and verbs drawn from the user's facts.
+## Choose a form from the material
 
-## Common Post Shapes
+| Genre                                     | Useful structure                                                                                                                                               | Ending                                                                                    |
+| ----------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------- |
+| Travel or photo essay                     | Selected scenes or chronology; itinerary completeness is optional. A salient setup such as new gear needs a supported result if the post depends on it.        | A scene, memory, or preference; no required moral.                                        |
+| Personal update                           | A diary, object, routine, or practical constraint; headings may be unnecessary.                                                                                | A present state or specific next action.                                                  |
+| Technical argument or workflow reflection | A tension, concrete artifact or session, mechanism, and evidence.                                                                                              | A decision, changed practice, or unresolved question.                                     |
+| Implementation note or case study         | The artifact and problem, then constraints, choices, results, and limits.                                                                                      | A concrete limitation or next experiment.                                                 |
+| Learning note or review                   | The source and the idea encountered, tested, or reconsidered; examples where helpful.                                                                          | What changed or remains unclear.                                                          |
+| Philosophical reflection                  | The central question, Alex's position, and unresolved tensions. Source concepts advance or complicate that inquiry. Reading can supply the personal grounding. | A qualified judgment, hope, or sharper question that accounts for material complications. |
 
-1. Technical implementation post
-- Opening: define the problem and the relevant context or consequence.
-- Middle sections: explain approach, what changed, and why design choices were made.
-- Trade-offs: call out cost, complexity, or limitations.
-- Close: summarize durable takeaway or operating principle.
-
-2. Reflection post
-- Opening: anchor on a concrete observation or recent experience before adding interpretation.
-- Middle sections: articulate tension, reasoning, and implications.
-- Close: leave a specific question or grounded forward-looking point.
-
-3. Learning/review post
-- Opening: state source material and scope.
-- Middle sections: describe key concepts and how they changed thinking.
-- Close: identify what will be tested or explored next.
-
-## Content Quality Checks
-
-- Tie each section to one clear claim.
-- Back claims with concrete mechanisms, examples, or constraints.
-- Prefer specific examples over summary labels when introducing a section or transition.
-- Cut duplicated meaning: if the second half of a sentence only restates the first more elegantly, simplify it.
-- Keep transitions explicit between sections.
-- Keep ending aligned with the thesis introduced at the start.
+These are options, not templates. A brief aside need not become a premise, and an open philosophical question need not be resolved. Let the genre determine paragraph cadence; cohesive multi-sentence reasoning and short observational passages can coexist.

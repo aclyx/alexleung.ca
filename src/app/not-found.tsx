@@ -1,21 +1,27 @@
-import Link from "next/link";
+import { LinkText } from "@/components/LinkText";
+import { PageShell } from "@/components/PageShell";
+import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 
 export default function NotFound() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-black text-white">
-      <div className="text-center">
-        <h1 className="mb-4 text-6xl font-bold">404</h1>
-        <h2 className="mb-6 text-2xl">Page Not Found</h2>
-        <p className="mb-8 text-lg text-gray-400">
-          The page you&apos;re looking for doesn&apos;t exist.
-        </p>
-        <Link
-          href="/"
-          className="inline-block rounded-lg bg-accent-primary px-6 py-3 text-white transition-colors hover:bg-accent-primary-hover"
+    <PageShell
+      eyebrow="404"
+      title="Page not found"
+      description="The page you’re looking for doesn’t exist."
+    >
+      <ResponsiveContainer>
+        <nav
+          aria-label="Page recovery"
+          className="flex flex-wrap gap-x-6 gap-y-2"
         >
-          Back home
-        </Link>
-      </div>
-    </div>
+          <LinkText href="/" standalone>
+            Home
+          </LinkText>
+          <LinkText href="/blog/" standalone>
+            Writing
+          </LinkText>
+        </nav>
+      </ResponsiveContainer>
+    </PageShell>
   );
 }

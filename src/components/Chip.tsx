@@ -1,13 +1,14 @@
-import { ElementType, ReactNode } from "react";
+import { CSSProperties, ElementType, ReactNode } from "react";
 
 type ChipProps<T extends ElementType = "span"> = {
   element?: T;
   children: ReactNode;
   className?: string;
+  style?: CSSProperties;
 };
 
 const chipBaseClassName =
-  "inline-flex items-center rounded-full border px-2.5 py-1 text-xs font-semibold";
+  "inline-flex min-h-11 min-w-11 items-center justify-center rounded-full border px-3 py-1.5 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper md:min-h-8 md:min-w-0";
 
 export function chipClassName(className = "") {
   return `${chipBaseClassName} ${className}`.trim();
@@ -17,8 +18,13 @@ export function Chip<T extends ElementType = "span">({
   element,
   children,
   className = "",
+  style,
 }: ChipProps<T>) {
   const Component = element ?? "span";
 
-  return <Component className={chipClassName(className)}>{children}</Component>;
+  return (
+    <Component className={chipClassName(className)} style={style}>
+      {children}
+    </Component>
+  );
 }
