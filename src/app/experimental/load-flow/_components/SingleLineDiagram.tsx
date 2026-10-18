@@ -1,10 +1,9 @@
 "use client";
 
 import {
-  PointerEvent,
   useEffect,
   useId,
-  useRef,
+  useMemo,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -28,6 +27,8 @@ import {
   BusSolution,
 } from "@/features/load-flow/solver/types";
 import { BusNode, LineEdge } from "@/features/load-flow/state/loadFlowStore";
+
+import { useDiagramViewport } from "./useDiagramViewport";
 
 const TERMINALS: Array<"from" | "to"> = ["from", "to"];
 const DEVICE_LABELS = {
@@ -119,42 +120,44 @@ export function SingleLineDiagram({
     () => window.matchMedia(compactQuery).matches,
     () => false
   );
-  const offsets =
-    compact && sourceBuses.length <= 3
-      ? sourceBuses.map((_, index) =>
-          sourceBuses.length === 3
-            ? [
-                { x: -40, y: -30 },
-                { x: -360, y: 170 },
-                { x: -290, y: 80 },
-              ][index]
-            : ([
-                { x: -40, y: -70 },
-                { x: -360, y: 230 },
-              ][index] ?? { x: 0, y: 0 })
-        )
-      : sourceBuses.map(() => ({ x: 0, y: 0 }));
-  const buses = sourceBuses.map((bus, index) => ({
-    ...bus,
-    x: bus.x + offsets[index].x,
-    y: bus.y + offsets[index].y,
-  }));
-  const amountPositions = showAmounts
-    ? placeFlowLabels(branches, buses)
-    : new Map<string, { position: Point; anchor: Point }>();
+  const offsets = useMemo(
+    () =>
+      compact && sourceBuses.length <= 3
+        ? sourceBuses.map((_, index) =>
+            sourceBuses.length === 3
+              ? [
+                  { x: -40, y: -30 },
+                  { x: -360, y: 170 },
+                  { x: -290, y: 80 },
+                ][index]
+              : ([
+                  { x: -40, y: -70 },
+                  { x: -360, y: 230 },
+                ][index] ?? { x: 0, y: 0 })
+          )
+        : sourceBuses.map(() => ({ x: 0, y: 0 })),
+    [compact, sourceBuses.length]
+  );
+  const buses = useMemo(
+    () =>
+      sourceBuses.map((bus, index) => ({
+        ...bus,
+        x: bus.x + offsets[index].x,
+        y: bus.y + offsets[index].y,
+      })),
+    [sourceBuses, offsets]
+  );
+  const amountPositions = useMemo(
+    () =>
+      showAmounts
+        ? placeFlowLabels(branches, buses)
+        : new Map<string, { position: Point; anchor: Point }>(),
+    [showAmounts, branches, buses]
+  );
   function moveBus(id: string, x: number, y: number) {
     const offset = offsets[sourceBuses.findIndex((bus) => bus.id === id)];
     onBusMove(id, x - offset.x, y - offset.y);
   }
-  const svgRef = useRef<SVGSVGElement>(null);
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-  const drag = useRef<{
-    pointer: number;
-    id?: string;
-    start: Point;
-    origin: Point;
-  } | null>(null);
   function bounds() {
     const minX = Math.min(0, ...buses.map((bus) => bus.x - 100));
     const minY = Math.min(0, ...buses.map((bus) => bus.y - 115));
@@ -172,80 +175,44 @@ export function SingleLineDiagram({
   const [camera, setCamera] = useState(bounds);
   useEffect(() => {
     setCamera(bounds());
-    setZoom(1);
-    setPan({ x: 0, y: 0 });
   }, [compact, sourceBuses.length]);
-  const { minX, minY, width, height } = camera;
-  const viewWidth = width / zoom;
-  const viewHeight = height / zoom;
-  const viewX = minX + (width - viewWidth) / 2 + pan.x;
-  const viewY = minY + (height - viewHeight) / 2 + pan.y;
+  const {
+    svgRef,
+    zoom,
+    viewX,
+    viewY,
+    viewWidth,
+    viewHeight,
+    zoomBy,
+    trackPointer,
+    startDrag,
+    movePointer,
+    endPointer,
+    suppressClick,
+  } = useDiagramViewport(camera, moveBus, onBusSelect);
   const slackAngle =
     busSolutionsById.get(buses.find((bus) => bus.type === "SLACK")?.id ?? "")
       ?.voltageAngleDeg ?? 0;
 
-  function svgPoint(event: PointerEvent) {
-    const matrix = svgRef.current?.getScreenCTM()?.inverse();
-    return matrix
-      ? {
-          x: matrix.a * event.clientX + matrix.c * event.clientY + matrix.e,
-          y: matrix.b * event.clientX + matrix.d * event.clientY + matrix.f,
-        }
-      : { x: 0, y: 0 };
-  }
-
-  function startDrag(event: PointerEvent<SVGElement>, bus?: BusNode) {
-    if (event.button !== 0) return;
-    event.stopPropagation();
-    event.currentTarget.setPointerCapture(event.pointerId);
-    drag.current = {
-      pointer: event.pointerId,
-      id: bus?.id,
-      start: svgPoint(event),
-      origin: bus ? { x: bus.x, y: bus.y } : pan,
-    };
-    if (bus) onBusSelect(bus.id);
-  }
-
-  function moveDrag(event: PointerEvent<SVGSVGElement>) {
-    const active = drag.current;
-    if (!active || active.pointer !== event.pointerId) return;
-    const point = svgPoint(event);
-    if (active.id)
-      moveBus(
-        active.id,
-        active.origin.x + point.x - active.start.x,
-        active.origin.y + point.y - active.start.y
-      );
-    else {
-      setPan({
-        x: pan.x + active.start.x - point.x,
-        y: pan.y + active.start.y - point.y,
-      });
-    }
-  }
-
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <p className="text-sm text-muted">
+        <p className="max-w-lg text-sm text-muted">
           Select a bus or line. Drag buses to arrange; drag the background to
-          pan.
+          pan. Pinch or ⌘/Ctrl-scroll to zoom.
         </p>
         <div className="flex items-center gap-1" aria-label="Diagram zoom">
           <button
             className={actionClassNames({ variant: "secondary", size: "sm" })}
             aria-label="Zoom out"
             disabled={zoom <= 0.5}
-            onClick={() => setZoom((value) => Math.max(0.5, value / 1.4))}
+            onClick={() => zoomBy(1 / 1.4)}
           >
             −
           </button>
           <button
             className={actionClassNames({ variant: "quiet", size: "sm" })}
             onClick={() => {
-              setZoom(1);
-              setPan({ x: 0, y: 0 });
               setCamera(bounds());
             }}
           >
@@ -255,7 +222,7 @@ export function SingleLineDiagram({
             className={actionClassNames({ variant: "secondary", size: "sm" })}
             aria-label="Zoom in"
             disabled={zoom >= 8}
-            onClick={() => setZoom((value) => Math.min(8, value * 1.4))}
+            onClick={() => zoomBy(1.4)}
           >
             +
           </button>
@@ -266,18 +233,19 @@ export function SingleLineDiagram({
         role="group"
         aria-labelledby={titleId}
         data-testid="load-flow-diagram"
-        className="load-flow-diagram h-[540px] w-full touch-none rounded-md border border-line bg-white md:h-[520px]"
+        className="load-flow-diagram h-[540px] w-full touch-none select-none rounded-md border border-line bg-white md:h-[520px]"
         viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
+        onPointerDownCapture={trackPointer}
         onPointerDown={(event) => startDrag(event)}
-        onPointerMove={moveDrag}
-        onPointerUp={() => {
-          drag.current = null;
-        }}
-        onPointerCancel={() => {
-          drag.current = null;
-        }}
-        onLostPointerCapture={() => {
-          drag.current = null;
+        onPointerMove={movePointer}
+        onPointerUp={endPointer}
+        onPointerCancel={endPointer}
+        onLostPointerCapture={endPointer}
+        onClickCapture={(event) => {
+          if (suppressClick.current && event.detail > 0) {
+            event.preventDefault();
+            event.stopPropagation();
+          }
         }}
       >
         <title id={titleId}>

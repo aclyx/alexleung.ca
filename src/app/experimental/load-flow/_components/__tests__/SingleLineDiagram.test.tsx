@@ -1,4 +1,10 @@
-import { fireEvent, render, screen } from "@testing-library/react";
+import {
+  act,
+  createEvent,
+  fireEvent,
+  render,
+  screen,
+} from "@testing-library/react";
 
 import { BranchFlowSolution } from "@/features/load-flow/solver/types";
 import { BusNode, LineEdge } from "@/features/load-flow/state/loadFlowStore";
@@ -265,4 +271,195 @@ test("keeps the viewport fixed during keyboard moves, then fits on request", () 
   expect(diagram).toHaveAttribute("viewBox", before);
   fireEvent.click(screen.getByRole("button", { name: "Fit diagram" }));
   expect(diagram).not.toHaveAttribute("viewBox", before);
+});
+
+function interactiveDiagram(width = 780, height = 520) {
+  const result = render(
+    <SingleLineDiagram {...props} mode="both" animate={false} />
+  );
+  const diagram = screen.getByTestId("load-flow-diagram");
+  Object.defineProperties(diagram, {
+    clientWidth: { value: width },
+    clientHeight: { value: height },
+    clientLeft: { value: 1 },
+    clientTop: { value: 1 },
+    getBoundingClientRect: {
+      value: () => ({
+        left: 10,
+        top: 20,
+        width: width + 2,
+        height: height + 2,
+      }),
+    },
+    setPointerCapture: { value: jest.fn() },
+  });
+  function view() {
+    const [x, y, width, height] = diagram
+      .getAttribute("viewBox")!
+      .split(" ")
+      .map(Number);
+    return { x, y, width, height };
+  }
+  function worldAt(clientX: number, clientY: number) {
+    const box = view();
+    const scale = Math.max(box.width / width, box.height / height);
+    return {
+      x: box.x + box.width / 2 + (clientX - 11 - width / 2) * scale,
+      y: box.y + box.height / 2 + (clientY - 21 - height / 2) * scale,
+    };
+  }
+  return { ...result, diagram, view, worldAt };
+}
+
+function touch(
+  target: Element,
+  type:
+    | "pointerDown"
+    | "pointerMove"
+    | "pointerUp"
+    | "pointerCancel"
+    | "lostPointerCapture",
+  pointerId: number,
+  clientX: number,
+  clientY: number
+) {
+  const event = createEvent[type](target, {
+    bubbles: true,
+    cancelable: true,
+    button: 0,
+    pointerId,
+    clientX,
+    clientY,
+  });
+  // JSDOM's shared PointerEvent shim only supplies pointerId.
+  Object.defineProperty(event, "pointerType", { value: "touch" });
+  fireEvent(target, event);
+}
+
+test.each([
+  { width: 1000, height: 520, metaKey: true, ctrlKey: false },
+  { width: 340, height: 540, metaKey: false, ctrlKey: true },
+])("modifier zoom stays anchored across a burst ($width px wide)", (size) => {
+  const { diagram, view, worldAt } = interactiveDiagram(
+    size.width,
+    size.height
+  );
+  const before = worldAt(150, 190);
+  act(() => {
+    for (let step = 0; step < 10; step++) {
+      const event = new WheelEvent("wheel", {
+        cancelable: true,
+        clientX: 150,
+        clientY: 190,
+        deltaY: -4,
+        metaKey: size.metaKey,
+        ctrlKey: size.ctrlKey,
+      });
+      diagram.dispatchEvent(event);
+      expect(event.defaultPrevented).toBe(true);
+    }
+  });
+  expect(view().width).toBeCloseTo(
+    780 / Math.exp(40 * (size.ctrlKey ? 0.01 : 0.002))
+  );
+  expect(worldAt(150, 190).x).toBeCloseTo(before.x);
+  expect(worldAt(150, 190).y).toBeCloseTo(before.y);
+});
+
+test("ordinary scrolling is untouched, with normalized deltas and bounded zoom", () => {
+  const { diagram, view } = interactiveDiagram();
+  const original = view();
+  const ordinary = createEvent.wheel(diagram, {
+    deltaY: 100,
+    cancelable: true,
+  });
+  fireEvent(diagram, ordinary);
+  expect(ordinary.defaultPrevented).toBe(false);
+  expect(view()).toEqual(original);
+  fireEvent.wheel(diagram, { metaKey: true, deltaY: -2, deltaMode: 1 });
+  expect(view().width).toBeCloseTo(780 / Math.exp(32 * 0.002));
+  fireEvent.click(screen.getByRole("button", { name: "Fit diagram" }));
+  fireEvent.wheel(diagram, { metaKey: true, deltaY: -1, deltaMode: 2 });
+  expect(view().width).toBeCloseTo(780 / Math.exp(520 * 0.002));
+  fireEvent.wheel(diagram, { metaKey: true, deltaY: -100000 });
+  expect(screen.getByRole("button", { name: "Zoom in" })).toBeDisabled();
+  expect(view().width).toBeCloseTo(780 / 8);
+  fireEvent.wheel(diagram, { metaKey: true, deltaY: 100000 });
+  expect(screen.getByRole("button", { name: "Zoom out" })).toBeDisabled();
+  expect(view().width).toBeCloseTo(780 / 0.5);
+  fireEvent.click(screen.getByRole("button", { name: "Fit diagram" }));
+  expect(view()).toEqual(original);
+});
+
+test("touch pinch zooms and pans without moving a bus or selecting a line on release", () => {
+  const { diagram, view, worldAt } = interactiveDiagram();
+  const bus = screen.getByRole("button", { name: /Bus A,/ });
+  const line = screen.getByRole("button", { name: /Line line:/ });
+  Object.defineProperty(bus, "setPointerCapture", { value: jest.fn() });
+  Object.defineProperty(line, "setPointerCapture", { value: jest.fn() });
+  const anchor = worldAt(300, 240);
+  onBusMove.mockClear();
+  props.onBranchSelect.mockClear();
+  touch(bus, "pointerDown", 1, 200, 240);
+  touch(line, "pointerDown", 2, 400, 240);
+  touch(diagram, "pointerMove", 1, 100, 260);
+  touch(diagram, "pointerMove", 2, 500, 260);
+  expect(view().width).toBeCloseTo(390);
+  expect(worldAt(300, 260).x).toBeCloseTo(anchor.x);
+  expect(worldAt(300, 260).y).toBeCloseTo(anchor.y);
+  const afterPinch = view();
+  touch(diagram, "pointerUp", 2, 500, 260);
+  touch(diagram, "pointerMove", 1, 110, 260);
+  expect(view()).toEqual(afterPinch);
+  touch(diagram, "pointerUp", 1, 110, 260);
+  fireEvent.click(line, { detail: 1 });
+  expect(props.onBranchSelect).not.toHaveBeenCalled();
+  expect(onBusMove).not.toHaveBeenCalled();
+  touch(line, "pointerDown", 3, 300, 260);
+  touch(line, "pointerUp", 3, 300, 260);
+  fireEvent.click(line, { detail: 1 });
+  expect(props.onBranchSelect).toHaveBeenCalledWith("line");
+});
+
+const pointerEnds: Array<"pointerCancel" | "lostPointerCapture"> = [
+  "pointerCancel",
+  "lostPointerCapture",
+];
+test.each(pointerEnds)(
+  "%s ends a touch gesture and a fresh drag still works",
+  (end) => {
+    const { diagram, view } = interactiveDiagram();
+    touch(diagram, "pointerDown", 1, 200, 240);
+    touch(diagram, "pointerDown", 2, 400, 240);
+    touch(diagram, end, 1, 200, 240);
+    touch(diagram, end, 2, 400, 240);
+    const before = view();
+    touch(diagram, "pointerMove", 1, 100, 240);
+    expect(view()).toEqual(before);
+    touch(diagram, "pointerDown", 3, 200, 240);
+    touch(diagram, "pointerMove", 3, 230, 260);
+    expect(view().x).toBeCloseTo(before.x - 30);
+    expect(view().y).toBeCloseTo(before.y - 20);
+  }
+);
+
+test("Safari gesture scaling is incremental, anchored, and not doubled by wheel events", () => {
+  const { diagram, view, worldAt } = interactiveDiagram();
+  const anchor = worldAt(180, 200);
+  function gesture(type: string, scale: number) {
+    const event = new Event(type, { cancelable: true });
+    Object.assign(event, { scale, clientX: 180, clientY: 200 });
+    fireEvent(diagram, event);
+    expect(event.defaultPrevented).toBe(true);
+  }
+  gesture("gesturestart", 1);
+  gesture("gesturechange", 1.25);
+  fireEvent.wheel(diagram, { ctrlKey: true, deltaY: -20 });
+  gesture("gesturechange", 2);
+  expect(view().width).toBeCloseTo(390);
+  expect(worldAt(180, 200).x).toBeCloseTo(anchor.x);
+  expect(worldAt(180, 200).y).toBeCloseTo(anchor.y);
+  gesture("gestureend", 2);
+  fireEvent.wheel(diagram, { metaKey: true, deltaY: -20 });
+  expect(view().width).toBeLessThan(390);
 });

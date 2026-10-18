@@ -155,3 +155,106 @@ test("diagram works with keyboard, fits the viewport, and is reachable from home
     "https://alexleung.ca/experimental/load-flow/"
   );
 });
+
+test("pinch-style and Command-scroll wheel zoom stay under the cursor", async ({
+  page,
+  isMobile,
+}) => {
+  test.skip(isMobile, "Native wheel input is a desktop interaction.");
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  const diagram = page.getByTestId("load-flow-diagram");
+  await diagram.scrollIntoViewIfNeeded();
+  const initial = await diagram.getAttribute("viewBox");
+  const box = (await diagram.boundingBox())!;
+  const cursor = {
+    x: Math.round(box.x + box.width * 0.3),
+    y: Math.round(box.y + box.height * 0.4),
+  };
+  const pointUnderCursor = () =>
+    diagram.evaluate((svg, cursor) => {
+      if (!(svg instanceof SVGSVGElement)) throw new Error("Expected diagram");
+      const point = new DOMPoint(cursor.x, cursor.y).matrixTransform(
+        svg.getScreenCTM()!.inverse()
+      );
+      return { x: point.x, y: point.y };
+    }, cursor);
+  await page.mouse.move(cursor.x, cursor.y);
+  const before = await pointUnderCursor();
+  const scrollBefore = await page.evaluate(() => scrollY);
+  for (const key of ["Meta", "Control"]) {
+    await page.keyboard.down(key);
+    await page.mouse.wheel(0, -40);
+    await page.keyboard.up(key);
+    await expect(diagram).not.toHaveAttribute("viewBox", initial!);
+    await expect
+      .poll(async () => (await pointUnderCursor()).x)
+      .toBeCloseTo(before.x, 4);
+    await expect
+      .poll(async () => (await pointUnderCursor()).y)
+      .toBeCloseTo(before.y, 4);
+    expect(await page.evaluate(() => scrollY)).toBe(scrollBefore);
+    await page.getByRole("button", { name: "Fit diagram" }).click();
+    await expect(diagram).toHaveAttribute("viewBox", initial!);
+    await page.mouse.move(cursor.x, cursor.y);
+  }
+  await page.mouse.wheel(0, 120);
+  await expect
+    .poll(() => page.evaluate(() => scrollY))
+    .toBeGreaterThan(scrollBefore);
+  await expect(diagram).toHaveAttribute("viewBox", initial!);
+});
+
+test("two-finger touch pinch scales the diagram without rearranging the network", async ({
+  page,
+  browserName,
+  isMobile,
+}) => {
+  test.skip(
+    browserName !== "chromium" || !isMobile,
+    "Real multi-touch input uses Chromium's mobile input protocol."
+  );
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  const diagram = page.getByTestId("load-flow-diagram");
+  await diagram.scrollIntoViewIfNeeded();
+  const box = (await diagram.boundingBox())!;
+  const center = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  const initial = await diagram.getAttribute("viewBox");
+  const busPositions = () =>
+    diagram
+      .locator('[aria-label^="Bus "]')
+      .evaluateAll((buses) =>
+        buses.map((bus) => bus.getAttribute("transform"))
+      );
+  const positionsBefore = await busPositions();
+  const session = await page.context().newCDPSession(page);
+  const points = (radius: number) => [
+    { x: center.x - radius, y: center.y, id: 1 },
+    { x: center.x + radius, y: center.y, id: 2 },
+  ];
+  await session.send("Input.dispatchTouchEvent", {
+    type: "touchStart",
+    touchPoints: points(40),
+  });
+  for (const radius of [45, 50, 60, 70, 80]) {
+    await session.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: points(radius),
+    });
+  }
+  await session.send("Input.dispatchTouchEvent", {
+    type: "touchEnd",
+    touchPoints: [],
+  });
+  await expect(diagram).not.toHaveAttribute("viewBox", initial!);
+  const width = () =>
+    diagram.evaluate((svg) =>
+      Number(svg.getAttribute("viewBox")!.split(" ")[2])
+    );
+  const initialWidth = Number(initial!.split(" ")[2]);
+  await expect.poll(width).toBeCloseTo(initialWidth / 2, 1);
+  expect(await busPositions()).toEqual(positionsBefore);
+  expect(await page.evaluate(() => window.visualViewport?.scale)).toBe(1);
+  await page.getByRole("button", { name: "Fit diagram" }).click();
+  await expect(diagram).toHaveAttribute("viewBox", initial!);
+  await session.detach();
+});
