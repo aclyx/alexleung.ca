@@ -11,6 +11,14 @@ test("home top fold stays visually stable", async ({ page }) => {
   await expect(page).toHaveScreenshot("home-top-fold.png");
 });
 
+test("home browser tools stay visually stable", async ({ page }) => {
+  await gotoAndStabilize(page, "/");
+
+  await expect(
+    page.getByRole("region", { name: "Browser tools" })
+  ).toHaveScreenshot("home-browser-tools.png");
+});
+
 test("home work section stays visually stable", async ({ page }) => {
   await gotoAndStabilize(page, "/");
   await page.locator("#experience").evaluate((element) => {
