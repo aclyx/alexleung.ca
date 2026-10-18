@@ -147,9 +147,9 @@ test("primary navigation routes render expected page headings and active states"
     await navigation
       .getByRole("link", { name: route.label, exact: true })
       .click();
+    await expect(page).toHaveURL(route.path);
     await waitForStablePage(page);
 
-    expect(new URL(page.url()).pathname).toBe(route.path);
     await expect(
       page.getByRole("heading", { level: 1, name: route.heading })
     ).toBeVisible();

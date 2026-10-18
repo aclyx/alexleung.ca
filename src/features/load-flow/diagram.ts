@@ -1,3 +1,4 @@
+import { arrangeNetwork } from "./layout";
 import { BusNode, LineEdge, LoadFlowEditorState } from "./state/loadFlowStore";
 
 export type FlowMode = "both" | "p" | "q";
@@ -71,60 +72,16 @@ export function branchCurve(
   };
 }
 
-export function placeFlowLabels(branches: LineEdge[], buses: BusNode[]) {
-  const occupied = buses.map(({ x, y }) => ({
-    x,
-    y,
-    halfWidth: 88,
-    halfHeight: 94,
-  }));
-  const placements = new Map<string, { position: Point; anchor: Point }>();
-  const minX = Math.min(...buses.map((bus) => bus.x)) - 95;
-  const maxX = Math.max(...buses.map((bus) => bus.x)) + 95;
-  const minY = Math.min(...buses.map((bus) => bus.y)) - 105;
-  const maxY = Math.max(...buses.map((bus) => bus.y)) + 95;
-  for (const branch of branches) {
-    const { a, b, c } = branchCurve(branch, branches, buses);
-    const center = pointOnCurve(a, b, c, 0.5);
-    let placement = { position: center, anchor: center };
-    search: for (let radius = 0; radius <= 720; radius += 24) {
-      for (let step = 0; step < (radius ? 16 : 1); step++) {
-        const angle = (step * Math.PI) / 8;
-        const position = {
-          x: center.x + Math.cos(angle) * radius,
-          y: center.y + Math.sin(angle) * radius,
-        };
-        if (
-          position.x - 58 < minX ||
-          position.x + 58 > maxX ||
-          position.y - 30 < minY ||
-          position.y + 30 > maxY
-        )
-          continue;
-        if (
-          occupied.some(
-            (box) =>
-              Math.abs(position.x - box.x) < box.halfWidth + 58 &&
-              Math.abs(position.y - box.y) < box.halfHeight + 30
-          )
-        )
-          continue;
-        placement = { position, anchor: center };
-        break search;
-      }
-    }
-    placements.set(branch.id, placement);
-    occupied.push({
-      ...placement.position,
-      halfWidth: 58,
-      halfHeight: 30,
-    });
-  }
-  return placements;
-}
-
 export function layoutDiagram(state: LoadFlowEditorState): LoadFlowEditorState {
   const count = state.busOrder.length;
+  const indices = new Map(state.busOrder.map((id, index) => [id, index]));
+  const edges = new Map<string, readonly [number, number]>();
+  for (const branch of Object.values(state.branchesById)) {
+    const a = indices.get(branch.fromBusId);
+    const b = indices.get(branch.toBusId);
+    if (a === undefined || b === undefined || a === b) continue;
+    edges.set([Math.min(a, b), Math.max(a, b)].join(":"), [a, b]);
+  }
   const positions =
     count === 2
       ? [
@@ -137,14 +94,7 @@ export function layoutDiagram(state: LoadFlowEditorState): LoadFlowEditorState {
             { x: 640, y: 130 },
             { x: 390, y: 420 },
           ]
-        : state.busOrder.map((_, index) => {
-            const angle = -Math.PI / 2 + (index * Math.PI * 2) / count;
-            const radius = Math.max(280, count * 28);
-            return {
-              x: 400 + Math.cos(angle) * radius * 1.5,
-              y: 350 + Math.sin(angle) * radius * 0.8,
-            };
-          });
+        : arrangeNetwork(count, [...edges.values()]);
   return {
     ...state,
     busesById: Object.fromEntries(

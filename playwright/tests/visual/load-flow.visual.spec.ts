@@ -24,4 +24,14 @@ test("load-flow diagram and terminal inspector stay readable", async ({
   await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
     "load-flow-ieee14.png"
   );
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("ieee-30-bus");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-ieee30.png"
+  );
+  await page.getByRole("button", { name: /^Bus Bus 2,/ }).focus();
+  await expect(page.getByRole("tooltip")).toHaveScreenshot(
+    "load-flow-power-card.png"
+  );
 });

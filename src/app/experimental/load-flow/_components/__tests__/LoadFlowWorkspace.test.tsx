@@ -58,14 +58,22 @@ test("keeps the original branch results table tied to solved terminal values", (
     expect(table.getAllByText(value.toFixed(2)).length).toBeGreaterThan(0);
 });
 
-test("shows amounts on larger networks and can hide them", () => {
+test("larger networks start uncluttered and arranging preserves electrical edits", () => {
   render(<LoadFlowWorkspace />);
   chooseNetwork("ieee-14-bus");
-  expect(screen.getAllByTestId("line-amount")).toHaveLength(20);
-  fireEvent.click(screen.getByRole("button", { name: "Hide amounts" }));
-  expect(screen.queryByTestId("line-amount")).toBeNull();
-  fireEvent.click(screen.getByRole("button", { name: "Show amounts" }));
-  expect(screen.getAllByTestId("line-amount")).toHaveLength(20);
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  const bus = screen.getByRole("button", { name: /^Bus Bus 2,/ });
+  const before = bus.getAttribute("transform");
+  fireEvent.keyDown(bus, { key: "ArrowRight" });
+  expect(bus).not.toHaveAttribute("transform", before);
+  fireEvent.change(screen.getByRole("slider"), { target: { value: "150" } });
+  fireEvent.click(screen.getByRole("button", { name: "Arrange buses" }));
+  expect(screen.getByRole("button", { name: /^Bus Bus 2,/ })).toHaveAttribute(
+    "transform",
+    before
+  );
+  expect(screen.getByRole("slider")).toHaveValue("150");
+  expect(screen.getByRole("status")).toHaveTextContent("Converged");
 });
 
 test("scales loads, switches overlays, and resets without losing selection", () => {

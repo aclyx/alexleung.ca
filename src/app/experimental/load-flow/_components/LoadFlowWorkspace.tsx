@@ -91,7 +91,6 @@ export function LoadFlowWorkspace() {
   const [loadPercent, setLoadPercent] = useState(100);
   const [mode, setMode] = useState<FlowMode>("both");
   const [animate, setAnimate] = useState(true);
-  const [showAmounts, setShowAmounts] = useState(true);
   const [diagramRevision, setDiagramRevision] = useState(0);
   const [fromId, setFromId] = useState("");
   const [toId, setToId] = useState("");
@@ -301,13 +300,6 @@ export function LoadFlowWorkspace() {
             </div>
             <button
               className={buttonClass}
-              aria-pressed={showAmounts}
-              onClick={() => setShowAmounts(!showAmounts)}
-            >
-              {showAmounts ? "Hide amounts" : "Show amounts"}
-            </button>
-            <button
-              className={buttonClass}
               aria-pressed={animate}
               onClick={() => {
                 setAnimate(!animate);
@@ -340,7 +332,10 @@ export function LoadFlowWorkspace() {
           branchFlowsById={branchFlows}
           mode={mode}
           animate={animate && solved}
-          showAmounts={showAmounts}
+          onArrange={() => {
+            setEditor(layoutDiagram);
+            setDiagramRevision((value) => value + 1);
+          }}
         />
       </div>
       <section
@@ -623,15 +618,6 @@ export function LoadFlowWorkspace() {
             onClick={() => setEditor((state) => addBus(state))}
           >
             Add bus
-          </button>
-          <button
-            className={buttonClass}
-            onClick={() => {
-              setEditor(layoutDiagram);
-              setDiagramRevision((value) => value + 1);
-            }}
-          >
-            Arrange buses
           </button>
         </div>
         <div className="grid items-end gap-3 sm:grid-cols-3">

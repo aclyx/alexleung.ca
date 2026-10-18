@@ -4,6 +4,7 @@ import {
   useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -15,7 +16,6 @@ import {
   flowAnimationDuration,
   FlowMode,
   flowWidth,
-  placeFlowLabels,
   Point,
   pointOnCurve,
   terminalDirection,
@@ -85,7 +85,7 @@ interface Props {
   branchFlowsById: Map<string, BranchFlowSolution>;
   mode: FlowMode;
   animate: boolean;
-  showAmounts: boolean;
+  onArrange: () => void;
 }
 
 export function SingleLineDiagram({
@@ -103,9 +103,74 @@ export function SingleLineDiagram({
   branchFlowsById,
   mode,
   animate,
-  showAmounts,
+  onArrange,
 }: Props) {
   const titleId = useId();
+  const detailId = useId();
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
+    undefined
+  );
+  const [detail, setDetail] = useState<{
+    type: "BUS" | "BRANCH";
+    id: string;
+    x: number;
+    y: number;
+  } | null>(null);
+  function keepDetail() {
+    clearTimeout(hideTimer.current);
+  }
+  function hideDetail() {
+    keepDetail();
+    setDetail(null);
+  }
+  function leaveDetail() {
+    keepDetail();
+    hideTimer.current = setTimeout(() => setDetail(null), 180);
+  }
+  function showDetail(
+    type: "BUS" | "BRANCH",
+    id: string,
+    element: Element,
+    pointer?: { clientX: number; clientY: number }
+  ) {
+    keepDetail();
+    const wrapper = wrapperRef.current!.getBoundingClientRect();
+    const anchor = element.getBoundingClientRect();
+    const x =
+      (pointer?.clientX ?? anchor.left + anchor.width / 2) - wrapper.left;
+    const y =
+      (pointer?.clientY ?? anchor.top + anchor.height / 2) - wrapper.top;
+    setDetail({
+      type,
+      id,
+      x: Math.max(
+        8,
+        Math.min(
+          x + 280 > wrapper.width ? x - 276 : x + 12,
+          wrapper.width - 280
+        )
+      ),
+      y: Math.max(
+        8,
+        Math.min(
+          y + 180 > wrapper.height ? y - 180 : y + 12,
+          wrapper.height - 180
+        )
+      ),
+    });
+  }
+  useEffect(() => {
+    const closeOnResize = () => {
+      clearTimeout(hideTimer.current);
+      setDetail(null);
+    };
+    window.addEventListener("resize", closeOnResize);
+    return () => {
+      clearTimeout(hideTimer.current);
+      window.removeEventListener("resize", closeOnResize);
+    };
+  }, []);
   const components: Array<"p" | "q"> = mode === "both" ? ["p", "q"] : [mode];
   const generatorBuses = new Set(
     generators
@@ -147,13 +212,6 @@ export function SingleLineDiagram({
       })),
     [sourceBuses, offsets]
   );
-  const amountPositions = useMemo(
-    () =>
-      showAmounts
-        ? placeFlowLabels(branches, buses)
-        : new Map<string, { position: Point; anchor: Point }>(),
-    [showAmounts, branches, buses]
-  );
   function moveBus(id: string, x: number, y: number) {
     const offset = offsets[sourceBuses.findIndex((bus) => bus.id === id)];
     onBusMove(id, x - offset.x, y - offset.y);
@@ -194,14 +252,75 @@ export function SingleLineDiagram({
     busSolutionsById.get(buses.find((bus) => bus.type === "SLACK")?.id ?? "")
       ?.voltageAngleDeg ?? 0;
 
+  const readout: {
+    title: string;
+    note?: string;
+    rows: Array<{ label: string; p: number; q: number }>;
+  } = { title: "", rows: [] };
+  if (detail?.type === "BRANCH") {
+    const branch = branches.find((item) => item.id === detail.id);
+    const flow =
+      branch?.status === "OUT_OF_SERVICE"
+        ? undefined
+        : branchFlowsById.get(detail.id);
+    readout.title = detail.id;
+    readout.note =
+      branch?.status === "OUT_OF_SERVICE"
+        ? "Out of service"
+        : flow
+          ? "Positive = into line at that end"
+          : "No solved flow";
+    if (flow)
+      readout.rows = [
+        {
+          label: `From · ${buses.find((bus) => bus.id === branch?.fromBusId)?.name}`,
+          p: flow.pFromToMW,
+          q: flow.qFromToMVar,
+        },
+        {
+          label: `To · ${buses.find((bus) => bus.id === branch?.toBusId)?.name}`,
+          p: flow.pToFromMW,
+          q: flow.qToFromMVar,
+        },
+      ];
+  } else if (detail) {
+    const bus = buses.find((item) => item.id === detail.id);
+    const solution = busSolutionsById.get(detail.id);
+    const demand = loads
+      .filter((load) => load.busId === detail.id && load.status === "ON")
+      .reduce((sum, load) => ({ p: sum.p + load.p, q: sum.q + load.q }), {
+        p: 0,
+        q: 0,
+      });
+    readout.title = bus?.name ?? detail.id;
+    if (solution) {
+      if (generatorBuses.has(detail.id) || bus?.type === "SLACK")
+        readout.rows.push({
+          label: generatorBuses.has(detail.id) ? "Generator" : "Grid supply",
+          p: solution.pInjectionPu * baseMVA + demand.p,
+          q: solution.qInjectionPu * baseMVA + demand.q,
+        });
+      if (loadBuses.has(detail.id))
+        readout.rows.push({ label: "Load", ...demand });
+      if (!readout.rows.length)
+        readout.note = "No generator or load connected.";
+    } else readout.note = "No solved power";
+  }
+
   return (
     <div>
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <p className="max-w-lg text-sm text-muted">
-          Select a bus or line. Drag buses to arrange; drag the background to
-          pan. Pinch or ⌘/Ctrl-scroll to zoom.
+          Hover or focus for power details; tap to inspect. Drag buses to move,
+          background to pan. Pinch or ⌘/Ctrl-scroll to zoom.
         </p>
-        <div className="flex items-center gap-1" aria-label="Diagram zoom">
+        <div className="flex items-center gap-1" aria-label="Diagram controls">
+          <button
+            className={actionClassNames({ variant: "quiet", size: "sm" })}
+            onClick={onArrange}
+          >
+            Arrange buses
+          </button>
           <button
             className={actionClassNames({ variant: "secondary", size: "sm" })}
             aria-label="Zoom out"
@@ -228,391 +347,385 @@ export function SingleLineDiagram({
           </button>
         </div>
       </div>
-      <svg
-        ref={svgRef}
-        role="group"
-        aria-labelledby={titleId}
-        data-testid="load-flow-diagram"
-        className="load-flow-diagram h-[540px] w-full touch-none select-none rounded-md border border-line bg-white md:h-[520px]"
-        viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
-        onPointerDownCapture={trackPointer}
-        onPointerDown={(event) => startDrag(event)}
-        onPointerMove={movePointer}
-        onPointerUp={endPointer}
-        onPointerCancel={endPointer}
-        onLostPointerCapture={endPointer}
-        onClickCapture={(event) => {
-          if (suppressClick.current && event.detail > 0) {
-            event.preventDefault();
-            event.stopPropagation();
-          }
+      <div
+        ref={wrapperRef}
+        className="relative"
+        onKeyDown={(event) => {
+          if (event.key === "Escape") hideDetail();
         }}
       >
-        <title id={titleId}>
-          Single-line diagram: bus voltages, phase angles, and terminal power
-          flows
-        </title>
-        <defs>
-          <pattern
-            id={`${titleId}-grid`}
-            width="24"
-            height="24"
-            patternUnits="userSpaceOnUse"
-          >
-            <circle cx="1" cy="1" r="0.8" fill="#d3d5d5" />
-          </pattern>
-        </defs>
-        <rect
-          x={viewX}
-          y={viewY}
-          width={viewWidth}
-          height={viewHeight}
-          fill={`url(#${titleId}-grid)`}
-        />
-        {branches.map((branch) => {
-          const { a, b, c } = branchCurve(branch, branches, buses);
-          const d = `M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}`;
-          const selected =
-            selectedElementType === "BRANCH" && selectedElementId === branch.id;
-          const offline = branch.status === "OUT_OF_SERVICE";
-          const flow = offline ? undefined : branchFlowsById.get(branch.id);
-          const center = pointOnCurve(a, b, c, 0.5);
-          return (
-            <g
-              key={branch.id}
-              role="button"
-              tabIndex={0}
-              aria-label={`Line ${branch.id}: ${a.name} to ${b.name}${offline ? ", out of service" : ""}`}
-              aria-pressed={selected}
-              className="cursor-pointer outline-none"
-              onPointerDown={(event) => event.stopPropagation()}
-              onClick={() => onBranchSelect(branch.id)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  onBranchSelect(branch.id);
-                }
-              }}
+        <svg
+          ref={svgRef}
+          role="group"
+          aria-labelledby={titleId}
+          data-testid="load-flow-diagram"
+          className="load-flow-diagram h-[540px] w-full touch-none select-none rounded-md border border-line bg-white md:h-[520px]"
+          viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
+          onPointerDownCapture={(event) => {
+            hideDetail();
+            trackPointer(event);
+          }}
+          onPointerDown={(event) => startDrag(event)}
+          onPointerMove={movePointer}
+          onPointerUp={endPointer}
+          onPointerCancel={endPointer}
+          onLostPointerCapture={endPointer}
+          onClickCapture={(event) => {
+            if (suppressClick.current && event.detail > 0) {
+              event.preventDefault();
+              event.stopPropagation();
+            }
+          }}
+        >
+          <title id={titleId}>
+            Single-line diagram: bus voltages, phase angles, and terminal power
+            flows
+          </title>
+          <defs>
+            <pattern
+              id={`${titleId}-grid`}
+              width="24"
+              height="24"
+              patternUnits="userSpaceOnUse"
             >
-              <title>{`${branch.id}: ${a.name} — ${b.name}${flow ? `; from end ${flow.pFromToMW.toFixed(2)} MW, ${flow.qFromToMVar.toFixed(2)} MVAr; to end ${flow.pToFromMW.toFixed(2)} MW, ${flow.qToFromMVar.toFixed(2)} MVAr (positive into line)` : "; no solved flow"}`}</title>
-              <path d={d} fill="none" stroke="white" strokeWidth="16" />
-              <path
-                className="load-flow-line-focus"
-                d={d}
-                fill="none"
-                stroke={selected ? "#202936" : "#858c95"}
-                strokeWidth={selected ? 3 : 1.5}
-                strokeDasharray={offline ? "7 7" : undefined}
-              />
-              <path d={d} fill="none" stroke="transparent" strokeWidth="28" />
-              {flow &&
-                components.map((component) => {
-                  const fromValue =
-                    component === "p" ? flow.pFromToMW : flow.qFromToMVar;
-                  const toValue =
-                    component === "p" ? flow.pToFromMW : flow.qToFromMVar;
-                  const offset =
-                    mode === "both" ? (component === "p" ? -6 : 6) : 0;
-                  const length = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-                  const shift = {
-                    x: (-(b.y - a.y) / length) * offset,
-                    y: ((b.x - a.x) / length) * offset,
-                  };
-                  return (
-                    <g
-                      key={component}
-                      transform={`translate(${shift.x} ${shift.y})`}
-                      pointerEvents="none"
-                      data-component={component}
-                    >
-                      {TERMINALS.map((end) => {
-                        const value = end === "from" ? fromValue : toValue;
-                        const direction = terminalDirection(value, end);
-                        if (!direction) return null;
-                        const t = end === "from" ? 0.28 : 0.72;
-                        const point = pointOnCurve(a, b, c, t);
-                        const tangent = {
-                          x: (1 - t) * (c.x - a.x) + t * (b.x - c.x),
-                          y: (1 - t) * (c.y - a.y) + t * (b.y - c.y),
-                        };
-                        const angle =
-                          (Math.atan2(tangent.y, tangent.x) * 180) / Math.PI +
-                          (direction < 0 ? 180 : 0);
-                        const halfControl =
-                          end === "from"
-                            ? { x: (a.x + c.x) / 2, y: (a.y + c.y) / 2 }
-                            : { x: (b.x + c.x) / 2, y: (b.y + c.y) / 2 };
-                        const halfPath =
-                          end === "from"
-                            ? `M ${a.x} ${a.y} Q ${halfControl.x} ${halfControl.y} ${center.x} ${center.y}`
-                            : `M ${center.x} ${center.y} Q ${halfControl.x} ${halfControl.y} ${b.x} ${b.y}`;
-                        return (
-                          <g
-                            key={end}
-                            data-terminal={end}
-                            data-direction={direction}
-                          >
-                            <path
-                              d={halfPath}
-                              fill="none"
-                              stroke={DIAGRAM_COLORS[component]}
-                              strokeWidth={flowWidth(value)}
-                              opacity="0.38"
-                              strokeDasharray={
-                                component === "q" ? "5 4" : undefined
-                              }
-                            />
-                            {animate && (
-                              <path
-                                className="load-flow-motion"
-                                data-testid="flow-motion"
-                                d={halfPath}
-                                fill="none"
-                                stroke={DIAGRAM_COLORS[component]}
-                                strokeWidth="2"
-                                strokeDasharray="3 23"
-                                style={{
-                                  animationDuration: `${flowAnimationDuration(value)}s`,
-                                  animationDirection:
-                                    direction > 0 ? "normal" : "reverse",
-                                }}
-                              />
-                            )}
-                            <path
-                              d="M -7 -5 L 0 0 L -7 5"
-                              fill="none"
-                              stroke={DIAGRAM_COLORS[component]}
-                              strokeWidth="2.5"
-                              transform={`translate(${point.x} ${point.y}) rotate(${angle})`}
-                            />
-                          </g>
-                        );
-                      })}
-                    </g>
-                  );
-                })}
-            </g>
-          );
-        })}
-        {showAmounts &&
-          branches.map((branch) => {
-            const flow =
-              branch.status === "OUT_OF_SERVICE"
-                ? undefined
-                : branchFlowsById.get(branch.id);
+              <circle cx="1" cy="1" r="0.8" fill="#d3d5d5" />
+            </pattern>
+          </defs>
+          <rect
+            x={viewX}
+            y={viewY}
+            width={viewWidth}
+            height={viewHeight}
+            fill={`url(#${titleId}-grid)`}
+          />
+          {branches.map((branch) => {
+            const { a, b, c } = branchCurve(branch, branches, buses);
+            const d = `M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}`;
             const selected =
               selectedElementType === "BRANCH" &&
               selectedElementId === branch.id;
-            const { position: center, anchor } = amountPositions.get(
-              branch.id
-            )!;
+            const offline = branch.status === "OUT_OF_SERVICE";
+            const flow = offline ? undefined : branchFlowsById.get(branch.id);
+            const center = pointOnCurve(a, b, c, 0.5);
             return (
-              <g key={branch.id} pointerEvents="none" data-testid="line-amount">
+              <g
+                key={branch.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Line ${branch.id}: ${a.name} to ${b.name}${offline ? ", out of service" : ""}`}
+                aria-pressed={selected}
+                className="cursor-pointer outline-none"
+                onPointerDown={(event) => event.stopPropagation()}
+                aria-describedby={
+                  detail?.type === "BRANCH" && detail.id === branch.id
+                    ? detailId
+                    : undefined
+                }
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== "touch")
+                    showDetail("BRANCH", branch.id, event.currentTarget, event);
+                }}
+                onPointerLeave={leaveDetail}
+                onFocus={(event) =>
+                  showDetail("BRANCH", branch.id, event.currentTarget)
+                }
+                onBlur={hideDetail}
+                onClick={(event) => {
+                  onBranchSelect(branch.id);
+                  showDetail("BRANCH", branch.id, event.currentTarget);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    onBranchSelect(branch.id);
+                  }
+                }}
+              >
+                <path d={d} fill="none" stroke="white" strokeWidth="16" />
                 <path
-                  d={`M ${anchor.x} ${anchor.y} L ${center.x} ${center.y}`}
-                  stroke="#858c95"
-                  strokeWidth="1"
+                  className="load-flow-line-focus"
+                  d={d}
+                  fill="none"
+                  stroke={selected ? "#202936" : "#858c95"}
+                  strokeWidth={selected ? 3 : 1.5}
+                  strokeDasharray={offline ? "7 7" : undefined}
                 />
-                <rect
-                  x={center.x - 53}
-                  y={center.y - (flow ? 25 : 12)}
-                  width="106"
-                  height={flow ? 50 : 24}
-                  rx="4"
-                  fill="white"
-                  stroke={selected ? "#202936" : "#d3d5d5"}
-                />
-                <text
-                  x={center.x}
-                  y={center.y + (flow ? -10 : 4)}
-                  textAnchor="middle"
-                  fill="#58616d"
-                  fontSize="10"
-                >
-                  {branch.id.replace(/^line-/, "L ")}
-                </text>
+                <path d={d} fill="none" stroke="transparent" strokeWidth="28" />
                 {flow &&
-                  components.map((component, index) => (
-                    <text
-                      key={component}
-                      x={center.x}
-                      y={center.y + 5 + index * 14}
-                      textAnchor="middle"
-                      fill={DIAGRAM_COLORS[component]}
-                      fontSize="12"
-                    >
-                      {component === "p"
-                        ? `${flow.pFromToMW.toFixed(1)} MW`
-                        : `${flow.qFromToMVar.toFixed(1)} MVAr`}
-                    </text>
-                  ))}
+                  components.map((component) => {
+                    const fromValue =
+                      component === "p" ? flow.pFromToMW : flow.qFromToMVar;
+                    const toValue =
+                      component === "p" ? flow.pToFromMW : flow.qToFromMVar;
+                    const offset =
+                      mode === "both" ? (component === "p" ? -6 : 6) : 0;
+                    const length = Math.hypot(b.x - a.x, b.y - a.y) || 1;
+                    const shift = {
+                      x: (-(b.y - a.y) / length) * offset,
+                      y: ((b.x - a.x) / length) * offset,
+                    };
+                    return (
+                      <g
+                        key={component}
+                        transform={`translate(${shift.x} ${shift.y})`}
+                        pointerEvents="none"
+                        data-component={component}
+                      >
+                        {TERMINALS.map((end) => {
+                          const value = end === "from" ? fromValue : toValue;
+                          const direction = terminalDirection(value, end);
+                          if (!direction) return null;
+                          const t = end === "from" ? 0.28 : 0.72;
+                          const point = pointOnCurve(a, b, c, t);
+                          const tangent = {
+                            x: (1 - t) * (c.x - a.x) + t * (b.x - c.x),
+                            y: (1 - t) * (c.y - a.y) + t * (b.y - c.y),
+                          };
+                          const angle =
+                            (Math.atan2(tangent.y, tangent.x) * 180) / Math.PI +
+                            (direction < 0 ? 180 : 0);
+                          const halfControl =
+                            end === "from"
+                              ? { x: (a.x + c.x) / 2, y: (a.y + c.y) / 2 }
+                              : { x: (b.x + c.x) / 2, y: (b.y + c.y) / 2 };
+                          const halfPath =
+                            end === "from"
+                              ? `M ${a.x} ${a.y} Q ${halfControl.x} ${halfControl.y} ${center.x} ${center.y}`
+                              : `M ${center.x} ${center.y} Q ${halfControl.x} ${halfControl.y} ${b.x} ${b.y}`;
+                          return (
+                            <g
+                              key={end}
+                              data-terminal={end}
+                              data-direction={direction}
+                            >
+                              <path
+                                d={halfPath}
+                                fill="none"
+                                stroke={DIAGRAM_COLORS[component]}
+                                strokeWidth={flowWidth(value)}
+                                opacity="0.38"
+                                strokeDasharray={
+                                  component === "q" ? "5 4" : undefined
+                                }
+                              />
+                              {animate && (
+                                <path
+                                  className="load-flow-motion"
+                                  data-testid="flow-motion"
+                                  d={halfPath}
+                                  fill="none"
+                                  stroke={DIAGRAM_COLORS[component]}
+                                  strokeWidth="2"
+                                  strokeDasharray="3 23"
+                                  style={{
+                                    animationDuration: `${flowAnimationDuration(value)}s`,
+                                    animationDirection:
+                                      direction > 0 ? "normal" : "reverse",
+                                  }}
+                                />
+                              )}
+                              <path
+                                d="M -7 -5 L 0 0 L -7 5"
+                                fill="none"
+                                stroke={DIAGRAM_COLORS[component]}
+                                strokeWidth="2.5"
+                                transform={`translate(${point.x} ${point.y}) rotate(${angle})`}
+                              />
+                            </g>
+                          );
+                        })}
+                      </g>
+                    );
+                  })}
               </g>
             );
           })}
-        {buses.map((bus) => {
-          const solution = busSolutionsById.get(bus.id);
-          const angle = solution ? solution.voltageAngleDeg - slackAngle : 0;
-          const selected =
-            selectedElementType === "BUS" && selectedElementId === bus.id;
-          const color = voltageColor(solution?.voltageMagnitudePu);
-          const devices: DeviceKind[] = [];
-          if (generatorBuses.has(bus.id)) devices.push("generator");
-          else if (bus.type === "SLACK") devices.push("grid");
-          if (loadBuses.has(bus.id)) devices.push("load");
-          const demand = loads
-            .filter((load) => load.busId === bus.id && load.status === "ON")
-            .reduce(
-              (total, load) => ({ p: total.p + load.p, q: total.q + load.q }),
-              { p: 0, q: 0 }
-            );
-          const supply = solution
-            ? {
-                p: solution.pInjectionPu * baseMVA + demand.p,
-                q: solution.qInjectionPu * baseMVA + demand.q,
-              }
-            : undefined;
-          const deviceDescription = devices
-            .map((kind) => {
-              const power = kind === "load" ? demand : supply;
-              return `${DEVICE_LABELS[kind]}${showAmounts && solution && power ? `: ${power.p.toFixed(1)} MW, ${power.q.toFixed(1)} MVAr` : ""}`;
-            })
-            .join("; ");
-          return (
-            <g
-              key={bus.id}
-              role="button"
-              tabIndex={0}
-              aria-label={`Bus ${bus.name}, ${bus.type}${devices.length ? `, ${devices.map((kind) => DEVICE_LABELS[kind]).join(", ")}` : ""}${solution ? `, ${solution.voltageMagnitudePu.toFixed(3)} per unit, ${angle.toFixed(2)} degrees relative to slack` : ", unsolved"}`}
-              aria-pressed={selected}
-              aria-description={deviceDescription || undefined}
-              className="cursor-grab outline-none active:cursor-grabbing"
-              transform={`translate(${bus.x} ${bus.y})`}
-              onPointerDown={(event) => startDrag(event, bus)}
-              onClick={() => onBusSelect(bus.id)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter" || event.key === " ") {
-                  event.preventDefault();
-                  onBusSelect(bus.id);
+          {buses.map((bus) => {
+            const solution = busSolutionsById.get(bus.id);
+            const angle = solution ? solution.voltageAngleDeg - slackAngle : 0;
+            const selected =
+              selectedElementType === "BUS" && selectedElementId === bus.id;
+            const color = voltageColor(solution?.voltageMagnitudePu);
+            const devices: DeviceKind[] = [];
+            if (generatorBuses.has(bus.id)) devices.push("generator");
+            else if (bus.type === "SLACK") devices.push("grid");
+            if (loadBuses.has(bus.id)) devices.push("load");
+            const demand = loads
+              .filter((load) => load.busId === bus.id && load.status === "ON")
+              .reduce(
+                (total, load) => ({ p: total.p + load.p, q: total.q + load.q }),
+                { p: 0, q: 0 }
+              );
+            const supply = solution
+              ? {
+                  p: solution.pInjectionPu * baseMVA + demand.p,
+                  q: solution.qInjectionPu * baseMVA + demand.q,
                 }
-                const delta: Record<string, Point> = {
-                  ArrowLeft: { x: -10, y: 0 },
-                  ArrowRight: { x: 10, y: 0 },
-                  ArrowUp: { x: 0, y: -10 },
-                  ArrowDown: { x: 0, y: 10 },
-                };
-                if (delta[event.key]) {
-                  event.preventDefault();
-                  moveBus(
-                    bus.id,
-                    bus.x + delta[event.key].x,
-                    bus.y + delta[event.key].y
-                  );
-                }
-              }}
-            >
-              {devices.map((kind) => {
+              : undefined;
+            const deviceDescription = devices
+              .map((kind) => {
                 const power = kind === "load" ? demand : supply;
-                return (
-                  <g
-                    key={kind}
-                    data-device={kind}
-                    color="#58616d"
-                    aria-hidden="true"
-                  >
-                    <title>{`${DEVICE_LABELS[kind]} at ${bus.name}`}</title>
-                    <path
-                      d={kind === "load" ? "M 55 43 V 64" : "M 55 -43 V -59"}
-                      stroke="currentColor"
-                      strokeWidth="1.8"
-                    />
+                return `${DEVICE_LABELS[kind]}${solution && power ? `: ${power.p.toFixed(1)} MW, ${power.q.toFixed(1)} MVAr` : ""}`;
+              })
+              .join("; ");
+            return (
+              <g
+                key={bus.id}
+                role="button"
+                tabIndex={0}
+                aria-label={`Bus ${bus.name}, ${bus.type}${devices.length ? `, ${devices.map((kind) => DEVICE_LABELS[kind]).join(", ")}` : ""}${solution ? `, ${solution.voltageMagnitudePu.toFixed(3)} per unit, ${angle.toFixed(2)} degrees relative to slack` : ", unsolved"}`}
+                aria-pressed={selected}
+                aria-description={deviceDescription || undefined}
+                className="cursor-grab outline-none active:cursor-grabbing"
+                transform={`translate(${bus.x} ${bus.y})`}
+                onPointerDown={(event) => startDrag(event, bus)}
+                aria-describedby={
+                  detail?.type === "BUS" && detail.id === bus.id
+                    ? detailId
+                    : undefined
+                }
+                onPointerEnter={(event) => {
+                  if (event.pointerType !== "touch")
+                    showDetail("BUS", bus.id, event.currentTarget, event);
+                }}
+                onPointerLeave={leaveDetail}
+                onFocus={(event) =>
+                  showDetail("BUS", bus.id, event.currentTarget)
+                }
+                onBlur={hideDetail}
+                onClick={(event) => {
+                  onBusSelect(bus.id);
+                  showDetail("BUS", bus.id, event.currentTarget);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter" || event.key === " ") {
+                    event.preventDefault();
+                    onBusSelect(bus.id);
+                  }
+                  const delta: Record<string, Point> = {
+                    ArrowLeft: { x: -10, y: 0 },
+                    ArrowRight: { x: 10, y: 0 },
+                    ArrowUp: { x: 0, y: -10 },
+                    ArrowDown: { x: 0, y: 10 },
+                  };
+                  if (delta[event.key]) {
+                    event.preventDefault();
+                    moveBus(
+                      bus.id,
+                      bus.x + delta[event.key].x,
+                      bus.y + delta[event.key].y
+                    );
+                  }
+                }}
+              >
+                {devices.map((kind) => {
+                  return (
                     <g
-                      transform={`translate(55 ${kind === "load" ? 72 : -73})`}
+                      key={kind}
+                      data-device={kind}
+                      color="#58616d"
+                      aria-hidden="true"
                     >
-                      <DeviceSymbol kind={kind} />
-                      {showAmounts && solution && power && (
-                        <g data-testid="device-amount">
-                          <rect
-                            x="-131"
-                            y="-17"
-                            width="113"
-                            height="34"
-                            rx="3"
-                            fill="white"
-                            opacity="0.95"
-                          />
-                          {components.map((component, index) => (
-                            <text
-                              key={component}
-                              x="-127"
-                              y={components.length === 1 ? 4 : -3 + index * 14}
-                              fill={DIAGRAM_COLORS[component]}
-                              fontSize="11"
-                            >
-                              {power[component].toFixed(1)}{" "}
-                              {component === "p" ? "MW" : "MVAr"}
-                            </text>
-                          ))}
-                        </g>
-                      )}
+                      <path
+                        d={kind === "load" ? "M 55 43 V 64" : "M 55 -43 V -59"}
+                        stroke="currentColor"
+                        strokeWidth="1.8"
+                      />
+                      <g
+                        transform={`translate(55 ${kind === "load" ? 72 : -73})`}
+                      >
+                        <DeviceSymbol kind={kind} />
+                      </g>
+                    </g>
+                  );
+                })}
+                <rect
+                  className="load-flow-bus-focus"
+                  x="-81"
+                  y="-43"
+                  width="162"
+                  height="86"
+                  rx="6"
+                  fill="white"
+                  stroke={selected ? "#202936" : "#d3d5d5"}
+                  strokeWidth={selected ? 2 : 1}
+                />
+                <path
+                  d="M -76 -32 V 32"
+                  stroke={color}
+                  strokeWidth="6"
+                  strokeLinecap="round"
+                />
+                <text
+                  x="-63"
+                  y="-22"
+                  fill="#202936"
+                  fontSize="13"
+                  fontWeight="600"
+                >
+                  {bus.name.length > 16
+                    ? `${bus.name.slice(0, 15)}…`
+                    : bus.name}
+                </text>
+                <text x="-63" y="-5" fill="#58616d" fontSize="10">
+                  {bus.type === "SLACK" ? "Slack · reference" : bus.type}
+                </text>
+                <text
+                  x="-63"
+                  y="16"
+                  fill={color}
+                  fontSize="14"
+                  fontWeight="600"
+                >
+                  {solution
+                    ? `${solution.voltageMagnitudePu.toFixed(3)} pu`
+                    : "Unsolved"}
+                </text>
+                <text x="-63" y="33" fill="#58616d" fontSize="11">
+                  {solution ? `${angle.toFixed(2)}°` : "—"}
+                </text>
+                {solution && (
+                  <g transform="translate(54 17)" aria-hidden="true">
+                    <circle r="17" fill="none" stroke="#d3d5d5" />
+                    <path
+                      d="M 0 0 H 18"
+                      stroke="#858c95"
+                      strokeDasharray="2 2"
+                    />
+                    <g transform={`rotate(${-angle})`}>
+                      <path
+                        d="M 0 0 H 15 M 11 -3 L 15 0 L 11 3"
+                        fill="none"
+                        stroke={color}
+                        strokeWidth="2"
+                      />
                     </g>
                   </g>
-                );
-              })}
-              <rect
-                className="load-flow-bus-focus"
-                x="-81"
-                y="-43"
-                width="162"
-                height="86"
-                rx="6"
-                fill="white"
-                stroke={selected ? "#202936" : "#d3d5d5"}
-                strokeWidth={selected ? 2 : 1}
-              />
-              <path
-                d="M -76 -32 V 32"
-                stroke={color}
-                strokeWidth="6"
-                strokeLinecap="round"
-              />
-              <text
-                x="-63"
-                y="-22"
-                fill="#202936"
-                fontSize="13"
-                fontWeight="600"
-              >
-                {bus.name.length > 16 ? `${bus.name.slice(0, 15)}…` : bus.name}
-              </text>
-              <text x="-63" y="-5" fill="#58616d" fontSize="10">
-                {bus.type === "SLACK" ? "Slack · reference" : bus.type}
-              </text>
-              <text x="-63" y="16" fill={color} fontSize="14" fontWeight="600">
-                {solution
-                  ? `${solution.voltageMagnitudePu.toFixed(3)} pu`
-                  : "Unsolved"}
-              </text>
-              <text x="-63" y="33" fill="#58616d" fontSize="11">
-                {solution ? `${angle.toFixed(2)}°` : "—"}
-              </text>
-              {solution && (
-                <g transform="translate(54 17)" aria-hidden="true">
-                  <circle r="17" fill="none" stroke="#d3d5d5" />
-                  <path d="M 0 0 H 18" stroke="#858c95" strokeDasharray="2 2" />
-                  <g transform={`rotate(${-angle})`}>
-                    <path
-                      d="M 0 0 H 15 M 11 -3 L 15 0 L 11 3"
-                      fill="none"
-                      stroke={color}
-                      strokeWidth="2"
-                    />
-                  </g>
-                </g>
-              )}
-            </g>
-          );
-        })}
-      </svg>
+                )}
+              </g>
+            );
+          })}
+        </svg>
+        {detail && (
+          <div
+            id={detailId}
+            role="tooltip"
+            className="absolute z-10 w-[264px] max-w-[calc(100%-16px)] rounded-md border border-line bg-white p-3 text-xs shadow-sm"
+            style={{ left: detail.x, top: detail.y }}
+            onPointerEnter={keepDetail}
+            onPointerLeave={leaveDetail}
+          >
+            <p className="mb-2 font-semibold">{readout.title}</p>
+            {readout.note && <p className="mb-2 text-muted">{readout.note}</p>}
+            {readout.rows.map((row) => (
+              <div key={row.label} className="mt-1">
+                <span className="text-muted">{row.label}</span>
+                <PowerAmount {...row} components={components} />
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
       <div
         className="mt-3 flex flex-wrap gap-x-5 gap-y-2 text-xs text-muted"
         aria-label="Diagram legend"
@@ -632,16 +745,36 @@ export function SingleLineDiagram({
         ))}
       </div>
       <p className="mt-2 text-xs leading-relaxed text-muted">
-        Arrows show flow at each end; labels are signed values at the from end.
-        Thicker lines mean larger magnitudes. Voltage bands are visual guides,
-        not equipment limits. Phasors show angle relative to the slack bus, at
-        true scale. Crossings are not connections. Device values show total
-        generation or demand at each bus.
+        Arrows show flow at each end. Thicker lines mean larger magnitudes.
+        Voltage bands are visual guides, not equipment limits. Phasors show
+        angle relative to the slack bus, at true scale. Crossings are not
+        connections. Device values show total generation or demand at each bus.
       </p>
       <p className="mt-1 text-xs text-muted">
         Motion speed is proportional to power magnitude on a fixed scale—not AC
         wave speed or transient behavior. Reduced-motion settings keep it still.
       </p>
     </div>
+  );
+}
+
+function PowerAmount({
+  p,
+  q,
+  components,
+}: {
+  p: number;
+  q: number;
+  components: Array<"p" | "q">;
+}) {
+  return (
+    <p className="flex gap-3 font-mono">
+      {components.map((component) => (
+        <span key={component} style={{ color: DIAGRAM_COLORS[component] }}>
+          {(component === "p" ? p : q).toFixed(1)}{" "}
+          {component === "p" ? "MW" : "MVAr"}
+        </span>
+      ))}
+    </p>
   );
 }

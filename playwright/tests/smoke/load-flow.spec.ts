@@ -18,16 +18,16 @@ test("load flow hydrates, scales demand, and inspects terminal power", async ({
   await expect(generatorBus.locator('[data-device="generator"]')).toBeVisible();
   await expect(generatorBus.locator('[data-device="load"]')).toBeVisible();
   await expect(page.locator('[data-device="grid"]')).toBeVisible();
-  await expect(page.getByTestId("device-amount")).toHaveCount(4);
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
   await expect(generatorBus).toHaveAttribute(
     "aria-description",
     /Generator: 50.0 MW, 7.0 MVAr; Load: 20.0 MW, 10.0 MVAr/
   );
-  await page.getByRole("button", { name: "Hide amounts" }).click();
-  await expect(page.getByTestId("device-amount")).toHaveCount(0);
-  await expect(page.getByTestId("line-amount")).toHaveCount(0);
-  await page.getByRole("button", { name: "Show amounts" }).click();
-  await expect(page.getByTestId("line-amount")).toHaveCount(3);
+  await generatorBus.focus();
+  await expect(page.getByRole("tooltip")).toContainText("50.0 MW");
+  await expect(page.getByRole("tooltip")).toContainText("7.0 MVAr");
+  await generatorBus.press("Escape");
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
   const slider = page.getByRole("slider");
   await slider.focus();
   await slider.press("ArrowRight");
@@ -257,4 +257,70 @@ test("two-finger touch pinch scales the diagram without rearranging the network"
   await page.getByRole("button", { name: "Fit diagram" }).click();
   await expect(diagram).toHaveAttribute("viewBox", initial!);
   await session.detach();
+});
+
+test("power cards work on hover and touch, stay readable at zoom, and clear on exit", async ({
+  page,
+  isMobile,
+}) => {
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  const bus = page.getByRole("button", { name: /^Bus Gen Bus,/ });
+  const diagram = page.getByTestId("load-flow-diagram");
+  await diagram.scrollIntoViewIfNeeded();
+  if (isMobile) await bus.tap();
+  else await bus.hover();
+  const card = page.getByRole("tooltip");
+  await expect(card).toContainText("Generator");
+  await expect(card).toContainText("20.0 MW");
+  const cardBox = (await card.boundingBox())!;
+  const diagramBox = (await diagram.boundingBox())!;
+  expect(cardBox.x).toBeGreaterThanOrEqual(diagramBox.x);
+  expect(cardBox.x + cardBox.width).toBeLessThanOrEqual(
+    diagramBox.x + diagramBox.width
+  );
+  expect(cardBox.y + cardBox.height).toBeLessThanOrEqual(
+    diagramBox.y + diagramBox.height
+  );
+  if (!isMobile) {
+    await card.hover();
+    await expect(card).toBeVisible();
+    await page
+      .getByRole("heading", { name: "Single-line diagram", exact: true })
+      .hover();
+    await expect(card).toHaveCount(0);
+  }
+  await page.getByRole("button", { name: "Zoom in", exact: true }).click();
+  await bus.focus();
+  await expect(card).toHaveCSS("font-size", "12px");
+  await bus.press("Escape");
+  await expect(card).toHaveCount(0);
+  await page.getByRole("button", { name: "Fit diagram", exact: true }).click();
+  const line = page.getByRole("button", { name: /^Line line-1-2:/ });
+  await line.focus();
+  await expect(card).toContainText("From · Slack");
+  await expect(card).toContainText("To · Gen Bus");
+  await expect(card).toContainText("Positive = into line at that end");
+});
+
+test("IEEE 30 arrangement is repeatable without resetting load or manual edits", async ({
+  page,
+}) => {
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("ieee-30-bus");
+  const bus = page.getByRole("button", { name: /^Bus Bus 2,/ });
+  const position = await bus.getAttribute("transform");
+  await bus.focus();
+  await bus.press("ArrowRight");
+  await expect(bus).not.toHaveAttribute("transform", position!);
+  await page.getByRole("slider").focus();
+  await page.getByRole("slider").press("ArrowRight");
+  await page
+    .getByRole("button", { name: "Arrange buses", exact: true })
+    .click();
+  await expect(bus).toHaveAttribute("transform", position!);
+  await expect(page.getByRole("slider")).toHaveValue("105");
+  await expect(page.getByRole("status")).toContainText("Converged");
+  await expect(page.getByRole("tooltip")).toHaveCount(0);
 });

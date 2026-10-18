@@ -41,7 +41,7 @@ const props = {
   generators: [],
   loads: [],
   baseMVA: 100,
-  showAmounts: true,
+  onArrange: jest.fn(),
   selectedElementId: null,
   selectedElementType: null,
   onBusSelect: jest.fn(),
@@ -151,17 +151,43 @@ test("draws reverse P and Q leaving both ends without conflating directions", ()
   expect(screen.queryByTestId("flow-motion")).toBeNull();
 });
 
-test("amounts can be hidden without hiding flow arrows", () => {
+test("power details appear only on hover, focus or tap, and Escape dismisses them", () => {
+  jest.useFakeTimers();
   const { container } = render(
-    <SingleLineDiagram
-      {...props}
-      mode="both"
-      animate={true}
-      showAmounts={false}
-    />
+    <SingleLineDiagram {...props} mode="both" animate={true} />
   );
-  expect(screen.queryByTestId("line-amount")).toBeNull();
+  const line = screen.getByRole("button", { name: /Line line:/ });
+  expect(screen.queryByRole("tooltip")).toBeNull();
   expect(container.querySelector('[data-component="p"]')).not.toBeNull();
+  fireEvent.pointerEnter(line, {
+    pointerType: "mouse",
+    clientX: 200,
+    clientY: 200,
+  });
+  expect(screen.getByRole("tooltip")).toHaveTextContent("-10.0 MW");
+  expect(screen.getByRole("tooltip")).toHaveTextContent("10.1 MW");
+  expect(screen.getByRole("tooltip")).toHaveTextContent(
+    "Positive = into line at that end"
+  );
+  fireEvent.pointerLeave(line);
+  fireEvent.pointerEnter(screen.getByRole("tooltip"));
+  act(() => jest.advanceTimersByTime(200));
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  fireEvent.pointerLeave(screen.getByRole("tooltip"));
+  act(() => jest.advanceTimersByTime(200));
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  fireEvent.focus(line);
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  fireEvent.keyDown(line, { key: "Escape" });
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  fireEvent.click(line);
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  fireEvent.resize(window);
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  fireEvent.focus(line);
+  fireEvent.blur(line);
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  jest.useRealTimers();
 });
 
 test("source amounts add local demand to solved injections, not generator setpoints", () => {
@@ -203,14 +229,14 @@ test("source amounts add local demand to solved injections, not generator setpoi
     "aria-description",
     "Generator: 50.0 MW, 7.0 MVAr; Load: 20.0 MW, 10.0 MVAr"
   );
-  expect(bus.querySelector('[data-device="generator"]')).toHaveTextContent(
-    "50.0 MW"
-  );
-  expect(bus.querySelector('[data-device="generator"]')).toHaveTextContent(
-    "7.0 MVAr"
-  );
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  fireEvent.focus(bus);
+  expect(screen.getByRole("tooltip")).toHaveTextContent("50.0 MW");
+  expect(screen.getByRole("tooltip")).toHaveTextContent("7.0 MVAr");
+  expect(screen.getByRole("tooltip")).toHaveTextContent("20.0 MW");
+  expect(screen.getByRole("tooltip")).toHaveTextContent("10.0 MVAr");
   rerender(<SingleLineDiagram {...props} mode="both" animate={false} />);
-  expect(screen.queryByTestId("device-amount")).toBeNull();
+  expect(screen.getByRole("tooltip")).toHaveTextContent("No solved power");
 });
 
 test("zero flows do not animate", () => {
