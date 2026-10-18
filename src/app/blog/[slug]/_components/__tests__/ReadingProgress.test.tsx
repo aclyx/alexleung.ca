@@ -71,7 +71,6 @@ describe("ReadingProgress", () => {
   it("tracks from the title to the end of prose without React scroll state", () => {
     const { container } = render(
       <>
-        <header className="fixed" />
         <h1 id="post-title">Post title</h1>
         <article>
           <div className="prose">Post body</div>
@@ -80,15 +79,13 @@ describe("ReadingProgress", () => {
       </>
     );
 
-    const header = container.querySelector("header")!;
     const title = container.querySelector("h1")!;
     const prose = container.querySelector<HTMLElement>(".prose")!;
     const progress = container.querySelector<HTMLElement>(
       "[data-reading-progress]"
     )!;
 
-    header.getBoundingClientRect = jest.fn(() => rectangle(0, 68));
-    title.getBoundingClientRect = jest.fn(() => rectangle(168, 210));
+    title.getBoundingClientRect = jest.fn(() => rectangle(100, 142));
     prose.getBoundingClientRect = jest.fn(() => rectangle(300, 1100));
 
     act(() => {

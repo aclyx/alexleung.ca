@@ -8,7 +8,6 @@ import { FollowItSubscribeForm } from "@/components/FollowItSubscribeForm";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { Subtitle } from "@/components/Subtitle";
 import { buildContactPageSchema, buildPageMetadata } from "@/lib/seo";
 
 import { EmailMe } from "./_components/EmailMe";
@@ -42,16 +41,15 @@ export default function ContactPage() {
       />
 
       <PageShell title="Contact" titleId="contact">
-        <EmailMe />
-        <SocialMediaList />
-        <ResponsiveContainer element="section" className="mt-16 space-y-6">
-          <Subtitle title="Subscribe" id="subscribe" />
-          <FollowItSubscribeForm
-            analyticsPlacement="contact_page"
-            title="Get new posts by email"
-            description="Occasional updates when I publish something new."
-            headingLevel="h3"
-          />
+        <ResponsiveContainer>
+          <div className="max-w-[650px]">
+            <EmailMe />
+            <SocialMediaList />
+            <FollowItSubscribeForm
+              analyticsPlacement="contact_page"
+              className="mt-6"
+            />
+          </div>
         </ResponsiveContainer>
       </PageShell>
     </>

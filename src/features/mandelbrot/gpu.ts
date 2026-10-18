@@ -406,7 +406,9 @@ fn main(@builtin(global_invocation_id) gid: vec3<u32>) {
     return;
   }
 
-  let normalizedValue = smoothIteration / f32(maxIterations);
+  // Match normalizedEscapeValue in palettes.ts.
+  let iteration = clamp(smoothIteration, 0.0, f32(maxIterations));
+  let normalizedValue = 0.2 + 0.8 * (0.5 - 0.5 * cos(sqrt(iteration)));
   pixels[index] = packColor(paletteColorAt(paletteIndex, normalizedValue));
 }
 `;

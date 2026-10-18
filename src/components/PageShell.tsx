@@ -25,7 +25,7 @@ export function PageShell({
 }: PageShellProps) {
   return (
     <div
-      className={`page-shell pb-16 pt-[calc(var(--header-height)+3rem)] md:pb-24 md:pt-[calc(var(--header-height)+4rem)] ${className}`.trim()}
+      className={`page-shell pt-8 pb-16 md:pt-11 md:pb-24 ${className}`.trim()}
     >
       {title ? (
         <PageHeader
@@ -35,7 +35,7 @@ export function PageShell({
           description={description}
           metadata={metadata}
           rail={headerRail}
-          className="mb-12 md:mb-16"
+          className="mb-8 md:mb-10"
         />
       ) : null}
       {children}

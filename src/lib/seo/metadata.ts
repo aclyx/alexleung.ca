@@ -28,7 +28,7 @@ export function buildPageMetadata(input: SeoInput): Metadata {
         "application/rss+xml": [
           {
             url: rssFeedUrl,
-            title: "Alex Leung Blog RSS Feed",
+            title: "Alex Leung's Writing RSS Feed",
           },
         ],
       },

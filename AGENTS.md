@@ -67,7 +67,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Images are unoptimized (required for static export)
 - Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/now/` and `/blog/post-slug/`, not `/now` or `/blog/post-slug`)
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`
-- `public/about/index.html`, `public/experimental/index.html`, `public/experimental/load-flow/index.html`, and `public/experimental/pid-controller/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/` is an active Next.js route and must not have a public redirect bridge. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
+- `public/about/index.html`, `public/experimental/index.html`, and `public/experimental/load-flow/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/` and `/experimental/pid-controller/` are active Next.js routes and must not have public redirect bridges. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
 
 ### Component Organization
 
@@ -83,7 +83,7 @@ yarn deploy           # Build and deploy to GitHub Pages
   - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
 - `yarn build` explicitly runs `yarn image:variants` before creating the static export.
-- `src/components/BlogPostCard.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
+- `src/app/blog/tags/[tag]/page.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
 - `src/lib/markdownToHtml.ts` resolves inline image variants from manifest profiles.
 - Pre-commit hook `.githooks/pre-commit` runs `yarn image:variants:stage` so generated variants and manifest stay in sync with staged content/image changes, but only after `prepare` has configured the hooks path and plain `yarn` is available on `PATH` as the pinned Yarn version. Treat the hook as best-effort automation; if hooks are not active or if the hook reports a skip because Yarn is unavailable, run `corepack yarn image:variants:stage` manually before commit when relevant.
 - Runtime has hard-failure checks for missing required manifest profiles (`profiles.cover.card`, `profiles.cover.hero`, `profiles.inlineContent`).

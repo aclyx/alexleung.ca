@@ -59,7 +59,13 @@ export function normalizedEscapeValue(
     return 0;
   }
 
-  return result.smoothIteration / maxIterations;
+  // Cycle smoothly so deep zooms retain contrast; keep exterior colors above black.
+  // Keep this transfer function in sync with the compute shader in gpu.ts.
+  const iteration = Math.min(
+    Math.max(result.smoothIteration, 0),
+    maxIterations
+  );
+  return 0.2 + 0.8 * (0.5 - 0.5 * Math.cos(Math.sqrt(iteration)));
 }
 
 export function colorEscapeResult(
