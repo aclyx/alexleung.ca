@@ -133,12 +133,17 @@ export default function Page() {
               className="mt-7 border-t border-line pt-5"
             >
               <h2 id="browser-tools-heading" className="text-editorial-label">
-                Browser tool
+                Browser tools
               </h2>
               <ul className="mt-2 space-y-1 text-sm">
                 <li>
                   <LinkText href="/experimental/pid-controller/" standalone>
                     PID controller simulator →
+                  </LinkText>
+                </li>
+                <li>
+                  <LinkText href="/experimental/load-flow/" standalone>
+                    Load flow analysis →
                   </LinkText>
                 </li>
               </ul>

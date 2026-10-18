@@ -31,10 +31,6 @@ describe("public discovery files", () => {
   it("keeps retired experiment URLs as no-index redirect bridges", () => {
     const redirects = [
       { path: "experimental/index.html", destination: "/blog/" },
-      {
-        path: "experimental/load-flow/index.html",
-        destination: "/blog/small-interactive-tools-with-a-coding-agent/",
-      },
     ];
 
     for (const redirect of redirects) {
@@ -49,7 +45,7 @@ describe("public discovery files", () => {
   });
 
   it("does not shadow active experiment routes with redirect bridges", () => {
-    const activeRoutes = ["mandelbrot", "pid-controller"];
+    const activeRoutes = ["mandelbrot", "pid-controller", "load-flow"];
 
     for (const route of activeRoutes) {
       expect(
@@ -135,6 +131,9 @@ describe("public discovery files", () => {
       "[PID Controller Simulator](https://alexleung.ca/experimental/pid-controller/)"
     );
     expect(llmsText).not.toContain("/about/");
+    expect(llmsText).toContain(
+      "[Load Flow Analysis](https://alexleung.ca/experimental/load-flow/)"
+    );
     expect(llmsText).not.toContain("[Experiments]");
   });
 });

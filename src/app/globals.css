@@ -131,6 +131,52 @@
     transition: stroke-dashoffset 160ms cubic-bezier(0.16, 1, 0.3, 1);
   }
 
+  .load-flow-diagram [role="button"]:focus-visible .load-flow-bus-focus,
+  .load-flow-diagram [role="button"]:focus-visible .load-flow-line-focus {
+    stroke: #285296;
+    stroke-width: 4;
+    stroke-dasharray: 4 3;
+  }
+
+  .load-flow-results table {
+    width: 100%;
+    font-size: 0.75rem;
+    text-align: left;
+  }
+  .load-flow-results caption {
+    text-align: left;
+    font-weight: 600;
+    padding-bottom: 0.75rem;
+  }
+  .load-flow-results th,
+  .load-flow-results td {
+    border-bottom: 1px solid #d3d5d5;
+    padding: 0.65rem;
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+  }
+  .load-flow-results td {
+    text-align: right;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .load-flow-motion {
+      animation: load-flow-travel 1.2s linear infinite;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .load-flow-motion {
+      display: none;
+    }
+  }
+
+  @keyframes load-flow-travel {
+    to {
+      stroke-dashoffset: -26;
+    }
+  }
+
   [data-copy-status="copied"] .copy-check-path {
     stroke-dashoffset: 0;
   }

@@ -1,6 +1,10 @@
 import { MetadataRoute } from "next";
 
 import {
+  LOAD_FLOW_LAST_MODIFIED_ISO,
+  LOAD_FLOW_PATH,
+} from "@/constants/loadFlow";
+import {
   MANDELBROT_LAST_MODIFIED_ISO,
   MANDELBROT_PATH,
 } from "@/constants/mandelbrot";
@@ -92,6 +96,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     {
       url: toCanonical(PID_CONTROLLER_PATH),
       lastModified: new Date(PID_CONTROLLER_LAST_MODIFIED_ISO),
+      changeFrequency: YEARLY,
+      priority: 0.5,
+    },
+    {
+      url: toCanonical(LOAD_FLOW_PATH),
+      lastModified: new Date(LOAD_FLOW_LAST_MODIFIED_ISO),
       changeFrequency: YEARLY,
       priority: 0.5,
     },
