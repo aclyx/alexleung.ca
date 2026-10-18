@@ -128,6 +128,21 @@ export default function Page() {
                 </article>
               </section>
             ) : null}
+            <section
+              aria-labelledby="browser-tools-heading"
+              className="mt-7 border-t border-line pt-5"
+            >
+              <h2 id="browser-tools-heading" className="text-editorial-label">
+                Browser tool
+              </h2>
+              <ul className="mt-2 space-y-1 text-sm">
+                <li>
+                  <LinkText href="/experimental/pid-controller/" standalone>
+                    PID controller simulator →
+                  </LinkText>
+                </li>
+              </ul>
+            </section>
           </aside>
         </div>
         <section

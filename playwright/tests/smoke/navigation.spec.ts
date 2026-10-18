@@ -175,6 +175,35 @@ test("tag archive routes render and keep the writing nav item active", async ({
   ).toHaveAttribute("aria-current", "page");
 });
 
+test("PID simulator is discoverable from the homepage", async ({ page }) => {
+  await gotoAndStabilize(page, "/");
+  await page.getByRole("link", { name: "PID controller simulator →" }).click();
+  await waitForStablePage(page);
+
+  await expect(
+    page.getByRole("heading", {
+      level: 1,
+      name: "PID Controller Simulator",
+    })
+  ).toBeVisible();
+  await expect(page.getByText(/metal plate/)).toBeVisible();
+  await expect(page.getByLabel("Plant", { exact: true })).toHaveValue("plate");
+  await expect(
+    page.locator('meta[name="robots"][content*="noindex"]')
+  ).toHaveCount(0);
+  await expect(page.locator('meta[http-equiv="refresh"]')).toHaveCount(0);
+  const sitemap = await page.request.get("/sitemap.xml");
+  expect(sitemap.ok()).toBe(true);
+  expect(await sitemap.text()).toContain(
+    "<loc>https://alexleung.ca/experimental/pid-controller/</loc>"
+  );
+  const llms = await page.request.get("/llms.txt");
+  expect(llms.ok()).toBe(true);
+  expect(await llms.text()).toContain(
+    "[PID Controller Simulator](https://alexleung.ca/experimental/pid-controller/)"
+  );
+});
+
 test("legacy page URLs resolve to their canonical destinations", async ({
   page,
 }) => {
@@ -185,7 +214,6 @@ test("legacy page URLs resolve to their canonical destinations", async ({
       legacy: "/experimental/load-flow/",
       destination: "/blog/small-interactive-tools-with-a-coding-agent/",
     },
-    { legacy: "/experimental/pid-controller/", destination: "/blog/" },
   ];
 
   for (const redirect of redirects) {
