@@ -204,6 +204,21 @@ test("PID simulator is discoverable from the homepage", async ({ page }) => {
   );
 });
 
+test("Mandelbrot explorer is discoverable from the homepage", async ({
+  page,
+}) => {
+  await gotoAndStabilize(page, "/");
+  const tools = page.getByRole("region", { name: "Browser tools" });
+  const link = tools.getByRole("link", { name: "Mandelbrot explorer →" });
+  await expect(link).toHaveAttribute("href", "/experimental/mandelbrot/");
+  await link.click();
+  await expect(page).toHaveURL("/experimental/mandelbrot/");
+  await expect(
+    page.getByRole("heading", { level: 1, name: "Mandelbrot Explorer" })
+  ).toBeVisible();
+  await expect(page.getByTestId("mandelbrot-render-canvas")).toBeVisible();
+});
+
 test("legacy page URLs resolve to their canonical destinations", async ({
   page,
 }) => {

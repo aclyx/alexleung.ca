@@ -146,6 +146,11 @@ export default function Page() {
                     Load flow analysis →
                   </LinkText>
                 </li>
+                <li>
+                  <LinkText href="/experimental/mandelbrot/" standalone>
+                    Mandelbrot explorer →
+                  </LinkText>
+                </li>
               </ul>
             </section>
           </aside>
