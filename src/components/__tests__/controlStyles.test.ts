@@ -1,5 +1,6 @@
 import {
   actionClassNames,
+  controlLabelClassNames,
   fieldClassNames,
   type ActionVariant,
 } from "../controlStyles";
@@ -34,6 +35,24 @@ describe("control styles", () => {
 
   it("uses the semantic control border for fields", () => {
     expect(fieldClassNames()).toContain("border-control-border");
+  });
+
+  it("keeps range controls touch-sized with focus and disabled states", () => {
+    const className = fieldClassNames({ kind: "range", className: "mt-1" });
+    expect(className).toContain("min-h-11");
+    expect(className).toContain("accent-accent-link");
+    expect(className).toContain("focus-visible:ring-2");
+    expect(className).toContain("disabled:opacity-60");
+    expect(className).toContain("mt-1");
+    expect(className).not.toContain("px-4");
+    expect(className).not.toContain("border-control-border");
+  });
+
+  it("shares stacked and inline label layouts without fixing their typography", () => {
+    expect(controlLabelClassNames()).toBe("grid gap-1");
+    expect(
+      controlLabelClassNames({ layout: "inline", className: "text-sm" })
+    ).toBe("flex min-h-11 items-center gap-2 text-sm");
   });
 
   it("adds select-specific affordances", () => {

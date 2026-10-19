@@ -142,6 +142,17 @@ selects so border, focus, disabled, and minimum-height behavior stay aligned.
 Use `control-border`, rather than the quieter divider token, where a control
 boundary needs to be easy to find.
 
+`fieldClassNames({ kind: "range" })` styles native sliders with the same 44px
+target, accent focus ring, and disabled treatment. Use
+`controlLabelClassNames` for stacked labels above fields or `layout: "inline"`
+for checkbox rows; typography and section spacing stay with the caller.
+
+`LinkText` supplies the shared underline, color, and keyboard focus treatment.
+Use `standalone` for 44px navigation targets. Dense lists such as the homepage
+browser tools can opt into `standalone="compact"`: 32px rows at `md` and above
+with a fine pointer, and 44px on mobile or coarse-pointer devices. Do not add
+extra vertical gaps between those rows.
+
 For native `details` disclosures, compose `disclosureSummaryClassNames` with
 `DisclosureIndicator`. This preserves the same target size and focus treatment,
 hides the browser-specific marker, and rotates one shared indicator when open.

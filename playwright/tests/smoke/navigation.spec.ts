@@ -109,6 +109,25 @@ for (const width of [360, 768, 1280]) {
       }
 
       if (path === "/") {
+        const compactTools = await page.evaluate(
+          () => innerWidth >= 768 && matchMedia("(pointer: fine)").matches
+        );
+        const tools = page.getByRole("region", { name: "Browser tools" });
+        const toolLinks = tools.getByRole("link");
+        await expect(toolLinks).toHaveCount(5);
+        const boxes = await toolLinks.evaluateAll((links) =>
+          links.map((link) => {
+            const { y, height } = link.getBoundingClientRect();
+            return { y, height };
+          })
+        );
+        for (const [index, box] of boxes.entries()) {
+          expect(box.height).toBe(compactTools ? 32 : 44);
+          if (index > 0) {
+            expect(box.y - boxes[index - 1].y).toBe(box.height);
+          }
+        }
+
         for (const label of ["All writing →", "More on the Now page →"]) {
           const link = page.getByRole("link", { name: label, exact: true });
           await expect(link).toBeVisible();

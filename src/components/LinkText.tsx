@@ -7,7 +7,7 @@ type LinkTextProps = {
   children: ReactNode;
   className?: string;
   external?: boolean;
-  standalone?: boolean;
+  standalone?: boolean | "compact";
 };
 
 const inlineLinkClassName =
@@ -20,9 +20,13 @@ export function LinkText({
   external = false,
   standalone = false,
 }: LinkTextProps) {
-  const linkClassName = standalone
-    ? `${className} inline-flex min-h-11 min-w-11 items-center`
-    : className;
+  const linkClassName = [
+    className,
+    standalone && "inline-flex min-h-11 min-w-11 items-center",
+    standalone === "compact" && "md:[@media(pointer:fine)]:min-h-8",
+  ]
+    .filter(Boolean)
+    .join(" ");
 
   if (external) {
     return (
