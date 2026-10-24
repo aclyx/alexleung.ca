@@ -3,6 +3,30 @@ import { render, screen } from "@testing-library/react";
 import { LinkText } from "../LinkText";
 
 describe("LinkText", () => {
+  it("preserves full-size standalone links by default", () => {
+    render(
+      <LinkText href="/blog/" standalone>
+        Writing
+      </LinkText>
+    );
+    const link = screen.getByRole("link");
+    expect(link).toHaveClass("min-h-11", "min-w-11");
+    expect(link).not.toHaveClass("md:[@media(pointer:fine)]:min-h-8");
+  });
+
+  it("compacts only opted-in links on desktop with a fine pointer", () => {
+    render(
+      <LinkText href="/blog/" standalone="compact">
+        Writing
+      </LinkText>
+    );
+    expect(screen.getByRole("link")).toHaveClass(
+      "min-h-11",
+      "md:[@media(pointer:fine)]:min-h-8",
+      "focus-visible:ring-2"
+    );
+  });
+
   it("renders external links with security attributes", () => {
     render(
       <LinkText href="https://example.com" external>

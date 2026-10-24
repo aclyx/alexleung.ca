@@ -135,29 +135,44 @@ export default function Page() {
               <h2 id="browser-tools-heading" className="text-editorial-label">
                 Browser tools
               </h2>
-              <ul className="mt-2 space-y-1 text-sm">
+              <ul className="mt-2 text-sm">
                 <li>
-                  <LinkText href="/experimental/pid-controller/" standalone>
+                  <LinkText
+                    href="/experimental/pid-controller/"
+                    standalone="compact"
+                  >
                     PID controller simulator →
                   </LinkText>
                 </li>
                 <li>
-                  <LinkText href="/experimental/load-flow/" standalone>
+                  <LinkText
+                    href="/experimental/load-flow/"
+                    standalone="compact"
+                  >
                     Load flow analysis →
                   </LinkText>
                 </li>
                 <li>
-                  <LinkText href="/experimental/mandelbrot/" standalone>
+                  <LinkText
+                    href="/experimental/mandelbrot/"
+                    standalone="compact"
+                  >
                     Mandelbrot explorer →
                   </LinkText>
                 </li>
                 <li>
-                  <LinkText href="/experimental/ray-tracing/" standalone>
+                  <LinkText
+                    href="/experimental/ray-tracing/"
+                    standalone="compact"
+                  >
                     Ray-tracing room →
                   </LinkText>
                 </li>
                 <li>
-                  <LinkText href="/experimental/seam-carving/" standalone>
+                  <LinkText
+                    href="/experimental/seam-carving/"
+                    standalone="compact"
+                  >
                     Content-aware resizing →
                   </LinkText>
                 </li>
