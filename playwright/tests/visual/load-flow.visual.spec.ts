@@ -49,6 +49,19 @@ test("load-flow diagram and terminal inspector stay readable", async ({
   await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
     "load-flow-ieee14.png"
   );
+  await page.getByRole("button", { name: "P + Q", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Inspect", exact: true })
+    .selectOption("BRANCH:line-10-11-18");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-ieee14-selected.png"
+  );
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("ieee-9-bus");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-ieee9.png"
+  );
   await page
     .getByRole("combobox", { name: "Network", exact: true })
     .selectOption("ieee-30-bus");

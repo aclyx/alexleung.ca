@@ -448,7 +448,10 @@ export function SingleLineDiagram({
                 tabIndex={0}
                 aria-label={`Line ${branch.id}: ${a.name} to ${b.name}${offline ? ", out of service" : ""}`}
                 aria-pressed={selected}
-                className="cursor-pointer outline-none"
+                opacity={
+                  selectedElementType === "BRANCH" && !selected ? 0.3 : 1
+                }
+                className="cursor-pointer outline-none focus-visible:opacity-100"
                 onPointerDown={(event) => event.stopPropagation()}
                 aria-describedby={
                   detail?.type === "BRANCH" && detail.id === branch.id
@@ -495,7 +498,7 @@ export function SingleLineDiagram({
                       component === "p" ? flow.pToFromMW : flow.qToFromMVar;
                     const offset =
                       mode === "both" ? (component === "p" ? -6 : 6) : 0;
-                    const segments = flowSegments(route, offset);
+                    const segments = flowSegments(route, offset, buses);
                     return (
                       <g
                         key={component}
@@ -541,13 +544,16 @@ export function SingleLineDiagram({
                                   }}
                                 />
                               )}
-                              <path
-                                d="M -7 -5 L 0 0 L -7 5"
-                                fill="none"
-                                stroke={DIAGRAM_COLORS[component]}
-                                strokeWidth="2.5"
-                                transform={`translate(${segment.x} ${segment.y}) rotate(${angle})`}
-                              />
+                              {segment.visible && (
+                                <path
+                                  data-flow-arrow
+                                  d="M -7 -5 L 0 0 L -7 5"
+                                  fill="none"
+                                  stroke={DIAGRAM_COLORS[component]}
+                                  strokeWidth="2.5"
+                                  transform={`translate(${segment.x} ${segment.y}) rotate(${angle})`}
+                                />
+                              )}
                             </g>
                           );
                         })}

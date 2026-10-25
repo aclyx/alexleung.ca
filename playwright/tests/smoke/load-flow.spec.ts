@@ -256,6 +256,47 @@ test("parallel circuits remain independently selectable after dragging a bus", a
   }
 });
 
+test("IEEE 9 terminal arrows clear bus cards and device icons", async ({
+  page,
+}) => {
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("ieee-9-bus");
+  const line = page.getByRole("button", { name: /^Line line-6-7-5:/ });
+  await expect(line.locator("[data-flow-arrow]")).toHaveCount(4);
+  const hiddenArrows = await page
+    .getByTestId("load-flow-diagram")
+    .evaluate((svg) => {
+      const obstacles = Array.from(
+        svg.querySelectorAll(".load-flow-bus-focus, [data-device]")
+      ).map((element) => element.getBoundingClientRect());
+      return Array.from(svg.querySelectorAll("[data-flow-arrow]"))
+        .filter((arrow) => {
+          const box = arrow.getBoundingClientRect();
+          return obstacles.some(
+            (obstacle) =>
+              box.left < obstacle.right &&
+              box.right > obstacle.left &&
+              box.top < obstacle.bottom &&
+              box.bottom > obstacle.top
+          );
+        })
+        .map((arrow) =>
+          arrow.closest('[role="button"]')?.getAttribute("aria-label")
+        );
+    });
+  expect(hiddenArrows).toEqual([]);
+  await page
+    .getByRole("combobox", { name: "Inspect", exact: true })
+    .selectOption("BRANCH:line-6-7-5");
+  const lines = page.getByRole("button", { name: /^Line / });
+  await expect(lines.nth(1)).toHaveCSS("opacity", "0.3");
+  await lines.first().press("Tab");
+  await expect(lines.nth(1)).toBeFocused();
+  await expect(lines.nth(1)).toHaveCSS("opacity", "1");
+});
+
 test("pinch-style and Command-scroll wheel zoom stay under the cursor", async ({
   page,
   isMobile,

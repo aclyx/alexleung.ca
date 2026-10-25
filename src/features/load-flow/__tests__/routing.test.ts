@@ -192,6 +192,73 @@ test.each([9, 14, 30, 57, 118])(
       }
     }
     expect(collisions).toEqual([]);
+    const sharedTracks: string[] = [];
+    for (const [index, branch] of lines.entries()) {
+      for (const other of lines.slice(0, index)) {
+        if (
+          [branch.fromBusId, branch.toBusId].some(
+            (id) => id === other.fromBusId || id === other.toBusId
+          )
+        )
+          continue;
+        const points = routes.get(branch.id)!;
+        const otherPoints = routes.get(other.id)!;
+        for (let i = 1; i < points.length; i++) {
+          for (let j = 1; j < otherPoints.length; j++) {
+            const a = points[i - 1],
+              b = points[i];
+            const c = otherPoints[j - 1],
+              d = otherPoints[j];
+            const horizontal = a.y === b.y;
+            if (horizontal !== (c.y === d.y)) continue;
+            const axis = horizontal ? "x" : "y";
+            const cross = horizontal ? "y" : "x";
+            if (
+              Math.abs(a[cross] - c[cross]) < 18 &&
+              Math.min(Math.max(a[axis], b[axis]), Math.max(c[axis], d[axis])) -
+                Math.max(
+                  Math.min(a[axis], b[axis]),
+                  Math.min(c[axis], d[axis])
+                ) >
+                1e-6
+            )
+              sharedTracks.push(`${branch.id} overlaps ${other.id}`);
+          }
+        }
+      }
+    }
+    expect(sharedTracks).toEqual([]);
+  }
+);
+
+test.each([9, 14, 30, 57, 118])(
+  "IEEE %i terminal arrows stay outside cards and devices",
+  (count) => {
+    const state = layoutDiagram(
+      replaceEditorStateFromLoadFlowCase(
+        getReferenceScenarioById(`ieee-${count}-bus`)!.loadFlowCase
+      )
+    );
+    const buses = Object.values(state.busesById);
+    const lines = Object.values(state.branchesById);
+    const routes = routeBranches(lines, buses);
+    const hidden: string[] = [];
+    for (const line of lines) {
+      for (const offset of [-6, 0, 6]) {
+        const segments = flowSegments(routes.get(line.id)!, offset, buses);
+        for (const [end, arrow] of Object.entries(segments)) {
+          if (
+            !arrow.visible ||
+            buses.some(
+              (bus) =>
+                Math.abs(arrow.x - bus.x) < 92 && Math.abs(arrow.y - bus.y) < 98
+            )
+          )
+            hidden.push(`${line.id} ${offset} ${end}`);
+        }
+      }
+    }
+    expect(hidden).toEqual([]);
   }
 );
 

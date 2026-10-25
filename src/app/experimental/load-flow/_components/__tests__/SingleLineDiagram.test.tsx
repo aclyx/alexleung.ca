@@ -242,6 +242,44 @@ test("pointer focus waits until click to show details while keyboard focus still
   expect(screen.getByRole("tooltip")).toBeInTheDocument();
 });
 
+test("selecting a line subdues other wires without changing keyboard order", () => {
+  const branches = [branch, { ...branch, id: "other" }];
+  const { rerender } = render(
+    <SingleLineDiagram
+      {...props}
+      branches={branches}
+      mode="both"
+      animate={false}
+    />
+  );
+  const lines = screen.getAllByRole("button", { name: /^Line / });
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      branches={branches}
+      mode="both"
+      animate={false}
+      selectedElementType="BRANCH"
+      selectedElementId="line"
+    />
+  );
+  expect(screen.getAllByRole("button", { name: /^Line / })).toEqual(lines);
+  expect(lines[0]).toHaveAttribute("opacity", "1");
+  expect(lines[1]).toHaveAttribute("opacity", "0.3");
+  expect(lines[1]).toHaveAttribute("tabindex", "0");
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      branches={branches}
+      mode="both"
+      animate={false}
+      selectedElementType="BUS"
+      selectedElementId="a"
+    />
+  );
+  expect(lines[1]).toHaveAttribute("opacity", "1");
+});
+
 test("source amounts add local demand to solved injections, not generator setpoints", () => {
   const { rerender } = render(
     <SingleLineDiagram

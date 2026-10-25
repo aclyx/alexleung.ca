@@ -7,39 +7,45 @@ const distance = (a: Point, b: Point) =>
 type Track = [Point, Point];
 const TRACK_SPACING = 40;
 
-function occupiesTrack(a: Point, b: Point, tracks: Track[]) {
+function occupiesTrack(
+  a: Point,
+  b: Point,
+  tracks: Track[],
+  spacing = TRACK_SPACING
+) {
   const horizontal = a.y === b.y;
   return tracks.some(([c, d]) =>
     horizontal !== (c.y === d.y)
       ? false
       : horizontal
-        ? Math.abs(a.y - c.y) < TRACK_SPACING - 1e-6 &&
+        ? Math.abs(a.y - c.y) < spacing - 1e-6 &&
           overlap(a.x, b.x, c.x, d.x) > 0
-        : Math.abs(a.x - c.x) < TRACK_SPACING - 1e-6 &&
+        : Math.abs(a.x - c.x) < spacing - 1e-6 &&
           overlap(a.y, b.y, c.y, d.y) > 0
   );
 }
 
-// Reserve the longest exposed leg, not the shared connections inside bus cards.
-function exposedTrack(
+function exposedTracks(
   points: Point[],
-  terminals: BusNode[]
-): Track | undefined {
-  let longest: Track | undefined;
+  buses: BusNode[],
+  halfWidth = 100,
+  halfHeight = 105
+): Track[] {
+  const tracks: Track[] = [];
   for (let i = 1; i < points.length; i++) {
     const a = points[i - 1],
       b = points[i];
     const horizontal = a.y === b.y;
     const axis = horizontal ? "x" : "y";
     let intervals = [[Math.min(a[axis], b[axis]), Math.max(a[axis], b[axis])]];
-    for (const bus of terminals) {
+    for (const bus of buses) {
       if (
         Math.abs(horizontal ? a.y - bus.y : a.x - bus.x) >=
-        (horizontal ? 105 : 100)
+        (horizontal ? halfHeight : halfWidth)
       )
         continue;
-      const low = bus[axis] - (horizontal ? 100 : 105);
-      const high = bus[axis] + (horizontal ? 100 : 105);
+      const low = bus[axis] - (horizontal ? halfWidth : halfHeight);
+      const high = bus[axis] + (horizontal ? halfWidth : halfHeight);
       intervals = intervals.flatMap(([start, end]) =>
         end <= low || start >= high
           ? [[start, end]]
@@ -49,15 +55,15 @@ function exposedTrack(
             ].filter(([start, end]) => end > start)
       );
     }
-    for (const [start, end] of intervals) {
-      if (end > start && (!longest || end - start > distance(...longest)))
-        longest = [
-          { ...a, [axis]: start },
-          { ...a, [axis]: end },
-        ];
-    }
+    if (b[axis] < a[axis]) intervals.reverse();
+    for (const [start, end] of intervals)
+      if (end > start)
+        tracks.push([
+          { ...a, [axis]: b[axis] < a[axis] ? end : start },
+          { ...a, [axis]: b[axis] < a[axis] ? start : end },
+        ]);
   }
-  return longest;
+  return tracks;
 }
 
 function simplify(points: Point[]) {
@@ -124,8 +130,12 @@ function findClearRoute(
   a: BusNode,
   b: BusNode,
   buses: BusNode[],
-  tracks: Track[]
+  tracks: Track[],
+  separateWires: Track[]
 ) {
+  const blocked = (start: Point, end: Point) =>
+    occupiesTrack(start, end, tracks) ||
+    occupiesTrack(start, end, separateWires, 20);
   const ports = (bus: BusNode) => [
     { x: bus.x - 100, y: bus.y },
     { x: bus.x + 100, y: bus.y },
@@ -135,12 +145,12 @@ function findClearRoute(
   const startPorts = ports(a).filter(
     (p) =>
       buses.every((bus) => bus.id === a.id || !busOverlap(a, p, bus)) &&
-      !occupiesTrack(a, p, tracks)
+      !blocked(a, p)
   );
   const endPorts = ports(b).filter(
     (p) =>
       buses.every((bus) => bus.id === b.id || !busOverlap(p, b, bus)) &&
-      !occupiesTrack(p, b, tracks)
+      !blocked(p, b)
   );
   const xs = [
     ...new Set([
@@ -149,6 +159,9 @@ function findClearRoute(
       ...buses.flatMap((bus) => [bus.x - 100, bus.x + 100]),
       ...tracks.flatMap((track) =>
         track.flatMap((p) => [p.x - TRACK_SPACING, p.x + TRACK_SPACING])
+      ),
+      ...separateWires.flatMap(([c, d]) =>
+        c.x === d.x ? [c.x - 20, c.x + 20] : []
       ),
     ]),
   ].sort((x, y) => x - y);
@@ -159,6 +172,9 @@ function findClearRoute(
       ...buses.flatMap((bus) => [bus.y - 105, bus.y + 105]),
       ...tracks.flatMap((track) =>
         track.flatMap((p) => [p.y - TRACK_SPACING, p.y + TRACK_SPACING])
+      ),
+      ...separateWires.flatMap(([c, d]) =>
+        c.y === d.y ? [c.y - 20, c.y + 20] : []
       ),
     ]),
   ].sort((x, y) => x - y);
@@ -210,7 +226,7 @@ function findClearRoute(
       if (nx < 0 || ny < 0 || nx >= xs.length || ny >= ys.length) continue;
       const next = { x: xs[nx], y: ys[ny] };
       if (buses.some((bus) => busOverlap(p, next, bus))) continue;
-      if (occupiesTrack(p, next, tracks)) continue;
+      if (blocked(p, next)) continue;
       const prev = current.previous ? point(current.previous.id) : a;
       const bend = (prev.x === p.x) !== (p.x === next.x) ? 24 : 0;
       const cost = current.cost + distance(p, next) + bend;
@@ -229,6 +245,7 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
   const routes = new Map<string, Point[]>();
   const byId = new Map(buses.map((bus) => [bus.id, bus]));
   const wires: Array<[Point, Point]> = [];
+  const routed: Array<{ branch: LineEdge; tracks: Track[] }> = [];
   const reserved = new Map<string, Track[]>();
   for (const branch of branches) {
     const from = byId.get(branch.fromBusId)!;
@@ -237,6 +254,15 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
     const [a, b] = from.id < to.id ? [from, to] : [to, from];
     const pair = JSON.stringify([a.id, b.id]);
     const tracks = reserved.get(pair) ?? [];
+    // Wires with no common terminal must not merge into an apparent junction.
+    const separateWires = routed
+      .filter(
+        ({ branch: previous }) =>
+          ![previous.fromBusId, previous.toBusId].some(
+            (id) => id === a.id || id === b.id
+          )
+      )
+      .flatMap(({ tracks }) => tracks);
     const candidates = [
       [a, { x: b.x, y: a.y }, b],
       [a, { x: a.x, y: b.y }, b],
@@ -281,6 +307,7 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
         const start = points[i - 1],
           end = points[i];
         if (occupiesTrack(start, end, tracks)) continue candidate;
+        if (occupiesTrack(start, end, separateWires, 20)) continue candidate;
         score += distance(start, end);
         for (const bus of buses) {
           if (
@@ -305,13 +332,20 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
         bestOverlap = obstruction;
       }
     }
-    if (bestOverlap > 0) best = findClearRoute(a, b, buses, tracks) ?? best;
+    if (bestOverlap > 0)
+      best = findClearRoute(a, b, buses, tracks, separateWires) ?? best;
     // Overlapping bus cards may leave no exposed route at all.
     best ??= simplify(candidates[0]);
-    const track = exposedTrack(best, [a, b]);
+    const exposed = exposedTracks(best, [a, b]);
+    const track = exposed.reduce<Track | undefined>(
+      (longest, next) =>
+        !longest || distance(...next) > distance(...longest) ? next : longest,
+      undefined
+    );
     if (track) tracks.push(track);
     reserved.set(pair, tracks);
     for (let i = 1; i < best.length; i++) wires.push([best[i - 1], best[i]]);
+    routed.push({ branch, tracks: exposed });
     routes.set(branch.id, from === a ? best : [...best].reverse());
   }
   return routes;
@@ -346,7 +380,11 @@ function sampleRoute(points: Point[], fraction: number) {
 
 // Offset each leg and intersect adjacent legs at the elbows, rather than
 // translating the whole wire diagonally (which swaps lanes around bends).
-export function flowSegments(route: Point[], offset: number) {
+export function flowSegments(
+  route: Point[],
+  offset: number,
+  buses: BusNode[] = []
+) {
   const normals = route.slice(1).map((b, index) => {
     const a = route[index];
     return { x: -Math.sign(b.y - a.y), y: Math.sign(b.x - a.x) };
@@ -365,8 +403,28 @@ export function flowSegments(route: Point[], offset: number) {
     to: simplify([middle.point, ...points.slice(middle.index + 1)]),
   };
   const segment = (half: Point[], fraction: number) => {
-    const arrow = sampleRoute(half, fraction);
-    return { d: pathData(half), ...arrow.point, angle: arrow.angle };
+    // Card and device bounds include clearance for the whole arrowhead.
+    const visible = exposedTracks(half, buses, 92, 98);
+    let remaining =
+      visible.reduce((sum, track) => sum + distance(...track), 0) * fraction;
+    for (const track of visible) {
+      const length = distance(...track);
+      if (remaining <= length || track === visible.at(-1)) {
+        const inset = Math.min(8, length / 2);
+        const arrow = sampleRoute(
+          track,
+          Math.max(inset, Math.min(length - inset, remaining)) / length
+        );
+        return {
+          d: pathData(half),
+          ...arrow.point,
+          angle: arrow.angle,
+          visible: true,
+        };
+      }
+      remaining -= length;
+    }
+    return { d: pathData(half), x: 0, y: 0, angle: 0, visible: false };
   };
   return { from: segment(halves.from, 0.56), to: segment(halves.to, 0.44) };
 }
