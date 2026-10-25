@@ -11,17 +11,20 @@ import {
 
 import { actionClassNames } from "@/components/controlStyles";
 import {
-  branchCurve,
   DIAGRAM_COLORS,
   flowAnimationDuration,
   FlowMode,
   flowWidth,
   Point,
-  pointOnCurve,
   terminalDirection,
   voltageColor,
 } from "@/features/load-flow/diagram";
 import { Generator, Load } from "@/features/load-flow/model/types";
+import {
+  flowSegments,
+  pathData,
+  routeBranches,
+} from "@/features/load-flow/routing";
 import {
   BranchFlowSolution,
   BusSolution,
@@ -212,22 +215,41 @@ export function SingleLineDiagram({
       })),
     [sourceBuses, offsets]
   );
+  const routes = useMemo(
+    () => routeBranches(branches, buses),
+    [branches, buses]
+  );
   function moveBus(id: string, x: number, y: number) {
     const offset = offsets[sourceBuses.findIndex((bus) => bus.id === id)];
     onBusMove(id, x - offset.x, y - offset.y);
   }
   function bounds() {
-    const minX = Math.min(0, ...buses.map((bus) => bus.x - 100));
-    const minY = Math.min(0, ...buses.map((bus) => bus.y - 115));
+    const points = [...routes.values()].flat();
+    const minX = Math.min(
+      0,
+      ...buses.map((bus) => bus.x - 100),
+      ...points.map((point) => point.x - 20)
+    );
+    const minY = Math.min(
+      0,
+      ...buses.map((bus) => bus.y - 115),
+      ...points.map((point) => point.y - 20)
+    );
     return {
       minX,
       minY,
       width:
-        Math.max(compact ? 390 : 780, ...buses.map((bus) => bus.x + 100)) -
-        minX,
+        Math.max(
+          compact ? 390 : 780,
+          ...buses.map((bus) => bus.x + 100),
+          ...points.map((point) => point.x + 20)
+        ) - minX,
       height:
-        Math.max(compact ? 580 : 520, ...buses.map((bus) => bus.y + 105)) -
-        minY,
+        Math.max(
+          compact ? 580 : 520,
+          ...buses.map((bus) => bus.y + 105),
+          ...points.map((point) => point.y + 20)
+        ) - minY,
     };
   }
   const [camera, setCamera] = useState(bounds);
@@ -399,14 +421,15 @@ export function SingleLineDiagram({
             fill={`url(#${titleId}-grid)`}
           />
           {branches.map((branch) => {
-            const { a, b, c } = branchCurve(branch, branches, buses);
-            const d = `M ${a.x} ${a.y} Q ${c.x} ${c.y} ${b.x} ${b.y}`;
+            const a = buses.find((bus) => bus.id === branch.fromBusId)!;
+            const b = buses.find((bus) => bus.id === branch.toBusId)!;
+            const route = routes.get(branch.id)!;
+            const d = pathData(route);
             const selected =
               selectedElementType === "BRANCH" &&
               selectedElementId === branch.id;
             const offline = branch.status === "OUT_OF_SERVICE";
             const flow = offline ? undefined : branchFlowsById.get(branch.id);
-            const center = pointOnCurve(a, b, c, 0.5);
             return (
               <g
                 key={branch.id}
@@ -459,15 +482,10 @@ export function SingleLineDiagram({
                       component === "p" ? flow.pToFromMW : flow.qToFromMVar;
                     const offset =
                       mode === "both" ? (component === "p" ? -6 : 6) : 0;
-                    const length = Math.hypot(b.x - a.x, b.y - a.y) || 1;
-                    const shift = {
-                      x: (-(b.y - a.y) / length) * offset,
-                      y: ((b.x - a.x) / length) * offset,
-                    };
+                    const segments = flowSegments(route, offset);
                     return (
                       <g
                         key={component}
-                        transform={`translate(${shift.x} ${shift.y})`}
                         pointerEvents="none"
                         data-component={component}
                       >
@@ -475,23 +493,9 @@ export function SingleLineDiagram({
                           const value = end === "from" ? fromValue : toValue;
                           const direction = terminalDirection(value, end);
                           if (!direction) return null;
-                          const t = end === "from" ? 0.28 : 0.72;
-                          const point = pointOnCurve(a, b, c, t);
-                          const tangent = {
-                            x: (1 - t) * (c.x - a.x) + t * (b.x - c.x),
-                            y: (1 - t) * (c.y - a.y) + t * (b.y - c.y),
-                          };
+                          const segment = segments[end];
                           const angle =
-                            (Math.atan2(tangent.y, tangent.x) * 180) / Math.PI +
-                            (direction < 0 ? 180 : 0);
-                          const halfControl =
-                            end === "from"
-                              ? { x: (a.x + c.x) / 2, y: (a.y + c.y) / 2 }
-                              : { x: (b.x + c.x) / 2, y: (b.y + c.y) / 2 };
-                          const halfPath =
-                            end === "from"
-                              ? `M ${a.x} ${a.y} Q ${halfControl.x} ${halfControl.y} ${center.x} ${center.y}`
-                              : `M ${center.x} ${center.y} Q ${halfControl.x} ${halfControl.y} ${b.x} ${b.y}`;
+                            segment.angle + (direction < 0 ? 180 : 0);
                           return (
                             <g
                               key={end}
@@ -499,7 +503,7 @@ export function SingleLineDiagram({
                               data-direction={direction}
                             >
                               <path
-                                d={halfPath}
+                                d={segment.d}
                                 fill="none"
                                 stroke={DIAGRAM_COLORS[component]}
                                 strokeWidth={flowWidth(value)}
@@ -512,7 +516,7 @@ export function SingleLineDiagram({
                                 <path
                                   className="load-flow-motion"
                                   data-testid="flow-motion"
-                                  d={halfPath}
+                                  d={segment.d}
                                   fill="none"
                                   stroke={DIAGRAM_COLORS[component]}
                                   strokeWidth="2"
@@ -529,7 +533,7 @@ export function SingleLineDiagram({
                                 fill="none"
                                 stroke={DIAGRAM_COLORS[component]}
                                 strokeWidth="2.5"
-                                transform={`translate(${point.x} ${point.y}) rotate(${angle})`}
+                                transform={`translate(${segment.x} ${segment.y}) rotate(${angle})`}
                               />
                             </g>
                           );

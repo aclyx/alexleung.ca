@@ -151,6 +151,44 @@ test("draws reverse P and Q leaving both ends without conflating directions", ()
   expect(screen.queryByTestId("flow-motion")).toBeNull();
 });
 
+test("wire hit areas, power lanes, and motion follow orthogonal paths after a bus moves", () => {
+  const { container, rerender } = render(
+    <SingleLineDiagram {...props} mode="both" animate={true} />
+  );
+  const original = container
+    .querySelector(".load-flow-line-focus")!
+    .getAttribute("d");
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      buses={[buses[0], { ...buses[1], y: 450 }]}
+      mode="both"
+      animate={true}
+    />
+  );
+  const lineElement = screen.getByRole("button", { name: /Line line:/ });
+  const wire = lineElement.querySelector(".load-flow-line-focus")!;
+  expect(wire.getAttribute("d")).not.toBe(original);
+  expect(
+    lineElement.querySelector('path[stroke="transparent"]')
+  ).toHaveAttribute("d", wire.getAttribute("d"));
+  for (const path of lineElement.querySelectorAll("path:not([transform])")) {
+    const d = path.getAttribute("d")!;
+    expect(d).not.toMatch(/[QC]/);
+    const numbers = d.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+    for (let i = 2; i < numbers.length; i += 2)
+      expect(
+        numbers[i] === numbers[i - 2] || numbers[i + 1] === numbers[i - 1]
+      ).toBe(true);
+  }
+  for (const arrow of lineElement.querySelectorAll("path[transform]")) {
+    const angle = Number(
+      arrow.getAttribute("transform")!.match(/rotate\(([-\d.]+)\)/)![1]
+    );
+    expect(Math.abs(angle % 90)).toBe(0);
+  }
+});
+
 test("power details appear only on hover, focus or tap, and Escape dismisses them", () => {
   jest.useFakeTimers();
   const { container } = render(

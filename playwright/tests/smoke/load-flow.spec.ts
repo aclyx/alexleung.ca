@@ -145,6 +145,19 @@ test("diagram works with keyboard, fits the viewport, and is reachable from home
   );
   await page.mouse.up();
   await expect(bus).not.toHaveAttribute("transform", beforeDrag!);
+  const paths = await diagram
+    .locator(".load-flow-line-focus, [data-testid='flow-motion']")
+    .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d")!));
+  for (const path of paths) {
+    expect(path).not.toMatch(/[QC]/);
+    const coordinates = path.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+    for (let i = 2; i < coordinates.length; i += 2) {
+      expect(
+        coordinates[i] === coordinates[i - 2] ||
+          coordinates[i + 1] === coordinates[i - 1]
+      ).toBe(true);
+    }
+  }
   expect(
     await page.evaluate(
       () => document.documentElement.scrollWidth <= innerWidth
