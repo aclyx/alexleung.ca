@@ -58,6 +58,106 @@ test("routes around an intervening bus and preserves input coordinates", () => {
   expect(routeBranches([line], buses).get(line.id)).toEqual(route);
 });
 
+test.each<[string, number, number]>([
+  ["horizontal", 500, 0],
+  ["vertical", 0, 500],
+  ["diagonal", 500, 500],
+  ["moved across the other bus", -350, 250],
+])("reserves distinct tracks for parallel circuits: %s", (_, x, y) => {
+  const buses = [bus("a", 0, 0), bus("b", x, y)];
+  for (const count of [4, 8]) {
+    const branches = Array.from({ length: count }, (_, index) => ({
+      ...line,
+      id: `parallel-${index}`,
+      fromBusId: index % 2 ? "b" : "a",
+      toBusId: index % 2 ? "a" : "b",
+    }));
+    const routes = routeBranches(branches, buses);
+    expectParallelTracks(branches, buses, routes);
+    expect(routeBranches(branches, buses)).toEqual(routes);
+  }
+});
+
+test("corridor search preserves parallel tracks around intervening bus cards", () => {
+  const buses = [
+    bus("a", 0, 0),
+    bus("b", 700, 500),
+    bus("c", 300, 0),
+    bus("d", 0, 300),
+    bus("e", 700, 200),
+    bus("f", 400, 500),
+  ];
+  const branches = Array.from({ length: 8 }, (_, index) => ({
+    ...line,
+    id: `parallel-${index}`,
+  }));
+  const routes = routeBranches(branches, buses);
+  expectParallelTracks(branches, buses, routes);
+  expect([...routes.values()].every((points) => points.length > 4)).toBe(true);
+});
+
+function expectParallelTracks(
+  branches: LineEdge[],
+  buses: BusNode[],
+  routes: Map<string, Point[]>
+) {
+  const paths = branches.map((branch) => {
+    const points = routes.get(branch.id)!;
+    expectOrthogonal(points);
+    const from = buses.find((bus) => bus.id === branch.fromBusId)!;
+    const to = buses.find((bus) => bus.id === branch.toBusId)!;
+    expect(points[0]).toMatchObject({ x: from.x, y: from.y });
+    expect(points.at(-1)).toMatchObject({ x: to.x, y: to.y });
+    for (const bus of buses.slice(2))
+      expect(crossesBus(points, bus)).toBe(false);
+    for (const offset of [-6, 6]) {
+      const segments = flowSegments(points, offset);
+      expectOrthogonal(readPath(segments.from.d));
+      expectOrthogonal(readPath(segments.to.d));
+    }
+    return branch.fromBusId === "a" ? points : points.toReversed();
+  });
+  expect(new Set(paths.map(pathData)).size).toBe(branches.length);
+  // Each circuit needs an exposed pointer target, not just a different path string.
+  for (const path of paths) {
+    const samples = path.slice(1).flatMap((b, index) =>
+      [0.25, 0.5, 0.75].map((t) => ({
+        x: path[index].x + (b.x - path[index].x) * t,
+        y: path[index].y + (b.y - path[index].y) * t,
+      }))
+    );
+    expect(
+      samples.some(
+        (p) =>
+          buses.every(
+            (bus) => Math.abs(p.x - bus.x) > 100 || Math.abs(p.y - bus.y) > 105
+          ) &&
+          paths
+            .filter((other) => other !== path)
+            .every((other) =>
+              other.slice(1).every((b, index) => {
+                const a = other[index];
+                return (
+                  Math.hypot(
+                    p.x -
+                      Math.max(
+                        Math.min(a.x, b.x),
+                        Math.min(Math.max(a.x, b.x), p.x)
+                      ),
+                    p.y -
+                      Math.max(
+                        Math.min(a.y, b.y),
+                        Math.min(Math.max(a.y, b.y), p.y)
+                      )
+                  ) > 14
+                );
+              })
+            )
+      )
+    ).toBe(true);
+  }
+}
+
 test.each([9, 14, 30, 57, 118])(
   "IEEE %i routes use right angles and avoid unrelated bus cards",
   (count) => {

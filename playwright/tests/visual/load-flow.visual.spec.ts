@@ -1,5 +1,30 @@
 import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
 
+test("parallel circuits have separate visible tracks", async ({ page }) => {
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("two-bus-radial");
+  await page.getByText("Network editor & model", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "From bus", exact: true })
+    .selectOption("bus-1");
+  await page
+    .getByRole("combobox", { name: "To bus", exact: true })
+    .selectOption("bus-2");
+  for (let i = 0; i < 3; i++)
+    await page
+      .getByRole("button", { name: "Connect buses", exact: true })
+      .click();
+  await page.getByText("Network editor & model", { exact: true }).click();
+  await page.getByRole("button", { name: "Fit diagram" }).click();
+  await page.mouse.move(0, 0);
+  await page.keyboard.press("Escape");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-parallel.png"
+  );
+});
+
 test("load-flow diagram and terminal inspector stay readable", async ({
   page,
 }) => {

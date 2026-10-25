@@ -4,6 +4,62 @@ import type { BusNode, LineEdge } from "./state/loadFlowStore";
 const distance = (a: Point, b: Point) =>
   Math.abs(b.x - a.x) + Math.abs(b.y - a.y);
 
+type Track = [Point, Point];
+const TRACK_SPACING = 40;
+
+function occupiesTrack(a: Point, b: Point, tracks: Track[]) {
+  const horizontal = a.y === b.y;
+  return tracks.some(([c, d]) =>
+    horizontal !== (c.y === d.y)
+      ? false
+      : horizontal
+        ? Math.abs(a.y - c.y) < TRACK_SPACING - 1e-6 &&
+          overlap(a.x, b.x, c.x, d.x) > 0
+        : Math.abs(a.x - c.x) < TRACK_SPACING - 1e-6 &&
+          overlap(a.y, b.y, c.y, d.y) > 0
+  );
+}
+
+// Reserve the longest exposed leg, not the shared connections inside bus cards.
+function exposedTrack(
+  points: Point[],
+  terminals: BusNode[]
+): Track | undefined {
+  let longest: Track | undefined;
+  for (let i = 1; i < points.length; i++) {
+    const a = points[i - 1],
+      b = points[i];
+    const horizontal = a.y === b.y;
+    const axis = horizontal ? "x" : "y";
+    let intervals = [[Math.min(a[axis], b[axis]), Math.max(a[axis], b[axis])]];
+    for (const bus of terminals) {
+      if (
+        Math.abs(horizontal ? a.y - bus.y : a.x - bus.x) >=
+        (horizontal ? 105 : 100)
+      )
+        continue;
+      const low = bus[axis] - (horizontal ? 100 : 105);
+      const high = bus[axis] + (horizontal ? 100 : 105);
+      intervals = intervals.flatMap(([start, end]) =>
+        end <= low || start >= high
+          ? [[start, end]]
+          : [
+              [start, Math.min(end, low)],
+              [Math.max(start, high), end],
+            ].filter(([start, end]) => end > start)
+      );
+    }
+    for (const [start, end] of intervals) {
+      if (end > start && (!longest || end - start > distance(...longest)))
+        longest = [
+          { ...a, [axis]: start },
+          { ...a, [axis]: end },
+        ];
+    }
+  }
+  return longest;
+}
+
 function simplify(points: Point[]) {
   const result: Point[] = [];
   for (const point of points) {
@@ -64,24 +120,36 @@ function wirePenalty(a: Point, b: Point, c: Point, d: Point) {
 
 // Dense networks sometimes need more than two elbows. Search the corridors
 // around bus rectangles only when the simple candidates cannot clear them.
-function findClearRoute(a: BusNode, b: BusNode, buses: BusNode[]) {
+function findClearRoute(
+  a: BusNode,
+  b: BusNode,
+  buses: BusNode[],
+  tracks: Track[]
+) {
   const ports = (bus: BusNode) => [
     { x: bus.x - 100, y: bus.y },
     { x: bus.x + 100, y: bus.y },
     { x: bus.x, y: bus.y - 105 },
     { x: bus.x, y: bus.y + 105 },
   ];
-  const startPorts = ports(a).filter((p) =>
-    buses.every((bus) => bus.id === a.id || !busOverlap(a, p, bus))
+  const startPorts = ports(a).filter(
+    (p) =>
+      buses.every((bus) => bus.id === a.id || !busOverlap(a, p, bus)) &&
+      !occupiesTrack(a, p, tracks)
   );
-  const endPorts = ports(b).filter((p) =>
-    buses.every((bus) => bus.id === b.id || !busOverlap(p, b, bus))
+  const endPorts = ports(b).filter(
+    (p) =>
+      buses.every((bus) => bus.id === b.id || !busOverlap(p, b, bus)) &&
+      !occupiesTrack(p, b, tracks)
   );
   const xs = [
     ...new Set([
       a.x,
       b.x,
       ...buses.flatMap((bus) => [bus.x - 100, bus.x + 100]),
+      ...tracks.flatMap((track) =>
+        track.flatMap((p) => [p.x - TRACK_SPACING, p.x + TRACK_SPACING])
+      ),
     ]),
   ].sort((x, y) => x - y);
   const ys = [
@@ -89,6 +157,9 @@ function findClearRoute(a: BusNode, b: BusNode, buses: BusNode[]) {
       a.y,
       b.y,
       ...buses.flatMap((bus) => [bus.y - 105, bus.y + 105]),
+      ...tracks.flatMap((track) =>
+        track.flatMap((p) => [p.y - TRACK_SPACING, p.y + TRACK_SPACING])
+      ),
     ]),
   ].sort((x, y) => x - y);
   const key = (p: Point) => ys.indexOf(p.y) * xs.length + xs.indexOf(p.x);
@@ -139,6 +210,7 @@ function findClearRoute(a: BusNode, b: BusNode, buses: BusNode[]) {
       if (nx < 0 || ny < 0 || nx >= xs.length || ny >= ys.length) continue;
       const next = { x: xs[nx], y: ys[ny] };
       if (buses.some((bus) => busOverlap(p, next, bus))) continue;
+      if (occupiesTrack(p, next, tracks)) continue;
       const prev = current.previous ? point(current.previous.id) : a;
       const bend = (prev.x === p.x) !== (p.x === next.x) ? 24 : 0;
       const cost = current.cost + distance(p, next) + bend;
@@ -157,11 +229,14 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
   const routes = new Map<string, Point[]>();
   const byId = new Map(buses.map((bus) => [bus.id, bus]));
   const wires: Array<[Point, Point]> = [];
+  const reserved = new Map<string, Track[]>();
   for (const branch of branches) {
     const from = byId.get(branch.fromBusId)!;
     const to = byId.get(branch.toBusId)!;
     // Canonical orientation keeps reverse-entered circuits on distinct routes too.
     const [a, b] = from.id < to.id ? [from, to] : [to, from];
+    const pair = JSON.stringify([a.id, b.id]);
+    const tracks = reserved.get(pair) ?? [];
     const candidates = [
       [a, { x: b.x, y: a.y }, b],
       [a, { x: a.x, y: b.y }, b],
@@ -182,7 +257,20 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
       if (y >= Math.min(a.y, b.y) - 125 && y <= Math.max(a.y, b.y) + 125)
         candidates.push([a, { x: a.x, y }, { x: b.x, y }, b]);
     }
-    let best = candidates[0];
+    for (let lane = 1; lane <= tracks.length; lane++) {
+      const gap = lane * TRACK_SPACING;
+      for (const x of [
+        Math.min(a.x, b.x) - 120 - gap,
+        Math.max(a.x, b.x) + 120 + gap,
+      ])
+        candidates.push([a, { x, y: a.y }, { x, y: b.y }, b]);
+      for (const y of [
+        Math.min(a.y, b.y) - 125 - gap,
+        Math.max(a.y, b.y) + 125 + gap,
+      ])
+        candidates.push([a, { x: a.x, y }, { x: b.x, y }, b]);
+    }
+    let best: Point[] | undefined;
     let bestScore = Infinity;
     let bestOverlap = Infinity;
     candidate: for (const candidate of candidates) {
@@ -192,6 +280,7 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
       for (let i = 1; i < points.length; i++) {
         const start = points[i - 1],
           end = points[i];
+        if (occupiesTrack(start, end, tracks)) continue candidate;
         score += distance(start, end);
         for (const bus of buses) {
           if (
@@ -216,7 +305,12 @@ export function routeBranches(branches: LineEdge[], buses: BusNode[]) {
         bestOverlap = obstruction;
       }
     }
-    if (bestOverlap > 0) best = findClearRoute(a, b, buses) ?? best;
+    if (bestOverlap > 0) best = findClearRoute(a, b, buses, tracks) ?? best;
+    // Overlapping bus cards may leave no exposed route at all.
+    best ??= simplify(candidates[0]);
+    const track = exposedTrack(best, [a, b]);
+    if (track) tracks.push(track);
+    reserved.set(pair, tracks);
     for (let i = 1; i < best.length; i++) wires.push([best[i - 1], best[i]]);
     routes.set(branch.id, from === a ? best : [...best].reverse());
   }

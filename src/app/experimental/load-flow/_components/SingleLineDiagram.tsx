@@ -111,6 +111,7 @@ export function SingleLineDiagram({
   const titleId = useId();
   const detailId = useId();
   const wrapperRef = useRef<HTMLDivElement>(null);
+  const pointerFocus = useRef(false);
   const hideTimer = useRef<ReturnType<typeof setTimeout> | undefined>(
     undefined
   );
@@ -164,14 +165,21 @@ export function SingleLineDiagram({
     });
   }
   useEffect(() => {
+    const releasePointerFocus = () => {
+      pointerFocus.current = false;
+    };
     const closeOnResize = () => {
       clearTimeout(hideTimer.current);
       setDetail(null);
     };
     window.addEventListener("resize", closeOnResize);
+    window.addEventListener("mouseup", releasePointerFocus);
+    window.addEventListener("blur", releasePointerFocus);
     return () => {
       clearTimeout(hideTimer.current);
       window.removeEventListener("resize", closeOnResize);
+      window.removeEventListener("mouseup", releasePointerFocus);
+      window.removeEventListener("blur", releasePointerFocus);
     };
   }, []);
   const components: Array<"p" | "q"> = mode === "both" ? ["p", "q"] : [mode];
@@ -383,6 +391,9 @@ export function SingleLineDiagram({
           data-testid="load-flow-diagram"
           className="load-flow-diagram h-[540px] w-full touch-none select-none rounded-md border border-line bg-white md:h-[520px]"
           viewBox={`${viewX} ${viewY} ${viewWidth} ${viewHeight}`}
+          onMouseDownCapture={() => {
+            pointerFocus.current = true;
+          }}
           onPointerDownCapture={(event) => {
             hideDetail();
             trackPointer(event);
@@ -449,9 +460,11 @@ export function SingleLineDiagram({
                     showDetail("BRANCH", branch.id, event.currentTarget, event);
                 }}
                 onPointerLeave={leaveDetail}
-                onFocus={(event) =>
-                  showDetail("BRANCH", branch.id, event.currentTarget)
-                }
+                onFocus={(event) => {
+                  // Pointer focus precedes click; a tooltip here can intercept it.
+                  if (!pointerFocus.current)
+                    showDetail("BRANCH", branch.id, event.currentTarget);
+                }}
                 onBlur={hideDetail}
                 onClick={(event) => {
                   onBranchSelect(branch.id);
@@ -593,9 +606,10 @@ export function SingleLineDiagram({
                     showDetail("BUS", bus.id, event.currentTarget, event);
                 }}
                 onPointerLeave={leaveDetail}
-                onFocus={(event) =>
-                  showDetail("BUS", bus.id, event.currentTarget)
-                }
+                onFocus={(event) => {
+                  if (!pointerFocus.current)
+                    showDetail("BUS", bus.id, event.currentTarget);
+                }}
                 onBlur={hideDetail}
                 onClick={(event) => {
                   onBusSelect(bus.id);

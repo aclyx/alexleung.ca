@@ -1,6 +1,11 @@
 import { getReferenceScenarioById } from "../../../src/features/load-flow/solver/referenceScenarios";
 import { runLoadFlow } from "../../../src/features/load-flow/solver/runLoadFlow";
-import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
+import {
+  expect,
+  gotoAndStabilize,
+  test,
+  waitForStablePage,
+} from "../../fixtures/stableRendering";
 
 test("load flow hydrates, scales demand, and inspects terminal power", async ({
   page,
@@ -167,6 +172,88 @@ test("diagram works with keyboard, fits the viewport, and is reachable from home
     "href",
     "https://alexleung.ca/experimental/load-flow/"
   );
+});
+
+test("parallel circuits remain independently selectable after dragging a bus", async ({
+  page,
+  isMobile,
+}) => {
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("two-bus-radial");
+  await page.getByText("Network editor & model", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "From bus", exact: true })
+    .selectOption("bus-1");
+  await page
+    .getByRole("combobox", { name: "To bus", exact: true })
+    .selectOption("bus-2");
+  for (let i = 0; i < 3; i++)
+    await page
+      .getByRole("button", { name: "Connect buses", exact: true })
+      .click();
+  await page.getByText("Network editor & model", { exact: true }).click();
+  const diagram = page.getByTestId("load-flow-diagram");
+  const lines = diagram.getByRole("button", { name: /^Line / });
+  await expect(lines).toHaveCount(4);
+  for (let pass = 0; pass < 2; pass++) {
+    await page.getByRole("button", { name: "Fit diagram" }).click();
+    await diagram.scrollIntoViewIfNeeded();
+    await waitForStablePage(page);
+    const paths = await lines
+      .locator(".load-flow-line-focus")
+      .evaluateAll((nodes) => nodes.map((node) => node.getAttribute("d")));
+    expect(new Set(paths).size).toBe(4);
+    for (let i = 0; i < 4; i++) {
+      const line = lines.nth(i);
+      const point = await line.evaluate((group) => {
+        const path = group.querySelector<SVGPathElement>(
+          ".load-flow-line-focus"
+        )!;
+        const matrix = path.getScreenCTM()!;
+        const steps = Array.from({ length: 39 }, (_, index) => index + 1).sort(
+          (a, b) => Math.abs(a - 20) - Math.abs(b - 20)
+        );
+        for (const step of steps) {
+          const p = path
+            .getPointAtLength((path.getTotalLength() * step) / 40)
+            .matrixTransform(matrix);
+          if (
+            [-3, 0, 3].every((dx) =>
+              [-3, 0, 3].every(
+                (dy) =>
+                  document
+                    .elementFromPoint(p.x + dx, p.y + dy)
+                    ?.closest('[role="button"]') === group
+              )
+            )
+          )
+            return { x: p.x, y: p.y };
+        }
+        return null;
+      });
+      expect(point).not.toBeNull();
+      if (isMobile) await page.touchscreen.tap(point!.x, point!.y);
+      else await page.mouse.click(point!.x, point!.y);
+      await expect(line).toHaveAttribute("aria-pressed", "true");
+      await page.keyboard.press("Escape");
+    }
+    if (pass === 0) {
+      const bus = diagram.getByRole("button", { name: /^Bus Plant Bus,/ });
+      const before = await bus.getAttribute("transform");
+      const box = (await bus.boundingBox())!;
+      await page.mouse.move(box.x + box.width / 2, box.y + box.height / 2);
+      await page.mouse.down();
+      await page.mouse.move(
+        box.x + box.width / 2 - 35,
+        box.y + box.height / 2 + 60,
+        { steps: 5 }
+      );
+      await page.mouse.up();
+      await expect(bus).not.toHaveAttribute("transform", before!);
+    }
+  }
 });
 
 test("pinch-style and Command-scroll wheel zoom stay under the cursor", async ({

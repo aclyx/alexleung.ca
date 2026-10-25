@@ -228,6 +228,20 @@ test("power details appear only on hover, focus or tap, and Escape dismisses the
   jest.useRealTimers();
 });
 
+test("pointer focus waits until click to show details while keyboard focus still works", () => {
+  render(<SingleLineDiagram {...props} mode="both" animate={false} />);
+  const line = screen.getByRole("button", { name: /Line line:/ });
+  fireEvent.mouseDown(line);
+  fireEvent.focus(line);
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  fireEvent.mouseUp(window);
+  fireEvent.click(line);
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  fireEvent.blur(line);
+  fireEvent.focus(line);
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+});
+
 test("source amounts add local demand to solved injections, not generator setpoints", () => {
   const { rerender } = render(
     <SingleLineDiagram
