@@ -27,7 +27,7 @@ Create or revise non-blog site copy while preserving Alex's facts, structure, an
    - Preserve warmth and curiosity through relevant human context, not slogans, flourishes, or generic friendliness.
 
 3. Fit the surface.
-   - Keep navigation, headings, and calls to action brief and literal.
+   - Keep navigation and calls to action brief and literal; use the canonical voice for editorial headings.
    - Keep page prose cohesive, first-person when Alex is speaking, and specific enough to establish context.
    - Keep metadata and structured summaries durable, representative of the whole site, and readable rather than keyword-stacked.
    - Keep technical copy precise enough to reveal behavior and trade-offs without assuming unnecessary jargon.

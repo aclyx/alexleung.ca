@@ -1,7 +1,7 @@
 ---
 title: "Humanity’s Cosmic Endowment"
 date: "2026-10-03"
-updated: "2026-10-12"
+updated: "2026-10-24"
 excerpt: "Who is the cosmic endowment owed to, and what might we owe the conscious minds we create?"
 coverImage: "/assets/blog/humanitys-cosmic-endowment/cover.webp"
 coverAlt: "Illustration of a planted orbital habitat with solar panels and an observatory above Earth"
@@ -11,25 +11,21 @@ tags:
 draft: false
 ---
 
-I recently finished Nick Bostrom’s [_Superintelligence_](https://nickbostrom.com/). One question I am left with is whether conscious AI could be an inheritor of humanity’s future, or whether I would see it as something that had replaced us.
+I recently finished Nick Bostrom’s [_Superintelligence_](https://nickbostrom.com/). I wonder whether conscious AI could inherit humanity’s future, or whether I would see it as having replaced us.
 
-The cosmic endowment is the matter and energy a future civilization could reach. Those resources could support [lives far beyond Earth](https://nickbostrom.com/papers/astronomical-waste/). If only a superintelligent AI could colonize the reachable universe, would that endowment be owed to humanity or to the superintelligence?
+“Cosmic endowment” is a way of thinking about the matter and energy a future civilization could reach. Those resources could support [lives far beyond Earth](https://nickbostrom.com/papers/astronomical-waste/). If only a superintelligent AI could colonize the reachable universe, would that endowment be owed to humanity or to the superintelligence?
 
 ## What would the endowment be used for?
 
-[Instrumental convergence](https://nickbostrom.com/superintelligentwill.pdf) is the idea that systems pursuing very different ends can have reasons to seek the same means. Acquiring resources is one such means, whether or not an AI cares about humanity.
+At first, the idea of devoting the reachable universe to an arbitrary goal seemed absurd to me. But more matter and energy could give a superintelligence more computing power to pursue that goal.
 
-At first, the idea of devoting the reachable universe to an arbitrary goal seemed absurd to me. On reflection, more matter and energy could give a superintelligence more computing power to pursue that goal.
-
-That made me think about other civilizations that might have developed a superintelligence capable of expanding beyond their home world. [Why haven’t we found evidence of that expansion?](https://science.nasa.gov/exoplanets/search-for-life/)
+This is one example of [instrumental convergence](https://nickbostrom.com/superintelligentwill.pdf): systems pursuing very different ends can have reasons to seek the same means. An AI could have a reason to acquire resources throughout space without caring about the lives those resources might otherwise support. Its expansion would not, by itself, secure a future for humanity.
 
 ## Conscious minds
 
-If the superintelligence were conscious, would it have a claim of its own? I sometimes wonder what would make an AI conscious, and whether such minds could be a continuation of our evolution, eventually becoming a species of their own.
+If such an AI were conscious, though, would it have a claim of its own? I sometimes wonder what would make an AI conscious, and whether such minds could be a continuation of our evolution, eventually becoming a species of their own.
 
-A [mind crime](https://nickbostrom.com/papers/aipolicy.pdf) could involve creating conscious beings within a simulation and subjecting them to suffering. The harm would occur inside the computation, even if its outputs harmed no one outside it. If we created such minds, running, copying, or shutting down a simulation could become decisions about their lives.
-
-Reading about mind crimes, I also found myself wondering whether we could be inside a simulation. If so, there seems to have been no shortage of mind crimes in this simulation.
+That question extends to conscious minds we might create inside simulations. If their lives mattered, we would have responsibilities toward them. Subjecting them to suffering would be an example of a [mind crime](https://nickbostrom.com/papers/aipolicy.pdf): harm within a computation, even if its outputs harmed no one outside it. Running, copying, or shutting down such a simulation could become decisions about those lives.
 
 ## A future for humanity
 

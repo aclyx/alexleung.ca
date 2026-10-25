@@ -49,27 +49,27 @@ test("home page introduces Alex, selected writing, and current interests", async
   ).toBeVisible();
 });
 
-test("the homepage Now preview and date match the full Now page", async ({
+test("the homepage reading link matches the full Now page", async ({
   page,
 }) => {
   await gotoAndStabilize(page, "/");
 
-  const preview = page.getByRole("complementary", { name: "Now", exact: true });
-  const entryTitle = await preview
-    .getByRole("heading", { level: 3 })
-    .innerText();
-  const paragraphs = await preview.locator("section p").allTextContents();
-  const readingHref = await preview.locator("section a").getAttribute("href");
-  const updatedAt = await preview.locator("time").getAttribute("datetime");
-  const displayDate = await preview.locator("time").innerText();
+  const preview = page.locator("#about p").filter({
+    hasText: "Currently reading:",
+  });
+  await expect(preview).toBeVisible();
+  const readingLink = preview.getByRole("link", {
+    name: "Reinforcement Learning from Human Feedback",
+    exact: true,
+  });
+  const readingTitle = await readingLink.innerText();
+  const readingHref = await readingLink.getAttribute("href");
 
-  if (!updatedAt || !readingHref || paragraphs.length === 0) {
-    throw new Error(
-      "Expected the Now preview to contain dated reading content."
-    );
+  if (!readingHref) {
+    throw new Error("Expected the reading update to link to the book.");
   }
 
-  await preview.getByRole("link", { name: "More on the Now page →" }).click();
+  await preview.getByRole("link", { name: "Now →", exact: true }).click();
   await waitForStablePage(page);
   await expect(page).toHaveURL(/\/now\/$/);
   await expect(
@@ -77,18 +77,15 @@ test("the homepage Now preview and date match the full Now page", async ({
   ).toBeVisible();
 
   const fullEntry = page.locator("main section").filter({
-    has: page.getByRole("heading", { level: 2, name: entryTitle, exact: true }),
+    has: page.getByRole("heading", {
+      level: 2,
+      name: "Currently reading",
+      exact: true,
+    }),
   });
-  expect(await fullEntry.locator("p").allTextContents()).toEqual(paragraphs);
-  await expect(fullEntry.getByRole("link")).toHaveAttribute(
-    "href",
-    readingHref
-  );
-  await expect(page.locator("main time")).toHaveAttribute(
-    "datetime",
-    updatedAt
-  );
-  await expect(page.locator("main time")).toHaveText(`Updated ${displayDate}`);
+  await expect(
+    fullEntry.getByRole("link", { name: readingTitle, exact: true })
+  ).toHaveAttribute("href", readingHref);
 });
 
 for (const width of [360, 768, 1280]) {
@@ -128,7 +125,7 @@ for (const width of [360, 768, 1280]) {
           }
         }
 
-        for (const label of ["All writing →", "More on the Now page →"]) {
+        for (const label of ["All writing →", "Now →"]) {
           const link = page.getByRole("link", { name: label, exact: true });
           await expect(link).toBeVisible();
           const bounds = await link.boundingBox();

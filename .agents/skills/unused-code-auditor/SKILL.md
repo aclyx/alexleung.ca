@@ -31,11 +31,7 @@ For every candidate:
 
 2. **Run static analyzers first**
    - Prefer project-native tools where available.
-   - In JS/TS repos, use as needed:
-     - `yarn lint`
-     - `yarn typecheck`
-     - `yarn lint:unused` (the repository-pinned Knip check for unused files/exports/dependencies)
-     - `yarn dlx ts-prune` (unused exports; often noisy)
+   - Start with `yarn lint:unused`, the repository-pinned Knip check. `yarn lint` includes it; do not rerun it without a reason. Use `yarn typecheck` when type or import integrity is relevant.
    - Treat tool output as leads, not final truth.
 
 3. **Validate each lead with targeted evidence**
@@ -45,7 +41,7 @@ For every candidate:
 
 4. **Classify findings**
    - **High confidence:** safe to remove directly.
-   - **Medium confidence:** likely removable but needs owner confirmation.
+   - **Medium confidence:** needs further evidence before removal. Ask the owner only when the unresolved intent or behavior requires their knowledge.
    - **Manual verification required:** dynamic/runtime/plugin-driven usage cannot be proven statically.
 
 5. **Propose cleanup patches**
