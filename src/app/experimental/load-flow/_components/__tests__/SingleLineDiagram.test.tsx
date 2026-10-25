@@ -151,6 +151,44 @@ test("draws reverse P and Q leaving both ends without conflating directions", ()
   expect(screen.queryByTestId("flow-motion")).toBeNull();
 });
 
+test("wire hit areas, power lanes, and motion follow orthogonal paths after a bus moves", () => {
+  const { container, rerender } = render(
+    <SingleLineDiagram {...props} mode="both" animate={true} />
+  );
+  const original = container
+    .querySelector(".load-flow-line-focus")!
+    .getAttribute("d");
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      buses={[buses[0], { ...buses[1], y: 450 }]}
+      mode="both"
+      animate={true}
+    />
+  );
+  const lineElement = screen.getByRole("button", { name: /Line line:/ });
+  const wire = lineElement.querySelector(".load-flow-line-focus")!;
+  expect(wire.getAttribute("d")).not.toBe(original);
+  expect(
+    lineElement.querySelector('path[stroke="transparent"]')
+  ).toHaveAttribute("d", wire.getAttribute("d"));
+  for (const path of lineElement.querySelectorAll("path:not([transform])")) {
+    const d = path.getAttribute("d")!;
+    expect(d).not.toMatch(/[QC]/);
+    const numbers = d.match(/-?\d+(?:\.\d+)?/g)!.map(Number);
+    for (let i = 2; i < numbers.length; i += 2)
+      expect(
+        numbers[i] === numbers[i - 2] || numbers[i + 1] === numbers[i - 1]
+      ).toBe(true);
+  }
+  for (const arrow of lineElement.querySelectorAll("path[transform]")) {
+    const angle = Number(
+      arrow.getAttribute("transform")!.match(/rotate\(([-\d.]+)\)/)![1]
+    );
+    expect(Math.abs(angle % 90)).toBe(0);
+  }
+});
+
 test("power details appear only on hover, focus or tap, and Escape dismisses them", () => {
   jest.useFakeTimers();
   const { container } = render(
@@ -188,6 +226,58 @@ test("power details appear only on hover, focus or tap, and Escape dismisses the
   fireEvent.blur(line);
   expect(screen.queryByRole("tooltip")).toBeNull();
   jest.useRealTimers();
+});
+
+test("pointer focus waits until click to show details while keyboard focus still works", () => {
+  render(<SingleLineDiagram {...props} mode="both" animate={false} />);
+  const line = screen.getByRole("button", { name: /Line line:/ });
+  fireEvent.mouseDown(line);
+  fireEvent.focus(line);
+  expect(screen.queryByRole("tooltip")).toBeNull();
+  fireEvent.mouseUp(window);
+  fireEvent.click(line);
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+  fireEvent.blur(line);
+  fireEvent.focus(line);
+  expect(screen.getByRole("tooltip")).toBeInTheDocument();
+});
+
+test("selecting a line subdues other wires without changing keyboard order", () => {
+  const branches = [branch, { ...branch, id: "other" }];
+  const { rerender } = render(
+    <SingleLineDiagram
+      {...props}
+      branches={branches}
+      mode="both"
+      animate={false}
+    />
+  );
+  const lines = screen.getAllByRole("button", { name: /^Line / });
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      branches={branches}
+      mode="both"
+      animate={false}
+      selectedElementType="BRANCH"
+      selectedElementId="line"
+    />
+  );
+  expect(screen.getAllByRole("button", { name: /^Line / })).toEqual(lines);
+  expect(lines[0]).toHaveAttribute("opacity", "1");
+  expect(lines[1]).toHaveAttribute("opacity", "0.3");
+  expect(lines[1]).toHaveAttribute("tabindex", "0");
+  rerender(
+    <SingleLineDiagram
+      {...props}
+      branches={branches}
+      mode="both"
+      animate={false}
+      selectedElementType="BUS"
+      selectedElementId="a"
+    />
+  );
+  expect(lines[1]).toHaveAttribute("opacity", "1");
 });
 
 test("source amounts add local demand to solved injections, not generator setpoints", () => {

@@ -1,5 +1,5 @@
 import { arrangeNetwork } from "./layout";
-import { BusNode, LineEdge, LoadFlowEditorState } from "./state/loadFlowStore";
+import { LoadFlowEditorState } from "./state/loadFlowStore";
 
 export type FlowMode = "both" | "p" | "q";
 export type Point = { x: number; y: number };
@@ -35,41 +35,6 @@ export function flowWidth(value: number) {
 // A 26-unit dash period at 0.5 diagram units/s per MW or MVAr.
 export function flowAnimationDuration(value: number) {
   return 52 / Math.abs(value);
-}
-
-export function pointOnCurve(a: Point, b: Point, c: Point, t: number): Point {
-  return {
-    x: (1 - t) ** 2 * a.x + 2 * (1 - t) * t * c.x + t * t * b.x,
-    y: (1 - t) ** 2 * a.y + 2 * (1 - t) * t * c.y + t * t * b.y,
-  };
-}
-
-// Keep parallel circuits separate, including circuits entered in reverse order.
-export function branchCurve(
-  branch: LineEdge,
-  branches: LineEdge[],
-  buses: BusNode[]
-) {
-  const from = buses.find((bus) => bus.id === branch.fromBusId)!;
-  const to = buses.find((bus) => bus.id === branch.toBusId)!;
-  const parallel = branches.filter(
-    (line) =>
-      (line.fromBusId === from.id && line.toBusId === to.id) ||
-      (line.fromBusId === to.id && line.toBusId === from.id)
-  );
-  const offset =
-    (parallel.indexOf(branch) - (parallel.length - 1) / 2) *
-    80 *
-    (from.id < to.id ? 1 : -1);
-  const length = Math.hypot(to.x - from.x, to.y - from.y) || 1;
-  return {
-    a: from,
-    b: to,
-    c: {
-      x: (from.x + to.x) / 2 - ((to.y - from.y) / length) * offset,
-      y: (from.y + to.y) / 2 + ((to.x - from.x) / length) * offset,
-    },
-  };
 }
 
 export function layoutDiagram(state: LoadFlowEditorState): LoadFlowEditorState {
