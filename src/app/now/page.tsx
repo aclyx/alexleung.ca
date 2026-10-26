@@ -14,7 +14,7 @@ import { buildPageMetadata, buildWebPageSchema } from "@/lib/seo";
 
 const title = "Now | Alex Leung";
 const description =
-  "Current notes from Alex Leung on reading and everyday life.";
+  "Current notes from Alex Leung on learning, reading, and everyday life.";
 const path = "/now";
 
 export const metadata: Metadata = buildPageMetadata({
