@@ -94,7 +94,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Every served raster blog source and generated variant must use a `.webp` extension and contain genuine RIFF/WEBP bytes. Convert camera exports, screenshots, and generated images to metadata-stripped WebP instead of renaming them, and do not keep temporary JPEG/PNG exports in the repo. Playwright PNG baselines under `playwright/**-snapshots/` are test artifacts and are exempt.
 - For blog covers: update frontmatter `coverImage` in `content/posts/*.md`.
 - For inline blog images: add standard markdown image references.
-- After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit). The command verifies blog-image extensions and file signatures before updating variants and the manifest; include the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json`.
+- After any source image addition/update, run `yarn image:variants` (or `yarn image:variants:stage` when preparing a commit). Generation requires `cwebp`; the command can exit successfully while reporting a skip, which does not verify fresh variants. Confirm generation completed, and include the generated assets under `public/assets/...` plus `src/generated/imageVariantManifest.json`.
 
 ### SEO and Structured Data
 
@@ -143,7 +143,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 
 - When creating a pull request, default to a regular ready-for-review PR rather than a draft PR unless the user explicitly asks for draft status or the work is intentionally incomplete/blocking on follow-up.
 - Do not add PR labels/tags by default. If a tool or workflow offers labels such as `codex`, leave them off unless the user explicitly requests specific labels or the repository requires them.
-- For any request path that creates commits or pull requests (including the yeet skill), keep wording tool-agnostic: do not mention Codex or any other AI agent/model by name.
+- Keep commit messages and PR titles/descriptions tool-agnostic: do not mention Codex or any other AI agent/model by name. This convention does not restrict product names in blog posts, documentation, or code being changed.
 - After pushing a commit or PR branch, do not watch or wait for remote CI by default. Check current status once only if useful for the handoff, then stop unless the user explicitly asks you to wait, watch, or fix a failing check.
 
 ### Environment Troubleshooting

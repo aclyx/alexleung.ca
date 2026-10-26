@@ -8,21 +8,20 @@ export type NowEntryContent = {
   body: ReactNode;
 };
 
+const currentBookLink = (
+  <ExternalLink href="https://rlhfbook.com/">
+    <em>Reinforcement Learning from Human Feedback</em>
+  </ExternalLink>
+);
+
 export const NOW_CONTENT = {
   updatedAt: "2026-10-03",
+  homePreview: <>Currently reading: {currentBookLink}.</>,
   entries: [
     {
       id: "reading",
       title: "Currently reading",
-      body: (
-        <p>
-          I’m reading{" "}
-          <ExternalLink href="https://rlhfbook.com/">
-            <em>Reinforcement Learning from Human Feedback</em>
-          </ExternalLink>{" "}
-          by Nathan Lambert.
-        </p>
-      ),
+      body: <p>I’m reading {currentBookLink} by Nathan Lambert.</p>,
     },
     {
       id: "sake",
@@ -36,7 +35,11 @@ export const NOW_CONTENT = {
       ),
     },
   ],
-} satisfies { updatedAt: string; entries: NowEntryContent[] };
+} satisfies {
+  updatedAt: string;
+  homePreview: ReactNode;
+  entries: NowEntryContent[];
+};
 
 export const NOW_PAGE_LAST_UPDATED_ISO = NOW_CONTENT.updatedAt;
 

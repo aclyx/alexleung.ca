@@ -15,11 +15,13 @@ Avoid giving every subject the same card, illustration, or introductory label.
 
 ## Shared Content
 
-Edit `NOW_CONTENT.entries` and `NOW_CONTENT.updatedAt` in
-[`src/constants/now.tsx`](../src/constants/now.tsx) to update both Home and Now.
-The homepage previews the first entry; Now renders all entries. Keep the update
-date tied to content changes. `WritingList` receives post titles and excerpts
-from blog frontmatter, so they stay consistent across the homepage and archive.
+Edit `NOW_CONTENT.homePreview`, `NOW_CONTENT.entries`, and
+`NOW_CONTENT.updatedAt` in [`src/constants/now.tsx`](../src/constants/now.tsx)
+to update Home and Now. The homepage uses a compact reading line beneath the
+introduction; Now renders all entries. Keep their reading details consistent
+and the Now update date tied to content changes. `WritingList` receives post
+titles and excerpts from blog frontmatter, so they stay consistent across the
+homepage and archive.
 Contact and the shared footer use profile URLs from
 [`src/constants/socialLinks.tsx`](../src/constants/socialLinks.tsx).
 
@@ -94,9 +96,9 @@ background and `paper` text, while inline code remains on the light surface.
 - When `PageShell` renders a title, it delegates to `PageHeader` and applies the
   standard gap before the body. Use `headerRail="prose"` for article-shaped
   pages and the default content rail elsewhere.
-- Homepage sections use border dividers and compact spacing. The introduction
-  and selected writing occupy the main column, with a smaller Now preview and
-  personal material alongside them at desktop widths.
+- Homepage sections use border dividers and compact spacing. A small reading
+  line links to Now beneath the introduction. Selected writing occupies the
+  main column, with personal material alongside it at desktop widths.
 
 Prefer open sections and dividers over wrapping every region in a card. At each
 breakpoint, check line length and column balance rather than preserving a
@@ -206,7 +208,8 @@ Tailwind's default breakpoints are in use. Mobile is the baseline; `md`
 - Home, Writing, Now, and Contact stay visible at every width. The domain and
   navigation wrap onto two rows only when the available width requires it.
 - The homepage columns collapse into a readable single-column flow on smaller
-  screens. The Now preview follows the introduction.
+  screens. The compact reading line stays beneath the introduction at every
+  width.
 - Topic rows pair a small thumbnail with the title and date; excerpts occupy the
   full row on mobile. Related writing stays in one column at every width.
 - Mobile controls and links should provide a 44px target. Compact chips may

@@ -12,8 +12,6 @@ tags:
 
 I arrived in San Francisco about a week ago and started with the practical things: getting an SSN, setting up bank accounts, buying apartment basics, and waiting for the rest of my stuff to arrive. For now, the apartment is mostly a sleeping pad, a sleeping bag, a few cat things, and whatever has arrived from Amazon.
 
-My furniture is still in transit, so most of my day-to-day setup is on the floor.
-
 We used a pet taxi service so the cats could stay together and neither had to travel in cargo.
 It also gave me time to set up their trees and beds. Once they arrived, the apartment felt occupied.
 
@@ -24,4 +22,4 @@ I have been enjoying outdoor runs, especially along the Bay Trail, between erran
 
 I often overhear people talking about tech: startups, AI, infrastructure, products, companies, jobs. Hearing those conversations in public still feels a little odd.
 
-I am enjoying the city. I hope the furniture arrives next week.
+The cats have their trees and beds, and I have a sleeping pad. I am enjoying San Francisco so far, but I hope the furniture arrives next week.
