@@ -5,7 +5,7 @@
         <title>Alex Leung's Writing</title>
         <link>https://alexleung.ca/blog/</link>
         <description>Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.</description>
-        <lastBuildDate>Sat, 17 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sun, 25 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -43,11 +43,11 @@
             <category>Lifestyle</category>
         </item>
         <item>
-            <title><![CDATA[Farming Agent Mistakes]]></title>
+            <title><![CDATA[Farming Expensive Agent Sessions]]></title>
             <link>https://alexleung.ca/blog/farming-expensive-coding-agent-sessions/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/farming-expensive-coding-agent-sessions/</guid>
             <pubDate>Sun, 14 Jun 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[When a coding agent makes a repeatable mistake, I try to keep the correction in the harness for the next run.]]></description>
+            <description><![CDATA[I’m using expensive agent sessions to refine the instructions that tell Codex how I want the work done.]]></description>
             <category>AI</category>
             <category>Developer Workflow</category>
             <category>Reflection</category>
@@ -95,7 +95,7 @@
             <link>https://alexleung.ca/blog/making-responsive-images-just-work/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/making-responsive-images-just-work/</guid>
             <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[I replaced scattered responsive-image conventions in a Next.js static site with one generated manifest for variants, dimensions, and lookup during static rendering.]]></description>
+            <description><![CDATA[This site generates responsive image variants and their lookup metadata together, so components and Markdown do not have to reconstruct filenames.]]></description>
             <category>Next.js</category>
             <category>Architecture</category>
             <category>Developer Workflow</category>
