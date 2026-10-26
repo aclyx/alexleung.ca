@@ -15,13 +15,27 @@ const currentBookLink = (
 );
 
 export const NOW_CONTENT = {
-  updatedAt: "2026-10-03",
+  updatedAt: "2026-10-25",
   homePreview: <>Currently reading: {currentBookLink}.</>,
   entries: [
     {
       id: "reading",
       title: "Currently reading",
       body: <p>I’m reading {currentBookLink} by Nathan Lambert.</p>,
+    },
+    {
+      id: "rust",
+      title: "Revisiting Rust",
+      body: (
+        <p>
+          I’m revisiting Rust after six years away, working through{" "}
+          <ExternalLink href="https://rust-exercises.com/100-exercises/01_intro/00_welcome">
+            <em>100 Exercises to Learn Rust</em>
+          </ExternalLink>
+          . In the age of coding agents, it’s refreshing to get back into the
+          details of the code and solve the exercises myself.
+        </p>
+      ),
     },
     {
       id: "sake",
