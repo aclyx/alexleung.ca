@@ -2,7 +2,7 @@
 title: "Humanity’s Cosmic Endowment"
 date: "2026-10-03"
 updated: "2026-10-24"
-excerpt: "Who is the cosmic endowment owed to, and what might we owe the conscious minds we create?"
+excerpt: "The cosmic endowment is the matter and energy a future civilization could reach. Who should inherit it, and what might we owe conscious minds we create?"
 coverImage: "/assets/blog/humanitys-cosmic-endowment/cover.webp"
 coverAlt: "Illustration of a planted orbital habitat with solar panels and an observatory above Earth"
 tags:
