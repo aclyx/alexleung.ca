@@ -1,8 +1,8 @@
 ---
-title: "Depth Changes Scaling, Not Just Capacity"
+title: "Structure and Optimization in Deep Networks"
 date: "2026-02-15"
-updated: "2026-10-05"
-excerpt: "Chapter 6 of Deep Learning separates representational capacity, parameter efficiency, and learnability—and shows why depth changes scaling, not just expressiveness."
+updated: "2026-10-25"
+excerpt: "Notes from Chapter 6 of Deep Learning on representational capacity, low-rank parameterizations, and the choice of activation function."
 coverImage: "/assets/blog/structural-reasoning-about-deep-networks/cover.webp"
 coverAlt: "Illustration of Alex studying neural network diagrams beside a lake"
 tags:
@@ -10,7 +10,6 @@ tags:
   - "Book Notes"
 series: "Deep Learning Notes"
 seriesOrder: 2
-unlisted: true
 ---
 
 [Chapter 6, _Deep Feedforward Networks_](https://www.deeplearningbook.org/contents/mlp.html), separates what a network can represent from how efficiently it can represent it and whether optimization can find the parameters.

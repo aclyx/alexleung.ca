@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
+import {
+  actionClassNames,
+  controlLabelClassNames,
+  fieldClassNames,
+} from "@/components/controlStyles";
 import {
   DisclosureIndicator,
   disclosureSummaryClassNames,
@@ -145,7 +149,7 @@ export function RayWorkbench() {
   return (
     <section aria-label="Ray tracing playground">
       <div className="mb-4 flex flex-wrap items-end gap-3">
-        <label className="grid gap-1 text-sm">
+        <label className={controlLabelClassNames({ className: "text-sm" })}>
           Scene
           <select
             className={fieldClassNames({ kind: "select" })}
@@ -340,7 +344,7 @@ export function RayWorkbench() {
           </p>
         </div>
         <div className="space-y-4">
-          <label className="grid gap-1 text-sm">
+          <label className={controlLabelClassNames({ className: "text-sm" })}>
             Surface interactions
             <select
               aria-label="Surface interactions"
@@ -353,7 +357,7 @@ export function RayWorkbench() {
               <option value="6">6 · indirect lighting</option>
             </select>
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className={controlLabelClassNames({ className: "text-sm" })}>
             Left sphere
             <select
               className={fieldClassNames({ kind: "select" })}
@@ -364,7 +368,12 @@ export function RayWorkbench() {
               <option value="matte">Matte surface</option>
             </select>
           </label>
-          <label className="flex min-h-11 items-center gap-2 text-sm">
+          <label
+            className={controlLabelClassNames({
+              layout: "inline",
+              className: "text-sm",
+            })}
+          >
             <input
               type="checkbox"
               checked={settings.glass}
@@ -372,7 +381,12 @@ export function RayWorkbench() {
             />{" "}
             Glass sphere
           </label>
-          <label className="flex min-h-11 items-center gap-2 text-sm">
+          <label
+            className={controlLabelClassNames({
+              layout: "inline",
+              className: "text-sm",
+            })}
+          >
             <input
               type="checkbox"
               checked={settings.coloredWalls}
@@ -380,11 +394,11 @@ export function RayWorkbench() {
             />{" "}
             Colored walls
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className={controlLabelClassNames({ className: "text-sm" })}>
             <span>Light width · {settings.lightSize.toFixed(2)}</span>
             <input
               aria-label="Light width"
-              className="min-h-11 w-full accent-accent-link"
+              className={fieldClassNames({ kind: "range" })}
               type="range"
               min="0.25"
               max="1.4"
@@ -393,11 +407,11 @@ export function RayWorkbench() {
               onChange={(e) => patch({ lightSize: Number(e.target.value) })}
             />
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className={controlLabelClassNames({ className: "text-sm" })}>
             <span>Light left / right</span>
             <input
               aria-label="Light horizontal position"
-              className="min-h-11 w-full accent-accent-link"
+              className={fieldClassNames({ kind: "range" })}
               type="range"
               min="-1.2"
               max="1.2"
@@ -406,11 +420,11 @@ export function RayWorkbench() {
               onChange={(e) => patch({ lightX: Number(e.target.value) })}
             />
           </label>
-          <label className="grid gap-1 text-sm">
+          <label className={controlLabelClassNames({ className: "text-sm" })}>
             <span>Light back / front</span>
             <input
               aria-label="Light depth"
-              className="min-h-11 w-full accent-accent-link"
+              className={fieldClassNames({ kind: "range" })}
               type="range"
               min="-1.2"
               max="1.2"
@@ -419,7 +433,12 @@ export function RayWorkbench() {
               onChange={(e) => patch({ lightZ: Number(e.target.value) })}
             />
           </label>
-          <label className="flex min-h-11 items-center gap-2 border-t border-line pt-3 text-sm">
+          <label
+            className={controlLabelClassNames({
+              layout: "inline",
+              className: "border-t border-line pt-3 text-sm",
+            })}
+          >
             <input
               type="checkbox"
               checked={inspect}

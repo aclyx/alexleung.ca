@@ -11,7 +11,6 @@ Use this profile as the governing taste model:
 
 - Concrete, understated, utility-minded, and quietly polished.
 - For copy and tone, read and apply the canonical [writing voice](../../../docs/writing-voice.md).
-- Direct labels and specific nouns over metaphors, slogans, or abstract positioning.
 - Calm, balanced layouts that feel intentional on both mobile and desktop.
 - Dense but scannable repeat-use surfaces, especially writing indexes and tag lists.
 - Editorial but practical typography: clear hierarchy, comfortable line length, restrained display sizes.
@@ -20,7 +19,7 @@ Use this profile as the governing taste model:
 
 ## Workflow
 
-1. Inspect the live surface at desktop and mobile widths. Use the in-app browser when available for localhost or visible browser state.
+1. Inspect the live surface at desktop and mobile widths for visual or interaction critique. A source-based tone review does not require viewport checks unless copy wrapping or layout is part of the concern. Use the in-app browser when available for localhost or visible browser state.
 2. For copy and tone audits, inventory both visible pages and machine-facing summaries. Review the relevant source for copy, typography tokens, layout constraints, color tokens, image assets, and interaction states.
 3. Judge the experience against the profile, not against generic portfolio-site trends.
 4. Prioritize issues that a visitor would actually feel: imbalance, forced copy, weak hierarchy, cramped or sparse browsing, unclear clickability, poor tap targets, slow or heavy assets, and visual inconsistency.

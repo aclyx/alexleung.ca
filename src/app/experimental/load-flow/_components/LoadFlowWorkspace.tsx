@@ -95,6 +95,14 @@ export function LoadFlowWorkspace() {
   const [fromId, setFromId] = useState("");
   const [toId, setToId] = useState("");
   const scenario = getReferenceScenarioById(scenarioId);
+  const diagramBuses = useMemo(
+    () => editor.busOrder.map((id) => editor.busesById[id]),
+    [editor.busOrder, editor.busesById]
+  );
+  const diagramBranches = useMemo(
+    () => editor.branchOrder.map((id) => editor.branchesById[id]),
+    [editor.branchOrder, editor.branchesById]
+  );
   // Selection and diagram coordinates do not belong to the electrical model.
   const modelKey = JSON.stringify(toLoadFlowCase(editor));
   const model = useMemo(() => {
@@ -312,8 +320,8 @@ export function LoadFlowWorkspace() {
         </div>
         <SingleLineDiagram
           key={`${scenarioId}:${diagramRevision}`}
-          buses={editor.busOrder.map((id) => editor.busesById[id])}
-          branches={editor.branchOrder.map((id) => editor.branchesById[id])}
+          buses={diagramBuses}
+          branches={diagramBranches}
           generators={model.generators}
           loads={model.loads}
           baseMVA={model.baseMVA}

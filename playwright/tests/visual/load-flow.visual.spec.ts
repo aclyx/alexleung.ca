@@ -1,5 +1,30 @@
 import { expect, gotoAndStabilize, test } from "../../fixtures/stableRendering";
 
+test("parallel circuits have separate visible tracks", async ({ page }) => {
+  await gotoAndStabilize(page, "/experimental/load-flow/");
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("two-bus-radial");
+  await page.getByText("Network editor & model", { exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "From bus", exact: true })
+    .selectOption("bus-1");
+  await page
+    .getByRole("combobox", { name: "To bus", exact: true })
+    .selectOption("bus-2");
+  for (let i = 0; i < 3; i++)
+    await page
+      .getByRole("button", { name: "Connect buses", exact: true })
+      .click();
+  await page.getByText("Network editor & model", { exact: true }).click();
+  await page.getByRole("button", { name: "Fit diagram" }).click();
+  await page.mouse.move(0, 0);
+  await page.keyboard.press("Escape");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-parallel.png"
+  );
+});
+
 test("load-flow diagram and terminal inspector stay readable", async ({
   page,
 }) => {
@@ -23,6 +48,19 @@ test("load-flow diagram and terminal inspector stay readable", async ({
     .selectOption("ieee-14-bus");
   await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
     "load-flow-ieee14.png"
+  );
+  await page.getByRole("button", { name: "P + Q", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Inspect", exact: true })
+    .selectOption("BRANCH:line-10-11-18");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-ieee14-selected.png"
+  );
+  await page
+    .getByRole("combobox", { name: "Network", exact: true })
+    .selectOption("ieee-9-bus");
+  await expect(page.getByTestId("load-flow-diagram")).toHaveScreenshot(
+    "load-flow-ieee9.png"
   );
   await page
     .getByRole("combobox", { name: "Network", exact: true })

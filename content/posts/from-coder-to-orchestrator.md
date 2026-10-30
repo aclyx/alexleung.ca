@@ -1,7 +1,7 @@
 ---
 title: "The Review Bottleneck in AI-Assisted Coding"
 date: "2026-02-03"
-updated: "2026-10-12"
+updated: "2026-10-24"
 excerpt: "Agents can implement tasks in parallel; reviewing plans, checking edge cases, and coordinating the work still fall to me."
 coverImage: "/assets/blog/from-coder-to-orchestrator/cover.webp"
 coverAlt: "Illustration of Alex reviewing code, test results, and a written plan at his desk"
@@ -12,26 +12,18 @@ series: "AI Tools and Workflows"
 seriesOrder: 1
 ---
 
-Implementation can run in parallel, but review and coordination still funnel back through me. That is the limit I have not solved in my AI-assisted coding workflow.
+In early 2024, I used AI mostly for snippets, error explanations, and small refactors. By 2026, I was handing agents larger tasks and spending more of my attention on constraints, review, and the edge cases they missed. Implementation could run in parallel, but the plans and finished changes still came back to me.
 
-In early 2024, I used AI mostly for autocomplete-level work: snippets, error explanations, and small refactors. By 2026, I was using agents for larger tasks. I still write code when needed, but more of my attention now goes to constraints, review, and the edge cases the tools miss.
+## Reviewing the plan before the code
 
-## Reviewing plans before implementation
+With Cline, I kept to straightforward work such as boilerplate, test scaffolding, and repetitive refactors. Larger tasks took too much prompt back-and-forth, and code that looked reasonable could still be wrong in ways that were hard to spot. In 2025, I switched to Claude Code and began asking for a plan before implementation.
 
-I started experimenting with Cline for straightforward tasks such as boilerplate, test scaffolding, and repetitive refactors. I avoided giving it larger tasks because it was easy to get code that looked fine but was wrong in non-obvious ways, and anything non-trivial took too much prompt back-and-forth.
+Reviewing the plan gave me an earlier chance to challenge the scope. Plans were often overbuilt for the problem; questioning the approach before implementation meant I could address that without first reviewing the code it produced. But the agent would still report “done” before handling edge cases. Agreeing on a plan settled what to attempt, while reviewing the result was how I checked whether it had actually been done.
 
-In 2025, I switched to Claude Code and stopped asking for immediate implementation. Instead, I asked for a plan first and reviewed it.
+## Repository context and checkpoints
 
-Plans were often overbuilt for the actual problem, and the agent would report "done" before handling edge cases. Plan review gave me a place to question the proposed scope before implementation; it did not remove the need to inspect the result.
+Many mistakes came from missing repository context, so I keep architecture preferences, testing requirements, and coding conventions in the repository guidance. Those instructions carry decisions that apply across tasks. The task brief can then concentrate on the particular change, including its constraints and non-goals, instead of making the agent infer both the local conventions and the request at once.
 
-## Making the work reviewable
+I often separate planning from implementation and turn the brief into checkpoints, running build, lint, and tests at each one. That gives me intermediate results to inspect.
 
-A lot of bad output came from missing repository context, so I keep architecture preferences, testing requirements, and coding conventions in the repository guidance. That gives the agent a baseline to work from, while the task brief supplies the specific constraints and non-goals.
-
-I often split planning and implementation into separate passes, turning the brief into checkpoints and running build, lint, and tests at each one.
-
-## Costs and limits
-
-Frequent tool calls and retries add up, and agents struggle when a system relies on undocumented history.
-
-I can hand off more implementation, but I still have to decide whether the plans fit the problem and whether the resulting changes are ready.
+This works best when the repository records the context behind its decisions. Agents still struggle with undocumented history, and frequent tool calls and retries add to the cost of a session. But that cost is worth it, as delegating implementation lets me spend more time on decision-making, analysis, and bringing my own taste to the work.

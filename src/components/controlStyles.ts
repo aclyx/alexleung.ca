@@ -1,6 +1,21 @@
 export type ActionVariant = "primary" | "secondary" | "quiet";
 type ActionSize = "sm" | "md";
-type FieldKind = "input" | "select";
+type FieldKind = "input" | "select" | "range";
+
+export function controlLabelClassNames({
+  layout = "stacked",
+  className = "",
+}: {
+  layout?: "stacked" | "inline";
+  className?: string;
+} = {}) {
+  return [
+    layout === "inline" ? "flex min-h-11 items-center gap-2" : "grid gap-1",
+    className,
+  ]
+    .filter(Boolean)
+    .join(" ");
+}
 
 const actionVariantClasses: Record<ActionVariant, string> = {
   primary:
@@ -43,7 +58,9 @@ export function fieldClassNames({
   className?: string;
 } = {}) {
   return [
-    "text-body min-h-11 w-full rounded-md border border-control-border bg-white px-4 py-2.5 text-ink placeholder:text-muted transition-[border-color] duration-150 focus:border-accent-link focus:placeholder-transparent focus:outline-none focus:ring-1 focus:ring-accent-link disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none",
+    kind === "range"
+      ? "min-h-11 w-full accent-accent-link focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper disabled:cursor-not-allowed disabled:opacity-60"
+      : "text-body min-h-11 w-full rounded-md border border-control-border bg-white px-4 py-2.5 text-ink placeholder:text-muted transition-[border-color] duration-150 focus:border-accent-link focus:placeholder-transparent focus:outline-none focus:ring-1 focus:ring-accent-link disabled:cursor-not-allowed disabled:opacity-60 motion-reduce:transition-none",
     kind === "select" ? "cursor-pointer pr-10" : "",
     className,
   ]

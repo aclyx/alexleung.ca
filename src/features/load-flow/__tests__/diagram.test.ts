@@ -1,5 +1,4 @@
 import {
-  branchCurve,
   DIAGRAM_COLORS,
   flowAnimationDuration,
   layoutDiagram,
@@ -8,6 +7,7 @@ import {
 } from "../diagram";
 import { toLoadFlowCase } from "../graph/toLoadFlowCase";
 import { arrangeNetwork } from "../layout";
+import { routeBranches } from "../routing";
 import { getReferenceScenarioById } from "../solver/referenceScenarios";
 import {
   BusNode,
@@ -152,7 +152,6 @@ test("parallel circuits entered in opposite directions have distinct paths", () 
     { id: "1", fromBusId: "a", toBusId: "b", r: 0.01, x: 0.1, bHalf: 0 },
     { id: "2", fromBusId: "b", toBusId: "a", r: 0.01, x: 0.1, bHalf: 0 },
   ];
-  expect(branchCurve(lines[0], lines, buses).c.y).not.toBe(
-    branchCurve(lines[1], lines, buses).c.y
-  );
+  const routes = routeBranches(lines, buses);
+  expect(routes.get("1")).not.toEqual(routes.get("2")!.toReversed());
 });

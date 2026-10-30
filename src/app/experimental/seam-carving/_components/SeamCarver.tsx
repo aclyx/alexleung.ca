@@ -2,7 +2,11 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
+import {
+  actionClassNames,
+  controlLabelClassNames,
+  fieldClassNames,
+} from "@/components/controlStyles";
 import {
   DisclosureIndicator,
   disclosureSummaryClassNames,
@@ -349,7 +353,7 @@ export function SeamCarver() {
   return (
     <section aria-label="Seam carving playground">
       <div className="mb-5 flex flex-wrap items-end gap-3">
-        <label className="grid gap-1 text-sm">
+        <label className={controlLabelClassNames({ className: "text-sm" })}>
           Image
           <select
             className={fieldClassNames({ kind: "select" })}
@@ -366,7 +370,11 @@ export function SeamCarver() {
             )}
           </select>
         </label>
-        <label className="grid max-w-full gap-1 text-sm">
+        <label
+          className={controlLabelClassNames({
+            className: "max-w-full text-sm",
+          })}
+        >
           Open image
           <input
             className="min-h-11 w-full max-w-64 rounded border border-control-border p-2"
@@ -428,7 +436,7 @@ export function SeamCarver() {
       </div>
       {maskCount > 0 && (
         <div className="mb-4 flex flex-wrap items-center gap-x-5 text-body-sm">
-          <label className="flex min-h-11 items-center gap-2">
+          <label className={controlLabelClassNames({ layout: "inline" })}>
             <input
               type="checkbox"
               checked={useProtection}
@@ -449,7 +457,9 @@ export function SeamCarver() {
         </div>
       )}
       <div className="mb-6 grid gap-3 border-y border-line py-3 sm:grid-cols-[1fr_auto] sm:items-center">
-        <label className="grid gap-1 text-body-sm">
+        <label
+          className={controlLabelClassNames({ className: "text-body-sm" })}
+        >
           <span className="flex justify-between gap-3">
             <span>Output width</span>
             <span className="font-mono text-sm">
@@ -458,7 +468,7 @@ export function SeamCarver() {
           </span>
           <input
             aria-label="Output width"
-            className="min-h-11 w-full accent-accent-link"
+            className={fieldClassNames({ kind: "range" })}
             type="range"
             min="50"
             max="100"
@@ -547,7 +557,7 @@ export function SeamCarver() {
               There is no automatic subject selection. Painting may leave the
               result unchanged if the seams already avoid that area.
             </p>
-            <label className="flex min-h-11 items-center gap-2">
+            <label className={controlLabelClassNames({ layout: "inline" })}>
               <input
                 type="checkbox"
                 checked={erase}

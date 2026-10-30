@@ -1,0 +1,3 @@
+I often separate planning from implementation and turn the brief into checkpoints, running build, lint, and tests at each one. That gives me intermediate results to inspect. The checks provide evidence for the behavior they cover; they cannot establish that an omitted edge case has been handled. The plan and brief still matter when I review a passing result, because they describe what the checks may have left out.
+
+This works best when the repository records the context behind its decisions. Agents still struggle with undocumented history, and frequent tool calls and retries add to the cost of a session. Delegating more implementation lets me spend more of my time on decision-making, analysis, and bringing my own taste to the work.
