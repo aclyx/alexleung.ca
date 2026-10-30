@@ -92,7 +92,13 @@ export function generateMetadata(): Metadata {
 }
 
 export default function BlogIndex() {
-  const allPosts = getAllPosts(["title", "date", "slug", "excerpt"]);
+  const allPosts = getAllPosts([
+    "title",
+    "date",
+    "slug",
+    "excerpt",
+    "coverImage",
+  ]);
   const topics: TopicLink[] = sortTagsByPopularity(
     getAllTags().filter(isIndexableTag)
   ).map((topic) => ({

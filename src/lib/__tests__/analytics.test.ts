@@ -60,11 +60,11 @@ describe("analytics helpers", () => {
     window.gtag = jest.fn();
     const { trackHomeSectionView } = await loadAnalytics({ enabled: true });
 
-    trackHomeSectionView("experience");
+    trackHomeSectionView("tools");
 
     expect(window.gtag).toHaveBeenCalledWith("event", "home_section_view", {
       event_category: "engagement",
-      section_id: "experience",
+      section_id: "tools",
     });
   });
 

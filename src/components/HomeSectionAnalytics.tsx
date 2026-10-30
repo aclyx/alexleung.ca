@@ -4,11 +4,7 @@ import { useEffect } from "react";
 
 import { trackHomeSectionView, type HomeSectionId } from "@/lib/analytics";
 
-const homeSectionIds: readonly HomeSectionId[] = [
-  "experience",
-  "interests",
-  "writing",
-];
+const homeSectionIds: readonly HomeSectionId[] = ["writing", "tools"];
 
 export function HomeSectionAnalytics() {
   useEffect(() => {

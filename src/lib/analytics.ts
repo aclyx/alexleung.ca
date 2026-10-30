@@ -8,7 +8,7 @@ const keyEventCategory = "key_event";
 const engagementCategory = "engagement";
 const navigationCategory = "navigation";
 
-export type HomeSectionId = "experience" | "interests" | "writing";
+export type HomeSectionId = "tools" | "writing";
 
 function compactParams(
   params: AnalyticsParams

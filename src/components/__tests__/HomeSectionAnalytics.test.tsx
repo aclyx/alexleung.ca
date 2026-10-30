@@ -93,47 +93,34 @@ describe("HomeSectionAnalytics", () => {
     render(
       <>
         <HomeSectionAnalytics />
-        <section id="experience">
-          <h2>Experience</h2>
-        </section>
-        <section id="interests">
-          <h2>Interests</h2>
-        </section>
         <section id="writing">
           <h2>Writing</h2>
         </section>
+        <section id="tools">
+          <h2>Tools</h2>
+        </section>
       </>
     );
-    const experience = screen.getByText("Experience");
-    const interests = screen.getByText("Interests");
     const writing = screen.getByText("Writing");
+    const tools = screen.getByText("Tools");
 
-    expect(observe).toHaveBeenCalledTimes(3);
-    expect(observe).toHaveBeenCalledWith(experience);
-    expect(observe).toHaveBeenCalledWith(interests);
+    expect(observe).toHaveBeenCalledTimes(2);
     expect(observe).toHaveBeenCalledWith(writing);
+    expect(observe).toHaveBeenCalledWith(tools);
 
     act(() => {
       callback(
-        [createEntry(experience, true), createEntry(interests, false)],
+        [createEntry(writing, true), createEntry(tools, false)],
         observer
       );
       callback(
-        [
-          createEntry(experience, true),
-          createEntry(interests, true),
-          createEntry(writing, true),
-        ],
+        [createEntry(writing, true), createEntry(tools, true)],
         observer
       );
     });
 
-    expect(trackHomeSectionView.mock.calls).toEqual([
-      ["experience"],
-      ["interests"],
-      ["writing"],
-    ]);
-    expect(unobserve).toHaveBeenCalledTimes(3);
+    expect(trackHomeSectionView.mock.calls).toEqual([["writing"], ["tools"]]);
+    expect(unobserve).toHaveBeenCalledTimes(2);
     expect(disconnect).toHaveBeenCalledTimes(1);
   });
 
@@ -141,7 +128,7 @@ describe("HomeSectionAnalytics", () => {
     const { unmount } = render(
       <>
         <HomeSectionAnalytics />
-        <section id="experience">Experience</section>
+        <section id="writing">Writing</section>
       </>
     );
 

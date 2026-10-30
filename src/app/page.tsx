@@ -5,6 +5,7 @@ import Link from "next/link";
 
 import type { ProfilePage } from "schema-dts";
 
+import { BrowserToolGrid } from "@/app/_components/BrowserToolGrid";
 import { Hero } from "@/components/Hero";
 import { HomeSectionAnalytics } from "@/components/HomeSectionAnalytics";
 import { LinkText } from "@/components/LinkText";
@@ -45,7 +46,15 @@ export const metadata: Metadata = buildPageMetadata({
 export default function Page() {
   const selectedPosts = selectedPostSlugs
     .map((slug) =>
-      getPostBySlug(slug, ["slug", "title", "date", "excerpt", "unlisted"])
+      getPostBySlug(slug, [
+        "slug",
+        "title",
+        "date",
+        "excerpt",
+        "coverImage",
+        "coverAlt",
+        "unlisted",
+      ])
     )
     .filter((post) => post !== null)
     .filter((post) => !post.unlisted);
@@ -55,6 +64,35 @@ export default function Page() {
     "unlisted",
   ]);
   const photo = getStaticImageFallback("homeFeature");
+  const featuredPhoto =
+    featuredPost && !featuredPost.unlisted ? (
+      <figure>
+        <Link
+          href={`/blog/${featuredPost.slug}/`}
+          aria-label={`Read ${featuredPost.title}`}
+          className="block rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
+        >
+          <ResponsiveImage
+            src={photo.path}
+            srcSet={getStaticImageSourceSet("homeFeature")}
+            alt="A cup held in front of Upper Velma Lake and the granite above it"
+            width={photo.width}
+            height={photo.height}
+            sizes="(min-width: 1120px) 440px, (min-width: 768px) 40vw, calc(100vw - 2.5rem)"
+            className="aspect-[3/2] w-full rounded-lg object-cover"
+            pictureClassName="block"
+            decoding="async"
+          />
+        </Link>
+        <figcaption className="mt-3 text-sm leading-relaxed text-muted">
+          Upper Velma Lake, from{" "}
+          <LinkText href={`/blog/${featuredPost.slug}/`}>
+            {featuredPost.title}
+          </LinkText>
+          .
+        </figcaption>
+      </figure>
+    ) : null;
 
   return (
     <>
@@ -62,135 +100,34 @@ export default function Page() {
         item={buildProfilePageSchema({ path, title, description })}
       />
       <HomeSectionAnalytics />
-      <Hero />
+      <Hero aside={featuredPhoto} />
       <ResponsiveContainer>
-        <div className="grid gap-8 py-8 md:grid-cols-[minmax(0,1.45fr)_minmax(0,0.85fr)] md:gap-16 md:py-10">
-          <section id="writing" aria-labelledby="selected-writing-heading">
-            <div className="mb-2 flex items-center justify-between gap-5">
-              <h2
-                id="selected-writing-heading"
-                className="text-editorial-label"
-              >
-                Selected writing
-              </h2>
-              <div className="flex text-sm">
-                <LinkText href="/blog/" standalone>
-                  All writing →
-                </LinkText>
-              </div>
-            </div>
-            <WritingList
-              posts={selectedPosts}
-              variant="selected"
-              headingLevel="h3"
-            />
-          </section>
-          <aside
-            id="interests"
-            aria-label="More from this site"
-            className="border-t border-line pt-6 md:border-t-0 md:pt-3"
-          >
-            {featuredPost && !featuredPost.unlisted ? (
-              <section aria-labelledby="featured-writing-heading">
-                <h2
-                  id="featured-writing-heading"
-                  className="text-editorial-label"
-                >
-                  From the blog
-                </h2>
-                <article className="mt-4">
-                  <Link
-                    href={`/blog/${featuredPost.slug}/`}
-                    aria-label={`Read ${featuredPost.title}`}
-                    className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
-                  >
-                    <ResponsiveImage
-                      src={photo.path}
-                      srcSet={getStaticImageSourceSet("homeFeature")}
-                      alt="A cup held in front of Upper Velma Lake and the granite above it"
-                      width={photo.width}
-                      height={photo.height}
-                      sizes="(min-width: 1120px) 366px, (min-width: 768px) 36vw, calc(100vw - 2.5rem)"
-                      className="aspect-[1.9] w-full object-cover"
-                      pictureClassName="block"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </Link>
-                  <h3 className="text-editorial-heading mt-4">
-                    <LinkText href={`/blog/${featuredPost.slug}/`}>
-                      {featuredPost.title}
-                    </LinkText>
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted">
-                    A new sleep setup and more food than we needed.
-                  </p>
-                </article>
-              </section>
-            ) : null}
-            <section
-              aria-labelledby="browser-tools-heading"
-              className="mt-7 border-t border-line pt-5"
-            >
-              <h2 id="browser-tools-heading" className="text-editorial-label">
-                Browser tools
-              </h2>
-              <ul className="mt-2 text-sm">
-                <li>
-                  <LinkText
-                    href="/experimental/pid-controller/"
-                    standalone="compact"
-                  >
-                    PID controller simulator →
-                  </LinkText>
-                </li>
-                <li>
-                  <LinkText
-                    href="/experimental/load-flow/"
-                    standalone="compact"
-                  >
-                    Load flow analysis →
-                  </LinkText>
-                </li>
-                <li>
-                  <LinkText
-                    href="/experimental/mandelbrot/"
-                    standalone="compact"
-                  >
-                    Mandelbrot explorer →
-                  </LinkText>
-                </li>
-                <li>
-                  <LinkText
-                    href="/experimental/ray-tracing/"
-                    standalone="compact"
-                  >
-                    Ray-tracing room →
-                  </LinkText>
-                </li>
-                <li>
-                  <LinkText
-                    href="/experimental/seam-carving/"
-                    standalone="compact"
-                  >
-                    Content-aware resizing →
-                  </LinkText>
-                </li>
-              </ul>
-            </section>
-          </aside>
-        </div>
         <section
-          id="experience"
-          aria-labelledby="work-heading"
-          className="grid gap-3 border-t border-line py-6 md:grid-cols-[7.5rem_minmax(0,1fr)] md:gap-6"
+          id="writing"
+          aria-labelledby="selected-writing-heading"
+          className="py-8 md:py-10"
         >
-          <h2 id="work-heading" className="text-editorial-label">
-            Work
+          <div className="mb-2 flex items-center justify-between gap-5">
+            <h2 id="selected-writing-heading" className="text-editorial-label">
+              Selected writing
+            </h2>
+            <div className="flex text-sm">
+              <LinkText href="/blog/" standalone>
+                All writing →
+              </LinkText>
+            </div>
+          </div>
+          <WritingList posts={selectedPosts} headingLevel="h3" />
+        </section>
+        <section
+          id="tools"
+          aria-labelledby="browser-tools-heading"
+          className="border-t border-line py-8 md:py-10"
+        >
+          <h2 id="browser-tools-heading" className="text-editorial-label mb-5">
+            Browser tools
           </h2>
-          <p className="text-sm leading-relaxed text-muted">
-            Previously at Jetson, Google, Cash App, and North.
-          </p>
+          <BrowserToolGrid />
         </section>
       </ResponsiveContainer>
     </>

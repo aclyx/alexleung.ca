@@ -77,7 +77,8 @@ eyebrow-and-`h2` pair when that extra context is useful; use `Subtitle` for a
 standalone `h2`. Homepage and writing sections use the simpler editorial heading
 or label without a repeated eyebrow.
 
-Use `ProseContent` for rendered long-form content. It defaults to base sizing;
+Headings inside `ProseContent` use Georgia at normal weight, matching page
+titles and editorial headings. Use `ProseContent` for rendered long-form content. It defaults to base sizing;
 use `size="sm"` for notes and `size="lg"` for article bodies that should scale at
 `md` and above. Keep display typography out of compact cards and utility
 panels. Blog code blocks intentionally invert the warm palette with an `ink`
@@ -96,9 +97,11 @@ background and `paper` text, while inline code remains on the light surface.
 - When `PageShell` renders a title, it delegates to `PageHeader` and applies the
   standard gap before the body. Use `headerRail="prose"` for article-shaped
   pages and the default content rail elsewhere.
-- Homepage sections use border dividers and compact spacing. A small reading
-  line links to Now beneath the introduction. Selected writing occupies the
-  main column, with personal material alongside it at desktop widths.
+- The homepage introduction pairs the name, a short line, the reading note, and
+  a "Previously at" line with one photograph that links to its post. From `md`
+  the photo sits beside the text; on mobile it follows the text. Selected
+  writing and browser tools follow as full-width sections separated by
+  dividers.
 
 Prefer open sections and dividers over wrapping every region in a card. At each
 breakpoint, check line length and column balance rather than preserving a
@@ -112,9 +115,12 @@ stack on mobile and share a row from `sm` upward.
 The footer provides GitHub, LinkedIn, X, RSS, and Contact on every page. Keep
 these as text links with 44px targets; the name sits above the links on mobile.
 
-Topic archives use one column of divider-separated rows with cover thumbnails,
-serif titles, dates, and excerpts. Keep mobile excerpts wide enough to read.
-Related posts use compact title-and-date rows within the article's prose rail.
+Every post list (the homepage, the writing archive, topic archives, and related
+posts) uses `WritingList`: a monospace date, a serif title, the excerpt, and a
+small decorative cover thumbnail. From `md` the date and thumbnail sit in side
+columns; on mobile the date sits above a title-and-thumbnail line and the
+excerpt spans the full row so it stays wide enough to read. Article covers fill
+a 16:9 frame with `object-cover`, without a tinted background or border.
 Illustrated post covers remain part of the site; changing the surrounding layout
 does not require replacing them.
 
@@ -136,6 +142,12 @@ stylesheet resolves on the feed's own origin so local previews match production.
   `sm`, `md`, or `lg` options fits. Use `responsive` for `p-5 sm:p-6 md:p-8` on
   content surfaces that need to breathe more as the viewport grows.
 
+Homepage browser tools use interactive `Surface` cards from
+`BROWSER_TOOLS` in [`src/constants/browserTools.ts`](../src/constants/browserTools.ts):
+a preview image, a monospace field label, the tool name, and one line of
+description. The featured tool spans two columns from `sm`. Preview images are
+WebP files under `public/assets/tools/`.
+
 Use `actionClassNames` for links and buttons that share control styling. It
 provides `primary`, `secondary`, and `quiet` variants in `sm` and `md` sizes,
 including a stable 44px minimum height, shared focus treatment, disabled state,
@@ -150,9 +162,12 @@ target, accent focus ring, and disabled treatment. Use
 for checkbox rows; typography and section spacing stay with the caller.
 
 `LinkText` supplies the shared underline, color, and keyboard focus treatment.
-Use `standalone` for 44px navigation targets. Dense lists such as the homepage
-browser tools can opt into `standalone="compact"`: 32px rows at `md` and above
-with a fine pointer, and 44px on mobile or coarse-pointer devices. Do not add
+Use `standalone` for 44px navigation targets. Dense link lists can opt into
+`standalone="compact"`: 32px rows at `md` and above with a fine pointer, and
+44px on mobile or coarse-pointer devices. A link inside a wrapping sentence,
+such as Now in the homepage reading line, can use `standalone="inline"`: padding
+brings its target to 44px while it stays inline, so line spacing does not
+change. Do not add
 extra vertical gaps between those rows.
 
 For native `details` disclosures, compose `disclosureSummaryClassNames` with
@@ -241,7 +256,7 @@ The Mandelbrot Explorer, PID Controller Simulator, and Load Flow Analysis are
 active routes in the former experiment namespace. They use the shared warm
 interface tokens, with a dark rendering canvas for Mandelbrot and light plots
 for PID and Load Flow. They remain standalone tools, not a navigation category
-or hub. The homepage links directly to PID and Load Flow.
+or hub. The homepage links to each tool through its browser tool card.
 The static files under `public/about/` and the remaining retired routes under
 `public/experimental/` are intentional noindex bridges, not page templates to
 extend.

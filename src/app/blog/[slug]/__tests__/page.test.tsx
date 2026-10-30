@@ -100,7 +100,7 @@ describe("Blog post page", () => {
     expect(listedMetadata.robots).toBeUndefined();
   });
 
-  it("renders related posts as title-and-date links in the supplied order", async () => {
+  it("renders related posts as shared writing rows in the supplied order", async () => {
     const relatedPosts = ["First", "Second", "Third"].map((name, index) => ({
       slug: `related-${index}`,
       title: `${name} related post`,
@@ -138,10 +138,10 @@ describe("Blog post page", () => {
         "datetime",
         "2026-02-01"
       );
-      expect(within(link).queryByRole("img")).not.toBeInTheDocument();
+      expect(link.querySelector("img")).toHaveAttribute("alt", "");
       expect(
-        within(link).queryByText(relatedPosts[index].excerpt)
-      ).not.toBeInTheDocument();
+        within(link).getByText(relatedPosts[index].excerpt)
+      ).toBeInTheDocument();
     });
   });
 
