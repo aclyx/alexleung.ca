@@ -10,7 +10,6 @@ tags:
   - "Book Notes"
 series: "Deep Learning Notes"
 seriesOrder: 2
-unlisted: true
 ---
 
 [Chapter 6, _Deep Feedforward Networks_](https://www.deeplearningbook.org/contents/mlp.html), separates what a network can represent from how efficiently it can represent it and whether optimization can find the parameters.

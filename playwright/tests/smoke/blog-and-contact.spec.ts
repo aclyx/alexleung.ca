@@ -65,7 +65,13 @@ test("related posts show only matching topics without filling empty slots", asyn
   );
 
   await gotoAndStabilize(page, "/blog/dropout-as-implicit-bagging/");
-  await expect(related).toHaveCount(0);
+  await expect(related.getByRole("link")).toHaveCount(2);
+  for (const slug of [
+    "deep-learning-part-1-review",
+    "structural-reasoning-about-deep-networks",
+  ]) {
+    await expect(related.locator(`a[href="/blog/${slug}/"]`)).toBeVisible();
+  }
   await expect(
     page.getByRole("heading", {
       level: 1,
@@ -355,74 +361,84 @@ test("static export metadata artifacts are served", async ({ request }) => {
 test("topic archives retain URLs and follow the indexing policy", async ({
   request,
 }) => {
-  const [deepLearningResponse, aiResponse, sitemapResponse] = await Promise.all(
-    [
-      request.get("/blog/tags/deep-learning/"),
-      request.get("/blog/tags/ai/"),
-      request.get("/sitemap.xml"),
-    ]
-  );
-
-  expect(deepLearningResponse.status()).toBe(200);
-  expect(aiResponse.status()).toBe(200);
+  const sitemapResponse = await request.get("/sitemap.xml");
   await expect(sitemapResponse).toBeOK();
-
-  const deepLearningHtml = await deepLearningResponse.text();
-  const aiHtml = await aiResponse.text();
   const sitemapText = await sitemapResponse.text();
-  const deepLearningUrl = "https://alexleung.ca/blog/tags/deep-learning/";
-  const aiUrl = "https://alexleung.ca/blog/tags/ai/";
 
-  expect(deepLearningHtml).toContain(
-    `<link rel="canonical" href="${deepLearningUrl}"`
-  );
-  expect(deepLearningHtml).toContain(
-    '<meta name="robots" content="noindex, follow"'
-  );
-  expect(sitemapText).not.toContain(`<loc>${deepLearningUrl}</loc>`);
+  for (const { tag, indexable } of [
+    { tag: "learning", indexable: false },
+    { tag: "deep-learning", indexable: true },
+    { tag: "book-notes", indexable: true },
+    { tag: "ai", indexable: true },
+  ]) {
+    const response = await request.get(`/blog/tags/${tag}/`);
+    await expect(response).toBeOK();
+    const html = await response.text();
+    const url = `https://alexleung.ca/blog/tags/${tag}/`;
 
-  expect(aiHtml).toContain(`<link rel="canonical" href="${aiUrl}"`);
-  expect(aiHtml).not.toMatch(/<meta name="robots"[^>]*\bnoindex\b/);
-  expect(sitemapText).toContain(`<loc>${aiUrl}</loc>`);
+    expect(html).toContain(`<link rel="canonical" href="${url}"`);
+    expect(/<meta name="robots"[^>]*\bnoindex\b/.test(html)).toBe(!indexable);
+    expect(sitemapText.includes(`<loc>${url}</loc>`)).toBe(indexable);
+  }
 });
 
-test("unlisted posts retain public URLs but disappear from discovery", async ({
+test("relisted posts are indexable and appear in public discovery", async ({
   request,
 }) => {
-  const unlistedSlugs = [
+  const relistedSlugs = [
     "deep-learning-part-1-review",
     "everyone-is-a-builder",
     "medium-and-meaning",
     "structural-reasoning-about-deep-networks",
   ];
 
-  for (const slug of unlistedSlugs) {
+  for (const slug of relistedSlugs) {
     const response = await request.get(`/blog/${slug}/`);
     await expect(response).toBeOK();
     const html = await response.text();
     expect(html).toContain('id="post-title"');
-    expect(html).toContain('<meta name="robots" content="noindex, follow"');
+    expect(html).not.toMatch(/<meta name="robots"[^>]*\bnoindex\b/);
     expect(html).toContain(
       `<link rel="canonical" href="https://alexleung.ca/blog/${slug}/"`
     );
   }
 
-  for (const path of [
-    "/",
-    "/blog/",
-    "/blog/tags/ai/",
-    "/blog/tags/deep-learning/",
-    "/blog/tags/book-notes/",
-    "/blog/dropout-as-implicit-bagging/",
-    "/blog/from-coder-to-orchestrator/",
-    "/feed.xml",
-    "/sitemap.xml",
+  for (const path of ["/blog/", "/feed.xml", "/sitemap.xml"]) {
+    const response = await request.get(path);
+    await expect(response).toBeOK();
+    const text = await response.text();
+    for (const slug of relistedSlugs) {
+      expect(text, `${path} should include ${slug}`).toContain(
+        `/blog/${slug}/`
+      );
+    }
+  }
+
+  for (const { path, slugs } of [
+    {
+      path: "/blog/tags/ai/",
+      slugs: ["everyone-is-a-builder", "medium-and-meaning"],
+    },
+    {
+      path: "/blog/tags/deep-learning/",
+      slugs: [
+        "deep-learning-part-1-review",
+        "structural-reasoning-about-deep-networks",
+      ],
+    },
+    {
+      path: "/blog/tags/book-notes/",
+      slugs: [
+        "deep-learning-part-1-review",
+        "structural-reasoning-about-deep-networks",
+      ],
+    },
   ]) {
     const response = await request.get(path);
     await expect(response).toBeOK();
     const text = await response.text();
-    for (const slug of unlistedSlugs) {
-      expect(text, `${path} should not promote ${slug}`).not.toContain(
+    for (const slug of slugs) {
+      expect(text, `${path} should include ${slug}`).toContain(
         `/blog/${slug}/`
       );
     }
