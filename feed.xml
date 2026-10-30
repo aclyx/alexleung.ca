@@ -101,6 +101,42 @@
             <category>Developer Workflow</category>
         </item>
         <item>
+            <title><![CDATA[Make Internal Tools Cheap to Try]]></title>
+            <link>https://alexleung.ca/blog/everyone-is-a-builder/</link>
+            <guid isPermaLink="false">https://alexleung.ca/blog/everyone-is-a-builder/</guid>
+            <pubDate>Sat, 28 Feb 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[A rough internal-tool prototype could let people test their understanding of a workflow before committing engineering time to it.]]></description>
+            <category>AI</category>
+            <category>Reflection</category>
+        </item>
+        <item>
+            <title><![CDATA[Medium and Meaning]]></title>
+            <link>https://alexleung.ca/blog/medium-and-meaning/</link>
+            <guid isPermaLink="false">https://alexleung.ca/blog/medium-and-meaning/</guid>
+            <pubDate>Sun, 22 Feb 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Making every part myself matters less to me when AI tools still let me express my ideas and taste.]]></description>
+            <category>AI</category>
+            <category>Reflection</category>
+        </item>
+        <item>
+            <title><![CDATA[Structure and Optimization in Deep Networks]]></title>
+            <link>https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</link>
+            <guid isPermaLink="false">https://alexleung.ca/blog/structural-reasoning-about-deep-networks/</guid>
+            <pubDate>Sun, 15 Feb 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Notes from Chapter 6 of Deep Learning on representational capacity, low-rank parameterizations, and the choice of activation function.]]></description>
+            <category>Deep Learning</category>
+            <category>Book Notes</category>
+        </item>
+        <item>
+            <title><![CDATA[Math Foundations for Deep Learning]]></title>
+            <link>https://alexleung.ca/blog/deep-learning-part-1-review/</link>
+            <guid isPermaLink="false">https://alexleung.ca/blog/deep-learning-part-1-review/</guid>
+            <pubDate>Sat, 07 Feb 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[Part I of Deep Learning reviews the linear algebra, probability, and numerical computation that later chapters build on.]]></description>
+            <category>Deep Learning</category>
+            <category>Book Notes</category>
+        </item>
+        <item>
             <title><![CDATA[The Review Bottleneck in AI-Assisted Coding]]></title>
             <link>https://alexleung.ca/blog/from-coder-to-orchestrator/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/from-coder-to-orchestrator/</guid>
