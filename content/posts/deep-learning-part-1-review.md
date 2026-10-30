@@ -10,7 +10,6 @@ tags:
   - "Book Notes"
 series: "Deep Learning Notes"
 seriesOrder: 1
-unlisted: true
 ---
 
 I recently finished [Part I of _Deep Learning_](https://www.deeplearningbook.org/contents/part_basics.html) by Goodfellow, Bengio, and Courville. It works best as a compact pass through the mathematical background the reader is expected to carry forward.
