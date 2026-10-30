@@ -13,6 +13,7 @@ This folder contains maintainer-facing documentation that supports implementatio
 | `blog-notification-report.md`  | Notification architecture and operational runbook for new-post alerts | When notification provider, subscribe UX, or feed workflow changes    |
 | `codespaces.md`                | Codespaces-specific Lighthouse setup and troubleshooting details      | When Codespaces base image or Lighthouse prerequisites change         |
 | `design-system.md`             | Current visual, responsive, interaction, and accessibility rules      | After meaningful interface-system or shared-component changes         |
+| `editorial-harness-history.md` | Evaluator-only run history for the blog editorial regression cases    | After each isolated regression run                                    |
 | `playwright-testing-design.md` | Hermetic Playwright smoke + visual testing setup and workflow         | When E2E test architecture, CI strategy, or baseline workflow changes |
 | `typography-audit.md`          | Decision record for explicit prose sizing                             | When the `ProseContent` sizing contract changes                       |
 | `writing-voice.md`             | Canonical voice and prose principles for site and blog writing        | When recurring editorial feedback changes the house voice             |
