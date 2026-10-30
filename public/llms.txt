@@ -1,6 +1,6 @@
 # Alex Leung
 
-> Personal website and writing archive by Alex Leung, a software engineer, writer, and licensed Professional Engineer (P.Eng.).
+> Personal website and writing archive by Alex Leung, a software engineer and writer.
 
 ## Site Map
 
@@ -16,7 +16,7 @@
 
 ## Writing
 
-The blog covers software projects, AI tools and workflows, technical books, and personal notes on moving, travel, study, and life outside work.
+The blog covers software projects, AI tools and workflows, book notes, and personal notes on moving, travel, study, and life outside work.
 
 ## Background
 

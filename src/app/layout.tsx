@@ -19,7 +19,7 @@ import "./globals.css";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung's personal website, with experience and writing about software, AI tools, books, and life outside work.";
+  "Alex Leung's personal website, with essays and notes on software, AI tools, reading, and life outside work, plus a few browser tools.";
 
 const googleAnalyticsId =
   process.env.NEXT_PUBLIC_ENABLE_ANALYTICS === "true"

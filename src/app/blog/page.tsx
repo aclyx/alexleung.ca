@@ -34,7 +34,7 @@ import {
 
 const title = "Writing | Alex Leung";
 const description =
-  "Essays and notes on software, AI tools, technical books, and life outside work.";
+  "Essays and notes on coding agents, software projects, book notes, and life outside work.";
 const path = "/blog";
 
 function SeriesLinks({
@@ -106,7 +106,7 @@ export default function BlogIndex() {
       <PageShell
         title="Writing"
         titleId="writing"
-        description="Software, AI tools, technical books, and life outside work."
+        description="Notes on software, AI tools, books, and life outside work."
         metadata={
           <details className="group border-y border-line text-left">
             <summary className={disclosureSummaryClassNames()}>

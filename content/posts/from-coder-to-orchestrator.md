@@ -26,4 +26,4 @@ Many mistakes came from missing repository context, so I keep architecture prefe
 
 I often separate planning from implementation and turn the brief into checkpoints, running build, lint, and tests at each one. That gives me intermediate results to inspect.
 
-This works best when the repository records the context behind its decisions. Agents still struggle with undocumented history, and frequent tool calls and retries add to the cost of a session. But that cost is worth it, as delegating implementation lets me spend more time on decision-making, analysis, and bringing my own taste to the work.
+This works best when the repository records the context behind its decisions. Agents still struggle with undocumented history, and frequent tool calls and retries add to the cost of a session. But that cost is worth it: delegating implementation leaves more of my time for the plan, the review, and the judgment calls that shape the result.

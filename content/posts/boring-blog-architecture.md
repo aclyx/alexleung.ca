@@ -10,13 +10,13 @@ tags:
   - "Architecture"
 ---
 
-I added the blog directly to the site's existing Next.js application so technical notes could live beside the rest of the site without another system to maintain. Posts are Markdown files, each route builds to static HTML, and publishing does not depend on a CMS or runtime admin surface.
+I added the blog directly to the site’s existing Next.js application so technical notes could live beside the rest of the site without another system to maintain. Posts are Markdown files, each route builds to static HTML, and publishing does not depend on a CMS or runtime admin surface.
 
 ## File-backed routes at build time
 
 `blogApi.ts` reads the post files and uses `gray-matter` to parse frontmatter. A separate `markdownToHtml.ts` pipeline converts post bodies with `remark` and `rehype`, including `rehype-pretty-code` for code blocks.
 
-The route's `generateStaticParams` function enumerates the post slugs, including unlisted posts whose URLs still need to work:
+The route’s `generateStaticParams` function enumerates the post slugs, including unlisted posts whose URLs still need to work:
 
 ```typescript
 export async function generateStaticParams() {

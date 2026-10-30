@@ -55,20 +55,18 @@ function getPostsForTag(tagName: string) {
 const TAG_DESCRIPTIONS: Record<string, string> = {
   ai: "Notes on coding agents, AI-assisted projects, and questions about AI’s future.",
   architecture:
-    "How this static Next.js site stores Markdown, generates responsive images, and keeps build-time conventions in one place.",
-  "book-notes": "Reading notes on dropout and regularization in Deep Learning.",
+    "How this site is put together: Markdown files in the repository, build-time image variants, and a static export to GitHub Pages.",
+  "book-notes": "Reading notes from technical books.",
   "deep-learning":
-    "Notes on dropout and model averaging in Goodfellow, Bengio, and Courville's Deep Learning.",
+    "Notes on neural networks from Goodfellow, Bengio, and Courville’s Deep Learning.",
   "developer-workflow":
-    "Posts on software tooling, coding agents, verification, and systems that make repeated development work easier to maintain.",
-  lifestyle:
-    "Notes on moving to San Francisco, traveling through southern Utah, and using an iPad for study and remote access.",
-  "ml-theory":
-    "Notes on representation, optimization, and regularization in neural networks.",
+    "Notes on coding agents, code review, and build tooling for repeated development work.",
+  learning: "Notes on relearning old subjects by building small tools.",
+  lifestyle: "Notes on moving, travel, backpacking, and everyday gear.",
   "next-js":
-    "How this static Next.js site handles Markdown posts, generated image variants, and build-time metadata.",
+    "The Next.js side of this static site: generated routes, static export, and build-time metadata.",
   reflection:
-    "Personal notes on moving and travel, alongside reflections on coding agents and AI's possible futures.",
+    "Personal notes on moving, trips, old interests, and how I think about AI.",
   regularization:
     "Notes on dropout, shared parameters, and model averaging as regularization mechanisms.",
   review:

@@ -12,17 +12,17 @@ draft: false
 
 My wife and I spent two nights in Desolation Wilderness over Labor Day weekend. We rented a car and drove there on the Saturday before Labor Day. The drive took four hours, and we started hiking around 4:30.
 
-Granite Lake was two kilometres from the trailhead. We camped there for the first night.
+Granite Lake was two kilometers from the trailhead. We camped there for the first night.
 
 ![Our first campsite beside Granite Lake, with backpacks and cooking gear on the granite](/assets/blog/two-nights-in-desolation-wilderness/granite-lake-camp.webp)
 
-On the second day, we made our way to Upper Velma Lake, probably seven kilometres.
+On the second day, we made our way to Upper Velma Lake, probably seven kilometers.
 
 ![A cup held in front of Upper Velma Lake and the granite above it](/assets/blog/two-nights-in-desolation-wilderness/upper-velma-morning.webp)
 
-The campsites were not super cold. It was super windy and loud. We tried a new sleep setup for the trip, the Zenbivy Double Sleeping System. It was great: warm and roomy, but it took up more pack space. We also got a new bear canister for the trip. We had more food than we needed, so we probably could have packed lighter.
+The campsites were not very cold, but it was super windy and loud. We tried a new sleep setup for the trip, the Zenbivy Double Sleeping System. It was great: warm and roomy, but it took up more pack space. We also got a new bear canister for the trip. We had more food than we needed, so we probably could have packed lighter.
 
-On the last day, we went all the way back.
+On the last day, we hiked all the way out.
 
 ![Pines in front of broad granite ridges in Desolation Wilderness](/assets/blog/two-nights-in-desolation-wilderness/desolation-granite-trail.webp)
 
