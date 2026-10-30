@@ -14,7 +14,7 @@ type FeedPost = {
 
 const FEED_TITLE = "Alex Leung's Writing";
 const FEED_DESCRIPTION =
-  "Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.";
+  "New essays and notes from Alex Leung on software, AI tools, reading, and life outside work.";
 const FEED_IMAGE_URL = `${BASE_URL}/icon4.png`;
 
 export function buildRssFeedXml(posts: readonly FeedPost[]): string {

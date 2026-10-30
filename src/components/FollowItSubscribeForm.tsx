@@ -23,7 +23,7 @@ type FollowItSubscribeFormProps = {
 export function FollowItSubscribeForm({
   className = "",
   title = "Get new posts by email",
-  description = "Occasional updates when I publish something new.",
+  description,
   note = "Follow.it sends the emails and includes an unsubscribe link.",
   placeholder = "Enter your email",
   buttonLabel = "Subscribe",
@@ -49,7 +49,9 @@ export function FollowItSubscribeForm({
         >
           {title}
         </Heading>
-        <p className="text-body-sm mt-2 text-muted">{description}</p>
+        {description ? (
+          <p className="text-body-sm mt-2 text-muted">{description}</p>
+        ) : null}
       </header>
 
       <form

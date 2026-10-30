@@ -14,7 +14,7 @@ seriesOrder: 1
 
 I recently finished [Part I of _Deep Learning_](https://www.deeplearningbook.org/contents/part_basics.html) by Goodfellow, Bengio, and Courville. It works best as a compact pass through the mathematical background the reader is expected to carry forward.
 
-## Shared Vocabulary for Later Chapters
+## Shared vocabulary for later chapters
 
 The most useful part for me was the quick pass through linear algebra, probability, and numerical computation. It put the mathematical background for the later chapters back in view without turning into a long detour.
 

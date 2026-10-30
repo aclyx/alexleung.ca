@@ -14,7 +14,7 @@ seriesOrder: 2
 
 [Chapter 6, _Deep Feedforward Networks_](https://www.deeplearningbook.org/contents/mlp.html), separates what a network can represent from how efficiently it can represent it and whether optimization can find the parameters.
 
-## Existence Does Not Imply Learnability
+## Existence does not imply learnability
 
 The common shorthand for the Universal Approximation Theorem is that neural networks can approximate any function. Chapter 6 makes the important constraint explicit: this is an existence result about representational capacity, not a statement about efficiency or trainability.
 
@@ -32,4 +32,4 @@ The same structure shows up in LoRA-style adaptation for large language models. 
 
 The comparison between softplus and ReLU corrected an intuition I had inherited from smooth optimization: smoother functions should be easier to train. Softplus is differentiable everywhere with nonzero gradient, while ReLU is nondifferentiable at zero and flat for negative inputs. By a classical smoothness criterion, softplus seems preferable.
 
-Chapter 6 cites experiments in which ReLU outperformed softplus. It also explains why ReLU's linear behavior on positive inputs can help optimization: its derivative is constant there, so the activation does not shrink the gradient as its input grows. On negative inputs, it outputs zero, effectively selecting a subnetwork for each input. These properties matter alongside smoothness; being differentiable everywhere does not by itself make an activation easier to train.
+Chapter 6 cites experiments in which ReLU outperformed softplus. It also explains why ReLU’s linear behavior on positive inputs can help optimization: its derivative is constant there, so the activation does not shrink the gradient as its input grows. On negative inputs, it outputs zero, effectively selecting a subnetwork for each input. These properties matter alongside smoothness; being differentiable everywhere does not by itself make an activation easier to train.

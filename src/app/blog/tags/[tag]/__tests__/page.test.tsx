@@ -137,9 +137,7 @@ describe("TagArchivePage", () => {
     render(view);
 
     expect(
-      screen.getByText(
-        /Posts on software tooling, coding agents, verification/i
-      )
+      screen.getByText(/coding agents, code review, and build tooling/i)
     ).toBeInTheDocument();
   });
 

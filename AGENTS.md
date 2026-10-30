@@ -164,24 +164,8 @@ See [agent environments](docs/agent-environments.md) for Windows/WSL worktree me
 ### Writing and Design Guidance
 
 - Canonical writing voice: [docs/writing-voice.md](docs/writing-voice.md). Apply it to visible copy and machine-facing summaries; keep skill instructions focused on their workflow.
-- Use [blog-post-creator](.agents/skills/blog-post-creator/SKILL.md) for blog prose, [site-copy-editor](.agents/skills/site-copy-editor/SKILL.md) for other site writing, and [site-taste-audit](.agents/skills/site-taste-audit/SKILL.md) for visual or tone critique.
+- Use [blog-post-creator](.agents/skills/blog-post-creator/SKILL.md) for blog prose, [site-copy-editor](.agents/skills/site-copy-editor/SKILL.md) for other site writing, and [site-taste-audit](.agents/skills/site-taste-audit/SKILL.md) for visual or tone critique. Read the relevant skill before changing any visible or machine-facing copy, including one-line label, metadata, or tag-description edits; copy-editing rules live there rather than here.
 - Follow [docs/design-system.md](docs/design-system.md) for visual implementation. Verify affected mobile and desktop layouts; typography-specific rules are above.
-
-### Copy Editing Guardrails (Agent Guidance)
-
-- Prefer revising existing copy over rewriting from scratch unless the current structure is actively causing clarity or tone problems.
-- Prefer site-representative language over recruiter-optimized phrasing in top-level labels such as homepage headlines, page titles, section names, metadata descriptions, `public/manifest.json`, `public/llms.txt`, RSS/feed text, and JSON-LD descriptions.
-- Treat visible pages and machine-facing summaries as one editorial system: navigation labels, CTA labels, blog titles/excerpts/intros, metadata, RSS/feed text, manifest text, `llms.txt`, and JSON-LD/schema text should feel consistent without becoming copy-pasted.
-- Before finalizing, read the affected surfaces together and remove deviations from the canonical voice.
-- Do not force SEO phrases into headings when they fit better in supporting copy or metadata descriptions.
-- Avoid repeating the same positioning claim across hero, section intros, metadata, manifest text, RSS text, `llms.txt`, and JSON-LD. Keep them directionally consistent without making them all identical.
-- For metadata and machine-facing summaries, prefer durable wording over quickly stale current-state details unless the surface is intentionally time-stamped, such as the body of the Now page.
-- Use credentials, project history, and domain experience as factual context when relevant, but avoid turning them into a pitch.
-- In cover alt text and caption-style metadata, refer to Alex by name when the image depicts him. Avoid generic substitutions like `a person` when the intended subject is Alex.
-- Keep experiential claims tightly bounded. Do not introduce phrases like `over time`, `in practice`, or other duration/usage claims unless the user explicitly established that scope.
-- Before changing labels or short copy in response to a brief user instruction like `do it`, state the chosen interpretation in a short update before editing if there were multiple plausible options in the immediately preceding discussion.
-- Do not add emphasis styling such as bold inline links unless the existing page already uses that pattern or the user asked for stronger emphasis.
-- Treat `meta keywords` as low-value by default. Only add them if the repo has a concrete downstream use for them.
 
 ### Planning and Skill Authoring Guardrails (Agent Guidance)
 

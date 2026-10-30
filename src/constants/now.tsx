@@ -42,9 +42,8 @@ export const NOW_CONTENT = {
       title: "Trying new sake",
       body: (
         <p>
-          We’ve been enjoying trying new sake. We recently tried an
-          unpasteurized sake, and I particularly liked its effervescence and
-          brighter aroma.
+          We’ve been enjoying new sake. Recently we tried an unpasteurized one,
+          and I particularly liked its effervescence and brighter aroma.
         </p>
       ),
     },

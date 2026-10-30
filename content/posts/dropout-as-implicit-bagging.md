@@ -25,4 +25,4 @@ The [original dropout paper](https://www.jmlr.org/papers/v15/srivastava14a.html)
 
 The bagging interpretation also makes another part of dropout easier to think about: the apparent paradox that it can widen the set of subnetworks seen during training while still regularizing. Each binary mask defines a different thinned network, but those networks share weights. At the same time, any one unit cannot rely on a specific partner always being present, so representations are pushed to be useful across many subnet configurations.
 
-That pressure reduces fragile co-adaptation. Features that only work in one narrow pathway get penalized indirectly, while more robust features survive across many sampled masks. I like this framing because it explains dropout through the training setup itself, not just through the shortcut phrase "add noise."
+That pressure reduces fragile co-adaptation. Features that only work in one narrow pathway get penalized indirectly, while more robust features survive across many sampled masks. I like this framing because it explains dropout through the training setup itself, not just through the shortcut phrase “add noise.”

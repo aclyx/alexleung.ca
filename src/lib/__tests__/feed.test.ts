@@ -42,7 +42,7 @@ describe("buildRssFeedXml", () => {
       expect.objectContaining({
         title: "Alex Leung's Writing",
         description:
-          "Follow Alex Leung's writing about software and AI tools, technical books, and life outside work.",
+          "New essays and notes from Alex Leung on software, AI tools, reading, and life outside work.",
         id: "https://alexleung.ca/blog/",
         link: "https://alexleung.ca/blog/",
         image: "https://alexleung.ca/icon4.png",
