@@ -1,23 +1,16 @@
 import { JsonLd } from "react-schemaorg";
 
 import { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 
 import { CollectionPage, ItemList } from "schema-dts";
 
-import { ExcerptText } from "@/components/ExcerptText";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { LinkText } from "@/components/LinkText";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
-import { ResponsiveImage } from "@/components/ResponsiveImage";
+import { WritingList } from "@/components/WritingList";
 import { getAllPosts } from "@/lib/blogApi";
-import {
-  getCoverVariantPath,
-  getCoverVariantSourceSet,
-} from "@/lib/coverVariants";
-import { formatIsoDateForDisplay } from "@/lib/date";
 import {
   buildBlogCollectionPageSchema,
   buildBlogItemListSchema,
@@ -168,53 +161,7 @@ export default async function TagArchivePage({ params }: Props) {
         metadata={`${tag.count} ${tag.count === 1 ? "post" : "posts"}`}
       >
         <ResponsiveContainer>
-          <div>
-            {posts.map((post) => (
-              <article key={post.slug} className="border-t border-line">
-                <Link
-                  href={`/blog/${post.slug}/`}
-                  aria-label={post.title}
-                  className="group grid grid-cols-[5rem_minmax(0,1fr)] gap-x-4 gap-y-3 py-5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper md:grid-cols-[7rem_minmax(0,1fr)] md:gap-x-6 md:py-6"
-                >
-                  {post.coverImage ? (
-                    <ResponsiveImage
-                      src={
-                        getCoverVariantPath(post.coverImage, "card") ||
-                        post.coverImage
-                      }
-                      srcSet={getCoverVariantSourceSet(post.coverImage, "card")}
-                      alt={post.coverAlt || `Cover for ${post.title}`}
-                      width={1200}
-                      height={630}
-                      sizes="(min-width: 768px) 112px, 80px"
-                      loading="lazy"
-                      decoding="async"
-                      pictureClassName="mt-1 block md:row-span-2"
-                      className="aspect-[3/2] w-full object-cover"
-                    />
-                  ) : null}
-                  <div className={post.coverImage ? "" : "col-span-2"}>
-                    <time
-                      dateTime={post.date}
-                      className="font-mono text-xs leading-relaxed text-muted"
-                    >
-                      {formatIsoDateForDisplay(post.date)}
-                    </time>
-                    <h2 className="text-editorial-heading mt-2 text-ink group-hover:underline group-hover:decoration-line group-hover:underline-offset-4 group-focus-visible:underline group-focus-visible:underline-offset-4">
-                      {post.title}
-                    </h2>
-                  </div>
-                  {post.excerpt ? (
-                    <p
-                      className={`text-body-sm col-span-2 leading-relaxed text-muted ${post.coverImage ? "md:col-span-1 md:col-start-2" : ""}`.trim()}
-                    >
-                      <ExcerptText text={post.excerpt} />
-                    </p>
-                  ) : null}
-                </Link>
-              </article>
-            ))}
-          </div>
+          <WritingList posts={posts} />
         </ResponsiveContainer>
       </PageShell>
     </>

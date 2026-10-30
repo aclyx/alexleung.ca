@@ -34,7 +34,7 @@ export function CoverImage({
         : compactOnMobile
           ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-accent-secondary-soft md:h-52 md:w-full md:rounded-lg"
           : "h-52 w-full overflow-hidden rounded-lg bg-accent-secondary-soft"
-      : "overflow-hidden rounded-xl border border-line bg-accent-secondary-soft";
+      : "overflow-hidden rounded-lg bg-accent-secondary-soft";
 
   const basePictureClassName =
     variant === "card" ? "block h-full w-full" : "block w-full";
@@ -46,7 +46,7 @@ export function CoverImage({
         : compactOnMobile
           ? "h-full w-full object-cover object-center md:object-contain"
           : "h-full w-full object-contain object-center"
-      : "aspect-[2/1] w-full object-contain object-center shadow-sm";
+      : "aspect-[16/9] w-full object-cover object-center";
 
   if (!src) {
     return (

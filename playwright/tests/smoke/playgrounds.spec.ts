@@ -269,12 +269,12 @@ for (const route of ["ray-tracing", "seam-carving"]) {
 for (const experiment of [
   {
     route: "ray-tracing",
-    link: "Ray-tracing room →",
+    link: "Ray-tracing room",
     heading: "Ray-tracing Room",
   },
   {
     route: "seam-carving",
-    link: "Content-aware resizing →",
+    link: "Content-aware resizing",
     heading: "Content-aware Resizing",
   },
 ]) {

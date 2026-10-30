@@ -103,9 +103,11 @@ describe("TagArchivePage", () => {
     expect(
       within(row).getByRole("heading", { level: 2, name: "Agent Notes" })
     ).toBeInTheDocument();
-    expect(
-      within(row).getByRole("img", { name: "Alex reviewing code at his desk." })
-    ).toHaveAttribute("src", "/assets/blog/cover.webp");
+    expect(row.querySelector("img")).toHaveAttribute(
+      "src",
+      "/assets/blog/cover.webp"
+    );
+    expect(row.querySelector("img")).toHaveAttribute("alt", "");
     expect(row.querySelector("time")).toHaveAttribute(
       "datetime",
       "2026-04-10T00:00:00.000Z"

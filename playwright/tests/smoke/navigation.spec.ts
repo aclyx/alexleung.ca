@@ -5,7 +5,7 @@ import {
   waitForStablePage,
 } from "../../fixtures/stableRendering";
 
-test("home page introduces Alex, selected writing, and current interests", async ({
+test("home page introduces Alex, selected writing, and browser tools", async ({
   page,
 }) => {
   await gotoAndStabilize(page, "/");
@@ -36,17 +36,19 @@ test("home page introduces Alex, selected writing, and current interests", async
     page.getByRole("link", { name: "All writing →" })
   ).toHaveAttribute("href", "/blog/");
   await expect(
-    page.getByRole("region", { name: "From the blog" }).getByRole("link", {
+    page.locator("#about figcaption").getByRole("link", {
       name: "Two Nights in Desolation Wilderness",
       exact: true,
     })
   ).toHaveAttribute("href", "/blog/two-nights-in-desolation-wilderness/");
   await expect(
-    page.getByRole("heading", { level: 2, name: "Work", exact: true })
+    page
+      .locator("#about")
+      .getByText("Previously at Jetson, Google, Cash App, and North.")
   ).toBeVisible();
   await expect(
-    page.getByText("Previously at Jetson, Google, Cash App, and North.")
-  ).toBeVisible();
+    page.getByRole("region", { name: "Browser tools" }).getByRole("link")
+  ).toHaveCount(5);
 });
 
 test("the homepage reading link matches the full Now page", async ({
@@ -106,23 +108,24 @@ for (const width of [360, 768, 1280]) {
       }
 
       if (path === "/") {
-        const compactTools = await page.evaluate(
-          () => innerWidth >= 768 && matchMedia("(pointer: fine)").matches
-        );
         const tools = page.getByRole("region", { name: "Browser tools" });
         const toolLinks = tools.getByRole("link");
         await expect(toolLinks).toHaveCount(5);
         const boxes = await toolLinks.evaluateAll((links) =>
           links.map((link) => {
-            const { y, height } = link.getBoundingClientRect();
-            return { y, height };
+            const { left, right, height } = link.getBoundingClientRect();
+            return {
+              left,
+              right,
+              height,
+              viewport: document.documentElement.clientWidth,
+            };
           })
         );
-        for (const [index, box] of boxes.entries()) {
-          expect(box.height).toBe(compactTools ? 32 : 44);
-          if (index > 0) {
-            expect(box.y - boxes[index - 1].y).toBe(box.height);
-          }
+        for (const box of boxes) {
+          expect(box.height).toBeGreaterThanOrEqual(44);
+          expect(box.left).toBeGreaterThanOrEqual(0);
+          expect(box.right).toBeLessThanOrEqual(box.viewport);
         }
 
         for (const label of ["All writing →", "Now →"]) {
@@ -193,7 +196,7 @@ test("tag archive routes render and keep the writing nav item active", async ({
 
 test("PID simulator is discoverable from the homepage", async ({ page }) => {
   await gotoAndStabilize(page, "/");
-  await page.getByRole("link", { name: "PID controller simulator →" }).click();
+  await page.getByRole("link", { name: "PID controller simulator" }).click();
   await waitForStablePage(page);
 
   await expect(
@@ -225,7 +228,7 @@ test("Mandelbrot explorer is discoverable from the homepage", async ({
 }) => {
   await gotoAndStabilize(page, "/");
   const tools = page.getByRole("region", { name: "Browser tools" });
-  const link = tools.getByRole("link", { name: "Mandelbrot explorer →" });
+  const link = tools.getByRole("link", { name: "Mandelbrot explorer" });
   await expect(link).toHaveAttribute("href", "/experimental/mandelbrot/");
   await link.click();
   await expect(page).toHaveURL("/experimental/mandelbrot/");

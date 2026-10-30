@@ -27,6 +27,17 @@ describe("LinkText", () => {
     );
   });
 
+  it("pads inline targets without switching them to block layout", () => {
+    render(
+      <LinkText href="/now/" standalone="inline">
+        Now →
+      </LinkText>
+    );
+    const link = screen.getByRole("link");
+    expect(link).toHaveClass("py-3.5", "px-1.5", "-mx-1.5");
+    expect(link).not.toHaveClass("inline-flex", "min-h-11");
+  });
+
   it("renders external links with security attributes", () => {
     render(
       <LinkText href="https://example.com" external>

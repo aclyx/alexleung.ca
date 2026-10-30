@@ -13,6 +13,7 @@ import { PageShell } from "@/components/PageShell";
 import { ProseContent } from "@/components/ProseContent";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
 import { Tag } from "@/components/Tag";
+import { WritingList } from "@/components/WritingList";
 import {
   getAllPosts,
   getPostBySlug,
@@ -271,26 +272,7 @@ export default async function Post({ params }: Props) {
                 >
                   Related posts
                 </h2>
-                <div className="divide-y divide-line">
-                  {relatedPosts.map((relatedPost) => (
-                    <Link
-                      key={relatedPost.slug}
-                      href={`/blog/${relatedPost.slug}/`}
-                      aria-label={relatedPost.title}
-                      className="group block py-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper"
-                    >
-                      <h3 className="text-body-lg font-serif leading-snug text-ink group-hover:underline group-hover:decoration-line group-hover:underline-offset-4 group-focus-visible:underline group-focus-visible:underline-offset-4">
-                        {relatedPost.title}
-                      </h3>
-                      <time
-                        dateTime={relatedPost.date}
-                        className="mt-1 block font-mono text-xs leading-relaxed text-muted"
-                      >
-                        {formatIsoDateForDisplay(relatedPost.date)}
-                      </time>
-                    </Link>
-                  ))}
-                </div>
+                <WritingList posts={relatedPosts} headingLevel="h3" />
               </section>
             )}
           </div>

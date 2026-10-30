@@ -58,8 +58,27 @@ describe("WritingList", () => {
     expect(screen.getAllByRole("article")[1].querySelector("p")).toBeNull();
   });
 
+  it("adds a decorative cover thumbnail only when a post has a cover", () => {
+    render(
+      <WritingList
+        posts={[
+          { ...posts[0], coverImage: "/assets/blog/using-srcset/cover.webp" },
+          posts[1],
+        ]}
+      />
+    );
+
+    const [withCover, withoutCover] = screen.getAllByRole("article");
+    expect(withCover.querySelector("img")).toHaveAttribute(
+      "src",
+      "/assets/blog/using-srcset/cover.webp"
+    );
+    expect(withCover.querySelector("img")).toHaveAttribute("alt", "");
+    expect(withoutCover.querySelector("img")).toBeNull();
+  });
+
   it("uses a lower heading level when embedded in a homepage section", () => {
-    render(<WritingList posts={posts} variant="selected" headingLevel="h3" />);
+    render(<WritingList posts={posts} headingLevel="h3" />);
 
     expect(screen.getAllByRole("heading", { level: 3 })).toHaveLength(2);
     expect(screen.queryByRole("heading", { level: 2 })).not.toBeInTheDocument();

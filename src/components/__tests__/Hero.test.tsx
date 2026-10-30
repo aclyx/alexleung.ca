@@ -26,5 +26,14 @@ describe("Hero", () => {
     expect(
       screen.queryByText(NOW_CONTENT.entries[1].title)
     ).not.toBeInTheDocument();
+    expect(
+      screen.getByText("Previously at Jetson, Google, Cash App, and North.")
+    ).toBeInTheDocument();
+  });
+
+  it("renders an optional aside beside the introduction", () => {
+    render(<Hero aside={<figure>Lake photo</figure>} />);
+
+    expect(screen.getByText("Lake photo")).toBeInTheDocument();
   });
 });

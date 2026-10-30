@@ -119,7 +119,7 @@ test("diagram works with keyboard, fits the viewport, and is reachable from home
 }) => {
   await gotoAndStabilize(page, "/");
   await page
-    .getByRole("link", { name: "Load flow analysis →", exact: true })
+    .getByRole("link", { name: "Load flow analysis", exact: true })
     .click();
   await expect(page).toHaveURL(/\/experimental\/load-flow\/$/);
   const diagram = page.getByTestId("load-flow-diagram");

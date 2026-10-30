@@ -7,7 +7,7 @@ type LinkTextProps = {
   children: ReactNode;
   className?: string;
   external?: boolean;
-  standalone?: boolean | "compact";
+  standalone?: boolean | "compact" | "inline";
 };
 
 const inlineLinkClassName =
@@ -22,8 +22,11 @@ export function LinkText({
 }: LinkTextProps) {
   const linkClassName = [
     className,
-    standalone && "inline-flex min-h-11 min-w-11 items-center",
+    (standalone === true || standalone === "compact") &&
+      "inline-flex min-h-11 min-w-11 items-center",
     standalone === "compact" && "md:[@media(pointer:fine)]:min-h-8",
+    // Padding on an inline box enlarges the target without changing line height.
+    standalone === "inline" && "-mx-1.5 px-1.5 py-3.5",
   ]
     .filter(Boolean)
     .join(" ");
