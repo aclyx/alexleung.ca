@@ -1,5 +1,6 @@
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+import { getBrowserToolShareImages } from "@/constants/browserTools";
 import { buildPageMetadata } from "@/lib/seo";
 
 import { PlaygroundLinks } from "../_components/PlaygroundLinks";
@@ -10,6 +11,7 @@ export const metadata = buildPageMetadata({
   description:
     "Move the light. Inspect the paths behind reflections, shadows, and color.",
   path: "/experimental/ray-tracing/",
+  images: getBrowserToolShareImages("ray-tracing"),
 });
 export default function Page() {
   return (

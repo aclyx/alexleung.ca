@@ -7,6 +7,7 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+import { getBrowserToolShareImages } from "@/constants/browserTools";
 import {
   LOAD_FLOW_DESCRIPTION,
   LOAD_FLOW_PATH,
@@ -20,6 +21,7 @@ export const metadata: Metadata = buildPageMetadata({
   title: `${LOAD_FLOW_TITLE} | Alex Leung`,
   description: LOAD_FLOW_DESCRIPTION,
   path: LOAD_FLOW_PATH,
+  images: getBrowserToolShareImages("load-flow"),
 });
 
 export default function LoadFlowPage() {

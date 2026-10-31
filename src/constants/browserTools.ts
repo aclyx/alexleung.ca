@@ -61,3 +61,18 @@ export const BROWSER_TOOLS: readonly BrowserTool[] = [
     image: { src: "/assets/tools/seam-carving.webp", width: 640, height: 320 },
   },
 ];
+
+export function getBrowserToolShareImages(id: string) {
+  const tool = BROWSER_TOOLS.find((entry) => entry.id === id);
+
+  return tool
+    ? [
+        {
+          url: tool.image.src,
+          width: tool.image.width,
+          height: tool.image.height,
+          alt: tool.title,
+        },
+      ]
+    : undefined;
+}

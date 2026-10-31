@@ -8,10 +8,6 @@ import {
   TopicRevealList,
   type TopicLink,
 } from "@/app/blog/_components/TopicRevealList";
-import {
-  DisclosureIndicator,
-  disclosureSummaryClassNames,
-} from "@/components/Disclosure";
 import { FollowItSubscribeForm } from "@/components/FollowItSubscribeForm";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
@@ -114,16 +110,10 @@ export default function BlogIndex() {
         titleId="writing"
         description="Notes on software, AI tools, books, and life outside work."
         metadata={
-          <details className="group border-y border-line text-left">
-            <summary className={disclosureSummaryClassNames()}>
-              <span>Browse topics and series</span>
-              <DisclosureIndicator />
-            </summary>
-            <div className="space-y-4 border-t border-line px-4 py-4">
-              <TopicRevealList topics={topics} />
-              <SeriesLinks seriesSummaries={seriesSummaries} />
-            </div>
-          </details>
+          <div className="space-y-4 border-t border-line pt-5">
+            <TopicRevealList topics={topics} />
+            <SeriesLinks seriesSummaries={seriesSummaries} />
+          </div>
         }
       >
         <ResponsiveContainer className="space-y-8 md:space-y-10">

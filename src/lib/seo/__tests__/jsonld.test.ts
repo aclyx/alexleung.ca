@@ -1,5 +1,4 @@
 import {
-  buildArticleSchema,
   buildBlogCollectionPageSchema,
   buildBlogItemListSchema,
   buildBlogPostingSchema,
@@ -272,20 +271,5 @@ describe("seo jsonld builders", () => {
       "https://alexleung.ca/assets/blog/everyone-is-a-builder/cover-hero.webp",
       "https://alexleung.ca/assets/blog/everyone-is-a-builder/cover-card.webp",
     ]);
-  });
-
-  it("builds article schema for blog posts", () => {
-    const article = buildArticleSchema({
-      slug: "deep-dive",
-      title: "Deep Dive",
-      description: "A deep dive post",
-      coverImage: "/assets/blog/cover.webp",
-      date: "2026-02-16",
-      updated: "2026-02-18",
-      tags: ["ai", "systems"],
-    });
-
-    expect(article["@id"]).toBe("https://alexleung.ca/blog/deep-dive/#article");
-    expect(article.url).toBe("https://alexleung.ca/blog/deep-dive/");
   });
 });

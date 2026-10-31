@@ -668,11 +668,12 @@ export function SeamCarver() {
             {busy ? " as resizing progresses" : ""}.
           </p>
           <details
-            className="mt-6 border-t border-line pt-3"
+            className="group mt-6 border-t border-line pt-3"
             onToggle={(e) => setInspect(e.currentTarget.open)}
           >
             <summary className={disclosureSummaryClassNames()}>
-              <DisclosureIndicator /> Inspect the seams
+              <span>Inspect the seams</span>
+              <DisclosureIndicator />
             </summary>
             {inspect && (
               <div className="mt-4 grid gap-5 md:grid-cols-2">

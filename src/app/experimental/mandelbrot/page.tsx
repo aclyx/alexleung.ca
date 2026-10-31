@@ -6,6 +6,7 @@ import { WebPage } from "schema-dts";
 
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
+import { getBrowserToolShareImages } from "@/constants/browserTools";
 import {
   MANDELBROT_DESCRIPTION,
   MANDELBROT_PAGE_TITLE,
@@ -20,6 +21,7 @@ export const metadata: Metadata = buildPageMetadata({
   title: MANDELBROT_PAGE_TITLE,
   description: MANDELBROT_DESCRIPTION,
   path: MANDELBROT_PATH,
+  images: getBrowserToolShareImages("mandelbrot"),
 });
 
 export default function MandelbrotPage() {

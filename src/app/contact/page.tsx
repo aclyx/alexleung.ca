@@ -14,7 +14,8 @@ import { EmailMe } from "./_components/EmailMe";
 import { SocialMediaList } from "./_components/SocialMediaList";
 
 const title = "Contact | Alex Leung";
-const description = "Ways to reach Alex Leung and follow new writing.";
+const description =
+  "Email Alex Leung about a software project or something he wrote, or follow new writing by email or RSS.";
 const path = "/contact";
 
 export const metadata: Metadata = buildPageMetadata({

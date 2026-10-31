@@ -173,6 +173,9 @@ extra vertical gaps between those rows.
 For native `details` disclosures, compose `disclosureSummaryClassNames` with
 `DisclosureIndicator`. This preserves the same target size and focus treatment,
 hides the browser-specific marker, and rotates one shared indicator when open.
+Put the label first and the indicator after it, and add `group` to the
+`details` element so the indicator can rotate. The writing archive shows its
+topics and series directly in the page header rather than behind a disclosure.
 
 Use `Chip` for pill-shaped labels, `Tag` for topic links, and `Badge` for
 semantic status. Cards that look clickable must make the full surface keyboard
@@ -256,7 +259,9 @@ The Mandelbrot Explorer, PID Controller Simulator, and Load Flow Analysis are
 active routes in the former experiment namespace. They use the shared warm
 interface tokens, with a dark rendering canvas for Mandelbrot and light plots
 for PID and Load Flow. They remain standalone tools, not a navigation category
-or hub. The homepage links to each tool through its browser tool card.
+or hub. The homepage links to each tool through its browser tool card. Tool
+pages use their preview image as the share image; other pages without their
+own image fall back to the site portrait.
 The static files under `public/about/` and the remaining retired routes under
 `public/experimental/` are intentional noindex bridges, not page templates to
 extend.
