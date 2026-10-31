@@ -106,7 +106,6 @@ for (const width of [390, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await gotoAndStabilize(page, "/blog/");
 
-    await page.getByText("Browse topics and series", { exact: true }).click();
     const topicList = page.locator("#blog-topic-list");
     const topicLinks = topicList.getByRole("link");
     const revealButton = topicList.getByRole("button", {
@@ -142,7 +141,6 @@ for (const width of [390, 1280]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/blog/", { waitUntil: "domcontentloaded" });
 
-    await page.getByText("Browse topics and series", { exact: true }).click();
     const topicList = page.locator("#blog-topic-list");
     const topicLinks = topicList.getByRole("link");
     const firstNewTopicIndex = await topicLinks.count();

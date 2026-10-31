@@ -26,7 +26,15 @@ describe("buildPageMetadata", () => {
 
     expect(openGraph?.siteName).toBe("Alex Leung");
 
-    expect(twitter).toMatchObject({ card: "summary" });
+    expect(openGraph?.images).toEqual([
+      {
+        url: "https://alexleung.ca/assets/alex_vibing.webp",
+        width: 1536,
+        height: 1024,
+        alt: "Alex Leung in an art studio",
+      },
+    ]);
+    expect(twitter).toMatchObject({ card: "summary_large_image" });
   });
 
   it("normalizes image URLs and uses large-image twitter card when images exist", () => {

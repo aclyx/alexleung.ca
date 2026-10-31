@@ -1,5 +1,6 @@
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+import { getBrowserToolShareImages } from "@/constants/browserTools";
 import { buildPageMetadata } from "@/lib/seo";
 
 import { PlaygroundLinks } from "../_components/PlaygroundLinks";
@@ -10,6 +11,7 @@ export const metadata = buildPageMetadata({
   description:
     "Compare three ways to narrow a photograph. Paint over what should stay.",
   path: "/experimental/seam-carving/",
+  images: getBrowserToolShareImages("seam-carving"),
 });
 export default function Page() {
   return (

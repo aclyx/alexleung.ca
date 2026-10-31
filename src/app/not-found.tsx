@@ -1,6 +1,13 @@
+import type { Metadata } from "next";
+
 import { LinkText } from "@/components/LinkText";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+
+// Next.js adds the noindex robots tag to not-found pages itself.
+export const metadata: Metadata = {
+  title: "Page not found | Alex Leung",
+};
 
 export default function NotFound() {
   return (

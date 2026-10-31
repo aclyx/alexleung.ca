@@ -34,7 +34,6 @@ test("related posts stay visually stable", async ({ page }) => {
 
 test("expanded blog topics stay visually stable", async ({ page }) => {
   await gotoAndStabilize(page, "/blog/");
-  await page.getByText("Browse topics and series", { exact: true }).click();
 
   const topicList = page.locator("#blog-topic-list");
   const revealButton = topicList.getByRole("button", {

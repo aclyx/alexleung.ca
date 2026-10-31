@@ -1,5 +1,4 @@
 import type {
-  Article,
   BlogPosting,
   CollectionPage,
   ContactPage,
@@ -263,19 +262,6 @@ export function buildBlogPostingSchema(
       "@id": toAbsoluteUrl("/blog/#blog"),
       name: "Writing | Alex Leung",
     },
-  };
-}
-
-export function buildArticleSchema(
-  input: PostSchemaInput
-): WithContext<Article> {
-  const { canonicalPostUrl, schema } = buildBasePostSchema(input);
-
-  return {
-    "@context": SCHEMA_CONTEXT,
-    "@type": "Article",
-    "@id": `${canonicalPostUrl}#article`,
-    ...schema,
   };
 }
 

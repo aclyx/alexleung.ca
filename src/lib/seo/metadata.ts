@@ -6,17 +6,24 @@ import type { SeoInput } from "./types";
 
 const SITE_NAME = "Alex Leung";
 const DEFAULT_LOCALE = "en_CA";
+// Pages without their own image still get a large share card.
+const DEFAULT_IMAGES = [
+  {
+    url: "/assets/alex_vibing.webp",
+    width: 1536,
+    height: 1024,
+    alt: "Alex Leung in an art studio",
+  },
+];
 
 export function buildPageMetadata(input: SeoInput): Metadata {
   const canonicalUrl = toCanonical(input.path);
-  const normalizedImages =
-    input.images?.map((image) => ({
-      ...image,
-      url: toAbsoluteUrl(image.url),
-    })) ?? [];
-  const hasImages = normalizedImages.length > 0;
-  const twitterCard =
-    input.twitterCard || (hasImages ? "summary_large_image" : "summary");
+  const images = input.images?.length ? input.images : DEFAULT_IMAGES;
+  const normalizedImages = images.map((image) => ({
+    ...image,
+    url: toAbsoluteUrl(image.url),
+  }));
+  const twitterCard = input.twitterCard || "summary_large_image";
   const rssFeedUrl = toAbsoluteUrl("/feed.xml");
 
   return {
@@ -40,13 +47,13 @@ export function buildPageMetadata(input: SeoInput): Metadata {
       url: canonicalUrl,
       siteName: SITE_NAME,
       locale: DEFAULT_LOCALE,
-      images: hasImages ? normalizedImages : undefined,
+      images: normalizedImages,
     },
     twitter: {
       card: twitterCard,
       title: input.title,
       description: input.description,
-      images: hasImages ? normalizedImages : undefined,
+      images: normalizedImages,
     },
   };
 }

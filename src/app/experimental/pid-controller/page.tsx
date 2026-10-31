@@ -7,6 +7,7 @@ import { WebPage } from "schema-dts";
 import { JsonLdBreadcrumbs } from "@/components/JsonLdBreadcrumbs";
 import { PageShell } from "@/components/PageShell";
 import { ResponsiveContainer } from "@/components/ResponsiveContainer";
+import { getBrowserToolShareImages } from "@/constants/browserTools";
 import {
   PID_CONTROLLER_DESCRIPTION,
   PID_CONTROLLER_PAGE_TITLE,
@@ -21,6 +22,7 @@ export const metadata: Metadata = buildPageMetadata({
   title: PID_CONTROLLER_PAGE_TITLE,
   description: PID_CONTROLLER_DESCRIPTION,
   path: PID_CONTROLLER_PATH,
+  images: getBrowserToolShareImages("pid-controller"),
 });
 
 export default function PidControllerPage() {
