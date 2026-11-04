@@ -40,52 +40,54 @@ export function FollowItSubscribeForm({
   return (
     <section
       aria-labelledby="follow-it-subscribe-title"
-      className={`max-w-[650px] border-t border-line pt-6 ${className}`.trim()}
+      className={`border-t border-line pt-6 ${className}`.trim()}
     >
-      <header>
-        <Heading
-          id="follow-it-subscribe-title"
-          className="text-editorial-heading text-ink"
-        >
-          {title}
-        </Heading>
-        {description ? (
-          <p className="text-body-sm mt-2 text-muted">{description}</p>
-        ) : null}
-      </header>
+      <div className="max-w-[650px]">
+        <header>
+          <Heading
+            id="follow-it-subscribe-title"
+            className="text-editorial-heading text-ink"
+          >
+            {title}
+          </Heading>
+          {description ? (
+            <p className="text-body-sm mt-2 text-muted">{description}</p>
+          ) : null}
+        </header>
 
-      <form
-        action={action}
-        method="post"
-        className="mt-4 flex flex-col gap-3 sm:flex-row"
-        aria-busy={isSubmitting}
-        onSubmit={() => {
-          trackNewsletterSubscribe(analyticsPlacement);
-          setIsSubmitting(true);
-        }}
-      >
-        <label htmlFor="follow-it-email" className="sr-only">
-          Email address
-        </label>
-        <input
-          id="follow-it-email"
-          type="email"
-          name="email"
-          required
-          autoComplete="email"
-          placeholder={placeholder}
-          readOnly={isSubmitting}
-          className={fieldClassNames({ className: "min-w-0 sm:flex-1" })}
-        />
-        <button
-          type="submit"
-          aria-disabled={isSubmitting}
-          className={buttonClassName}
+        <form
+          action={action}
+          method="post"
+          className="mt-4 flex flex-col gap-3 sm:flex-row"
+          aria-busy={isSubmitting}
+          onSubmit={() => {
+            trackNewsletterSubscribe(analyticsPlacement);
+            setIsSubmitting(true);
+          }}
         >
-          {isSubmitting ? "Subscribing..." : buttonLabel}
-        </button>
-      </form>
-      {note ? <p className="mt-3 text-xs text-muted">{note}</p> : null}
+          <label htmlFor="follow-it-email" className="sr-only">
+            Email address
+          </label>
+          <input
+            id="follow-it-email"
+            type="email"
+            name="email"
+            required
+            autoComplete="email"
+            placeholder={placeholder}
+            readOnly={isSubmitting}
+            className={fieldClassNames({ className: "min-w-0 sm:flex-1" })}
+          />
+          <button
+            type="submit"
+            aria-disabled={isSubmitting}
+            className={buttonClassName}
+          >
+            {isSubmitting ? "Subscribing..." : buttonLabel}
+          </button>
+        </form>
+        {note ? <p className="mt-3 text-xs text-muted">{note}</p> : null}
+      </div>
     </section>
   );
 }

@@ -20,7 +20,7 @@ export const BROWSER_TOOLS: readonly BrowserTool[] = [
     field: "Power systems",
     description:
       "Change the load. See where power flows and how voltages respond on a single-line diagram.",
-    image: { src: "/assets/tools/load-flow.webp", width: 1056, height: 521 },
+    image: { src: "/assets/tools/load-flow.webp", width: 1440, height: 720 },
     featured: true,
   },
   {

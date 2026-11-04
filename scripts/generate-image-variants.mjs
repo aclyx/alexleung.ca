@@ -69,29 +69,6 @@ const inlineContentVariantProfile = [
 
 const inlineImageVariants = inlineContentVariantProfile;
 
-const staticAssetVariants = [
-  {
-    source: "/assets/alex_vibing.webp",
-    variants: [
-      {
-        name: "sm",
-        width: process.env.HERO_PORTRAIT_SM_WIDTH || "480",
-        quality: process.env.HERO_PORTRAIT_SM_QUALITY || "66",
-      },
-      {
-        name: "md",
-        width: process.env.HERO_PORTRAIT_MD_WIDTH || "900",
-        quality: process.env.HERO_PORTRAIT_MD_QUALITY || "70",
-      },
-      {
-        name: "lg",
-        width: process.env.HERO_PORTRAIT_LG_WIDTH || "1280",
-        quality: process.env.HERO_PORTRAIT_LG_QUALITY || "74",
-      },
-    ],
-  },
-];
-
 function readUint24LE(buffer, offset) {
   return (
     buffer[offset] | (buffer[offset + 1] << 8) | (buffer[offset + 2] << 16)
@@ -607,16 +584,6 @@ function resolveInlineImages({ stagedFiles, stagedPublicFiles }) {
   return inlineImages;
 }
 
-function resolveStaticAssets({ stagedPublicFiles }) {
-  if (!stagedOnly) {
-    return staticAssetVariants.map((asset) => asset.source);
-  }
-
-  return staticAssetVariants
-    .filter((asset) => stagedPublicFiles.has(asset.source))
-    .map((asset) => asset.source);
-}
-
 function createSourceVariantCandidates() {
   const sourceVariantCandidates = new Map();
   const addCandidates = (sourcePath, variants) => {
@@ -645,10 +612,6 @@ function createSourceVariantCandidates() {
 
   for (const sourcePath of inlineSources) {
     addCandidates(sourcePath, inlineImageVariants);
-  }
-
-  for (const asset of staticAssetVariants) {
-    addCandidates(asset.source, asset.variants);
   }
 
   return sourceVariantCandidates;
@@ -793,7 +756,6 @@ async function run() {
   const stagedPublicFiles = getStagedPublicFiles(stagedFiles);
   const coverImages = resolveCoverImages({ stagedFiles, stagedPublicFiles });
   const inlineImages = resolveInlineImages({ stagedFiles, stagedPublicFiles });
-  const staticSources = resolveStaticAssets({ stagedPublicFiles });
 
   assertWebpFiles(
     [...coverImages, ...inlineImages].map(resolvePublicAbsolutePath),
@@ -812,16 +774,11 @@ async function run() {
 
   if (stagedOnly && canGenerateVariants) {
     assertWorkingTreeMatchesGitIndex(
-      [...coverImages, ...inlineImages, ...staticSources].map(
-        resolvePublicAbsolutePath
-      )
+      [...coverImages, ...inlineImages].map(resolvePublicAbsolutePath)
     );
   }
 
   const generated = [];
-  const staticVariantMap = new Map(
-    staticAssetVariants.map((asset) => [asset.source, asset.variants])
-  );
 
   if (canGenerateVariants) {
     generateVariantsForSources({
@@ -837,22 +794,6 @@ async function run() {
       generated,
       label: "inline",
     });
-
-    for (const sourcePublicPath of staticSources) {
-      const sourcePath = resolvePublicAbsolutePath(sourcePublicPath);
-      if (!fs.existsSync(sourcePath)) {
-        warn(`[image:variants] Missing source image (static): ${sourcePath}`);
-        continue;
-      }
-
-      const variants = staticVariantMap.get(sourcePublicPath) || [];
-      for (const variant of variants) {
-        const targetPublicPath = toVariantPath(sourcePublicPath, variant.name);
-        const targetPath = resolvePublicAbsolutePath(targetPublicPath);
-        generateVariant(sourcePath, targetPath, variant);
-        generated.push(path.relative(repoRoot, targetPath));
-      }
-    }
   }
 
   assertWebpFiles(

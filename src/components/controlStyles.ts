@@ -19,7 +19,7 @@ export function controlLabelClassNames({
 
 const actionVariantClasses: Record<ActionVariant, string> = {
   primary:
-    "border border-accent-primary bg-accent-primary text-white hover:border-accent-primary-hover hover:bg-accent-primary-hover",
+    "border border-accent-link bg-accent-link text-white hover:border-accent-link-hover hover:bg-accent-link-hover",
   secondary:
     "border border-control-border bg-surface text-ink hover:border-accent-link/60 hover:bg-white",
   quiet:

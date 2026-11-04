@@ -79,14 +79,6 @@
     @apply text-lg md:text-xl;
   }
 
-  .text-heading {
-    @apply text-xl md:text-2xl;
-  }
-
-  .text-hero-subtitle {
-    @apply text-sm md:text-base;
-  }
-
   .text-hero-title {
     @apply font-serif text-[42px] leading-[1.05] font-normal tracking-[-0.035em] md:text-[52px];
   }
@@ -109,10 +101,6 @@
 
   .text-editorial-label {
     @apply text-ink text-sm leading-normal font-medium;
-  }
-
-  .text-section-title {
-    @apply text-ink text-3xl font-bold tracking-[-0.035em] md:text-4xl;
   }
 
   .surface-static {
@@ -179,15 +167,6 @@
 
   [data-copy-status="copied"] .copy-check-path {
     stroke-dashoffset: 0;
-  }
-
-  .link-arrow span[aria-hidden="true"] {
-    @apply ease-expo-out inline-block transition-[translate] duration-200;
-  }
-
-  .link-arrow:hover span[aria-hidden="true"],
-  .link-arrow:focus-visible span[aria-hidden="true"] {
-    @apply translate-x-1;
   }
 
   @media (prefers-reduced-motion: no-preference) {

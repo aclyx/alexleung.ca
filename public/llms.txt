@@ -16,7 +16,7 @@
 
 ## Writing
 
-The blog covers software projects, AI tools and workflows, book notes, and personal notes on moving, travel, study, and life outside work.
+The blog covers software projects, AI tools and workflows, book notes, and personal notes on moving, travel, and study.
 
 ## Background
 

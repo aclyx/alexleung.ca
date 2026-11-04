@@ -32,7 +32,7 @@ Use this profile as the governing taste model:
 - **Mobile Density**: blog browsing, tag lists, card height, image prominence, and repeated metadata. Prefer denser scanning without making tap targets uncomfortable.
 - **Typography**: semantic text utilities, heading scale, line length, panel text sizing, prose rhythm, and breakpoint behavior.
 - **Color and Accent**: restrained palette, legibility over imagery, useful secondary accents, and consistent background treatment. Avoid one-note palettes and decorative effects that dominate content.
-- **Visual Assets**: images should reveal the subject, object, state, or gameplay. Flag dark, blurred, overly atmospheric, cropped, or stock-like media when content inspection matters.
+- **Visual Assets**: images should reveal the subject, object, state, or interaction. Flag dark, blurred, overly atmospheric, cropped, or stock-like media when content inspection matters.
 - **Interaction**: cards that look clickable should be clickable, tag links should remain distinct, focus/hover states should be visible, and mobile controls should meet comfortable tap-target expectations.
 - **Speed and Weight**: image size, responsive variants, lazy/eager loading choices, unnecessary client components, and layout shifts.
 

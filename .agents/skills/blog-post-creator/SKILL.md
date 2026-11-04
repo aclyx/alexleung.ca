@@ -11,9 +11,9 @@ Write from Alex's facts and intent using the canonical [writing voice](../../../
 
 Identify the subject, genre, audience, and requested depth. Record the main takeaway or question, its mechanism and scope, any future aspiration, and what remains unresolved. Distinguish the author's point from the tools and examples that support it: do not narrow a personal reflection into a tool comparison or substitute a convenient repository example for the practice Alex described. When feedback changes the primary aim, update the brief and reconcile the title, excerpt, body, and ending with that priority before polishing individual passages.
 
-Keep the source-fact ledger in the three parts defined in the grader's [intent and facts check](references/blog-post-grader.md#intent-and-facts). Preserve actors, values, precision, ownership, uncertainty, and stated relationships. Paraphrase meaning faithfully; do not invent biography, practice, chronology, metrics, or confidence. Verify outside factual claims against appropriate sources before including them.
+Keep the source-fact ledger in the three parts defined in the grader's [intent and facts check](references/blog-post-grader.md#intent-and-facts). Paraphrase meaning faithfully; do not invent biography, practice, chronology, metrics, or confidence. Verify outside factual claims against appropriate sources before including them.
 
-Personal and travel posts need both a supported observation, condition, or scene and a supported reaction, preference, consequence, or trade-off. Reading and an intellectual reaction can provide that grounding. If necessary material is missing, ask one bundled question while continuing work that does not depend on it. An explicitly requested bare trip log or caption-led photo essay does not need added reflection.
+When the material the grader's experiential and grounding checks need is missing, such as a personal post's reaction or an idea's underlying event, ask one bundled question while continuing work that does not depend on it.
 
 ## Draft or revise
 
@@ -26,7 +26,7 @@ Personal and travel posts need both a supported observation, condition, or scene
 
 ## Images
 
-For new posts, include suitable generated imagery by default unless the user asks for post-only output or intentionally defers it. Use the [cover workflow](references/cover-prompt-template.md) to choose the subject before deciding whether a likeness reference is needed. If generation or a required reference is unavailable, provide a usable cover prompt and explain the specific limitation. Photos access is not a prerequisite for an image without Alex.
+For new posts, choose a cover with the [cover workflow](references/cover-prompt-template.md) unless the user asks for post-only output or intentionally defers it. A photograph, screenshot, diagram, or illustration can serve, and a post can go without one. If generation or a required likeness reference is unavailable, provide a usable cover prompt and explain the specific limitation.
 
 Inline images are optional and should clarify a scene, example, or mechanism. Follow the image storage and variant requirements in [AGENTS.md](../../../AGENTS.md#adding-images-agent-guidance).
 

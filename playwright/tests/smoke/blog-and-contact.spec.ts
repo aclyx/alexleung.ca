@@ -365,20 +365,29 @@ test("topic archives retain URLs and follow the indexing policy", async ({
   await expect(sitemapResponse).toBeOK();
   const sitemapText = await sitemapResponse.text();
 
-  for (const { tag, indexable } of [
-    { tag: "learning", indexable: false },
-    { tag: "deep-learning", indexable: true },
-    { tag: "book-notes", indexable: true },
-    { tag: "ai", indexable: true },
-  ]) {
+  for (const tag of ["deep-learning", "book-notes", "ai"]) {
     const response = await request.get(`/blog/tags/${tag}/`);
     await expect(response).toBeOK();
     const html = await response.text();
     const url = `https://alexleung.ca/blog/tags/${tag}/`;
 
     expect(html).toContain(`<link rel="canonical" href="${url}"`);
-    expect(/<meta name="robots"[^>]*\bnoindex\b/.test(html)).toBe(!indexable);
-    expect(sitemapText.includes(`<loc>${url}</loc>`)).toBe(indexable);
+    expect(/<meta name="robots"[^>]*\bnoindex\b/.test(html)).toBe(false);
+    expect(sitemapText.includes(`<loc>${url}</loc>`)).toBe(true);
+  }
+
+  // Merged topics keep their old URLs as no-index bridges to the topic that absorbed them.
+  for (const { tag, destination } of [
+    { tag: "learning", destination: "/blog/tags/reflection/" },
+    { tag: "architecture", destination: "/blog/tags/next-js/" },
+  ]) {
+    const response = await request.get(`/blog/tags/${tag}/`);
+    await expect(response).toBeOK();
+    const html = await response.text();
+
+    expect(html).toContain(`url=${destination}`);
+    expect(/<meta name="robots"[^>]*\bnoindex\b/.test(html)).toBe(true);
+    expect(sitemapText.includes(`/blog/tags/${tag}/`)).toBe(false);
   }
 });
 

@@ -8,7 +8,6 @@ coverAlt: "Illustration of Alex drawing glowing neural network diagrams beside a
 tags:
   - "Deep Learning"
   - "Book Notes"
-  - "Regularization"
 series: "Deep Learning Notes"
 seriesOrder: 3
 ---

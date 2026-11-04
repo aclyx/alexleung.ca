@@ -7,7 +7,6 @@ coverImage: "/assets/blog/small-interactive-tools-with-a-coding-agent/cover.webp
 coverAlt: "Illustration of Alex using load-flow and Mandelbrot tools across three screens"
 tags:
   - "AI"
-  - "Learning"
   - "Reflection"
 ---
 
@@ -27,6 +26,4 @@ The harder part for me was the single-line diagram. Its drag-and-drop behavior, 
 
 The Mandelbrot explorer came from a master’s degree course, ECE 8893 at Georgia Tech. In the course version, we used CUDA with one thread per pixel and the GNU Multiple Precision Arithmetic Library (GMP) to draw the set. I still like zooming into its edges, where each level reveals patterns that are related but not identical.
 
-The first browser version, which this post describes, had to handle the same two constraints with a simpler implementation: many per-pixel computations and viewport coordinates that need more precision as the view gets narrower. It kept those coordinates in arbitrary-precision decimals, rendered asynchronously, and used lower resolutions to keep interaction usable. That was enough for deep zooming in the browser, although it was slower than the CUDA version.
-
-To keep the workload bounded, I limited resolution at deep zooms and capped the iteration setting at 4,000. I do not remember running into the same limits in my C++ version with GMP.
+The first browser version, which this post describes, had to handle the same two constraints with a simpler implementation: many per-pixel computations and viewport coordinates that need more precision as the view gets narrower. It kept those coordinates in arbitrary-precision decimals, rendered asynchronously, and used lower resolutions to keep interaction usable. To keep the workload bounded, I also limited resolution at deep zooms and capped the iteration setting at 4,000, limits I don’t remember needing in my C++ version with GMP. It was slower than the CUDA version, but it was enough to keep zooming into the edges in the browser.

@@ -14,6 +14,8 @@ Resolve demonstratives against nearby text. Preserve ordinary references and leg
 
 Correct assertions and complete topic coverage do not establish useful depth. After reading the brief, assess whether the piece develops the requested mechanism or judgment enough for its audience. A workflow named in a sentence may still leave the reader unable to understand a consequential choice within it. Identify that missing contribution and the available material that could support it; do not demand length, an anecdote, or an example for its own sake. A short note can be complete, and a long draft can remain superficial.
 
+Check what the piece rests on. When nearly every claim is conditional—what a tool could do, what a team would gain, what someone might try—the reader has nothing to weigh. Ask for the supported event, decision, observation, or reading behind the idea. If the ledger has none, ask that the surfaces and framing present the piece as the proposal or open question it is. Never supply an invented event, and leave alone a conditional that marks real uncertainty.
+
 Read adjacent paragraphs as a continuous passage. Check whether each develops, qualifies, or turns from the preceding thought in a way the reader can follow. Shared subject matter and a plausible outline are not sufficient: several individually sensible tips can still feel disconnected. Quote the affected boundary and explain the missing relationship or distracting detour. Prefer a supported change in sequence, focus, or development over connective filler. Keep this prose-flow judgment separate from logical validity and intent coverage; do not invent a logical gap to describe awkward writing.
 
 ## Coherence and ending
@@ -60,7 +62,7 @@ Return:
 
 - **Decision:** ready, needs revision, or verification incomplete, with the findings or missing checks that determine it.
 - **Required repairs:** quoted evidence, its effect on the reader or intent, and the smallest supported fix. Order by impact. Zero repairs is a valid result; do not fill a quota.
-- **Check results:** intent priority/coverage, development at the requested depth, paragraph flow, fact delta, orientation/surfaces, local clarity/voice, corpus pattern density, experiential sufficiency, whole-piece coherence/ending, and assets/format. Mark each pass, fail, not applicable, or unverified. Include the intent evidence and applicable coherence table; avoid repeating them under separate headings.
+- **Check results:** intent priority/coverage, development and grounding at the requested depth, paragraph flow, fact delta, orientation/surfaces, local clarity/voice, corpus pattern density, experiential sufficiency, whole-piece coherence/ending, and assets/format. Mark each pass, fail, not applicable, or unverified. Include the intent evidence and applicable coherence table; avoid repeating them under separate headings.
 - **Optional preferences or limitations:** only when useful. A clean draft does not need invented improvement suggestions. Do not rewrite the post.
 
 For scoped excerpt or regression reviews, assess only the requested dimensions and report that scope; do not assign a full-post score or publication verdict. Publishing status and the authoring loop are governed by the [main skill](../SKILL.md#editorial-gate).

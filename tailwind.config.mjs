@@ -23,14 +23,10 @@ const config = {
         accent: {
           link: "#285296",
           "link-hover": "#1d3d72",
-          secondary: "#58616d",
-          "secondary-hover": "#202936",
           "secondary-soft": "#e8edf4",
           success: "#39714c",
           warning: "#80571d",
           info: "#315f70",
-          primary: "#285296",
-          "primary-hover": "#1d3d72",
         },
       },
       maxWidth: {

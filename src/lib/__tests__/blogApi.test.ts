@@ -391,7 +391,7 @@ describe("getRelatedPosts", () => {
     ]);
   });
 
-  test.each(["Reflection", "Book Notes", "Review", "Learning"])(
+  test.each(["Reflection", "Book Notes"])(
     "does not treat %s alone as a shared topic",
     async (genericTag) => {
       const tempDir = setupTempPosts({

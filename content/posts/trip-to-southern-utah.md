@@ -6,7 +6,6 @@ excerpt: "We flew to Las Vegas, drove into southern Utah, and hiked around Zion,
 coverImage: "/assets/blog/trip-to-southern-utah/cover.webp"
 coverAlt: "Illustration of Alex and a companion among red rock formations in southern Utah"
 tags:
-  - "Reflection"
   - "Lifestyle"
 ---
 

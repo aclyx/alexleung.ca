@@ -47,26 +47,18 @@ function getPostsForTag(tagName: string) {
 
 const TAG_DESCRIPTIONS: Record<string, string> = {
   ai: "Notes on coding agents, AI-assisted projects, and questions about AI’s future.",
-  architecture:
-    "How this site is put together: Markdown files in the repository, build-time image variants, and a static export to GitHub Pages.",
   "book-notes":
-    "Reading notes from technical books, such as Goodfellow, Bengio, and Courville’s Deep Learning.",
+    "Notes from books, from textbook chapters to wider arguments about AI.",
   "deep-learning":
     "Notes on neural networks from Goodfellow, Bengio, and Courville’s Deep Learning.",
   "developer-workflow":
     "Notes on coding agents, code review, and build tooling for repeated development work.",
-  learning:
-    "Notes on revisiting subjects from coursework and earlier work by building small browser tools.",
   lifestyle:
     "Personal notes on moving, travel, backpacking, and the everyday gear that goes with them.",
   "next-js":
-    "The Next.js side of this static site: generated routes, static export, and build-time metadata.",
+    "How this Next.js site is built: Markdown posts, generated routes, build-time image variants, and a static export to GitHub Pages.",
   reflection:
-    "Personal notes on moving, trips, old interests, and how I think about AI.",
-  regularization:
-    "Notes on dropout, shared parameters, and model averaging as regularization mechanisms.",
-  review:
-    "Hands-on notes on the 11-inch iPad Air for reading, annotation, and remote access.",
+    "Personal notes on moving, old interests, and how I think about AI.",
 };
 
 function getTagDescription(tag: TagEntry): string {
