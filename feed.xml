@@ -4,7 +4,7 @@
     <channel>
         <title>Alex Leung's Writing</title>
         <link>https://alexleung.ca/blog/</link>
-        <description>New essays and notes from Alex Leung on software, AI tools, reading, and life outside work.</description>
+        <description>New posts from Alex Leung on coding agents, software projects, reading, and travel.</description>
         <lastBuildDate>Thu, 29 Oct 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
@@ -23,6 +23,7 @@
             <description><![CDATA[The cosmic endowment is the matter and energy a future civilization could reach. Who should inherit it, and what might we owe conscious minds we create?]]></description>
             <category>AI</category>
             <category>Reflection</category>
+            <category>Book Notes</category>
         </item>
         <item>
             <title><![CDATA[Two Nights in Desolation Wilderness]]></title>
@@ -30,7 +31,6 @@
             <guid isPermaLink="false">https://alexleung.ca/blog/two-nights-in-desolation-wilderness/</guid>
             <pubDate>Sat, 12 Sep 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[A Labor Day weekend backpacking trip from Granite Lake to Upper Velma Lake, with a new sleep setup and more food than we needed.]]></description>
-            <category>Reflection</category>
             <category>Lifestyle</category>
         </item>
         <item>
@@ -39,7 +39,6 @@
             <guid isPermaLink="false">https://alexleung.ca/blog/trip-to-southern-utah/</guid>
             <pubDate>Sat, 04 Jul 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[We flew to Las Vegas, drove into southern Utah, and hiked around Zion, Escalante, and Bryce Canyon.]]></description>
-            <category>Reflection</category>
             <category>Lifestyle</category>
         </item>
         <item>
@@ -68,7 +67,6 @@
             <pubDate>Fri, 10 Apr 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[A browser-based load-flow solver and Mandelbrot explorer let me revisit power-system analysis, numerical precision, and the limits of small client-side tools.]]></description>
             <category>AI</category>
-            <category>Learning</category>
             <category>Reflection</category>
         </item>
         <item>
@@ -79,7 +77,6 @@
             <description><![CDATA[A concrete way to understand dropout in deep learning: sampled subnetworks with shared weights, standing in for a much more expensive ensemble.]]></description>
             <category>Deep Learning</category>
             <category>Book Notes</category>
-            <category>Regularization</category>
         </item>
         <item>
             <title><![CDATA[An 11-Inch M3 iPad Air for Studying]]></title>
@@ -87,7 +84,6 @@
             <guid isPermaLink="false">https://alexleung.ca/blog/ipad-air-m3-11-inch-first-impressions/</guid>
             <pubDate>Thu, 05 Mar 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[Notes on the 11-inch M3 iPad Air for reading, handwriting, and remote access without turning it into a laptop replacement.]]></description>
-            <category>Review</category>
             <category>Lifestyle</category>
         </item>
         <item>
@@ -97,7 +93,6 @@
             <pubDate>Wed, 04 Mar 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[This site generates responsive image variants and their lookup metadata together, so components and Markdown do not have to reconstruct filenames.]]></description>
             <category>Next.js</category>
-            <category>Architecture</category>
             <category>Developer Workflow</category>
         </item>
         <item>
@@ -105,7 +100,7 @@
             <link>https://alexleung.ca/blog/everyone-is-a-builder/</link>
             <guid isPermaLink="false">https://alexleung.ca/blog/everyone-is-a-builder/</guid>
             <pubDate>Sat, 28 Feb 2026 00:00:00 GMT</pubDate>
-            <description><![CDATA[A rough internal-tool prototype could let people test their understanding of a workflow before committing engineering time to it.]]></description>
+            <description><![CDATA[A rough prototype of an internal tool lets people test their understanding of a workflow before anyone commits engineering time to it.]]></description>
             <category>AI</category>
             <category>Reflection</category>
         </item>
@@ -152,7 +147,6 @@
             <pubDate>Sat, 31 Jan 2026 00:00:00 GMT</pubDate>
             <description><![CDATA[How repo-backed Markdown becomes static HTML without a CMS, database, or runtime admin surface.]]></description>
             <category>Next.js</category>
-            <category>Architecture</category>
         </item>
     </channel>
 </rss>
