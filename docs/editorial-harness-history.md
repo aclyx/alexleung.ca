@@ -83,3 +83,21 @@ All reviews used fresh contexts with inherited model settings and no overrides. 
 - Darning X passed grounding. Its reviewer required removing a plan (“If it holds through a winter…, I’ll darn the other elbow”), a surprise, and a closing valuation, none of which the brief contained. Those were correct fact deltas: the fixture's author had written them into the draft and the key but not the brief. The brief was then amended to include all three, so later runs should find X faithful, and a demand to cut “I won’t know until spring” remains a false positive.
 
 These are single-run spot checks, not reliability measurements.
+
+## 2026-11-04 proposals and support for claims
+
+The voice and authoring guidance required an underlying event even though the grader allowed honestly framed proposals. They now recognize reasoning with explicit assumptions, and the grader assesses support and scope rather than the frequency of conditionals. The darning key's fallback, “I haven’t tried this yet,” contradicted its completed-repair brief and was removed. Its drafts and brief remain unchanged.
+
+An earlier read-only check of the merged rules kept X's uncertainty but requested a habit qualifier and house-style edits; Y required grounding repairs. The results below retain that variation rather than treating X's later clean review as proof of improvement.
+
+The revised rubric and voice were frozen before an independent agent created the return-basket pair without reading them or the existing cases. All graders used fresh contexts with inherited model settings and no overrides, saved their cold reads before opening the briefs, and received no answer key. Two initial basket reviews read an evaluator-style sentence in the synthetic brief and were excluded: A's cold read flagged certainty, while B's review found no repairs. That sentence was removed, with the source facts and drafts unchanged, before new reviewers ran the cases.
+
+- Darning X needed no required repairs and retained the spring durability unknown.
+- Darning Y required restoring the supplied experience and personal judgment, bounding generalizations, and keeping the conditional next repair. Its reviewer explicitly rejected merely making the predictions more confident.
+- Basket A required qualifying assured benefits, restoring the unknown about background clutter, and treating easier departures as something to assess. It did not claim a completed trial; its defect was unsupported certainty about projected outcomes.
+- Basket B needed no required repairs. Its reviewer accepted the developed proposal and preserved its assumptions and unknowns without requiring a completed trial.
+- A separate rough drafting exercise using the basket brief explained the proposal and its limits without asking for an event or inventing results.
+
+A subsequent review found that the technical-writing paragraph still listed only built, tested, read, or observed support. After aligning that sentence, a fresh rough drafting exercise used a synthetic brief for an unimplemented export queue. It explained the mechanism and assumptions, kept performance benefits conditional, and requested no missing experience. The authoring outputs were not applied to live posts.
+
+These scoped reviews and drafting exercises are spot checks, not measurements of reliability or full publication reviews. The return-basket pair is now a regression fixture, not an unseen test.

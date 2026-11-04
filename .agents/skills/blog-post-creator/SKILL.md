@@ -13,7 +13,7 @@ Identify the subject, genre, audience, and requested depth. Record the main take
 
 Keep the source-fact ledger in the three parts defined in the grader's [intent and facts check](references/blog-post-grader.md#intent-and-facts). Paraphrase meaning faithfully; do not invent biography, practice, chronology, metrics, or confidence. Verify outside factual claims against appropriate sources before including them.
 
-When the material the grader's experiential and grounding checks need is missing, such as a personal post's reaction or an idea's underlying event, ask one bundled question while continuing work that does not depend on it.
+When a missing fact or personal reaction blocks the grader's checks, ask one bundled question while continuing work that does not depend on it. A proposal or open question can proceed from explicit reasoning and assumptions without a completed personal event.
 
 ## Draft or revise
 
