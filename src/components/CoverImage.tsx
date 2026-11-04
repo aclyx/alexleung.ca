@@ -1,16 +1,11 @@
 import { ResponsiveImage } from "@/components/ResponsiveImage";
 
 type CoverImageProps = {
-  src?: string;
+  src: string;
   srcSet?: string;
   alt: string;
-  variant: "card" | "hero";
   sizes: string;
   className?: string;
-  imageClassName?: string;
-  fallbackLabel?: string;
-  compactOnMobile?: boolean;
-  thumbnail?: boolean;
   priority?: boolean;
 };
 
@@ -18,48 +13,12 @@ export function CoverImage({
   src,
   srcSet,
   alt,
-  variant,
   sizes,
   className = "",
-  imageClassName = "",
-  fallbackLabel = "No cover image available",
-  compactOnMobile = false,
-  thumbnail = false,
   priority = false,
 }: CoverImageProps) {
-  const wrapperClassName =
-    variant === "card"
-      ? thumbnail
-        ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-accent-secondary-soft md:h-24 md:w-36"
-        : compactOnMobile
-          ? "h-24 w-24 shrink-0 overflow-hidden rounded-md bg-accent-secondary-soft md:h-52 md:w-full md:rounded-lg"
-          : "h-52 w-full overflow-hidden rounded-lg bg-accent-secondary-soft"
-      : "overflow-hidden rounded-lg bg-accent-secondary-soft";
-
-  const basePictureClassName =
-    variant === "card" ? "block h-full w-full" : "block w-full";
-
-  const baseImageClassName =
-    variant === "card"
-      ? thumbnail
-        ? "h-full w-full object-cover object-center"
-        : compactOnMobile
-          ? "h-full w-full object-cover object-center md:object-contain"
-          : "h-full w-full object-contain object-center"
-      : "aspect-[16/9] w-full object-cover object-center";
-
-  if (!src) {
-    return (
-      <div
-        className={`${wrapperClassName} flex items-center justify-center text-sm text-muted ${className}`.trim()}
-      >
-        {fallbackLabel}
-      </div>
-    );
-  }
-
   return (
-    <div className={`${wrapperClassName} ${className}`.trim()}>
+    <div className={`overflow-hidden rounded-lg ${className}`.trim()}>
       <ResponsiveImage
         src={src}
         srcSet={srcSet}
@@ -67,12 +26,12 @@ export function CoverImage({
         width={1200}
         height={630}
         sizes={sizes}
-        pictureClassName={basePictureClassName}
+        pictureClassName="block w-full"
         priority={priority}
         loading={priority ? "eager" : "lazy"}
         fetchPriority={priority ? "high" : "auto"}
         decoding={priority ? "sync" : "async"}
-        className={`${baseImageClassName} ${imageClassName}`.trim()}
+        className="aspect-[16/9] w-full object-cover object-center"
       />
     </div>
   );

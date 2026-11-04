@@ -67,7 +67,7 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Images are unoptimized (required for static export)
 - Internal site-route links should use trailing slashes to match the export shape and avoid unnecessary GitHub Pages redirects (for example, `/now/` and `/blog/post-slug/`, not `/now` or `/blog/post-slug`)
 - Do not add trailing slashes to file-like endpoints or assets such as `/feed.xml`, `/robots.txt`, `/sitemap.xml`, or `/assets/...`
-- `public/about/index.html` and `public/experimental/index.html` are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/`, `/experimental/pid-controller/`, and `/experimental/load-flow/` are active Next.js routes and must not have public redirect bridges. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
+- `public/about/index.html`, `public/experimental/index.html`, and the merged-topic bridges under `public/blog/tags/` (`architecture`, `review`, `regularization`, `learning`) are intentional static bridges for retired URLs. They use `noindex`, canonical links, and meta refreshes because GitHub Pages does not provide configurable server redirects. `/experimental/mandelbrot/`, `/experimental/pid-controller/`, and `/experimental/load-flow/` are active Next.js routes and must not have public redirect bridges. Do not remove the remaining bridges as unused files unless the URL migration strategy is intentionally changed; `src/app/__tests__/publicDiscovery.test.ts` protects this behavior.
 
 ### Component Organization
 
@@ -80,7 +80,6 @@ yarn deploy           # Build and deploy to GitHub Pages
 - Build-time script `scripts/generate-image-variants.mjs` generates responsive variants and manifest metadata:
   - cover variants: `*-card-sm.webp`, `*-card-md.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
   - inline markdown variants: `*-content-sm.webp`, `*-content.webp`
-  - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
 - `yarn build` explicitly runs `yarn image:variants` before creating the static export.
 - `src/app/blog/tags/[tag]/page.tsx` and `src/app/blog/[slug]/page.tsx` resolve cover variants from manifest profiles.
@@ -153,10 +152,7 @@ See [agent environments](docs/agent-environments.md) for Windows/WSL worktree me
 ### Typography and Prose Guardrails (Agent Guidance)
 
 - Prose-sizing decision record: `docs/typography-audit.md`.
-- Prefer semantic typography utilities for body/headline copy:
-  - body: `text-body-sm`, `text-body`, `text-body-lg`
-  - headings: `text-heading-sm`, `text-heading`
-  - hero: `text-hero-subtitle`, `text-hero-title`, `text-hero-description`
+- Prefer the semantic typography utilities in `src/app/globals.css`; [docs/design-system.md](docs/design-system.md#typography) lists each one and the role it serves.
 - Do not use `text-md` (not a Tailwind default utility).
 - `ProseContent` defaults to base prose sizing. Use `size="lg"` for `md:prose-lg`; for small notes/footers, explicitly set `size="sm"` so both `prose-sm` and `md:prose-sm` are applied.
 - When editing typography classes, verify rendered size at both mobile and `md`+ breakpoints via local browser inspection or the relevant Playwright coverage. Do not claim breakpoint verification unless you actually performed one of those checks.

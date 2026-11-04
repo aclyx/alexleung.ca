@@ -39,6 +39,11 @@ import { ReadingProgress } from "./_components/ReadingProgress";
 
 export const dynamicParams = false;
 
+const seriesLinkClassName =
+  "group block rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-4 focus-visible:ring-offset-paper";
+const seriesTitleClassName =
+  "text-editorial-heading mt-1 block group-hover:underline group-hover:decoration-line group-hover:underline-offset-4";
+
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params_awaited = await props.params;
   const post = getPostBySlug(params_awaited.slug, [
@@ -166,14 +171,22 @@ export default async function Post({ params }: Props) {
         titleId="post-title"
         headerRail="prose"
         metadata={
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
-            <time dateTime={post.date}>
-              Published {formatIsoDateForDisplay(post.date)}
-            </time>
-            {post.updated && post.updated !== post.date ? (
-              <time dateTime={post.updated}>
-                Updated {formatIsoDateForDisplay(post.updated)}
+          <div className="space-y-1">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+              <time dateTime={post.date}>
+                Published {formatIsoDateForDisplay(post.date)}
               </time>
+              {post.updated && post.updated !== post.date ? (
+                <time dateTime={post.updated}>
+                  Updated {formatIsoDateForDisplay(post.updated)}
+                </time>
+              ) : null}
+            </div>
+            {seriesNavigation ? (
+              <p>
+                Part {seriesNavigation.currentPart} of{" "}
+                {seriesNavigation.totalParts} in {seriesNavigation.name}
+              </p>
             ) : null}
           </div>
         }
@@ -184,55 +197,49 @@ export default async function Post({ params }: Props) {
           className="mb-12"
         >
           <div className="mx-auto">
-            {seriesNavigation ? (
+            {post.coverImage ? (
+              <CoverImage
+                src={heroCoverImage || post.coverImage}
+                srcSet={heroCoverSrcSet}
+                alt={heroCoverAlt}
+                sizes="(min-width: 768px) 720px, (min-width: 640px) calc(100vw - 3rem), calc(100vw - 2.5rem)"
+                className="mb-6 sm:mx-0 md:mb-10"
+                priority
+              />
+            ) : null}
+            <ProseContent html={content} size="lg" />
+            {seriesNavigation &&
+            (seriesNavigation.previousPost || seriesNavigation.nextPost) ? (
               <nav
                 aria-label={`${seriesNavigation.name} series navigation`}
-                className="mb-6 border-y border-line py-4"
+                className="mt-10 grid gap-6 border-t border-line pt-6 md:grid-cols-2 md:gap-8"
               >
-                <p className="text-sm font-semibold uppercase tracking-wide text-muted">
-                  {seriesNavigation.name}
-                </p>
-                <p className="mt-1 text-body-sm text-ink">
-                  Part {seriesNavigation.currentPart} of{" "}
-                  {seriesNavigation.totalParts}
-                </p>
-                <div className="mt-3 grid gap-3 md:grid-cols-2">
-                  {seriesNavigation.previousPost ? (
-                    <Link
-                      href={`/blog/${seriesNavigation.previousPost.slug}/`}
-                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper"
-                    >
-                      <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
-                        Previous
-                      </span>
+                {seriesNavigation.previousPost ? (
+                  <Link
+                    href={`/blog/${seriesNavigation.previousPost.slug}/`}
+                    className={seriesLinkClassName}
+                  >
+                    <span className="block text-sm text-muted">
+                      Previous part
+                    </span>
+                    <span className={seriesTitleClassName}>
                       {seriesNavigation.previousPost.title}
-                    </Link>
-                  ) : (
-                    <span />
-                  )}
-                  {seriesNavigation.nextPost ? (
-                    <Link
-                      href={`/blog/${seriesNavigation.nextPost.slug}/`}
-                      className="text-body-sm text-accent-link transition-colors hover:text-accent-link-hover focus-visible:rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-link focus-visible:ring-offset-2 focus-visible:ring-offset-paper md:text-right"
-                    >
-                      <span className="block text-xs font-semibold uppercase tracking-wide text-muted">
-                        Next
-                      </span>
+                    </span>
+                  </Link>
+                ) : null}
+                {seriesNavigation.nextPost ? (
+                  <Link
+                    href={`/blog/${seriesNavigation.nextPost.slug}/`}
+                    className={`${seriesLinkClassName} md:col-start-2 md:text-right`}
+                  >
+                    <span className="block text-sm text-muted">Next part</span>
+                    <span className={seriesTitleClassName}>
                       {seriesNavigation.nextPost.title}
-                    </Link>
-                  ) : null}
-                </div>
+                    </span>
+                  </Link>
+                ) : null}
               </nav>
             ) : null}
-            <CoverImage
-              src={heroCoverImage || post.coverImage}
-              srcSet={heroCoverSrcSet}
-              alt={heroCoverAlt}
-              variant="hero"
-              sizes="(min-width: 1024px) 896px, 100vw"
-              className="mb-6 sm:mx-0 md:mb-10"
-            />
-            <ProseContent html={content} size="lg" />
             {post.tags.length > 0 && (
               <section aria-label="Post tags" className="mt-8 pt-2">
                 <div className="flex flex-wrap gap-2">

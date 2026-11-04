@@ -55,9 +55,7 @@ export function TopicRevealList({
 
   return (
     <div>
-      <Heading className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
-        {heading}
-      </Heading>
+      <Heading className="text-editorial-label mb-2">{heading}</Heading>
       <div id={listId} className="flex flex-wrap gap-2">
         {visibleTopics.map((topic, index) => {
           const isNewlyRevealed =

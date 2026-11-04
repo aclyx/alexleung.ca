@@ -292,12 +292,7 @@ type GetRelatedPostsOptions = {
   includeDrafts?: boolean;
 };
 
-const NON_TOPIC_TAGS = new Set([
-  "Reflection",
-  "Book Notes",
-  "Review",
-  "Learning",
-]);
+const NON_TOPIC_TAGS = new Set(["Reflection", "Book Notes"]);
 
 function getRelatedScore(target: Post, candidate: Post): number {
   const targetTags = new Set(target.tags);

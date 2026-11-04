@@ -16,7 +16,7 @@ seriesOrder: 2
 
 ## Existence does not imply learnability
 
-The common shorthand for the Universal Approximation Theorem is that neural networks can approximate any function. Chapter 6 makes the important constraint explicit: this is an existence result about representational capacity, not a statement about efficiency or trainability.
+The common shorthand for the Universal Approximation Theorem is that neural networks can approximate any function. Chapter 6 makes the constraint explicit: this is an existence result about representational capacity, not a statement about efficiency or trainability.
 
 A single hidden layer network can approximate complex structured functions, but the width required may scale exponentially for certain compositional forms. Depth can reduce parameter count by reusing intermediate computations. In that sense, depth changes scaling behavior, not just capacity.
 

@@ -30,7 +30,7 @@ import {
 
 const title = "Writing | Alex Leung";
 const description =
-  "Essays and notes on coding agents, software projects, book notes, and life outside work.";
+  "Alex Leung's posts: workflow notes on coding agents, write-ups of software projects, book notes, and trip logs.";
 const path = "/blog";
 
 function SeriesLinks({
@@ -44,9 +44,7 @@ function SeriesLinks({
 
   return (
     <div>
-      <h2 className="mb-2 text-sm font-semibold uppercase tracking-wide text-muted">
-        Series
-      </h2>
+      <h2 className="text-editorial-label mb-2">Series</h2>
       <div className="flex flex-wrap gap-2">
         {seriesSummaries.map((series) => (
           <Tag key={series.name} href={`/blog/${series.firstPost.slug}/`}>
@@ -108,9 +106,9 @@ export default function BlogIndex() {
       <PageShell
         title="Writing"
         titleId="writing"
-        description="Notes on software, AI tools, books, and life outside work."
+        description="Notes on software, AI tools, books, and the occasional trip."
         metadata={
-          <div className="space-y-4 border-t border-line pt-5">
+          <div className="space-y-4 pt-2">
             <TopicRevealList topics={topics} />
             <SeriesLinks seriesSummaries={seriesSummaries} />
           </div>

@@ -21,7 +21,7 @@ import { buildPageMetadata, buildProfilePageSchema } from "@/lib/seo";
 
 const title = "Alex Leung | Software Engineer and Writer";
 const description =
-  "Alex Leung works on ChatGPT at OpenAI and writes about software, technical books, and life outside work.";
+  "Alex Leung works on ChatGPT at OpenAI. He writes about AI tools, software, and books, and builds small browser tools.";
 const path = "/";
 const selectedPostSlugs = [
   "humanitys-cosmic-endowment",
@@ -75,7 +75,7 @@ export default function Page() {
           <ResponsiveImage
             src={photo.path}
             srcSet={getStaticImageSourceSet("homeFeature")}
-            alt="A cup held in front of Upper Velma Lake and the granite above it"
+            alt="Campsite beside Granite Lake, with backpacks and cooking gear on the granite"
             width={photo.width}
             height={photo.height}
             sizes="(min-width: 1120px) 440px, (min-width: 768px) 40vw, calc(100vw - 2.5rem)"
@@ -85,7 +85,7 @@ export default function Page() {
           />
         </Link>
         <figcaption className="mt-3 text-sm leading-relaxed text-muted">
-          Upper Velma Lake, from{" "}
+          Our first campsite, at Granite Lake, from{" "}
           <LinkText href={`/blog/${featuredPost.slug}/`}>
             {featuredPost.title}
           </LinkText>

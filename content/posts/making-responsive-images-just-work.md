@@ -7,7 +7,6 @@ coverImage: "/assets/blog/making-responsive-images-just-work/cover.webp"
 coverAlt: "Illustration of Alex measuring framed landscape images labeled sm, md, and lg"
 tags:
   - "Next.js"
-  - "Architecture"
   - "Developer Workflow"
 ---
 
@@ -37,4 +36,4 @@ Cover helpers select the largest available variant in the requested profile for 
 
 The manifest describes the files, while `sizes` remains with the rendering code that knows the layout. A thumbnail and a full-width cover can use the same source without claiming the same display width. This keeps layout decisions out of the generator while removing filename conventions from its consumers.
 
-There is still a distinction between a broken manifest and a missing variant. The loader rejects missing or empty `cover.card`, `cover.hero`, and `inlineContent` profile definitions. An individual blog image can fall back to its source when no matching variant is available; fewer than two available variants means no `srcSet`. Those fallbacks keep a missing resize from becoming a broken image, but they can leave the original, larger file in use, and the page looks the same either way.
+A broken manifest and a missing variant fail differently. The loader rejects missing or empty `cover.card`, `cover.hero`, and `inlineContent` profile definitions. An individual blog image can fall back to its source when no matching variant is available; fewer than two available variants means no `srcSet`. Those fallbacks keep a missing resize from becoming a broken image, but they can leave the original, larger file in use, and the page looks the same either way.

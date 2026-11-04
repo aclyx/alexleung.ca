@@ -33,13 +33,11 @@ export function BrowserToolGrid() {
               loading="lazy"
               decoding="async"
               pictureClassName="block border-b border-line bg-surface"
-              className={`w-full ${tool.featured ? "aspect-[2/1] object-contain p-3 md:aspect-auto md:h-64" : "aspect-[2/1] object-cover"}`}
+              className={`aspect-[2/1] w-full object-cover ${tool.featured ? "md:aspect-auto md:h-64 md:object-contain" : ""}`.trim()}
             />
             <span className="flex flex-col gap-1.5 px-4 pb-5 pt-4 md:px-5">
-              <span className="font-mono text-xs uppercase tracking-wide text-muted">
-                {tool.field}
-              </span>
-              <span className="text-heading-sm text-ink">{tool.title}</span>
+              <span className="font-mono text-xs text-muted">{tool.field}</span>
+              <span className="text-editorial-heading">{tool.title}</span>
               <span className="text-body-sm leading-relaxed text-muted">
                 {tool.description}
               </span>

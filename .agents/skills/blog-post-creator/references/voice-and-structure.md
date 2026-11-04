@@ -4,7 +4,7 @@ Apply the canonical [writing voice](../../../../docs/writing-voice.md). This ref
 
 ## Surfaces
 
-Titles and excerpts should identify the subject or question without requiring the body. A short active claim, concrete object, or named-tool contrast can work. Avoid `Why…` or `Using…` packaging when it adds formality without information. Choose headings that show a section's contribution; a concept name can hide why the section belongs in an argument.
+Titles and excerpts should identify the subject or question without requiring the body. A short active claim, concrete object, or named-tool contrast can work. A concise conceptual title can name the idea while the excerpt supplies concrete context; the title need not list the tools used. A title that gives advice needs a body that commits to it; when the material is a proposal or an open question, title it as one. Avoid `Why…` or `Using…` packaging when it adds formality without information. Choose headings that show a section's contribution; a concept name can hide why the section belongs in an argument.
 
 Keep the title, excerpt, headings, and ending aligned with the user's meaning without repeating one takeaway formulation everywhere. Preserve an explicitly requested mechanism, scope, or aspiration wherever the reasoning needs it. A stated interest in AI workflows, for example, may depend on explaining the actual tests, prompts, graders, or feedback loop.
 

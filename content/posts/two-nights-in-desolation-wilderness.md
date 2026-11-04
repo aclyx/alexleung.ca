@@ -5,7 +5,6 @@ excerpt: "A Labor Day weekend backpacking trip from Granite Lake to Upper Velma 
 coverImage: "/assets/blog/two-nights-in-desolation-wilderness/cover.webp"
 coverAlt: "Illustration of Alex and his wife hiking toward an alpine lake in Desolation Wilderness"
 tags:
-  - "Reflection"
   - "Lifestyle"
 draft: false
 ---

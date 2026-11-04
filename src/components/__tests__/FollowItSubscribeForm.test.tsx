@@ -62,7 +62,7 @@ describe("FollowItSubscribeForm", () => {
     render(<FollowItSubscribeForm />);
 
     expect(screen.getByRole("button", { name: /subscribe/i })).toHaveClass(
-      "bg-accent-primary"
+      "bg-accent-link"
     );
     expect(screen.getByPlaceholderText(/enter your email/i)).toHaveClass(
       "border-control-border"

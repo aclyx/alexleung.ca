@@ -35,7 +35,7 @@ jest.mock("@/lib/blogApi", () => ({
       date: "2026-01-01T00:00:00.000Z",
       updated: undefined,
       content: "Body",
-      coverImage: "/assets/blog/cover.webp",
+      coverImage: slug === "no-cover" ? undefined : "/assets/blog/cover.webp",
       coverAlt: "A laptop beside a notebook on a desk.",
       excerpt: "A short summary.",
       tags: [],
@@ -152,11 +152,11 @@ describe("Blog post page", () => {
 
     render(view);
 
-    expect(
-      screen.getByRole("img", {
-        name: "A laptop beside a notebook on a desk.",
-      })
-    ).toBeInTheDocument();
+    const cover = screen.getByRole("img", {
+      name: "A laptop beside a notebook on a desk.",
+    });
+    expect(cover).toHaveAttribute("loading", "eager");
+    expect(cover).toHaveAttribute("fetchpriority", "high");
     expect(screen.getByRole("heading", { level: 1 })).toHaveAttribute(
       "id",
       "post-title"
@@ -167,6 +167,51 @@ describe("Blog post page", () => {
     );
   });
 
+  it("omits the cover when the post has none", async () => {
+    const view = await Post({
+      params: Promise.resolve({ slug: "no-cover" }),
+    });
+
+    render(view);
+
+    expect(screen.queryByRole("img")).not.toBeInTheDocument();
+  });
+
+  it("names the series part in the header and links neighbors after the body", async () => {
+    mockedGetSeriesNavigation.mockReturnValue({
+      name: "Example Series",
+      currentPart: 2,
+      totalParts: 3,
+      previousPost: {
+        slug: "previous-part",
+        title: "Previous part title",
+        seriesOrder: 1,
+      },
+      nextPost: undefined,
+    });
+
+    const view = await Post({
+      params: Promise.resolve({ slug: "cover-alt-hero" }),
+    });
+
+    render(view);
+
+    const partLine = screen.getByText("Part 2 of 3 in Example Series");
+    expect(partLine.closest("header")).not.toBeNull();
+
+    const nav = screen.getByRole("navigation", {
+      name: "Example Series series navigation",
+    });
+    const body = screen.getByText("Rendered body");
+    expect(
+      body.compareDocumentPosition(nav) & Node.DOCUMENT_POSITION_FOLLOWING
+    ).toBeTruthy();
+    expect(
+      within(nav).getByRole("link", { name: /Previous part title/ })
+    ).toHaveAttribute("href", "/blog/previous-part/");
+    expect(within(nav).queryByText("Next part")).not.toBeInTheDocument();
+  });
+
   it("uses the shared focus treatment for series navigation links", async () => {
     mockedGetSeriesNavigation.mockReturnValue({
       name: "Example Series",
@@ -174,12 +219,12 @@ describe("Blog post page", () => {
       totalParts: 3,
       previousPost: {
         slug: "previous-part",
-        title: "Previous part",
+        title: "Previous part title",
         seriesOrder: 1,
       },
       nextPost: {
         slug: "next-part",
-        title: "Next part",
+        title: "Next part title",
         seriesOrder: 3,
       },
     });
@@ -190,7 +235,7 @@ describe("Blog post page", () => {
 
     render(view);
 
-    for (const title of ["Previous part", "Next part"]) {
+    for (const title of ["Previous part title", "Next part title"]) {
       const link = screen.getByText(title).closest("a");
       expect(link).toHaveClass("focus-visible:outline-none");
       expect(link).toHaveClass("focus-visible:ring-2");

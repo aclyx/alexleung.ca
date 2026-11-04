@@ -23,12 +23,10 @@ locally.
 
 ## Guardrails
 
-- Prefer the semantic body, eyebrow, page-title, section-title, heading, and
-  hero utilities in `globals.css` for recurring roles before adding one-off
-  sizes.
-- Use `PageHeader` for page-level title groups and `SectionHeading` for the
-  standard eyebrow-and-`h2` section pattern. Use `Subtitle` only when the
-  section needs a standalone `h2` without an eyebrow.
+- Prefer the semantic utilities in `globals.css`, as listed in the
+  [design system](design-system.md#typography), for recurring roles before
+  adding one-off sizes.
+- Use `PageHeader` for page-level title groups.
 - Do not use `text-md`; it is not a default Tailwind utility.
 - When typography, line length, or breakpoint-sensitive copy changes, inspect
   both mobile and `md+` rendering or run the relevant Playwright coverage.

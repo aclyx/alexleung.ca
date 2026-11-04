@@ -27,7 +27,7 @@ Contact and the shared footer use profile URLs from
 
 ## Color
 
-The interface is light-only and uses a warm neutral palette:
+The interface is light-only: warm paper, cool slate text, and one blue accent.
 
 | Token                   | Value     | Use                                           |
 | ----------------------- | --------- | --------------------------------------------- |
@@ -41,6 +41,9 @@ The interface is light-only and uses a warm neutral palette:
 | `accent.link`           | `#285296` | Links, active states, and restrained emphasis |
 | `accent.link-hover`     | `#1d3d72` | Link and primary-action hover states          |
 | `accent.secondary-soft` | `#e8edf4` | Selected, hover, and chip backgrounds         |
+| `accent.success`        | `#39714c` | Success badges                                |
+| `accent.warning`        | `#80571d` | Warning badges                                |
+| `accent.info`           | `#315f70` | Informational badges                          |
 
 Use semantic tokens instead of raw color values. Accent colors should help with
 orientation and interaction; they should not become large decorative fields.
@@ -57,31 +60,29 @@ defined in `globals.css` for recurring roles:
 - `text-body`: `text-base`
 - `text-body-lg`: `text-lg md:text-xl`
 - `text-heading-sm`: `text-lg md:text-xl`
-- `text-heading`: `text-xl md:text-2xl`
 - `text-eyebrow`: small uppercase context label with restrained tracking
 - `text-page-title`: Georgia, 42px on mobile and 52px at `md`, normal weight,
   tight leading and restrained negative tracking
 - `text-editorial-heading`: Georgia, 24px, normal weight, for writing titles
   and reading sections
 - `text-editorial-label`: 14px medium-weight sans-serif for short section labels
-- `text-section-title`: `text-3xl md:text-4xl` with the section-title weight and
-  tracking
-- `text-hero-subtitle`: `text-sm md:text-base`
 - `text-hero-title`: the same Georgia sizing and weight as `text-page-title`
 - `text-hero-description`: `text-lg md:text-xl lg:text-2xl`
 
 `Title` is the page-title `h1`. `PageHeader` composes it with optional eyebrow,
 description, and metadata content on either content or prose rails. `PageShell`
-uses that header when its `title` prop is present. `SectionHeading` is the
-eyebrow-and-`h2` pair when that extra context is useful; use `Subtitle` for a
-standalone `h2`. Homepage and writing sections use the simpler editorial heading
-or label without a repeated eyebrow.
+uses that header when its `title` prop is present. Sections and filter groups
+are labeled with `text-editorial-label`; dates and tool fields use
+`font-mono text-xs text-muted`. Reserve `text-eyebrow` for page-level context,
+such as the 404 status and topic pages. `text-heading-sm` titles panels inside
+the browser tools; titles of posts and tools elsewhere use
+`text-editorial-heading`.
 
 Headings inside `ProseContent` use Georgia at normal weight, matching page
 titles and editorial headings. Use `ProseContent` for rendered long-form content. It defaults to base sizing;
 use `size="sm"` for notes and `size="lg"` for article bodies that should scale at
 `md` and above. Keep display typography out of compact cards and utility
-panels. Blog code blocks intentionally invert the warm palette with an `ink`
+panels. Blog code blocks intentionally invert the light palette with an `ink`
 background and `paper` text, while inline code remains on the light surface.
 
 ## Layout And Spacing
@@ -120,9 +121,12 @@ posts) uses `WritingList`: a monospace date, a serif title, the excerpt, and a
 small decorative cover thumbnail. From `md` the date and thumbnail sit in side
 columns; on mobile the date sits above a title-and-thumbnail line and the
 excerpt spans the full row so it stays wide enough to read. Article covers fill
-a 16:9 frame with `object-cover`, without a tinted background or border.
-Illustrated post covers remain part of the site; changing the surrounding layout
-does not require replacing them.
+a 16:9 frame with `object-cover`, without a tinted background or border, and
+load with priority because they are usually the largest element above the fold.
+A post without a cover omits both the article image and the list thumbnail.
+
+In a series post, the header metadata adds one line naming the part and series.
+Previous and next links sit after the article body, before the tags.
 
 The 404 page uses the standard page rail, a small status label, and direct Home
 and Writing links. The RSS browser view follows the same paper palette and serif
@@ -186,6 +190,23 @@ Radii should reflect scale: `rounded-md` for compact controls, `rounded-lg` for
 buttons and smaller media, `rounded-xl` for surfaces, and `rounded-full` only
 for chips or circular controls. Writing lists and editorial photographs do not
 need card surfaces, rounded frames, or shadows.
+
+## Images
+
+Choose each image for what it shows. A cover can be a photograph from the post,
+a screenshot or diagram of the thing being explained, or an illustration when
+the subject has nothing to photograph. Illustration is one option rather than a
+house style: avoid repeating one style, palette, or depiction of Alex across
+neighboring posts, and prefer a post's own photographs for trips and personal
+notes. A post can go without a cover when nothing useful fits.
+
+Covers are cropped twice: to a 16:9 frame at the top of the article and to a 3:2
+thumbnail in post lists. Make new covers 16:9, at least 1600 pixels wide, and
+keep the subject away from the left and right edges, which the thumbnail trims.
+Existing covers can stay as they are.
+
+Photographs should show their subject clearly at display size. Prefer a frame
+that shows the place or object over one dominated by blur, shadow, or haze.
 
 ## Motion
 
@@ -256,7 +277,7 @@ Tailwind's default breakpoints are in use. Mobile is the baseline; `md`
 ## Route And Asset Boundaries
 
 The Mandelbrot Explorer, PID Controller Simulator, and Load Flow Analysis are
-active routes in the former experiment namespace. They use the shared warm
+active routes in the former experiment namespace. They use the shared
 interface tokens, with a dark rendering canvas for Mandelbrot and light plots
 for PID and Load Flow. They remain standalone tools, not a navigation category
 or hub. The homepage links to each tool through its browser tool card. Tool

@@ -44,6 +44,28 @@ describe("public discovery files", () => {
     }
   });
 
+  it("keeps merged topic URLs as no-index redirect bridges", () => {
+    const redirects = [
+      { slug: "architecture", destination: "/blog/tags/next-js/" },
+      { slug: "review", destination: "/blog/tags/lifestyle/" },
+      { slug: "regularization", destination: "/blog/tags/deep-learning/" },
+      { slug: "learning", destination: "/blog/tags/reflection/" },
+    ];
+
+    for (const redirect of redirects) {
+      const html = readPublicFile(`blog/tags/${redirect.slug}/index.html`);
+
+      expect(html).toContain(
+        '<meta name="robots" content="noindex, follow" />'
+      );
+      expect(html).toContain(`content="0; url=${redirect.destination}"`);
+      expect(html).toContain('rel="canonical"');
+      expect(html).toContain(
+        `href="https://alexleung.ca${redirect.destination}"`
+      );
+    }
+  });
+
   it("does not shadow active experiment routes with redirect bridges", () => {
     const activeRoutes = [
       "mandelbrot",

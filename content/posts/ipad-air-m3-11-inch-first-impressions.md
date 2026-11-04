@@ -6,7 +6,6 @@ excerpt: "Notes on the 11-inch M3 iPad Air for reading, handwriting, and remote 
 coverImage: "/assets/blog/ipad-air-m3-11-inch-first-impressions/cover.webp"
 coverAlt: "Illustration of Alex and his wife using an iPad and remote development setup at a desk"
 tags:
-  - "Review"
   - "Lifestyle"
 ---
 

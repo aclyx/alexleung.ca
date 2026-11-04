@@ -12,13 +12,11 @@ series: "Deep Learning Notes"
 seriesOrder: 1
 ---
 
-I recently finished [Part I of _Deep Learning_](https://www.deeplearningbook.org/contents/part_basics.html) by Goodfellow, Bengio, and Courville. It works best as a compact pass through the mathematical background the reader is expected to carry forward.
+I recently finished [Part I of _Deep Learning_](https://www.deeplearningbook.org/contents/part_basics.html) by Goodfellow, Bengio, and Courville.
 
 ## Shared vocabulary for later chapters
 
-The most useful part for me was the quick pass through linear algebra, probability, and numerical computation. It put the mathematical background for the later chapters back in view without turning into a long detour.
-
-For example, linear regression in [Chapter 5](https://www.deeplearningbook.org/contents/ml.html) brings linear algebra and probability together. Writing the predictions as $Xw$ turns fitting the model into minimizing the squared distance between $Xw$ and the observed outputs $y$. Setting the gradient to zero gives the normal equations, $X^\top Xw = X^\top y$. The probability view reaches the same fitted weights by maximizing likelihood under independent Gaussian output noise with a shared, fixed variance.
+What I got most from Part I was its quick pass through linear algebra, probability, and numerical computation, which put the background for the later chapters back in view without a long detour. Linear regression in [Chapter 5](https://www.deeplearningbook.org/contents/ml.html), for example, brings linear algebra and probability together. Writing the predictions as $Xw$ turns fitting the model into minimizing the squared distance between $Xw$ and the observed outputs $y$. Setting the gradient to zero gives the normal equations, $X^\top Xw = X^\top y$. The probability view reaches the same fitted weights by maximizing likelihood under independent Gaussian output noise with a shared, fixed variance.
 
 ## Keeping the foundations light
 

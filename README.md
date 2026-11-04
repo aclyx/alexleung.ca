@@ -105,7 +105,6 @@ to listed posts.
 - Generated output:
   - responsive cover variants: `*-card-sm.webp`, `*-card-md.webp`, `*-card.webp`, `*-hero-sm.webp`, `*-hero.webp`
   - responsive inline markdown image variants: `*-content-sm.webp`, `*-content.webp`
-  - responsive variants for the homepage portrait
   - manifest: `src/generated/imageVariantManifest.json` (profiles + variant paths + dimensions)
 - Build integration:
   - `yarn build` runs `yarn image:variants` before creating the static export

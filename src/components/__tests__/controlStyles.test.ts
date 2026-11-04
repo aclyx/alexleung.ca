@@ -9,7 +9,7 @@ const actionVariants: ReadonlyArray<{
   variant: ActionVariant;
   expectedClass: string;
 }> = [
-  { variant: "primary", expectedClass: "bg-accent-primary" },
+  { variant: "primary", expectedClass: "bg-accent-link" },
   { variant: "secondary", expectedClass: "border-control-border" },
   { variant: "quiet", expectedClass: "bg-transparent" },
 ];

@@ -68,3 +68,18 @@ Second wording:
 Reviewers also applied the new house style to fixtures, flagging straight apostrophes such as “o'clock.” Fixtures were not edited; treat that as expected mechanical noise. All flapper reviews flagged a dropped “visible” qualifier shared by both drafts; it is a fixture artifact, not the tested distinction.
 
 The narrowed wording fixed the R over-trigger without losing P or S2. It did not stop reviewers from cutting low-stakes limits that are already stated plainly; both S1 runs did so. The flapper pair did not inform tuning and was added as a regression case. These are single-run spot checks, not reliability measurements.
+
+## 2026-11-03 grounding and one home for procedural rules
+
+A site audit found posts drifting toward caution: one post argued almost entirely in conditionals under an advice title, and the rule about phrasing limits appeared in the voice's core paragraph, two calibration passages, and the grader. The voice now describes grounding and plainly stated limits without restating the procedure; the grader keeps the limit-phrasing rule and gained a grounding check for pieces built from conditionals. Title guidance moved to voice-and-structure.
+
+All reviews used fresh contexts with inherited model settings and no overrides. Reviewers could not save `report.md`, so each returned its report as text; all saved `draft-only.md` before opening the brief. The rubric and voice were frozen before an independent agent created the darning pair.
+
+- S1 kept its plain limits and the shared unknown. Unlike both earlier runs, its reviewer required no cut to a plain limit; trimming “I only worked on the upstairs toilet” was optional. The required repair was the known “visible” fixture artifact.
+- S2 caught the verification-style caveats and kept the shared unknown, but again preferred deleting the limits to restating them.
+- P repeated its three findings: the missing cost valuation, the generic testing caveat, and the unsourced “often.”
+- R needed no editorial repairs and kept the delay sentence as reader-facing uncertainty.
+- Darning Y failed grounding. Its reviewer required telling the supplied event in the first person, cutting the conditionals to the genuine unknown, and retitling, which matches the key's preferred fix.
+- Darning X passed grounding. Its reviewer required removing a plan (“If it holds through a winter…, I’ll darn the other elbow”), a surprise, and a closing valuation, none of which the brief contained. Those were correct fact deltas: the fixture's author had written them into the draft and the key but not the brief. The brief was then amended to include all three, so later runs should find X faithful, and a demand to cut “I won’t know until spring” remains a false positive.
+
+These are single-run spot checks, not reliability measurements.

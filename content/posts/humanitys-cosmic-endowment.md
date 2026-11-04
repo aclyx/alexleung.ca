@@ -8,6 +8,7 @@ coverAlt: "Illustration of a planted orbital habitat with solar panels and an ob
 tags:
   - "AI"
   - "Reflection"
+  - "Book Notes"
 draft: false
 ---
 

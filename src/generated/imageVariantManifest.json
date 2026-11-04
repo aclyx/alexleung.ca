@@ -8,25 +8,6 @@
     "inlineContent": ["content-sm", "content"]
   },
   "sources": {
-    "/assets/alex_vibing.webp": {
-      "variants": {
-        "lg": {
-          "path": "/assets/alex_vibing-lg.webp",
-          "width": 1280,
-          "height": 854
-        },
-        "md": {
-          "path": "/assets/alex_vibing-md.webp",
-          "width": 900,
-          "height": 600
-        },
-        "sm": {
-          "path": "/assets/alex_vibing-sm.webp",
-          "width": 480,
-          "height": 320
-        }
-      }
-    },
     "/assets/blog/boring-blog-architecture/cover.webp": {
       "variants": {
         "card": {
