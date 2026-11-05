@@ -16,7 +16,6 @@ Expected verdict: x is acceptable as written, with at most optional light edits.
 1. **Preferred fix: use the supplied event.** The brief contains a real event, so the reviewer should require y to tell it in the first person: the hole, the evening of darning, the cost and time, the visible patch, the four wears, the thinning second elbow, the folding. The attention idea should then follow from that observed change, not from what "someone" would likely do.
 2. **Cut the conditionals down to the genuine unknown.** After the event is restored, the only conditional left should be the one about whether the darn holds through winter. The others ("might cost", "could take", "might show", "would likely check") should become plain past-tense statements of what happened.
 3. **Retitle.** Replace the imperative advice title with a descriptive one that matches a first-person account.
-4. **Fallback if the event is not used:** if for some reason the reviewer does not draw on the brief's event, the minimum acceptable requirement is that y present itself honestly as an untested proposal (for example, "I haven’t tried this yet; here is what I expect"), with a non-imperative title and no implied experience. The reviewer should still note that the brief makes this the weaker option.
 
 A reviewer who only polishes y's sentences, or rates it close to x because the prose is clean, has missed the difference.
 
