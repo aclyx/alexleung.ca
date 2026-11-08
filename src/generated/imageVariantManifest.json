@@ -8,6 +8,77 @@
     "inlineContent": ["content-sm", "content"]
   },
   "sources": {
+    "/assets/blog/ac-load-flow-newton-raphson/cover.webp": {
+      "variants": {
+        "card": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/cover-card.webp",
+          "width": 768,
+          "height": 432
+        },
+        "card-md": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/cover-card-md.webp",
+          "width": 640,
+          "height": 360
+        },
+        "card-sm": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/cover-card-sm.webp",
+          "width": 480,
+          "height": 270
+        },
+        "hero": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/cover-hero.webp",
+          "width": 1280,
+          "height": 720
+        },
+        "hero-sm": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/cover-hero-sm.webp",
+          "width": 640,
+          "height": 360
+        }
+      }
+    },
+    "/assets/blog/ac-load-flow-newton-raphson/ieee-9-bus-reactive.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/ieee-9-bus-reactive-content.webp",
+          "width": 1024,
+          "height": 706
+        },
+        "content-sm": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/ieee-9-bus-reactive-content-sm.webp",
+          "width": 640,
+          "height": 441
+        }
+      }
+    },
+    "/assets/blog/ac-load-flow-newton-raphson/load-slider-sequence.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/load-slider-sequence-content.webp",
+          "width": 1024,
+          "height": 1280
+        },
+        "content-sm": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/load-slider-sequence-content-sm.webp",
+          "width": 640,
+          "height": 800
+        }
+      }
+    },
+    "/assets/blog/ac-load-flow-newton-raphson/solver-architecture.webp": {
+      "variants": {
+        "content": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/solver-architecture-content.webp",
+          "width": 1024,
+          "height": 1147
+        },
+        "content-sm": {
+          "path": "/assets/blog/ac-load-flow-newton-raphson/solver-architecture-content-sm.webp",
+          "width": 640,
+          "height": 717
+        }
+      }
+    },
     "/assets/blog/boring-blog-architecture/cover.webp": {
       "variants": {
         "card": {

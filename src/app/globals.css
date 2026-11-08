@@ -103,6 +103,14 @@
     @apply text-ink text-sm leading-normal font-medium;
   }
 
+  /* KaTeX 0.18's stylesheet has no rule for .base, so inline math can break
+     between a symbol and its subscript. Keeping each .base whole leaves line
+     breaks at the relations and binary operators between them. */
+  .katex .base {
+    display: inline-block;
+    white-space: nowrap;
+  }
+
   .surface-static {
     @apply border-line bg-surface rounded-xl border shadow-sm;
   }
