@@ -1,7 +1,7 @@
 ---
 title: "Solving AC Load Flow with Newton–Raphson in the Browser"
 date: "2026-11-07"
-excerpt: "AC load flow, or power flow, finds a network’s bus voltages, phase angles, and line flows. A browser tool solves it with Newton–Raphson on networks of up to 118 buses and shows how reactive power changes bus voltages."
+excerpt: "AC load flow, or power flow, finds a network’s bus voltages, phase angles, and line flows. A browser tool solves it with Newton–Raphson on reference networks of up to 118 buses."
 coverImage: "/assets/blog/ac-load-flow-newton-raphson/cover.webp"
 coverAlt: "The Load Flow Analysis tool showing a three-bus single-line diagram with power-flow arrows between the slack, generator, and load buses"
 tags:
@@ -104,28 +104,10 @@ Each line is drawn as two halves with separate arrows, because the power at its 
 
 Hovering, focusing, or tapping an element shows its numbers, and collapsed tables list every bus and branch. Buses can be dragged, and an Arrange buses button returns them to an automatic layout. The diagram, including its dragging and automatic layout, was [the harder part of building the tool for me](/blog/small-interactive-tools-with-a-coding-agent/).
 
-## Reactive power and voltage
-
-The equations tie each bus’s reactive power to the voltages around it, so they do not show which voltages move when one load’s reactive power changes, or how far the change reaches. Editing loads in the tool answers both for a given network, and on three of its networks the answers follow two patterns.
-
-The first is that each MVAr delivered to a load costs more voltage than each MW, because transmission lines have more reactance than resistance. The drop across a line with resistance $R$ and reactance $X$, delivering $P$ and $Q$ to a bus at voltage $V$, is roughly:
-
-$$
-\Delta V \approx \frac{RP + XQ}{V}
-$$
-
-On the default three-bus network, each line’s reactance is three times its resistance. Its load bus draws 90 MW and 30 MVAr and sits at 0.966 pu. Removing the 30 MVAr raises it to 0.999 pu, while removing 30 MW instead raises it only to 0.980 pu. A load with no local source of reactive power has to draw it across that reactance, and its voltage pays for it.
-
-That makes the remedy local. A load’s $Q$ can be negative, which makes it supply reactive power, as a capacitive load does. Setting the load bus’s Load Q to −30 MVAr raises it to 1.029 pu, above the generator bus’s 1.025 pu setpoint, and reactive power on both of its lines now flows away from it.
-
-The second pattern is that how far a change reaches depends on what holds voltage nearby. A generator bus keeps its voltage at its setpoint by adjusting its reactive output, so it absorbs a nearby change instead of passing it on. In the IEEE 118-bus case, the lowest load-bus voltage is 0.946 pu, at Bus 53, which is one branch from a generator and two from four more. Lowering its Load Q by 30 MVAr, from 11 to −19, raises it to 0.973 pu. The generators at Buses 54, 49, and 56 cut their reactive output by 30 MVAr between them, and the rise fades within three branches: buses farther away change by less than $10^{-6}$ pu.
-
-In the IEEE 57-bus case, the lowest voltage is 0.936 pu, at Bus 31, nine branches from the nearest generator. A third of that injection, 10 MVAr, raises Bus 31 to 1.032 pu and lifts 12 other buses by more than 0.01 pu, as far as six branches away, and the drop in reactive output is spread across six generators. Per MVAr, Bus 31 rises about ten times as much as Bus 53. It is low for the same reason it responds so strongly: no generator nearby holds its voltage.
-
 ## Limits and future work
 
-The questions in the previous section are about differences: which voltages moved, and by how much. The tool shows only the current solution, so answering them means reading the voltages, making the edit, and comparing. Making the edit is indirect too. The diagram is only for selecting buses and lines and moving buses. The network’s parameters are edited in a form below it, one bus or line at a time, and that form starts collapsed, as does a separate panel for adding and connecting buses. The form also has no field for shunt capacitors, though the solver models the ones in the IEEE cases, so in the edits above a negative Load Q stands in for one. Editing on the diagram, with each bus shaded by how far its voltage moved from a saved solution, would let the diagram answer those questions directly.
+The network is not easy to edit. The diagram is only for selecting buses and lines and moving buses. The network’s parameters are edited in a form below it, one bus or line at a time, and that form starts collapsed, as does a separate panel for adding and connecting buses. The form also has no field for shunt capacitors, though the solver models the ones in the IEEE cases. And the tool shows only the current solution, so seeing what an edit changed means noting the voltages before it and comparing them afterward. Editing on the diagram, with each bus shaded by how far its voltage moved from a saved solution, would let the diagram show both the edit and what it changed.
 
-The second pattern relies on generators holding their voltage, and the solver lets them do that with any amount of reactive power. The case data gives each generator reactive limits, which the solver does not enforce. The generators that absorbed the edits above stayed within their limits, but under heavy load the tool can show healthy voltages that depend on generators exceeding theirs. In the IEEE 14-bus case at 150% load, it reports “Converged” with every bus at 1.00 pu or above, while all four PV generators are past their limits: the one at Bus 2 supplies 101 MVAr against a limit of 50. Holding those four at their limits and solving again, with the slack bus still unlimited, drops Bus 14 to 0.903 pu. “Converged” here means only that the power balance holds at every bus, not that generators stay within their limits or lines within their thermal ratings.
+A PV bus’s $Q$ is whatever it takes to hold its voltage. The case data gives each generator reactive limits, but the solver does not enforce them, so under heavy load the tool can show healthy voltages that depend on generators exceeding theirs. In the IEEE 14-bus case at 150% load, it reports “Converged” with every bus at 1.00 pu or above, while all four PV generators are past their limits: the one at Bus 2 supplies 101 MVAr against a limit of 50. Holding those four at their limits and solving again, with the slack bus still unlimited, drops Bus 14 to 0.903 pu. “Converged” here means only that the power balance holds at every bus, not that generators stay within their limits or lines within their thermal ratings.
 
 Scale is the last limit. Each bus connects to only a few others, so most of the Jacobian is zero: the 118-bus case’s 181 × 181 matrix averages about six nonzero entries per row. The solver still stores it as a dense matrix and solves it by Gaussian elimination, at a cost that grows with the cube of the number of unknowns. At 181 unknowns, that cost fits within the slider-step times above, but a network with 100 times as many unknowns would need a matrix of about 330 million entries and about a million times the work per iteration. Tinney and Walker’s [optimally ordered factorization](https://doi.org/10.1109/PROC.1967.6011), published the same year as Tinney and Hart’s paper, stores and eliminates only the nonzero entries, in an order that creates few new ones. The tool’s cases are small next to the utility models I had seen in PSS/E, and I did not try anything that large in the browser.
