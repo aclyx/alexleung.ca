@@ -51,7 +51,7 @@ The solve uses only the equations whose left side is known: $P$ at every PV and 
 
 ## Solving the equations with Newton–Raphson
 
-Newton–Raphson is the usual way to solve these equations, an approach [Tinney and Hart](https://doi.org/10.1109/TPAS.1967.291823) showed to be efficient in 1967. It replaces them with a linear approximation at the current guess, solves that, and repeats. The gap between the specified power at a bus and the power the equations give at the current guess is the mismatch:
+Newton–Raphson is the usual way to solve these equations. It replaces them with a linear approximation at the current guess, solves that, and repeats. The gap between the specified power at a bus and the power the equations give at the current guess is the mismatch:
 
 $$
 \begin{aligned}
