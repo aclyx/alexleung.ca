@@ -104,6 +104,8 @@ Each line is drawn as two halves with separate arrows, because the power at its 
 
 ![The tool’s IEEE 9-bus diagram in its reactive-power view, with bus cards showing voltages and angles and purple arrows meeting in the middle of the Bus 2–Bus 8 branch](/assets/blog/ac-load-flow-newton-raphson/ieee-9-bus-reactive.webp)
 
+On the default three-bus network, dropping 30 MVAr from the load raises its voltage more than twice as much as dropping 30 MW. The equations say so, but the diagram makes it obvious.
+
 The diagram, including dragging buses and arranging them automatically, was [the harder part of building the tool for me](/blog/small-interactive-tools-with-a-coding-agent/).
 
 ## Limits and future work
