@@ -35,7 +35,7 @@ Q_i &= \sum_j |V_i||V_j| \big( G_{ij}\sin\theta_{ij} \\
 \end{aligned}
 $$
 
-They multiply unknown magnitudes by sines and cosines of unknown angles, so they are nonlinear and are usually solved by iteration.
+They multiply unknown magnitudes by sines and cosines of unknown angles, so they are nonlinear.
 
 ## PQ, PV, and slack buses
 
@@ -51,7 +51,7 @@ The solve uses only the equations whose left side is known: $P$ at every PV and 
 
 ## Solving the equations with Newton–Raphson
 
-Newton–Raphson is the usual way to solve these equations. It replaces them with a linear approximation at the current guess, solves that, and repeats. The mismatch is the gap between each bus’s specified power and the power the equations give at the current guess:
+Newton–Raphson is the usual way to solve these equations. The mismatch is the gap between each bus’s specified power and the power the equations give at the current guess:
 
 $$
 \begin{aligned}
@@ -60,7 +60,7 @@ $$
 \end{aligned}
 $$
 
-The Jacobian $J$ holds the partial derivatives of the calculated power with respect to the unknowns, evaluated at the current guess:
+The Jacobian $J$ holds the partial derivatives of $P$ and $Q$:
 
 $$
 J = \begin{bmatrix} \partial P/\partial\theta & \partial P/\partial|V| \\ \partial Q/\partial\theta & \partial Q/\partial|V| \end{bmatrix}
@@ -73,8 +73,6 @@ J \begin{bmatrix} \Delta\theta \\ \Delta|V| \end{bmatrix}
 =
 \begin{bmatrix} \Delta P \\ \Delta Q \end{bmatrix}
 $$
-
-Near a solution, each step roughly squares the mismatch, which is why Newton’s method converges so quickly.
 
 The tool works in per unit, where 1 pu of voltage is nominal and 1 pu of power is 100 MVA in its reference cases. It begins from a flat start, with every unknown magnitude at 1 pu and every unknown angle at zero, and stops when the largest mismatch falls to $10^{-6}$ pu.
 
@@ -110,4 +108,4 @@ The network is not easy to edit. The diagram is for selecting and arranging, not
 
 A PV bus’s $Q$ is whatever it takes to hold its voltage. The case data gives each generator reactive limits, but the solver does not enforce them, so under heavy load the tool can show healthy voltages that depend on generators exceeding theirs. In the IEEE 14-bus case at 150% load, it reports “Converged” with every bus at 1.00 pu or above, while all four PV generators are past their limits: the one at Bus 2 supplies 101 MVAr against a limit of 50. Holding those four at their limits and solving again, with the slack bus still unlimited, drops Bus 14 to 0.903 pu. “Converged” here means only that the power balance holds at every bus, not that generators stay within their limits or lines within their thermal ratings.
 
-Scale is the last limit. Each bus connects to only a few others, so most of the Jacobian is zero. The solver still stores it as a dense matrix and solves it by Gaussian elimination, at a cost that grows with the cube of the number of unknowns. On the 118-bus case, that cost fits within the slider-step time above, but a network with 100 times as many unknowns would need about a million times the work per iteration. The tool’s cases are small next to the utility models I had seen in PSS/E. I did not try one that large in the browser, and with a dense solver I doubt it would run well.
+Scale is the last limit. Each bus connects to only a few others, so most of the Jacobian is zero. The solver still stores it as a dense matrix and solves it by Gaussian elimination. On the 118-bus case, this fits within the slider-step time above, but a network with 100 times as many unknowns would need about a million times the work per iteration. The tool’s cases are small next to the utility models I had seen in PSS/E. I did not try one that large in the browser, and with a dense solver I doubt it would run well.
