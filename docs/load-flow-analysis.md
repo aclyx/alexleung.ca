@@ -1,7 +1,9 @@
 # Load Flow Analysis
 
-The active route is `/experimental/load-flow/`. The homepage and the Load Flow
-and Mandelbrot blog post link to it; the route is in the sitemap and `llms.txt`.
+The active route is `/experimental/load-flow/`. The homepage, the Load Flow and
+Mandelbrot blog post, and the AC load flow post link to it; the route is in the
+sitemap and `llms.txt`. The model note under “Network editor & model” links
+back to the AC load flow post.
 Do not restore the retired public HTML bridge at the same path.
 
 ## Model and display conventions

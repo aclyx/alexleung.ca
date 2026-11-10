@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { actionClassNames, fieldClassNames } from "@/components/controlStyles";
+import { LinkText } from "@/components/LinkText";
 import { FlowMode, layoutDiagram } from "@/features/load-flow/diagram";
 import { toLoadFlowCase } from "@/features/load-flow/graph/toLoadFlowCase";
 import { LoadFlowCase } from "@/features/load-flow/model/types";
@@ -663,7 +664,11 @@ export function LoadFlowWorkspace() {
           with charging at both ends; transformers support taps and phase
           shifts. Slack fixes voltage and angle; PV fixes active generation and
           voltage. Generator reactive-power limits and thermal limits are not
-          enforced. Convergence is not a claim of safe operation.
+          enforced. Convergence is not a claim of safe operation.{" "}
+          <LinkText href="/blog/ac-load-flow-newton-raphson/">
+            A blog post
+          </LinkText>
+          {" explains the equations and the solver."}
         </p>
         <details className="mt-4">
           <summary className="min-h-11 cursor-pointer py-2 text-sm">

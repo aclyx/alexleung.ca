@@ -28,9 +28,9 @@ test("home page introduces Alex, selected writing, and browser tools", async ({
       .locator("#writing article a")
       .evaluateAll((links) => links.map((link) => link.getAttribute("href")))
   ).toEqual([
+    "/blog/ac-load-flow-newton-raphson/",
     "/blog/humanitys-cosmic-endowment/",
     "/blog/farming-expensive-coding-agent-sessions/",
-    "/blog/making-responsive-images-just-work/",
   ]);
   await expect(
     page.getByRole("link", { name: "All writing →" })

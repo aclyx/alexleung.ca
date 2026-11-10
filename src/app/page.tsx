@@ -24,9 +24,9 @@ const description =
   "Alex Leung works on ChatGPT at OpenAI. He writes about AI tools, software, and books, and builds small browser tools.";
 const path = "/";
 const selectedPostSlugs = [
+  "ac-load-flow-newton-raphson",
   "humanitys-cosmic-endowment",
   "farming-expensive-coding-agent-sessions",
-  "making-responsive-images-just-work",
 ];
 
 export const metadata: Metadata = buildPageMetadata({
