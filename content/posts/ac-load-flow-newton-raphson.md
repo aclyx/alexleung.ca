@@ -1,7 +1,7 @@
 ---
 title: "Solving AC Load Flow with Newton–Raphson in the Browser"
 date: "2026-11-07"
-excerpt: "AC load flow, or power flow, finds a network’s bus voltages, phase angles, and line flows. A browser tool solves it with Newton–Raphson on reference networks of up to 118 buses."
+excerpt: "AC load flow, or power flow, finds a network’s bus voltages and line flows, and it is hard to work out by hand. A browser tool I built solves it with Newton–Raphson and shows how the network responds."
 coverImage: "/assets/blog/ac-load-flow-newton-raphson/cover.webp"
 coverAlt: "The Load Flow Analysis tool showing a three-bus single-line diagram with power-flow arrows between the slack, generator, and load buses"
 tags:
