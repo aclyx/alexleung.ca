@@ -5,7 +5,7 @@
         <title>Alex Leung's Writing</title>
         <link>https://alexleung.ca/blog/</link>
         <description>New posts from Alex Leung on coding agents, software projects, reading, and travel.</description>
-        <lastBuildDate>Thu, 29 Oct 2026 00:00:00 GMT</lastBuildDate>
+        <lastBuildDate>Sat, 07 Nov 2026 00:00:00 GMT</lastBuildDate>
         <docs>https://validator.w3.org/feed/docs/rss2.html</docs>
         <generator>https://github.com/jpmonette/feed</generator>
         <language>en-CA</language>
@@ -15,6 +15,14 @@
             <link>https://alexleung.ca/blog/</link>
         </image>
         <atom:link href="https://alexleung.ca/feed.xml" rel="self" type="application/rss+xml"/>
+        <item>
+            <title><![CDATA[Solving AC Load Flow with Newton–Raphson in the Browser]]></title>
+            <link>https://alexleung.ca/blog/ac-load-flow-newton-raphson/</link>
+            <guid isPermaLink="false">https://alexleung.ca/blog/ac-load-flow-newton-raphson/</guid>
+            <pubDate>Sat, 07 Nov 2026 00:00:00 GMT</pubDate>
+            <description><![CDATA[AC load flow, or power flow, finds a network’s bus voltages and line flows, and it is hard to work out by hand. A browser tool I built solves it with Newton–Raphson and shows how the network responds.]]></description>
+            <category>Power Systems</category>
+        </item>
         <item>
             <title><![CDATA[Humanity’s Cosmic Endowment]]></title>
             <link>https://alexleung.ca/blog/humanitys-cosmic-endowment/</link>
