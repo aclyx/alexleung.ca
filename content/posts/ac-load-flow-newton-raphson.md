@@ -100,11 +100,11 @@ A slider step on the 118-bus case takes about 50 ms in Chromium on an Apple M4 w
 
 A single-line diagram draws each balanced three-phase circuit as one line. In the tool, each bus is a card showing its type, voltage magnitude, and angle relative to the slack bus. Its color shows a voltage band, a visual guide rather than an equipment limit. Real power is drawn in solid blue and reactive power in dashed purple, together or one at a time.
 
+On the default three-bus network, dropping 30 MVAr at the Load Bus raises its voltage more than twice as much as dropping 30 MW. The equations say so, but the diagram makes it obvious.
+
 Each line is drawn as two halves with separate arrows, because the power at its two ends can differ. The tool reports power as positive into the line at each end, following [MATPOWER’s branch convention](https://matpower.org/docs/ref/matpower7.1/lib/idx_brch.html), and the sum of the two is what the line absorbs. In the IEEE 9-bus case below, the arrows on the Bus 2–Bus 8 branch meet in the middle, with reactive power entering from both ends.
 
 ![The tool’s IEEE 9-bus diagram in its reactive-power view, with bus cards showing voltages and angles and purple arrows meeting in the middle of the Bus 2–Bus 8 branch](/assets/blog/ac-load-flow-newton-raphson/ieee-9-bus-reactive.webp)
-
-On the default three-bus network, dropping 30 MVAr from the load raises its voltage more than twice as much as dropping 30 MW. The equations say so, but the diagram makes it obvious.
 
 The diagram, including dragging buses and arranging them automatically, was [the harder part of building the tool for me](/blog/small-interactive-tools-with-a-coding-agent/).
 
