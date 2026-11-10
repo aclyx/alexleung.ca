@@ -9,7 +9,11 @@ tags:
 draft: false
 ---
 
-Load flow, also called power flow, answers a steady-state question about an AC network: given what each generator is set to produce and what each load draws, what are the voltage magnitude and phase angle at every bus, and how much power moves through each line? A bus is a node where lines, generators, and loads connect. [Load Flow Analysis](/experimental/load-flow/) is a browser tool I built that puts a network, its inputs, the solver, and the results on one page. It lets me change an input and read the new voltages and flows without moving between a model and a separate output view, which makes load flow easier to understand than through equations alone.
+Load flow, also called power flow, answers a steady-state question about an AC network: given what each generator is set to produce and what each load draws, what are the voltage magnitude and phase angle at every bus (a node where lines, generators, and loads connect), and how much power moves through each line?
+
+The question is easy to state and hard to answer by hand. Each bus adds two nonlinear equations, each bus’s voltage depends on its neighbors’, and a realistic network has thousands of unknowns that have to be solved together. Changing one load can move voltages across the network in ways the equations do not make obvious. I built [Load Flow Analysis](/experimental/load-flow/), a browser tool that puts a network, its inputs, the solver, and the results on one page, so I can change an input and see the new voltages and flows on a diagram right away. Watching the network respond builds an intuition that working through the equations alone does not.
+
+This post explains what load flow is and how Newton–Raphson solves it, then how the tool runs the solver in the browser.
 
 ## The power flow equations
 
