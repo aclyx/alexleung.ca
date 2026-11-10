@@ -9,7 +9,7 @@ tags:
 draft: false
 ---
 
-Load flow, also called power flow, answers a steady-state question about an AC network: given what each generator is set to produce and what each load draws, what are the voltage magnitude and phase angle at every bus, and how much power moves through each line? A bus is a node where lines, generators, and loads connect. [Load Flow Analysis](/experimental/load-flow/) is a browser tool I built that puts a network, its inputs, the solver, and the results on one page. I could change an input and read the new voltages and flows without moving between a model and a separate output view, and that made load flow easier to reason about than equations alone.
+Load flow, also called power flow, answers a steady-state question about an AC network: given what each generator is set to produce and what each load draws, what are the voltage magnitude and phase angle at every bus, and how much power moves through each line? A bus is a node where lines, generators, and loads connect. [Load Flow Analysis](/experimental/load-flow/) is a browser tool I built that puts a network, its inputs, the solver, and the results on one page. It lets me change an input and read the new voltages and flows without moving between a model and a separate output view, which makes load flow easier to understand than through equations alone.
 
 ## The power flow equations
 
@@ -35,7 +35,7 @@ Q_i &= \sum_j |V_i||V_j| \big( G_{ij}\sin\theta_{ij} \\
 \end{aligned}
 $$
 
-These are sums of products of unknown magnitudes with sines and cosines of unknown angles. That makes them nonlinear, so they are usually solved by iteration.
+They multiply unknown magnitudes by sines and cosines of unknown angles, so they are nonlinear and are usually solved by iteration.
 
 ## PQ, PV, and slack buses
 
@@ -51,7 +51,7 @@ The solve uses only the equations whose left side is known: $P$ at every PV and 
 
 ## Solving the equations with Newton–Raphson
 
-Newton–Raphson is the usual way to solve these equations. It replaces them with a linear approximation at the current guess, solves that, and repeats. The gap between the specified power at a bus and the power the equations give at the current guess is the mismatch:
+Newton–Raphson is the usual way to solve these equations. It replaces them with a linear approximation at the current guess, solves that, and repeats. The mismatch is the gap between each bus’s specified power and the power the equations give at the current guess:
 
 $$
 \begin{aligned}
@@ -74,7 +74,7 @@ J \begin{bmatrix} \Delta\theta \\ \Delta|V| \end{bmatrix}
 \begin{bmatrix} \Delta P \\ \Delta Q \end{bmatrix}
 $$
 
-Close to a solution, each step squares the mismatch, up to a constant factor, which is the quadratic convergence Newton’s method is known for.
+Near a solution, each step roughly squares the mismatch, which is why Newton’s method converges so quickly.
 
 The tool works in per unit, where 1 pu of voltage is nominal and 1 pu of power is 100 MVA in its reference cases. It begins from a flat start, with every unknown magnitude at 1 pu and every unknown angle at zero, and stops when the largest mismatch falls to $10^{-6}$ pu.
 
@@ -96,7 +96,7 @@ A slider step on the 118-bus case takes about 50 ms in Chromium on an Apple M4 w
 
 ## Reading the single-line diagram
 
-A single-line diagram draws each balanced three-phase circuit as one line. In the tool, each bus is a card showing its type, voltage magnitude, and angle relative to the slack bus. Its color marks fixed voltage bands that are visual guides rather than equipment limits. Real power is drawn in solid blue and reactive power in dashed purple, together or one at a time.
+A single-line diagram draws each balanced three-phase circuit as one line. In the tool, each bus is a card showing its type, voltage magnitude, and angle relative to the slack bus. Its color shows a voltage band, a visual guide rather than an equipment limit. Real power is drawn in solid blue and reactive power in dashed purple, together or one at a time.
 
 Each line is drawn as two halves with separate arrows, because the power at its two ends can differ. The tool reports power as positive into the line at each end, following [MATPOWER’s branch convention](https://matpower.org/docs/ref/matpower7.1/lib/idx_brch.html), and the sum of the two is what the line absorbs. In the IEEE 9-bus case below, the arrows on the Bus 2–Bus 8 branch meet in the middle, with reactive power entering from both ends.
 
@@ -106,7 +106,7 @@ The diagram, including dragging buses and arranging them automatically, was [the
 
 ## Limits and future work
 
-The network is not easy to edit. The diagram is only for selecting buses and lines and moving buses. The network’s parameters are edited in a form below it, one bus or line at a time, and that form starts collapsed, as does a separate panel for adding and connecting buses. The form also has no field for shunt capacitors, though the solver models the ones in the IEEE cases. And the tool shows only the current solution, so seeing what an edit changed means noting the voltages before it and comparing them afterward. Editing on the diagram, with each bus shaded by how far its voltage moved from a saved solution, would let the diagram show both the edit and what it changed.
+The network is not easy to edit. The diagram is for selecting and arranging, not editing. Parameters are edited one bus or line at a time in a form below it, and both that form and a separate panel for adding and connecting buses start collapsed. The form also has no field for shunt capacitors, though the solver models the ones in the IEEE cases. And the tool shows only the current solution, so seeing what an edit changed means noting the voltages beforehand. Editing on the diagram, with each bus shaded by how far its voltage moved from a saved solution, would let the diagram show both the edit and what it changed.
 
 A PV bus’s $Q$ is whatever it takes to hold its voltage. The case data gives each generator reactive limits, but the solver does not enforce them, so under heavy load the tool can show healthy voltages that depend on generators exceeding theirs. In the IEEE 14-bus case at 150% load, it reports “Converged” with every bus at 1.00 pu or above, while all four PV generators are past their limits: the one at Bus 2 supplies 101 MVAr against a limit of 50. Holding those four at their limits and solving again, with the slack bus still unlimited, drops Bus 14 to 0.903 pu. “Converged” here means only that the power balance holds at every bus, not that generators stay within their limits or lines within their thermal ratings.
 
