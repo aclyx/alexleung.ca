@@ -33,7 +33,7 @@ jest.mock("@/lib/blogApi", () => ({
       slug,
       title: "Cover Alt Hero",
       date: "2026-01-01T00:00:00.000Z",
-      updated: undefined,
+      updated: slug === "revised" ? "2026-03-01T00:00:00.000Z" : undefined,
       content: "Body",
       coverImage: slug === "no-cover" ? undefined : "/assets/blog/cover.webp",
       coverAlt: "A laptop beside a notebook on a desk.",
@@ -165,6 +165,27 @@ describe("Blog post page", () => {
       "aria-hidden",
       "true"
     );
+  });
+
+  it("shows only the publish date while keeping the revision date in metadata", async () => {
+    const metadata = await generateMetadata({
+      params: Promise.resolve({ slug: "revised" }),
+    });
+    expect(metadata.openGraph).toMatchObject({
+      modifiedTime: "2026-03-01T00:00:00.000Z",
+    });
+
+    render(await Post({ params: Promise.resolve({ slug: "revised" }) }));
+
+    expect(screen.getByText(/^Published /)).toBeInTheDocument();
+    expect(screen.queryByText(/^Updated /)).not.toBeInTheDocument();
+    expect(document.querySelectorAll("header time")).toHaveLength(1);
+    const schema = Array.from(
+      document.querySelectorAll('script[type="application/ld+json"]')
+    )
+      .map((script) => JSON.parse(script.textContent ?? "{}"))
+      .find((item) => item["@type"] === "BlogPosting");
+    expect(schema?.dateModified).toBe("2026-03-01T00:00:00.000Z");
   });
 
   it("omits the cover when the post has none", async () => {
