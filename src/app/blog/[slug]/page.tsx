@@ -172,16 +172,11 @@ export default async function Post({ params }: Props) {
         headerRail="prose"
         metadata={
           <div className="space-y-1">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-1">
+            <p>
               <time dateTime={post.date}>
                 Published {formatIsoDateForDisplay(post.date)}
               </time>
-              {post.updated && post.updated !== post.date ? (
-                <time dateTime={post.updated}>
-                  Updated {formatIsoDateForDisplay(post.updated)}
-                </time>
-              ) : null}
-            </div>
+            </p>
             {seriesNavigation ? (
               <p>
                 Part {seriesNavigation.currentPart} of{" "}
