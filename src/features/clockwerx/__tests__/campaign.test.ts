@@ -16,7 +16,6 @@ import {
   visible,
   type Difficulty,
 } from "../world";
-import replays from "./winning-replays.json";
 
 for (const name of ["LEVELS.CLL", "LEVELS.CL_"]) {
   const library = path.join(process.cwd(), ".cache", "clockwerx", name);
@@ -68,20 +67,6 @@ function replay(
   return world;
 }
 
-test("winning replays cover the campaign in order", () => {
-  expect(replays.map((r) => r.level)).toEqual(campaign.map((l) => l.number));
-});
-test.each(replays)(
-  "level $level, $name, has a winning input replay",
-  (record) => {
-    const { difficulty } = record;
-    if (!isDifficulty(difficulty)) throw new Error("Invalid replay difficulty");
-    const level = campaign[record.level - 1];
-    expect(level.name).toBe(record.name);
-    expect(replay(level, difficulty, record.commands).status).toBe("won");
-  }
-);
-
 const levels = [signalSchool, ...campaign];
 test("recorded browser clears cover every board and difficulty", () => {
   expect(browserResults.map((r) => [r.level, r.name])).toEqual(
@@ -105,7 +90,6 @@ test.each(
     const d = difficulties.indexOf(setting);
     if (!isDifficulty(d)) throw new Error("Invalid replay difficulty");
     const world = replay(levels[number], d, record.inputs, record.previewTicks);
-    expect(record.status).toBe("won");
     expect(world.status).toBe("won");
     expect(world.tick).toBe(record.playTicks);
     if (number) expect(world.score).toBe(record.score);

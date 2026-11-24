@@ -4,28 +4,24 @@
     "name": "Signal School",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "S F:192 B:192 R:1 F:191",
         "playTicks": 624,
         "score": null
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "S F:128 B:128 R:1 F:127",
         "playTicks": 416,
         "score": null
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "S F:96 B:96 R:1 F:95",
         "playTicks": 312,
         "score": null
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "S F:64 B:64 R:1 F:63",
         "playTicks": 208,
@@ -38,28 +34,24 @@
     "name": "Movement",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - F RF RF RF RF RF RF RF",
         "playTicks": 864,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - F RF RF RF RF RF RF RF",
         "playTicks": 576,
         "score": 4910
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - F RF RF RF RF RF RF RF",
         "playTicks": 432,
         "score": 5530
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - F RF RF RF RF RF RF RF",
         "playTicks": 288,
@@ -72,28 +64,24 @@
     "name": "Spikes",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF - F RF R F R F - F",
         "playTicks": 720,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF - F RF R F R F - F",
         "playTicks": 480,
         "score": 6420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF - F RF R F R F - F",
         "playTicks": 360,
         "score": 7140
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF - F RF R F R F - F",
         "playTicks": 240,
@@ -106,28 +94,24 @@
     "name": "Walls",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F - - F - F RF RF - F - F F RF - F RF - F",
         "playTicks": 1056,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F - - F - F RF RF - F - F F RF - F RF - F",
         "playTicks": 704,
         "score": 18390
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F - - F - F RF RF - F - F F RF - F RF - F",
         "playTicks": 528,
         "score": 19120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F - - F - F RF RF - F - F F RF - F RF - F",
         "playTicks": 352,
@@ -140,28 +124,24 @@
     "name": "Doors",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - - F F RF RF RF R - F - F R F - F RF RF - RF - RF RF - F",
         "playTicks": 1488,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - - F F RF RF RF R - F - F R F - F RF RF - RF - RF RF - F",
         "playTicks": 992,
         "score": 18340
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - - F F RF RF RF R - F - F R F - F RF RF - RF - RF RF - F",
         "playTicks": 744,
         "score": 19080
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - - F F RF RF RF R - F - F R F - F RF RF - RF - RF RF - F",
         "playTicks": 496,
@@ -174,28 +154,24 @@
     "name": "Oil",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F RF RF RF RF RF RF RF RF RF RF",
         "playTicks": 720,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F RF RF RF RF RF RF RF RF RF RF",
         "playTicks": 480,
         "score": 6420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F RF RF RF RF RF RF RF RF RF RF",
         "playTicks": 360,
         "score": 7140
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F RF RF RF RF RF RF RF RF RF RF",
         "playTicks": 240,
@@ -208,28 +184,24 @@
     "name": "Combo",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF RF RF RF F RF R F RF",
         "playTicks": 768,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF RF RF RF F RF R F RF",
         "playTicks": 512,
         "score": 4420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF RF RF RF F RF R F RF",
         "playTicks": 384,
         "score": 5140
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF RF RF RF F RF R F RF",
         "playTicks": 256,
@@ -242,28 +214,24 @@
     "name": "More Spikes",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F R F - F - F - F - F R - F - F RF RF RF - F - F R F - F - F - F F - F F - F - F - F - F",
         "playTicks": 2256,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F R F - F - F - F - F R - F - F RF RF RF - F - F R F - F - F - F F - F F - F - F - F - F",
         "playTicks": 1504,
         "score": 3250
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F R F - F - F - F - F R - F - F RF RF RF - F - F R F - F - F - F F - F F - F - F - F - F",
         "playTicks": 1128,
         "score": 4020
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F R F - F - F - F - F R - F - F RF RF RF - F - F R F - F - F - F F - F F - F - F - F - F",
         "playTicks": 752,
@@ -276,28 +244,24 @@
     "name": "More Doors",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F - F - F",
         "playTicks": 576,
         "score": 7000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F - F - F",
         "playTicks": 384,
         "score": 9440
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F - F - F",
         "playTicks": 288,
         "score": 10160
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F - F - F",
         "playTicks": 192,
@@ -310,28 +274,24 @@
     "name": "Some Dots",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF - F - F - F - F RF - F",
         "playTicks": 864,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF - F - F - F - F RF - F",
         "playTicks": 576,
         "score": 3410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF - F - F - F - F RF - F",
         "playTicks": 432,
         "score": 4130
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF - F - F - F - F RF - F",
         "playTicks": 288,
@@ -344,28 +304,24 @@
     "name": "Bombs",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF RF - F RF RF RF - F - F - F",
         "playTicks": 816,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF RF - F RF RF RF - F - F - F",
         "playTicks": 544,
         "score": 3410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF RF - F RF RF RF - F - F - F",
         "playTicks": 408,
         "score": 4140
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF - F - - F F RF RF - - F - F - F",
         "playTicks": 304,
@@ -378,28 +334,24 @@
     "name": "Curves",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - R - F F - F - F F RF RF - F RF R F RF - F - F - F",
         "playTicks": 1440,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - R - F F - F - F F RF RF - F RF R F RF - F - F - F",
         "playTicks": 960,
         "score": 12840
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - -:3 R:3 - - F F - F - F F RF RF - F RF - F F - F - F - -:3 R:3 - - F",
         "playTicks": 780,
         "score": 13670
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - -:2 R:2 - - F F - F - F F - F RF RF RF - F F - F - F - -:2 R:2 - - F",
         "playTicks": 520,
@@ -412,28 +364,24 @@
     "name": "Homer",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F R F - F R F",
         "playTicks": 528,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F R F - F R F",
         "playTicks": 352,
         "score": 4450
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F R F - F R F",
         "playTicks": 264,
         "score": 5160
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:4 R:4 F F RF F RF RF RF F RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 - R:2 R:2 R:4 R:4 F",
         "playTicks": 256,
@@ -446,28 +394,24 @@
     "name": "Touchdown",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - F - F - F - F",
         "playTicks": 816,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - F - F - F - F",
         "playTicks": 544,
         "score": 3910
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:1 F:23 - F R F R F - F -:21 -:3 F -:21 -:3 R:4 R:4 -:15 RF - F - F",
         "playTicks": 431,
         "score": 4530
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - -:2 R:2 -:4 R:4 F R F F RF F RF - F - -:2 R:2 - - -:11 - - -:11 RF - -:2 R:2 - - -:11 - - -:11 -:11 -:11 -:11 -:11 -:11 -:11 RF - F",
         "playTicks": 530,
@@ -480,28 +424,24 @@
     "name": "Tenacity",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF R F - F - F - F RF - F R - R R F RF - F - F RF RF RF RF RF RF RF RF - F - F R - F RF - F F RF F RF RF F RF - F - F RF - F",
         "playTicks": 2736,
         "score": 5000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - -:14 -:18 F - F - F - F RF F RF F RF R:14 RF:14 RF RF - F - F RF RF RF - F RF RF RF - F - -:4 R:4 - -:15 - F - F R:14 RF:14 RF RF - F - - F - F - F - F RF - F",
         "playTicks": 1839,
         "score": 10800
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 12,
         "inputs": "F:12 RF RF - -:10 -:14 F - F - F - F RF F RF F RF R:10 RF:10 R F -:3 R:3 - -:15 - F RF - F RF RF - F - - F F RF - F RF - F RF R:10 RF:10 RF RF RF - - F - F - F - F RF - F",
         "playTicks": 1369,
         "score": 7380
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 RF RF - -:7 -:9 F - F - F - F RF F RF F RF R:7 RF:7 RF - RF - -:2 R:2 - F F RF - F RF RF - F - - F F RF - F RF - F RF R:7 RF:7 RF RF RF - - F - F - F - F RF - F",
         "playTicks": 944,
@@ -514,28 +454,24 @@
     "name": "Ramble",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF - F RF - F RF - F R:32 R:32 - F",
         "playTicks": 880,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF - F RF - F RF - F R:21 R:21 - F",
         "playTicks": 586,
         "score": 18410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF -:41 - F F RF RF - F RF:15 F:15 -:15 -:3 R:3 -:15 -:3 R:3 -:15 - F - F",
         "playTicks": 536,
         "score": 14120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF -:2 R:2 -:2 R:2 -:2 R:2 F RF RF RF - F - F",
         "playTicks": 252,
@@ -548,28 +484,24 @@
     "name": "Sparse",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F F RF - F - F - F F RF RF - F - F",
         "playTicks": 864,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F F RF - F - F - F F RF RF - F - F",
         "playTicks": 576,
         "score": 13410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F F RF - F - F - F F RF RF - F - F",
         "playTicks": 432,
         "score": 14130
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F F RF - F - F - F F RF RF - F - F",
         "playTicks": 288,
@@ -582,28 +514,24 @@
     "name": "Pipeline",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - F RF - F F RF RF R F - F",
         "playTicks": 816,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - F RF - F F RF RF R F - F",
         "playTicks": 544,
         "score": 5410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - -:3 R:3 - - F -:3 R:3 - - F - F - F RF - F RF RF F RF",
         "playTicks": 564,
         "score": 4910
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - -:2 R:2 - - F -:2 R:2 - - F - F RF - RF - F RF -:2 R:2 - F RF F RF - F - F - F",
         "playTicks": 508,
@@ -616,28 +544,24 @@
     "name": "Offshoots",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - F RF - F - F RF RF - F - F RF R F RF - F RF - - F - F RF",
         "playTicks": 1440,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - F RF - F - F RF RF - F - F RF R F RF - F RF - - F - F RF",
         "playTicks": 960,
         "score": 7040
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF - RF - - F - - F -:3 R:3 - F - F - F RF RF - F - F RF - -:3 R:3 - - F - -:3 R:3 - F - F -:3 R:3 - - - RF - F",
         "playTicks": 1008,
         "score": 4440
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF - RF - - F - - F -:2 R:2 - F -:2 R:2 - F -:2 R:2 - F RF RF - F - -:2 R:2 - - F F - - - - - -:2 R:2 - - F RF - F - F - F",
         "playTicks": 708,
@@ -650,28 +574,24 @@
     "name": "Link",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F:47 -:31 - - F - F - F RF RF RF RF - -:31 - - -:31 - - -:31 - - -:31 - RF RF F RF RF",
         "playTicks": 1450,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F:31 -:21 - - F - F - F RF F RF RF RF F - RF RF F - F RF RF F RF RF RF RF RF RF",
         "playTicks": 1012,
         "score": 24440
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - - F - F - F - RF RF - F RF RF - R -:15 - RF:47 RF RF RF RF F RF RF RF RF RF RF",
         "playTicks": 782,
         "score": 20170
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - - F - F - F - RF RF - F RF RF - R -:11 - RF:31 RF RF RF RF F RF RF RF RF RF RF",
         "playTicks": 522,
@@ -684,28 +604,24 @@
     "name": "Balance",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F RF F RF - F - F",
         "playTicks": 576,
         "score": 7000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F RF F RF - F - F",
         "playTicks": 384,
         "score": 9440
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F RF F RF - F - F",
         "playTicks": 288,
         "score": 10160
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F RF F RF - F - F",
         "playTicks": 192,
@@ -718,28 +634,24 @@
     "name": "Doubleback",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F F - F - F - F F RF RF - F RF - F F - F - F - F",
         "playTicks": 1440,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F F - F - F - F F RF RF - F RF - F F - F - F - F",
         "playTicks": 960,
         "score": 3840
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F F - F - F - F F RF RF - F RF - F F - F - F - F",
         "playTicks": 720,
         "score": 4680
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - F - F F - F - F - F F RF RF - F RF - -:2 R:2 - - F RF - F - F - F",
         "playTicks": 516,
@@ -752,28 +664,24 @@
     "name": "Motion",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - R F F RF RF - F R F",
         "playTicks": 672,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - R F F RF RF - F R F",
         "playTicks": 448,
         "score": 6430
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF F RF RF - F - F",
         "playTicks": 288,
         "score": 7160
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF F RF RF - F - F",
         "playTicks": 192,
@@ -786,28 +694,24 @@
     "name": "Candycane",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF - F RF RF - F RF RF RF - F R F F RF - F",
         "playTicks": 1008,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF - F RF RF - F RF RF RF - F R F F RF - F",
         "playTicks": 672,
         "score": 4390
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF - F RF RF - F RF RF RF - F R F F RF - F",
         "playTicks": 504,
         "score": 5120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF - F RF RF - F RF RF RF - F -:2 R:2 - F F -:2 R:2 F - F",
         "playTicks": 344,
@@ -820,28 +724,24 @@
     "name": "Forced Entry",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F RF RF RF F RF RF RF RF RF R RF RF F RF - F - F - F - -:6 R:6 - - F - - - F F -:6 R:6 - F F RF - F F RF RF -:6 R:6 -:31 - F",
         "playTicks": 2227,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F - -:31 - - -:21 - - -:31 - - -:21 - - -:31 - - -:21 - - -:31 - - F:21 RF RF RF - R F RF RF RF RF RF R:21 RF:21 RF RF R F RF RF R F - F - F - F - RF RF RF - - F - F F RF - F F - F R:21 R:21 - F",
         "playTicks": 2436,
         "score": 19100
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:12 F:12 - F - F RF RF RF F RF RF - F RF RF R RF - F F RF - F - F - F F RF -:3 R:3 - - - - F R F RF RF RF RF F - F -:3 R:3 -:15 - F",
         "playTicks": 1107,
         "score": 29820
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 - F - F RF RF RF F RF RF - F - F RF F R F F RF F - - F RF RF - F F - - F - - - - - - - F RF RF RF - F F RF RF - F",
         "playTicks": 816,
@@ -854,28 +754,24 @@
     "name": "Tricolor",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F F RF F - F R F F - F F RF RF - F",
         "playTicks": 1008,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F F RF F - F R F F - F F RF RF - F",
         "playTicks": 672,
         "score": 6390
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F F RF F - F R F F - F F RF RF - F",
         "playTicks": 504,
         "score": 7120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F F RF F - F R F F - F F RF RF - F",
         "playTicks": 336,
@@ -888,28 +784,24 @@
     "name": "Cyclone",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - F - F RF RF RF",
         "playTicks": 672,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - F - F RF RF RF",
         "playTicks": 448,
         "score": 5430
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF R RF F - RF - F - RF RF - - F F RF F F RF -:3 R:3 -:3 R:3 F - F - F RF RF RF",
         "playTicks": 732,
         "score": 7880
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - - - - - - F - -:2 R:2 RF - F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - F - F F RF RF",
         "playTicks": 340,
@@ -922,28 +814,24 @@
     "name": "Prosperity",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F RF RF RF RF RF RF - F RF R F F",
         "playTicks": 912,
         "score": 22000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF - R RF RF - F R F RF RF RF RF RF RF RF R F F",
         "playTicks": 736,
         "score": 14480
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF R:2 R:2 - - -:8 F:16 F RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 F RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 F RF RF RF F RF F RF RF F RF F RF RF",
         "playTicks": 628,
         "score": 34100
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- - - - - - - - - -:2 R:2 - - - - - - - - - - - - - - - -:2 R:2 -:2 R:2 - - - - - - - - - - - - - - - - - - - - - - - F RF RF F -:2 R:2 - RF F RF -:2 R:2 RF F F -:2 R:2 - - F RF RF RF - - F RF RF - F - -:2 R:2 - RF RF F RF RF - F - F - F RF",
         "playTicks": 1388,
@@ -956,28 +844,24 @@
     "name": "Enclosure",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - F - F - F - - F - F - F - F - F RF RF - F RF RF",
         "playTicks": 1392,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - F - F - F - - F - F - F - F - F RF RF - F RF RF",
         "playTicks": 928,
         "score": 6850
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - F F - F - - F - - F - F R - -:15 - - F - - F - F - F - F RF RF - F RF RF - -:3 R:3 RF",
         "playTicks": 1005,
         "score": 9040
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - F F - F - - F - - F F RF - F:7 RF R RF RF - - F - F - F - F - R F RF - F RF RF - F",
         "playTicks": 695,
@@ -990,28 +874,24 @@
     "name": "Crossing",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:192 F RF - - - - - - F F RF - F - F - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R RF - - RF RF F - F - F RF - F - F",
         "playTicks": 3648,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - - - - - - F F RF - F - F - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R - R RF - - RF RF F - F - F RF - F - F",
         "playTicks": 2304,
         "score": 4620
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:42 F:6 F RF RF R:2 R:2 -:3 R:3 R:4 R:4 R:4 R:4 R:2 R:2 R:2 R:2 RF - R:2 R:2 -:8 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 F:16 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 - R:2 R:2 - R:4 R:4 - RF R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:4 R:4 - R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 RF R:2 R:2 - R:4 R:4 F F RF F - F RF R:2 R:2 -:3 R:3 R:4 R:4 R:4 R:4 R:2 R:2 R:2 R:2 R RF F R:2 R:2 RF - - F - F RF RF R:2 R:2 - R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 -:3 R:3 R:2 R:2 - R:4 R:4 R:4 R:4 RF R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 -:3 R:3 R -:8 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 -:16 F RF RF RF RF RF R:2 R:2 - R:4 R:4 RF R:4 R:4 R:2 R:2 - RF R:2 R:2 - R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R R:2 R:2 RF -:3 R:3 R:2 R:2 -:3 R:3 - F R:2 R:2 - - F R:2 R:2 - R:4 R:4 R:2 R:2 R:4 R:4 - F",
         "playTicks": 2060,
         "score": 5060
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 RF RF RF - - -:2 R:2 - - -:2 R:2 - - F RF RF F RF - -:2 R:2 F - F - F - - F F RF RF R RF - - F F RF RF - F - F - F - F F - F RF RF F",
         "playTicks": 796,
@@ -1024,28 +904,24 @@
     "name": "Labyrinth",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F R F - -:83 R:83 - R R F RF - F - F RF RF RF - F - F - F R F R F - F",
         "playTicks": 1558,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F R F - -:55 R:55 - R R F RF - F - F RF RF RF - F - F - F R F R F - F",
         "playTicks": 1038,
         "score": 7830
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F R F - -:41 R:41 - R R F RF - F - F RF RF RF - F - F - F R F R F - F",
         "playTicks": 778,
         "score": 8280
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F R F - -:28 R:28 - R R F RF - F - F RF RF RF - F - F - F R F R F - F",
         "playTicks": 520,
@@ -1058,28 +934,24 @@
     "name": "Hallway",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - F - - F - F RF - F - F - F - F - R -:32 - F - -:6 R:6 - -:32 - F",
         "playTicks": 1564,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - F - - F - F RF - F - F - F - F - R -:21 - F - -:4 R:4 - -:21 - F",
         "playTicks": 1042,
         "score": 19830
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - F - - F - F RF - F - F - F - F - R -:16 - F - -:3 R:3 - -:16 - F",
         "playTicks": 782,
         "score": 20270
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - F - - F - F RF - F - F - F - F - R -:11 - F - -:2 R:2 - -:11 - F",
         "playTicks": 522,
@@ -1092,28 +964,24 @@
     "name": "Sentry",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF F - F:47 RF - - RF - -:6 R:6 - - -:6 R:6 RF RF - -:6 R:6 - - -:6 R:6 - - F F - F RF -:6 R:6 -:47 -:6 R:6 -:47 -:6 R:6 -:47 - R -:47 - F RF RF RF RF",
         "playTicks": 1999,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF F - F:31 RF - - RF - -:4 R:4 - - -:4 R:4 RF RF - -:4 R:4 - - -:4 R:4 - - F F - F RF -:4 R:4 -:31 -:4 R:4 -:31 -:4 R:4 -:31 - R -:31 - F RF RF RF RF",
         "playTicks": 1331,
         "score": 7280
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF -:3 R:3 F RF F - -:23 - - RF F -:41 F -:3 R:3 - F - -:15 -:3 R:3 -:15 -:3 R:3 -:15 -:3 R:3 -:15 -:3 R:3 -:15 - F - F RF -:3 R:3 -:23 -:3 R:3 -:23 -:3 R:3 -:23 -:3 R:3 -:23 - R -:23 - F RF RF RF RF",
         "playTicks": 1010,
         "score": 7840
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF -:2 R:2 F RF - F RF - F F - F - RF RF F - -:15 - F RF - F RF RF RF F",
         "playTicks": 467,
@@ -1126,28 +994,24 @@
     "name": "Sinkers",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F - F RF RF RF RF - F",
         "playTicks": 720,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F - F RF RF RF - - F - F",
         "playTicks": 544,
         "score": 3910
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - - F - F - F F RF RF RF - F",
         "playTicks": 408,
         "score": 4540
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - - F - F - F F RF RF RF - F",
         "playTicks": 272,
@@ -1160,28 +1024,24 @@
     "name": "Pigeonholes",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - F RF - F - F RF RF - F - F RF RF RF",
         "playTicks": 960,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - F RF - F - F RF RF - F - F RF RF RF",
         "playTicks": 640,
         "score": 19400
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - F RF - F - F RF RF - F - F RF RF RF",
         "playTicks": 480,
         "score": 19920
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - F RF - F - -:2 R:2 - - F -:2 R:2 - - F F -:2 R:2 - F - F F RF RF",
         "playTicks": 396,
@@ -1194,28 +1054,24 @@
     "name": "Hiccup",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - - - - - - - - - - - - - - - - - - F - F F - F - F - - F - F F RF - F - -:6 R:6 - - F - F",
         "playTicks": 2076,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - - - - - - - - - - - - - - - - - - F - F F - F - F - - F - F F RF - F - -:4 R:4 - - F - F",
         "playTicks": 1384,
         "score": 6270
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - - - - - - - - - - - - - - - - - - F - F F - F - F - - F - F F RF - F - -:3 R:3 - - F - F",
         "playTicks": 1038,
         "score": 6430
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - - - - - - - - - - - - - - - - - - F - F F - F - F - - F - F F RF - F - -:2 R:2 - - F - F",
         "playTicks": 692,
@@ -1228,28 +1084,24 @@
     "name": "Stutter",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F RF RF - F - - -:31 F F:81 F F RF RF - F - F - F - F F R - F RF - - F RF RF - F - F F RF - F F RF",
         "playTicks": 2080,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF -:8 R:8 -:8 R:8 F RF RF - F - - RF F:55 F F RF RF - F - F - F - F F R - F RF - - F RF RF - F - F F RF - F F RF",
         "playTicks": 1399,
         "score": 7270
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF RF RF RF RF F - -:23 - -:41 F F F - F F RF RF - - - - - - - - - - - RF - F RF RF F - - F - - F RF - - -:15 RF:15 -:23 - F RF F RF RF F -:41 - -:3 R:3 - F:41 - - RF RF RF RF RF RF RF - F - F F RF",
         "playTicks": 1813,
         "score": 9300
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 -:8 RF RF RF RF RF - - -:11 - - -:11 -:2 R:2 -:11 - F F RF RF F RF RF RF -:27 - -:27 - -:27 - -:27 F RF F RF RF - F F - - - - F - - F:11 -:15 - F RF - F - -:15 - -:15 - -:15 - -:15 - -:15 F - F - F RF - F - F - F F RF",
         "playTicks": 1222,
@@ -1262,28 +1114,24 @@
     "name": "Quincunx",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F - -:6 R:6 - - -:6 R:6 - - -:6 R:6 - - -:6 R:6 RF",
         "playTicks": 624,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F R F F F RF - F RF R -:10 F:22 - - F RF RF RF RF RF RF",
         "playTicks": 736,
         "score": 6380
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F F RF R F - F -:3 R:3 F -:3 R:3 - - -:3 R:3 - - -:3 R:3 - - -:3 R:3 - - -:6 R:6 - - -:3 R:3 - - -:3 R:3 - - -:3 R:3 -:3 R:3 -:3 R:3 -:6 R:6 -:3 R:3 - - -:3 R:3 - - -:3 R:3 - - -:3 R:3 - - -:3 R:3 - - -:3 R:3 - - -:3 R:3 F RS RF RF -:3 R:3 -:6 R:6 - - F - F F -:3 R:3 F RF RF -:3 R:3 - - -:3 R:3 RF RF RF RF RF RF RF",
         "playTicks": 1530,
         "score": 6550
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF - F -:2 R:2 - F RF - -:2 R:2 -:2 R:2 - - F - - F - - - RF F -:2 R:2 -:2 R:2 -:2 R:2 R RF RF RF - - F",
         "playTicks": 488,
@@ -1296,28 +1144,24 @@
     "name": "Tempest",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F RF F RF RF RF F - F R F R F RF - - F - F RF - F - F - F RF RF R F - F F",
         "playTicks": 1632,
         "score": 26000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF R F RF RF - -:8 R:8 RF RF - F RF - - F RF RF RF -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 - F - F -:4 R:4 - F - - - RF - - F - F F",
         "playTicks": 1128,
         "score": 14320
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF F F RF -:3 R:3 - - F -:3 R:3 - F -:3 R:3 - -:3 R:3 - - - - - F -:3 R:3 -:3 R:3 -:3 R:3 R - F RF -:3 R:3 - F - F -:3 R:3 - -:3 R:3 - - -:3 R:3 - - F - -:3 R:3 - - F - F RF - - - RF RF - - F RF RF - F RF RF",
         "playTicks": 1344,
         "score": 24780
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF F F RF -:2 R:2 - - F -:2 R:2 - F -:2 R:2 - -:2 R:2 - - - - - F -:2 R:2 -:2 R:2 -:2 R:2 R - F RF RF RF - F -:2 R:2 - -:2 R:2 RF - F - - F - - - - - - - - - - - - - - - -:2 R:2 F R F - - F F - F F - - - - - - - - - - - - RF -:4 R:4 F - - F F",
         "playTicks": 1264,
@@ -1330,28 +1174,24 @@
     "name": "Dodger",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F:24 RF RF RF -:6 R:6 - F F - F - - -:6 R:6 - - -:6 R:6 - - -:6 R:6 - - -:6 R:6 - - -:6 R:6 - - -:6 R:6 - - -:6 R:6 RF F RF RF - F - F",
         "playTicks": 1560,
         "score": 5000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F:16 RF RF RF -:4 R:4 - F F - F - - -:4 R:4 - - -:4 R:4 - - -:4 R:4 - - -:4 R:4 - - -:4 R:4 - - -:4 R:4 - - -:4 R:4 RF F RF RF - F - F",
         "playTicks": 1040,
         "score": 8430
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:12 - - RF RF - F - - - - RF F RF - -:3 R:3 - - - -:3 R:3 F - - - -:3 R:3 - - -:3 R:3 - - - RF F F - - -:3 R:3 - - F - - - -:3 R:3 - - - -:3 R:3 - RF - - RF RF - RF RF RF RF - - - - F -:3 R:3 - F RF - F - F - -:3 R:3 - - -:3 R:3 - F - -:3 R:3 - -:3 R:3 - F F - F -:3 R:3 -:3 R:3 - - F -:3 R:3 -:3 R:3 - - -:3 R:3 -:3 R:3 RF RF - F - F - - RS RF - -:3 R:3 F - RF -:3 R:3 - F F - RF - -:3 R:3 F - - - -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:6 R:6 RF - - RF -:3 R:3 - F - F - - -:6 R:6 - -:3 R:3 - - -:3 R:3 - RF F - F - - F RF",
         "playTicks": 3234,
         "score": 14470
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 - - RF RF - F - - - - - F RF RF - -:2 R:2 - F - -:2 R:2 - - F F - F RF RF - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 -:2 R:2 -:2 R:2 -:4 R:4 -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - -:2 R:2 - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 F - - - F RF RF F",
         "playTicks": 1288,
@@ -1364,28 +1204,24 @@
     "name": "Hollow",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F RF RF RF RF - -:12 R:12 - - F F RF RF F RF RF - F - RF - - F F RF - - F - - F",
         "playTicks": 1848,
         "score": 7000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F RF RF RF RF - -:8 R:8 - - F F RF RF F RF RF - F - RF - - F F RF - - F - - F",
         "playTicks": 1232,
         "score": 10800
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F RF RF RF RF - -:6 R:6 - - F F RF RF F RF RF - F - RF - - F F RF - - F - - F",
         "playTicks": 924,
         "score": 11250
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F - F RF RF RF RF - -:4 R:4 - - F F RF RF F RF RF - F - RF - - F F RF - - F - - F",
         "playTicks": 616,
@@ -1398,28 +1234,24 @@
     "name": "Squiggle",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F - F R F - - - RF - F - F R F R F R - F RF - F - F - F",
         "playTicks": 1584,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F - F R F - - - RF - F - F R F R F R - F RF - F - F - F",
         "playTicks": 1056,
         "score": 3330
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F - F R F - - - RF - F - F R F R F R - F RF - F - F - F",
         "playTicks": 792,
         "score": 4070
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F - F -:2 R:2 - F - F - F F RF F RF - F RF F - F - F - -:2 R:2 RF",
         "playTicks": 472,
@@ -1432,28 +1264,24 @@
     "name": "Berserkeley",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F F RF RF RF RF - F F RF RF - F - F - F - F F RF RF RF RF - F - F F - - - F -:6 R:6 - - F F",
         "playTicks": 2076,
         "score": 51000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F F RF RF RF RF - F F RF RF - F - F - F - F F RF RF RF RF - F - F F - - - F -:4 R:4 - - F F",
         "playTicks": 1384,
         "score": 54270
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F F RF RF RF RF - F F RF RF - F - F - F - F F RF RF RF RF - F - - R - -:41 - F RF - - F",
         "playTicks": 1049,
         "score": 49830
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF - F F RF RF RF RF - F F RF RF - F - F - F - F F RF RF RF RF - F - - R - -:27 - F RF - - F",
         "playTicks": 699,
@@ -1466,28 +1294,24 @@
     "name": "Betwixt",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF RF RF RF F RF RF RF RF - - F",
         "playTicks": 672,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF RF RF RF - F R F RF - F RF RF",
         "playTicks": 480,
         "score": 9420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF RF - F RF RF R -:3 R:3 RF RF - F - -:3 R:3 - -:3 R:3 - F RF",
         "playTicks": 450,
         "score": 14130
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF RF - F RF RF R -:2 R:2 RF RF - F RF -:2 R:2 -:2 R:2 -:2 R:2 F",
         "playTicks": 256,
@@ -1500,28 +1324,24 @@
     "name": "Weave",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF R F R F RF RF - F - F",
         "playTicks": 816,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF R F R F RF RF - F - F",
         "playTicks": 544,
         "score": 5510
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF - - F - F - F F RF RF RF RF RF F F RF RF RF R RF - RF - - - - - -:3 R:3 -:3 R:3 -:3 R:3 - - - RF -:3 R:3 -:3 R:3 RF -:3 R:3 -:3 R:3 -:6 R:6 F -:3 R:3 -:3 R:3 -:3 R:3 R F - F",
         "playTicks": 1056,
         "score": 8130
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 - - - - - - - - - -:2 R:2 -:2 R:2 -:2 R:2 RS F -:2 R:2 - - - RF RF - - - RF RF RF - - - RF - RF - RF F F RF -:2 R:2 - - -:2 R:2 RF - - F - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - -:2 R:2 RF -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - F -:2 R:2 -:4 R:4 R F -:2 R:2 F -:2 R:2 - - F F -:4 R:4 F -:2 R:2 -:4 R:4 - RF RF F - F - F",
         "playTicks": 1088,
@@ -1534,28 +1354,24 @@
     "name": "Slide",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF RF RF RF RF RF RF - R F",
         "playTicks": 768,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF RF RF RF RF RF RF - R F",
         "playTicks": 512,
         "score": 6020
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - - F F RF RF RF RF RF - F",
         "playTicks": 384,
         "score": 5340
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - - F F RF RF RF RF RF - F",
         "playTicks": 256,
@@ -1568,28 +1384,24 @@
     "name": "Prop Wash",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF RF RF RF RF RF - F - F",
         "playTicks": 816,
         "score": 3000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF - F RF R F F RF - F - F",
         "playTicks": 608,
         "score": 6000
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF RF RF F - F F - - RF F - - F RF RF RF RF RF RF - F",
         "playTicks": 696,
         "score": 11590
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF RF RF - F RF R F F RF - F - F",
         "playTicks": 304,
@@ -1602,28 +1414,24 @@
     "name": "Focus",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F R F F RF RF RF - F F RF RF RF - - F",
         "playTicks": 768,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F R F F RF RF RF - F F RF RF RF - - F",
         "playTicks": 512,
         "score": 20420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - R - R - R RF RF F -:3 R:3 - -:3 R:3 -:3 R:3 - RF - - - - F -:3 R:3 F RF RF -:3 R:3 - - F -:3 R:3 - RF RF - -:3 R:3 - RF - -:3 R:3 F - RF RF RF RF RF RF RF F",
         "playTicks": 1032,
         "score": 30630
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - R - R - R RF RF F -:2 R:2 - -:2 R:2 -:2 R:2 - RF - - - - F -:2 R:2 F RF RF -:2 R:2 - - F -:2 R:2 - RF RF - -:2 R:2 - RF - -:2 R:2 F - RF RF RF - F - - -:2 R:2 - RF - - F",
         "playTicks": 756,
@@ -1636,28 +1444,24 @@
     "name": "Thriller",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F -:6 R:6 F -:6 R:6 F - - - - RF RF - - F - - - F -:6 R:6 - F RF RF RF RF - F F RF RF RF RF RF - F",
         "playTicks": 1716,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F -:4 R:4 F -:8 R:8 F - - - - F RF RF:55 F - F - F F RF RF RF RF RF",
         "playTicks": 815,
         "score": 5370
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:12 F:12 RF - F -:3 R:3 F RF RF RF - - F - - F F RF -:3 R:3 - - F - F RF RF F -:3 R:3 F F RF RF RF RF RF - F",
         "playTicks": 810,
         "score": 5670
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 RF - F -:2 R:2 F RF RF RF - - F - - F F RF -:2 R:2 - - F - F RF RF F -:2 R:2 F F RF RF RF - F RF RF",
         "playTicks": 540,
@@ -1670,28 +1474,24 @@
     "name": "Playground",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F F F RF R F RF RF - F R F RF - F - F F RF RF",
         "playTicks": 1008,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F F F RF R F RF RF - F R F RF - F - F F RF RF",
         "playTicks": 672,
         "score": 4390
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F F F RF R F RF RF - F R F RF - F - F F RF RF",
         "playTicks": 504,
         "score": 4920
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F - F RF RF RF RF - F - F F - F - F F RF RF",
         "playTicks": 368,
@@ -1704,28 +1504,24 @@
     "name": "Funhouse",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F -:6 R:6 - F RF -:6 R:6 - F - F RF RF F - - R - F -:6 R:6 -:6 R:6 -:6 R:6 F RF RF",
         "playTicks": 1116,
         "score": 21000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F R - F R F - F RF RF RF RF RF",
         "playTicks": 512,
         "score": 29420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F -:3 R:3 - F RF -:3 R:3 - F - - - - - - F RF F -:6 R:6 RF - F -:3 R:3 - F RF - - -:3 R:3 RF RF RF -:3 R:3 - - RF",
         "playTicks": 810,
         "score": 24870
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F -:2 R:2 - -:2 R:2 - - -:2 R:2 -:2 R:2 F F - - RF F -:2 R:2 - F - F RF RF -:2 R:2 - -:2 R:2 -:2 R:2 - RF F RF",
         "playTicks": 416,
@@ -1738,28 +1534,24 @@
     "name": "Bourbon",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - - - - F RF - F RF - F - F",
         "playTicks": 720,
         "score": 6000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - - - - F RF - F RF - F - F",
         "playTicks": 480,
         "score": 10620
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - - - - F RF - F RF - F - F",
         "playTicks": 360,
         "score": 8740
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - - - - F RF - F RF - F - F",
         "playTicks": 240,
@@ -1772,28 +1564,24 @@
     "name": "Spires",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF - F - - F R F - F R F - - - - - - - RF",
         "playTicks": 1056,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF - F - - F R F - F R F - - - - - - - RF",
         "playTicks": 704,
         "score": 5890
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF - F - - F R F - F R F - - - - - - - RF",
         "playTicks": 528,
         "score": 6320
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF - F - - F R F - F R F - - - - - - - RF",
         "playTicks": 352,
@@ -1806,28 +1594,24 @@
     "name": "Exile",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F -:6 R:6 -:12 R:12 -:12 R:12 -:12 R:12 R F - - - - - F - - - -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:12 R:12 - - RF - - - - - - - - - - - - - - - - - - - - - - - -:6 R:6 - -:6 R:6 - - F - F F RF RF - -:6 R:6 - - F RF RF - F RF RF RF RF RF",
         "playTicks": 3168,
         "score": 36000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F -:4 R:4 -:8 R:8 -:8 R:8 -:8 R:8 R F - - - - - F - - - -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:8 R:8 - - RF - - - - - - - - - - - - - - - - - - - - - - - -:4 R:4 - -:4 R:4 - - F - F F RF RF - -:4 R:4 - - F RF RF - F RF RF RF RF RF",
         "playTicks": 2112,
         "score": 40150
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:576 F F -:3 R:3 -:6 R:6 -:6 R:6 -:6 R:6 R F - - - - - F - - - -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:6 R:6 - - RF - - - - - - - - - - - - - - - - - - - - - - - -:3 R:3 - -:3 R:3 - - F - F F RF RF - -:3 R:3 - - F RF RF - F RF RF RF RF RF",
         "playTicks": 2160,
         "score": 40440
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 F - - - RF -:2 R:2 F RF R - F R - F - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -:2 R:2 - -:2 R:2 - - - - - -:2 R:2 - - - RF - F F RF RF - -:2 R:2 - - -:2 R:2 RF - RF F - F - -:4 R:4 RF F F - F - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - -:2 R:2 - -:2 R:2 -:2 R:2 -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - F - -:4 R:4 RF F - RF RF F R F - F - - F - - F RF - RF - R RF R R - RF RF RF RF RF",
         "playTicks": 2368,
@@ -1840,28 +1624,24 @@
     "name": "Square Dance",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F -:12 R:12 - F RF RF -:6 R:6 -:12 R:12 -:12 R:12 - -:6 R:6 RF RF RF RF RF - F F RF RF - F RF RF F RF",
         "playTicks": 1248,
         "score": 26000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F -:8 R:8 - F RF -:4 R:4 - -:4 R:4 -:4 R:4 -:4 R:4 F F F - - -:4 R:4 -:4 R:4 S - F - F - F - F - F - F - F - F - F - F - F - F - F - F - F - -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 - RF F -:4 R:4 -:4 R:4 -:4 R:4 - -:4 R:4 RF - F - F RF RF - - F -:4 R:4 -:4 R:4 F RF F RF - F",
         "playTicks": 2192,
         "score": 33140
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - RF - F F - - RF - -:3 R:3 -:3 R:3 F -:3 R:3 -:3 R:3 -:3 R:3 F F F F F F RF -:3 R:3 -:3 R:3 -:3 R:3 F RF F - F F RF -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 RF RF R F -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 F RF RF RF RF -:6 R:6 -:3 R:3 -:3 R:3 - - - F RF - F F RF - F - - F RF RF F RF -:3 R:3 - F RF",
         "playTicks": 1446,
         "score": 18960
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 F RF R F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - -:2 R:2 -:2 R:2 -:2 R:2 - - F -:2 R:2 F - F - F F F F R F RF - RF RF - F F RF - F - - F RF RF F RF -:2 R:2 - F RF",
         "playTicks": 708,
@@ -1874,28 +1654,24 @@
     "name": "Hokey Pokey",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - RF RF F RF RF RF RF - F - F - F RF -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 - F - F F",
         "playTicks": 1056,
         "score": 21000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - RF RF F RF RF - F - F - F - - F F RF F RF RF",
         "playTicks": 736,
         "score": 23380
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - RF RF F RF RF - F - F - F - - F F RF F RF RF",
         "playTicks": 552,
         "score": 24110
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - RF RF F RF RF RF RF - F - F - F RF -:2 R:2 -:2 R:2 -:2 R:2 - F -:2 R:2 - F F",
         "playTicks": 352,
@@ -1908,28 +1684,24 @@
     "name": "Headache",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF RF - - - - - - - R - - - - F",
         "playTicks": 1008,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF RF - - - - - - - R - - - - F",
         "playTicks": 672,
         "score": 6890
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF RF - - - - - - - R - - - - F",
         "playTicks": 504,
         "score": 7120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F RF RF RF - - - - - - - R - - - - F",
         "playTicks": 336,
@@ -1942,28 +1714,24 @@
     "name": "Mortality",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF - F RF RF RF F RF RF R F F - F",
         "playTicks": 768,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF - F RF RF RF F RF RF R F F - F",
         "playTicks": 512,
         "score": 13420
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 12,
         "inputs": "-:12 F RF - F RF RF - - - F -:3 R:3 F -:6 R:6 F - F - F - F F RF RF - F - F F RF RF -:3 R:3 - -:3 R:3 - -:3 R:3 - F",
         "playTicks": 816,
         "score": 10070
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF - F RF RF - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -:2 R:2 -:2 R:2 F R - - -:2 R:2 - - - - - - F RF -:2 R:2 - F - - F -:2 R:2 F F R - F - F RF -:2 R:2 F - - F - F",
         "playTicks": 1512,
@@ -1976,28 +1744,24 @@
     "name": "Death",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF F RF R F F RF F RF - F F RF F RF RF RF F F F F F F F F F F RF F F RF R:2 R:2 -:6 R:6 -:6 R:6 R:2 R:2 -:6 R:6 RF RF R:2 R:2 -:6 R:6 R:2 R:2 -:6 R:6 R:2 R:2 -:6 R:6 R:2 R:2 - F R:2 R:2 -:6 R:6 - F - - R:2 R:2 -:6 R:6 -:6 R:6 F R:2 R:2 - F RF R:2 R:2 - F R:2 R:2 - F R:2 R:2 - F",
         "playTicks": 2604,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - - - - - - - - - F F - - R - R - - - R - - RF R - - RF R F - - - - - - - R - - R - - - RF F RF RF - F - F - F",
         "playTicks": 1760,
         "score": 6710
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - - - - - - - - - F F - - R - R - - - R - - RF R - - RF R F - - - - - - - R - - R - - - RF F RF RF - F - F - F",
         "playTicks": 1320,
         "score": 7380
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - - - - - - - - - F F - - R - R - - - R - - RF R - - RF R F - - - - - - - R - - R - - - RF F RF RF - F - F - F",
         "playTicks": 880,
@@ -2010,28 +1774,24 @@
     "name": "Nasty",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF F RF RF RF - F RF RF - R - F",
         "playTicks": 720,
         "score": 5000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF F RF RF RF - F RF RF - R - F",
         "playTicks": 480,
         "score": 8520
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 12,
         "inputs": "F:12 RF R:8 F:16 - F RF R:2 R:2 - - F RF RF - R R F RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 - R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 RF RF RF F",
         "playTicks": 630,
         "score": 7900
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 8,
         "inputs": "F:8 RF R:5 R:2 R:2 F:11 - F F RF RF RF R:2 R:2 F RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R - R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R RF R:2 R:2 R:2 R:2 RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 - R:2 R:2 -:2 R:2 RF RF RF F",
         "playTicks": 496,
@@ -2044,28 +1804,24 @@
     "name": "Hitchhiker",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F - F - F - F RF RF RF - - - - - F - F - - F -:6 R:6 - - F",
         "playTicks": 1308,
         "score": 6000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F RF - - F - - R - F RF RF RF -:4 R:4 - F RF - F - F - - - - - - - - - - - - - - - RF -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 - -:4 R:4 RF -:4 R:4 -:55 F - F - - F",
         "playTicks": 1631,
         "score": 10830
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 6,
         "inputs": "RF:6 RF RF RF - RF - - F R:2 R:2 RF - - F RF - F RF R F RF - F - F R:2 R:2 -:3 R:3 -:6 R:6 -:3 R:3 -:3 R:3 - RF - F F F - - - - F RF - -:6 R:6 RF - - - - R:2 R:2 -:3 R:3 R:4 R:4 R:3 R:2 R:2 R:3 R:2 R:2 -:3 R:3 R:4 R:4 R:2 R:2 R:4 R:4 -:3 R:3 R:4 R:4 -:3 R:3 -:3 R:3 R:4 R:4 -:3 R:3 -:6 R:6 R:2 R:2 R:4 R:4 -:3 R:3 - -:8 -:6 R:14 - - F R:2 R:2 -:41 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 -:3 R:3 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 F:41 R:2 R:2 - R:2 R:2 R:4 R:4 -:3 R:3 R:2 R:2 R:4 R:4 R:2 R:2 -:9 F:15 R:2 R:2 -:3 R:3 - F R:2 R:2 - RF RF F RF RF RF R:2 R:2 - R:4 R:4 F - F F",
         "playTicks": 2032,
         "score": 12670
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - F RF R:2 R:2 - RF RF F R:2 R:2 - - F RF F RF F RF RF F RF RF F RF F RF R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 - F R:2 R:2 - - R -:4 R:4 R:4 R:4 R:4 -:12 - - R - R -:5 -:4 R:9 R:4 R:4 R:2 R:2 R - R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 - R R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:4 R:4 - - - R R:4 R:4 R:4 R:4 R - F F RF F RF RF RF RF F RF F RF F RF RF F",
         "playTicks": 1314,
@@ -2078,28 +1834,24 @@
     "name": "Diagonals",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF RF - F - F F RF RF RF - F - - F R F RF - F RF",
         "playTicks": 1152,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF RF - F - F F RF RF RF - F - - F R F RF - F RF",
         "playTicks": 768,
         "score": 7380
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF RF - F - F F RF RF RF - F - - F R F RF - F RF",
         "playTicks": 576,
         "score": 7910
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF RF - F - F F RF RF RF - F RF F RF F - F - F RF",
         "playTicks": 384,
@@ -2112,28 +1864,24 @@
     "name": "Seesaw",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - F -:6 R:6 - F F RF RF RF F RF RF - F F RF - F - -:6 R:6 - - F F",
         "playTicks": 1320,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - F -:4 R:4 - F F RF RF - - F - F - - F - F - F - F - -:4 R:4 - - F F RF RF",
         "playTicks": 1072,
         "score": 3830
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF - F -:3 R:3 - F RF RF F - F - F RF - R - F - F RF -:3 R:3 - F RF RF - -:3 R:3 - -:3 R:3 - - - - - - - RF F RF - R - F F",
         "playTicks": 1104,
         "score": 4420
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF RF RF F RF -:2 R:2 - F - F RF - F - F -:2 R:2 - RF F - -:2 R:2 - -:7 - F RF RF - - - - - RF - - -:2 R:2 - - F - F - F F -:2 R:2 -:2 R:2 -:2 R:2 - RF - F F RF",
         "playTicks": 787,
@@ -2146,28 +1894,24 @@
     "name": "Treachery",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF F RF - F F RF - - F - F - F - F - F - F RF",
         "playTicks": 1344,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF F RF - F F RF - - F - F - F - F - F - F RF",
         "playTicks": 896,
         "score": 18860
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:10 F:14 R:10 -:3 R:2 RF:13 RF RF RS -:6 R:5 R:23 R:4 R:3 F:1 R:21 F:3 RF -:17 F:7 RF -:23 F:1 R:12 RF:12 R:4 R:4 -:3 R:1 F:2 -:3 F:21 R:10 -:6 R:2 RF:10 R -:23 F:1 - F - -:23 F:1 - F -:18 -:6 -:5 -:13 -:5 F:1 RF",
         "playTicks": 640,
         "score": 14500
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF RF - -:2 R:2 - F - - F - F - - -:2 R:2 - - - - - RF - - - RF - RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 F - - - - - - - F - - - - - -:2 R:2 - F -:2 R:2 - RF RF - -:2 R:2 -:2 R:2 - - - RF F - - - - - - - - - - - - - -:2 R:2 - - - - - RF - - F - F - F - F - F -:2 R:2 - F F",
         "playTicks": 1424,
@@ -2180,28 +1924,24 @@
     "name": "Tubes",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:36 R - F RF RF -:6 R:6 F F RF R F R - R - RF -:6 R:6 -:12 R:12 -:6 R:6 -:12 R:12 RF -:12 R:12 - - F R -:12 R:12 RF F -:6 R:6 -:6 R:6 -:12 R:12 RF - R RF -:6 R:6 R - -:6 R:6 F -:12 R:12 - R - F - - - R - F -:12 R:12 RF",
         "playTicks": 2208,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:24 R - F RF RF -:4 R:4 F F RF R F R - R - RF -:4 R:4 -:8 R:8 -:4 R:4 -:8 R:8 RF -:8 R:8 - - F R -:8 R:8 RF F -:4 R:4 -:4 R:4 -:8 R:8 RF - R RF -:4 R:4 R - -:4 R:4 F -:8 R:8 - R - F - - - R - F -:8 R:8 RF",
         "playTicks": 1472,
         "score": 20260
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:18 R - F RF RF -:3 R:3 F F RF R F R - R - RF -:3 R:3 -:6 R:6 -:3 R:3 -:6 R:6 RF -:6 R:6 - - F R -:6 R:6 RF F -:3 R:3 -:3 R:3 -:6 R:6 RF - R RF -:3 R:3 R - -:3 R:3 F -:6 R:6 - R - F - - - R - F -:6 R:6 RF",
         "playTicks": 1104,
         "score": 20620
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:12 R - F RF RF - -:2 R:2 F RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - -:4 R:4 RF F - RF RF RF RF RF R -:2 R:2 -:2 R:2 F - - R F -:2 R:2 -:4 R:4 -:2 R:2 R F RF -:4 R:4 R RF F F RF R RF RF RF F -:2 R:2 -:4 R:4 -:2 R:2 F F R - RF - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - RF - RF -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF F - RF - F",
         "playTicks": 1024,
@@ -2214,28 +1954,24 @@
     "name": "Slipstream",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF RF RF - RF RF - - F",
         "playTicks": 576,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF RF RF - RF RF - - F",
         "playTicks": 384,
         "score": 4940
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF RF RF - RF RF - - F",
         "playTicks": 288,
         "score": 5360
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF RF RF - RF RF - - F",
         "playTicks": 192,
@@ -2248,28 +1984,24 @@
     "name": "Gunrunner",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F RF - F - F RF RF RF - -:32 - R -:32 - F RF F RF RF - F RF RF F RF RF - F - - F - RF - - - -:32 - - R - -:32 - - F - F F - -:32 R:32 R:32 R:32 F RF RF - R - F - -:83 - R -:83 - F RF:32 F:32 -:32 - F",
         "playTicks": 3443,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F RF - F - F RF RF RF - -:21 - R -:21 - F RF F RF RF - F RF RF F RF RF - F - - F - RF - - - -:21 - - R - -:21 - - F - F F - -:21 R:21 R:21 R:21 F RF RF - R - F - -:55 - R -:55 - F RF:21 F:21 -:21 - F",
         "playTicks": 2293,
         "score": 5120
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "R:1 F:23 F RF R:2 R:2 - F F RF F R:2 R:2 R:4 R:4 R:2 R:2 RF R:1 F:23 F RF F R:1 F:14 RF F RF RF R:2 R:2 R:4 R:4 F RF RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 F R:2 R:2 R:4 R:2 RF:22 R:2 R:2 R:4 R:4 RF RF R:2 R:2 R:4 R:4 R:2 F:22 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:3 RF:23 RF RF RF F RF RF F RF F R:2 R:2 RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 F R:2 R:2 R:4 R:4 RF F R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 F RF F RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:1 -:14 F RF RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 F RF R:2 R:2 R:4 R:4 R:1 R:2 R:2 R:1 - R:2 R:2 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:3 R:2 R:2 R:4 R:4 R:2 R:2 R:2 R:2 R:23 F",
         "playTicks": 1936,
         "score": 5480
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F RF - F - F RF RF RF RF RF F RF RF RF RF - F F RF RF - F - - F -:2 R:2 -:15 -:2 R:2 -:15 R:15 -:2 R:2 -:15 -:2 R:2 -:15 -:2 R:2 -:15 - - -:11 RF:11 F:11 F:11 -:11 R:11 - F - - F - F RF - -:2 R:2 - -:11 - F",
         "playTicks": 847,
@@ -2282,28 +2014,24 @@
     "name": "Chatter",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF - F RF RF RF RF RF - F RF RF",
         "playTicks": 768,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF - F RF RF RF RF RF - F RF RF",
         "playTicks": 512,
         "score": 4920
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF - F RF - F RF RF RF RF RF RF",
         "playTicks": 384,
         "score": 5340
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F - F RF - F RF RF -:2 R:2 - F F - F - F RF RF",
         "playTicks": 292,
@@ -2316,28 +2044,24 @@
     "name": "Jumble",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF -:81 - F RF RF - -:81 - -:31 F - - - F F - F RF - F F RF F RF",
         "playTicks": 1345,
         "score": 16000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF -:55 - F - F - - - - - -:21 - - - RF F RF RF RF RF - - - - RF - - RF",
         "playTicks": 1004,
         "score": 24340
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:1 -:6 R:3 RF:20 F R:16 -:6 F:2 R F RF R:15 -:1 F:8 R:2 R:2 - R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:1 R:2 R:2 F:1 R:2 R:2 R:4 R:4 R:4 R:3 F:1 R:2 R:2 -:3 R:3 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 RF:15 -:14 R:2 R:2 R:4 R:1 -:3 R:13 R:2 R:2 R:2 -:21 R R:4 R:4 R:1 R:4 R:4 R:4 R:4 R:2 R:2 R:2 R:2 -:6 R:6 F:1 F RF RF R:2 R:2 R:3 -:16 -:3 R:20 RF:22 R:2 F:22 R:2 R:2 R:4 R:3 R:16 R:4 R:2 -:3 R:14 RF:20 R:2 R:2 - -:9 -:6 R:10 F:5",
         "playTicks": 747,
         "score": 24880
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF -:27 - F - F F - - -:31 - F - -:4 R:4 RF RF RF RF RF RF - - F - - F",
         "playTicks": 466,
@@ -2350,28 +2074,24 @@
     "name": "Mishmash",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF F RF RF RF - F - - F - F - RF F - RF - RF - - - F - -:6 R:6 F -:12 R:12 -:6 R:6 - RF - -:6 R:6 - -:6 R:6 RF - -:6 R:6 RF -:6 R:6 - F RF RF - F - - RF - F RF RF - F RF RF",
         "playTicks": 2496,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF F RF RF RF - F RF R F R F - - F - R RF - - RF - F RF RF - F RF RF",
         "playTicks": 960,
         "score": 4840
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF F RF RF RF - F - F RF -:3 R:3 - - -:3 R:3 - - - -:3 R:3 F F -:3 R:3 - - -:3 R:3 - - F -:3 R:3 -:3 R:3 F - - - -:3 R:3 - - RF - -:3 R:3 -:3 R:3 -:3 R:3 R - - - -:3 R:3 F - RF R -:3 R:3 F - -:3 R:3 - - F RF - -:3 R:3 RF -:3 R:3 - F RF RF RF RF - - RF - F - F RF RF - F RF RF",
         "playTicks": 1680,
         "score": 5120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 RF:8 F RF - F RF RF RF -:2 R:2 -:2 R:2 -:2 R:2 F - - - F - -:2 R:2 - F RF - - - -:2 R:2 - -:2 R:2 - F -:2 R:2 - - - F -:2 R:2 - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 R - F - -:2 R:2 - -:2 R:2 - - F -:2 R:2 -:2 R:2 F - - - - - RF -:2 R:2 RF RF - -:2 R:2 -:2 R:2 - - F - -:2 R:2 - F -:2 R:2 F - - - F -:4 R:4 RF - -:2 R:2 RF R F -:2 R:2 F RF - RF - RF -:2 R:2 - F -:2 R:2 -:2 R:2 -:2 R:2 - - F RF R RF RF - F - F F RF - F RF RF",
         "playTicks": 1520,
@@ -2384,28 +2104,24 @@
     "name": "Descent",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F RF:58 -:31 - -:6 R:6 -:31 -:6 R:6 RF",
         "playTicks": 480,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - - -:21 RF:21 - F:21 RF RF",
         "playTicks": 383,
         "score": 6940
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F -:3 R:3 -:6 R:6 -:3 R:3 -:6 R:6 R F:15 RF -:15 F",
         "playTicks": 306,
         "score": 7150
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - F - F -:2 R:2 -:11 -:2 R:2 -:2 R:2 R F:11 RF -:11 F",
         "playTicks": 205,
@@ -2418,28 +2134,24 @@
     "name": "Saga",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - RF RF F - F - - F RF - F - RF - F RF R - - - F - R - R - R - F RF - F - F",
         "playTicks": 1824,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - RF RF F - F - - F RF - F - RF - F RF R - - - F - R - R - R - F RF - F - F",
         "playTicks": 1216,
         "score": 6900
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF RF RF RF - - F - -:3 R:3 - - -:3 R:3 -:3 R:3 RF F - F - - - - - RF - F F - F F - F - F",
         "playTicks": 786,
         "score": 6070
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF RF RF RF RF R -:2 R:2 F RF - F - - - - - RF - F F - -:2 R:2 - - -:2 R:2 - - -:2 R:2 - - F RF - F - F",
         "playTicks": 560,
@@ -2452,28 +2164,24 @@
     "name": "Firing Line",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F RF - F F - F - F RF F RF RF RF - F - -:6 R:6 - - F - F F",
         "playTicks": 1356,
         "score": 5000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F RF - F F - F - F RF F RF RF RF - F - -:4 R:4 - - F - F F",
         "playTicks": 904,
         "score": 8950
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F RF - F F - F - F RF F RF RF RF - F - -:3 R:3 - - F - F F",
         "playTicks": 678,
         "score": 8290
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F RF - F F - F - F RF F RF RF RF - F - -:2 R:2 - - F - F F",
         "playTicks": 452,
@@ -2486,28 +2194,24 @@
     "name": "Quest",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - - F F - - F F RF - F -:6 R:6 - F",
         "playTicks": 732,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F R - RF F RF R F F - - R RF R F",
         "playTicks": 544,
         "score": 7410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - - F F - - F F RF - F -:3 R:3 - F",
         "playTicks": 366,
         "score": 7940
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - - F F - - F F RF - F -:2 R:2 - F",
         "playTicks": 244,
@@ -2520,28 +2224,24 @@
     "name": "Release",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - F R - - -:12 R:12 - - -:12 R:12 F - F RF - F R F RF - F",
         "playTicks": 1008,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - F R F - RF RF - - R F F R R - F -:55 RF:55 - - - RF - F - RF R - F R RF RF - F - - - - RF - F R F RF - F",
         "playTicks": 1582,
         "score": 16740
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - F - - - F - - - - - RF RF - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - F F - -:41 F - RF - -:3 R:3 - - RF - RF - -:3 R:3 - -:3 R:3 - -:3 R:3 -:3 R:3 - R - - - R - - F -:41 R:41 -:3 R:3 RF - -:3 R:3 RF -:3 R:3 - F RF - F",
         "playTicks": 2139,
         "score": 16650
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 RF:8 - F - - RF - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - RF - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - F -:2 R:2 - -:4 R:4 RF RF - -:2 R:2 -:2 R:2 -:2 R:2 -:4 R:4 -:2 R:2 RF F - - F F",
         "playTicks": 1876,
@@ -2554,28 +2254,24 @@
     "name": "Wavicle",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - RF F F - F - F - -:6 R:6 -:6 R:6 - - -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 - -:12 R:12 -:6 R:6 - - -:6 R:6 - -:6 R:6 -:6 R:6 -:6 R:6 - R - - -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 R - - -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 R -:6 R:6 - R - -:6 R:6 RF F R F RF -:6 R:6 - F F RF RF - -:6 R:6 - F RF",
         "playTicks": 2376,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - RF F - - - RF - - - - - - - - - F - - F F R F F RF RF RF",
         "playTicks": 928,
         "score": 5850
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - RF F F - F - F - -:3 R:3 -:3 R:3 - - -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - -:6 R:6 -:3 R:3 - - -:3 R:3 - -:3 R:3 -:3 R:3 -:3 R:3 - R - - -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:6 R:6 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - - - -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 R -:3 R:3 - R - -:3 R:3 RF - R RF -:3 R:3 -:3 R:3 R F - F RF - - - - -:3 R:3 -:3 R:3 F RF RF RF F - F RF RF",
         "playTicks": 1392,
         "score": 5970
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - RF F - - - RF - - - - - - - - - F - - F F R F F RF RF RF",
         "playTicks": 464,
@@ -2588,28 +2284,24 @@
     "name": "Transport",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:768 F - F - F RF RF - - F R:81 F - F - F F RF RF RF - - -:81 - - -:31 - - -:81 - - -:31 - - -:81 - - -:31 - - -:81 - - -:31 - - -:81 - - -:31 - - -:81 - - -:31 - - -:81 - - -:31 - RF F RF - F - - - F - F - F RF - F",
         "playTicks": 4705,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF F RF RF RF -:8 R:8 -:8 R:8 -:8 R:8 -:8 R:8 RF -:55 F F RF - - R RF - F RF RF RF",
         "playTicks": 759,
         "score": 4880
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F F RF F RF RF RF -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 RF -:41 F F RF - - R RF - F RF RF RF",
         "playTicks": 569,
         "score": 5510
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 F:8 - F - F RF RF - - F -:2 R:2 -:27 F F - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF RF RF - RF RF - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF -:2 R:2 RF F F R - -:2 R:2 RF -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF F - - RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 F - RF RF F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RS -:2 R:2 -:4 R:4 S R RF F RF -:2 R:2 -:2 R:2 -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 RF F - RF - F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 RF - - F - F RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:11 F RF RF - R - F R F - F - - F - F",
         "playTicks": 1454,
@@ -2622,28 +2314,24 @@
     "name": "Contraction",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- - RF RF - RF -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 - - - RF -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 -:6 R:6 - F - F RF F - F - F RF RF",
         "playTicks": 1236,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- - RF RF - F - - -:55 - - -:21 - - -:55 - F - - - - RF F RF",
         "playTicks": 803,
         "score": 10870
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- - RF RF - RF -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - - - RF -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - F - F RF F - F - F RF RF",
         "playTicks": 618,
         "score": 6300
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:4 R:4 -:4 R:4 F F R - - -:2 R:2 RF R F R - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - RF - F F F - F - F RF RF",
         "playTicks": 412,
@@ -2656,28 +2344,24 @@
     "name": "Frustration",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF RF RF F RF RF RF - F RF - F -:6 R:6 - F - F - F - F - F RF RF RF F RF RF RF RF RF - F RF F RF RF RF F RF RF F",
         "playTicks": 2076,
         "score": 41000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF R F - F RF RF - F RF - F -:8 R:8 - F - F - F - F - F RF RF RF F RF RF - F RF - F - F RF - F F RF F",
         "playTicks": 1360,
         "score": 44780
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF RF RF F RF RF RF - F RF - F -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - F - F - F - -:15 - - F -:3 R:3 -:11 - F RF RF RF F RF RF RF RF RF - F RF F RF RF RF F RF RF F",
         "playTicks": 1136,
         "score": 45220
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF RF RF F RF RF RF - F RF - F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - F - F - F - -:11 - - F -:2 R:2 -:7 -:2 R:2 -:7 - F RF RF RF F - -:15 - - F F RF RF - F RF - F -:2 R:2 - -:2 R:2 - F RF F",
         "playTicks": 808,
@@ -2690,28 +2374,24 @@
     "name": "Hypertension",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 24,
         "inputs": "-:24 F - F RF RF F RF:31 R:15 R:15 -:31 F - F F - R - - F RF - F F - F - F - - RF F F F:31 RF",
         "playTicks": 1539,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F RF RF F -:10 RF:10 R:21 F - F F - RF F - RF - F - RF F - RF - - - - - - - - - - - - - - - RF F - RF - F - F F - RF RF F RF",
         "playTicks": 1705,
         "score": 10220
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:12 -:12 F RF - - F - F RF -:8 -:3 R:11 F:15 RF - F RF F F - F - -:15 F - F - - RF - F RF RF - F F F:15 -:15 -:3 R:3 -:15 F",
         "playTicks": 871,
         "score": 10860
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F F RF F RF RF -:2 R:2 -:11 F - F - -:11 RF:11 RF - RF R F RF RF - - F -:2 R:2 -:15 RF:15 RF F F:11 RF",
         "playTicks": 466,
@@ -2724,28 +2404,24 @@
     "name": "Flywheels",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - - RF F - R F F RF - - - - - F - - RF RF - - F",
         "playTicks": 1152,
         "score": 8000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - - RF - F F - RF RF -:4 R:4 -:4 R:4 - - - F RF -:4 R:4 -:4 R:4 -:4 R:4 R - -:4 R:4 - - - - - -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:8 R:8 R -:4 R:4 - - - - - -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 - -:4 R:4 -:4 R:4 -:4 R:4 - - - - - -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 R -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:8 R:8 - -:8 R:8 - F - -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 - -:4 R:4 -:4 R:4 RF RF RF F F RF RF - - -:4 R:4 -:8 R:8 R -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 RF F - - R -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 R F F - - R -:4 R:4 -:8 R:8 R -:4 R:4 RF - F R F R - -:4 R:4 RF -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:8 R:8 -:8 R:8 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 - -:8 R:8 - - - R -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 -:4 R:4 R - -:8 R:8 RF R RF RF",
         "playTicks": 3360,
         "score": 18840
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - - RF - F F -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 RF -:6 R:6 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - - - F - - R -:6 R:6 -:6 R:6 R -:3 R:3 -:3 R:3 F RF - F -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 F - RF - - RF - - RF",
         "playTicks": 864,
         "score": 12360
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - - RF - F -:2 R:2 RF - - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF -:4 R:4 - - R -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - -:2 R:2 RF -:2 R:2 RF - -:4 R:4 R R -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 R -:2 R:2 F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 F R R F -:2 R:2 F -:2 R:2 F RF F - - RF - F -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - - - RF - - -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 F",
         "playTicks": 864,
@@ -2758,28 +2434,24 @@
     "name": "Flail",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF R F F RF RF - F - F",
         "playTicks": 912,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF R F F RF RF - F - F",
         "playTicks": 608,
         "score": 6900
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF - -:3 R:3 - - -:3 R:3 RF F - F RF RF F - RF RF",
         "playTicks": 564,
         "score": 7510
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF - -:2 R:2 - - -:2 R:2 RF F - F RF RF F - RF RF",
         "playTicks": 376,
@@ -2792,28 +2464,24 @@
     "name": "Clutch",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - - F - F RF - F - F RF RF F",
         "playTicks": 960,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - R - R - R - R - R RF - F - F - F - - F RF RF RF - F - F",
         "playTicks": 928,
         "score": 10350
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - - F - F RF RF - - F - F RF RF",
         "playTicks": 504,
         "score": 10920
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F - - F - F RF RF - - F - F RF RF",
         "playTicks": 336,
@@ -2826,28 +2494,24 @@
     "name": "Swing Out",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F RF F RF RF RF - F F RF RF - F - F R - - - - - F",
         "playTicks": 1104,
         "score": 7000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F RF RF - F - F F RF RF - F - F R - - - - - F",
         "playTicks": 736,
         "score": 9880
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F RF RF - F - F F RF RF - F - F R - - - - - F",
         "playTicks": 552,
         "score": 10510
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F RF RF - F - F F RF RF - F - F R - - - - - F",
         "playTicks": 368,
@@ -2860,28 +2524,24 @@
     "name": "Slow Motion",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF - -:31 - -:12 R:12 RF RF F RF RF - F RF -:6 R:6 -:31 -:6 R:6 -:31 -:6 R:6 -:31 R:31 - - F - F F - - F RF - F - F RF - - F - F RF",
         "playTicks": 1799,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF - -:21 - -:8 R:8 RF RF F RF RF - RF RF F RF RF - F F RF - F RF - F - -:21 -:4 R:4 -:21 -:4 R:4 -:21 -:4 R:4 -:21 -:4 R:4 -:21 - F - - F - F RF",
         "playTicks": 1230,
         "score": 4800
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - - F RF - F - F RF RF F - -:3 R:3 RF RF -:3 R:3 - RF F - F F - F - RF RF - -:3 R:3 - -:23 - F - - F F RF RF -:3 R:3 -:15 -:3 R:3 -:15 -:3 R:3 -:15 -:3 R:3 -:15 R:15 R:15 - -:3 R:3 - -:15 - - F - F - RF RF -:3 R:3 -:17 -:3 R:3 -:17 -:3 R:3 -:17 R:17 F",
         "playTicks": 1414,
         "score": 5370
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 -:2 R:10 F RF - -:11 - F RF - -:2 R:2 - - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 F RF RF RF RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF -:2 R:2 - F - F - - F - -:2 R:2 - - -:11 - -:2 R:2 - -:2 R:2 - - - -:11 RF:11 -:15 - - -:11 -:2 R:2 -:11 -:2 R:2 -:11 RF:11 RF - F - - F F RF - - -:2 R:2 - R - R - R - - -:2 R:2 - F - - F - F - - F",
         "playTicks": 1175,
@@ -2894,28 +2554,24 @@
     "name": "Orbit",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - - - - - - - - F F RF - F F - R R F - - - - - - - - - - R F - - R F - - - - - - - - - - R F - - R F - - - - - F - - - - - RF - - - - - R R - - - - R - - R - - R RF F",
         "playTicks": 4032,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - - - - - - - - F F RF - F F - R R F - - - - - - - - - - R F - - R F - - - - - - - - - - R F - - R F - - - - - F - - - - - RF - - - - - R R - - - - R - - R - - R RF F",
         "playTicks": 2688,
         "score": 4060
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:12 F:12 - F F F F F F - F RF RF - F - RF F -:6 R:6 -:6 R:6 -:6 R:6 - - - RF F",
         "playTicks": 564,
         "score": 4110
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 -:8 F RF F F - F RF RF -:2 R:2 -:2 R:2 -:2 R:2 RF RF - F RF F - - - - - - - - - - -:2 R:2 RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:4 R:4 R -:2 R:2 -:2 R:2 F - -:4 R:4 - - - - -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - R - -:2 R:2 RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 RF -:4 R:4 RF",
         "playTicks": 768,
@@ -2928,28 +2584,24 @@
     "name": "Passage",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F -:12 R:12 -:30 -:12 R:36 RF:42 - - -:6 -:12 R:36 -:12 R:31 - - R:4 R:1 R:45 R:2 R:1 R:47 - - R:1 -:47 R:1 -:47 - RF R:1 F:47 R:1 -:47 F",
         "playTicks": 1013,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - F - - - - - - - - - - - - - F F - F",
         "playTicks": 672,
         "score": 4890
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - F - - - - -:6 R:29 - - - - - - - - F F - -:3 R:3 - - F",
         "playTicks": 569,
         "score": 5310
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - - F - - - - -:4 R:19 - - - - - - - - F F - -:2 R:2 - - F",
         "playTicks": 379,
@@ -2962,28 +2614,24 @@
     "name": "Gearshift",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF - F - F RF F RF - F - F RF -:6 R:6 - F - F - - F - F - F F - F F - F - F",
         "playTicks": 1644,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF - F - F RF F RF - F RF - F F RF - - F F - F F - F - F",
         "playTicks": 896,
         "score": 3860
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF - F - F RF F RF - F - - F - F RF RF RF RF - F -:3 R:3 -:15 F - F - F",
         "playTicks": 693,
         "score": 4490
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF RF - F - F RF F RF - F - F RF -:2 R:2 - F - F - - F - F - F F - F F - F - F",
         "playTicks": 548,
@@ -2996,28 +2644,24 @@
     "name": "Surrounded",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F - - -:6 R:6 RF - RF - RF F - -:47 F RF",
         "playTicks": 875,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF - F - F RF:55 -:4 R:4 -:8 R:8 F - F:55 F F",
         "playTicks": 486,
         "score": 5020
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF F - - F - F RF F - -:3 R:3 - F F RF -:3 R:3 - F RF -:41 - - -:3 R:3 F - - - F - -:6 R:6 - - -:41 RF:41 - F:41 RF",
         "playTicks": 938,
         "score": 4450
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF F - - F - F RF F - -:2 R:2 - F F RF -:2 R:2 - F RF -:27 F - - - - R - - F - RF - RF - -:2 R:2 - - RF F F -:2 R:2 -:15 -:2 R:2 -:15 - F -:27 - RF - - F - -:2 R:2 - F",
         "playTicks": 876,
@@ -3030,28 +2674,24 @@
     "name": "Blowout",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF R - F:81 -:81 - F - F RF RF - F - F F - F F RF - F F RF",
         "playTicks": 1410,
         "score": 7000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF RF - RF RF R:55 F RF F RF RF RF - F F RF - - F RF RF - F F RF",
         "playTicks": 951,
         "score": 19850
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:288 F RF - F RF R - F:41 -:41 - F - F RF RF - F - F F - F F RF - F F RF",
         "playTicks": 994,
         "score": 11240
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F - F RF - F -:2 R:2 - -:2 R:2 RF R F F - F RF - F F - F - F - F RF RF",
         "playTicks": 456,
@@ -3064,28 +2704,24 @@
     "name": "Fade-out",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - - F - F RF RF F RF RF F RF - F F RF - -:6 R:6 - -:6 R:6 - -:6 R:6 - R -:6 R:6 - -:6 R:6 - -:6 R:6 - F -:6 R:6 F - F",
         "playTicks": 1572,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF RF RF R F F RF - R F RF R R - F - F",
         "playTicks": 672,
         "score": 4390
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F - - F - F RF RF F RF RF F -:3 R:3 F F - - - - - -:3 R:3 - - -:3 R:3 - RF - -:3 R:3 - F -:3 R:3 F - F",
         "playTicks": 774,
         "score": 5880
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF - F RF RF F - - RF - F RF RF RF -:2 R:2 - -:2 R:2 RF RF F RF -:2 R:2 - -:2 R:2 -:2 R:2 R F RF -:2 R:2 F RF RF RF -:2 R:2 F - F",
         "playTicks": 524,
@@ -3098,28 +2734,24 @@
     "name": "Immunity",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F R F - F - F - F RF - F - F RF",
         "playTicks": 912,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F R F - F - F - F RF - F - F RF",
         "playTicks": 608,
         "score": 6400
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F - F - F - F F RF RF F RF F RF RF F",
         "playTicks": 480,
         "score": 19120
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F - F F - F - F F - F RF RF RF F R - - F RF RF",
         "playTicks": 352,
@@ -3132,28 +2764,24 @@
     "name": "Dizziness",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF - F F RF - F RF F RF - F - F - F - F RF RF RF - R F - - F RF RF",
         "playTicks": 1536,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF - F F RF - F RF F RF - F - F - F - F RF RF RF - R F - - F RF RF",
         "playTicks": 1024,
         "score": 8330
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF - F - F F RF - F RF F RF - F - F - F F RF RF RF F - F F - - F RF RF -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 -:3 R:3 - F",
         "playTicks": 852,
         "score": 6660
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF RF - F - F F RF - F RF F RF - F - F - F F RF RF RF F - F F - - F RF RF -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 - F",
         "playTicks": 568,
@@ -3166,28 +2794,24 @@
     "name": "Twin Peaks",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F F RS -:6 R:6 -:12 R:12 RF RF RF RF RF RF RF RF F R -:6 R:6 - - -:6 R:6 R -:6 R:6 RF",
         "playTicks": 936,
         "score": 7000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF - - F R F RF RF RF RF - R R F - F",
         "playTicks": 576,
         "score": 5410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF - - F R F RF RF RF RF - R R F - F",
         "playTicks": 432,
         "score": 5930
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF - - F R F RF RF RF RF - R R F - F",
         "playTicks": 288,
@@ -3200,28 +2824,24 @@
     "name": "Fracas",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF RF RF RF - F - F RF - F F RF RF RF - F - - F - F - - F - F RF RF",
         "playTicks": 1488,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF -:8 R:8 F - - - - - - F -:4 R:4 -:8 R:8 F -:4 R:4 - F - F F - F F RF RF RF - -:4 R:4 F -:8 R:8 -:4 R:4 -:4 R:4 -:4 R:4 - F - - -:4 R:4 - - -:4 R:4 - RF -:4 R:4 -:4 R:4 - F -:4 R:4 -:8 R:8 -:4 R:4 RF R - F -:4 R:4 -:4 R:4 S - - S -:4 R:4 - F - F RF RF RF -:4 R:4 - F RF RF RF - F F RF - F",
         "playTicks": 2144,
         "score": 5150
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF -:6 R:6 R:4 R:4 - -:6 R:6 RF -:6 R:6 -:3 R:3 F R:2 R:2 -:6 R:6 -:3 R:3 -:6 R:6 R:4 R:4 R:4 R:4 R:4 R:4 R R:4 R:4 F R F - F F - F F RF RF RF F RF R:4 R:4 R:4 R:4 - R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 F -:3 R:3 -:3 R:3 R:4 R:4 - R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 F R:4 R:4 - R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 -:3 R:3 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 - RF R F RF RF RF R F - F RF RF",
         "playTicks": 1342,
         "score": 5780
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- F RF -:2 R:2 -:4 R:4 R F -:2 R:2 -:2 R:2 -:4 R:4 -:2 R:2 F -:4 R:4 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:2 R:2 -:4 R:4 -:2 R:2 - -:2 R:2 RF R F - F F - F F - - -:2 R:2 - - -:2 R:2 - F RF -:2 R:2 -:2 R:2 F F - - F RF -:2 R:2 - F - F - F RF RF RF -:2 R:2 - F RF RF RF - F F RF - F",
         "playTicks": 884,
@@ -3234,28 +2854,24 @@
     "name": "Fallback",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - R R R - - R - - R R R - F F RF R F - - RF F",
         "playTicks": 1152,
         "score": 11000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RF - R R R - - R - - R R R - F F RF R F - - RF F",
         "playTicks": 768,
         "score": 13880
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "- RS R:2 R:2 -:3 R:3 R:2 R:2 - RF R:2 R:2 R:2 R:2 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 F - RF F - R R R - R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:4 R:4 F R RF - R R R - R R:2 R:2 -:3 R:3 R:4 R:4 R:2 R:2 R:4 R:4 -:3 R:3 - R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 F F R:2 R:2 - F - - R RF R:2 R:2 R:4 R:4 R:2 R:2 R:4 R:4 R -:6 R:6 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 R:2 R:2 R:4 R:4 R:2 R:2 RF -:3 R:3 F R:2 R:2 F R:4 R:4 R - - -:6 R:6 F F RF F RF F RF R:2 R:2 RF RF - R:2 R:2 - - R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 RF R:2 R:2 R:4 R:4 R:2 R:2 -:3 R:3 R:2 R:2 -:3 R:3 R:2 R:2 R - - - - - - - - F - RF - F",
         "playTicks": 2126,
         "score": 19250
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "-:8 RF:8 - RF F - F - F RF - - F RF -:2 R:2 -:4 R:4 -:2 R:2 -:4 R:4 -:2 R:2 F RF F -:2 R:2 F RF -:2 R:2 -:4 R:4 - F F - - -:27 RF:27 F F RF F RF RF -:2 R:2 - -:2 R:2 - -:4 R:4 -:2 R:2 RF R RF -:2 R:2 -:2 R:2 -:2 R:2 - F -:2 R:2 -:2 R:2 - -:2 R:2 -:2 R:2 RF R F",
         "playTicks": 786,
@@ -3268,28 +2884,24 @@
     "name": "Box",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F R - - - F R RF - - - F RF - F F",
         "playTicks": 864,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F R - - - F R RF - - - F RF - F F",
         "playTicks": 576,
         "score": 4410
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F R - - - F R RF - - - F RF - F F",
         "playTicks": 432,
         "score": 4930
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F R - - - F R RF - - - F RF - F F",
         "playTicks": 288,
@@ -3302,28 +2914,24 @@
     "name": "March",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F F RF - -:6 R:6 - -:31 - F RF:31 F:31 F RF RF RF - F RF - F",
         "playTicks": 969,
         "score": 4000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF F - RF RF R F RF RF R:21 R:21 R:21 RF RF RF - -:31 - F RF RF RF",
         "playTicks": 670,
         "score": 12890
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - -:3 R:3 - - F - F RF R -:15 R:15 - RF RF RF - F RF - -:3 R:3 - - F F",
         "playTicks": 546,
         "score": 9910
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - -:2 R:2 -:4 R:4 F - -:2 R:2 - - F -:2 R:2 - -:2 R:2 - - - -:2 R:2 RF -:4 R:4 - -:11 - - F:11 F RF - F RF -:4 R:4 F RF - F",
         "playTicks": 450,
@@ -3336,28 +2944,24 @@
     "name": "Slaughter",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF RF RF RF RF",
         "playTicks": 672,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF RF RF RF RF",
         "playTicks": 448,
         "score": 4430
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "R F RF - -:3 R:3 - F RF - F - F RF RF RF - F RF - - F",
         "playTicks": 486,
         "score": 4920
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F RF RF RF RF - F RF RF RF - F RF RF RF",
         "playTicks": 240,
@@ -3370,28 +2974,24 @@
     "name": "Crossfire",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F - RF RF -:6 R:6 -:33 -:12 R:12 RF - -:6 R:6 - -:31 - -:6 R:6 - -:31 - R -:31 -:6 R:6 -:31 - F - F - F - F RF F -:81 R:81 F RF RF RF RF RF - F RF - - F",
         "playTicks": 2167,
         "score": 1000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F - RF RF -:4 R:4 -:23 -:8 R:8 RF - -:4 R:4 - -:21 - -:4 R:4 - -:21 - R -:21 -:4 R:4 -:21 - F - F - F - F RF F -:55 R:55 F RF RF RF - F - F RF - F RF",
         "playTicks": 1449,
         "score": 4760
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F - RF RF -:3 R:3 -:17 -:6 R:6 RF - -:3 R:3 - -:16 - -:3 R:3 - -:16 - R -:16 -:3 R:3 -:16 - F - F - F - F RF F -:41 R:41 F RF RF RF - F - F RF - F RF",
         "playTicks": 1087,
         "score": 5220
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "RF - F - F - RF RF -:2 R:2 -:11 -:4 R:4 RF - -:2 R:2 - -:11 - -:2 R:2 - -:11 - R -:11 -:2 R:2 -:11 - F - F - F - F RF F -:27 R:27 F RF RF RF - F - F RF - F RF",
         "playTicks": 725,
@@ -3404,28 +3004,24 @@
     "name": "Break In",
     "checks": {
       "Child": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF R F F - F RF RF - F",
         "playTicks": 624,
         "score": 2000
       },
       "Easy": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF R F F - F RF RF - F",
         "playTicks": 416,
         "score": 8040
       },
       "Medium": {
-        "status": "won",
         "previewTicks": 0,
         "inputs": "F - F RF R F F - F RF RF - F",
         "playTicks": 312,
         "score": 6950
       },
       "Hard": {
-        "status": "won",
         "previewTicks": 36,
         "inputs": "-:2 R:6 F R -:5 R:2 R:2 F:11 R:5 R:2 R:2 F:11 R:5 -:11 F F RF RF R R:4 R:4 F R:2 R:2 R F",
         "playTicks": 236,
