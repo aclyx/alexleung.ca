@@ -14,6 +14,7 @@
     "build:deploy-marker": "node scripts/generate-deploy-marker.mjs",
     "typecheck": "tsc --noEmit",
     "test": "yarn test:harness && jest",
+    "test:last-local": "jest --watchman=false --runInBand --runTestsByPath src/features/clockwerx/__tests__/campaign.test.ts --testNamePattern='recorded browser'",
     "playwright:smoke:run": "playwright test --project=chromium-smoke --project=webkit-smoke --project=mobile-chromium-smoke --project=mobile-webkit-smoke",
     "playwright:visual:run": "playwright test --project=chromium-visual --project=mobile-chromium-visual",
     "playwright:visual:update:run": "playwright test --project=chromium-visual --project=mobile-chromium-visual --update-snapshots",
