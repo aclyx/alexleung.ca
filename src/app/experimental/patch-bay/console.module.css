@@ -25,6 +25,9 @@
     600 14px/1.35 "Arial",
     sans-serif;
   color-scheme: light;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-touch-callout: none;
 }
 .room *,
 .room *::before,
@@ -376,8 +379,6 @@
     inset 0 3px 5px #101b16,
     0 1px 0 #b5a58a;
   touch-action: none;
-  user-select: none;
-  -webkit-touch-callout: none;
 }
 .touchpad[aria-disabled="true"] {
   opacity: 0.55;
@@ -464,9 +465,9 @@
   touch-action: manipulation;
 }
 .pad button {
+  display: grid;
+  place-items: center;
   touch-action: none;
-  user-select: none;
-  -webkit-touch-callout: none;
 }
 .pad button:active,
 .strip button:active {
@@ -518,6 +519,9 @@
   font-size: 13px;
 }
 .dialog {
+  -webkit-user-select: text;
+  user-select: text;
+  -webkit-touch-callout: default;
   position: fixed;
   inset: 0;
   margin: auto;

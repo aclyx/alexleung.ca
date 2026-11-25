@@ -158,11 +158,11 @@ try {
     );
   const names = { 1: "Up", 2: "Left", 4: "Down", 8: "Right" };
   const pad = page.getByRole("group", { name: "Movement touchpad" });
-  if (touch && !touchpad) {
+  if (touchpad) {
     await activate("Guide");
     await page
       .getByLabel("Touch controls")
-      .selectOption("arrows", { force: true });
+      .selectOption("touchpad", { force: true });
     await activate("Close menu");
   }
   let padBox = touchpad ? await pad.boundingBox() : null;

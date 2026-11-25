@@ -22,11 +22,11 @@ const rootKey = "patch-bay.v1.";
 const campaignUrl =
   process.env.NEXT_PUBLIC_PATCH_BAY_CAMPAIGN_URL ||
   "https://raw.githubusercontent.com/gcmaniac/win10_cc/74da8199a3e45b7d154f08a683132761fabd7663/direct_method/chips_challenge/CHIPS.DAT";
-const directions: readonly [string, number, string][] = [
-  ["Up", 1, "▲"],
-  ["Left", 2, "◀"],
-  ["Right", 8, "▶"],
-  ["Down", 4, "▼"],
+const directions: readonly [string, number, number][] = [
+  ["Up", 1, 0],
+  ["Left", 2, -90],
+  ["Right", 8, 90],
+  ["Down", 4, 180],
 ];
 const keys: Record<string, number> = {
   Numpad8: 1,
@@ -216,12 +216,7 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
       game.current.audio.configure(musicOn, effectsOn);
       setMusic(musicOn);
       setEffects(effectsOn);
-      const preferredPad = stored("pad");
-      setTouchpad(
-        preferredPad
-          ? preferredPad === "touchpad"
-          : window.matchMedia("(pointer: coarse)").matches
-      );
+      setTouchpad(stored("pad") === "touchpad");
       install(levels);
       setReady(true);
     })().catch(() => {
@@ -379,6 +374,7 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
   return (
     <div
       className={s.room}
+      onContextMenu={panel ? undefined : (event) => event.preventDefault()}
       onClick={(event) => {
         if (
           event.target instanceof Element &&
@@ -538,7 +534,7 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
                   release={(id) => game.current?.release("p" + id)}
                 />
               ) : (
-                directions.map(([name, cmd, arrow]) => (
+                directions.map(([name, cmd, rotation]) => (
                   <button
                     key={cmd}
                     className={s["dir" + cmd]}
@@ -568,7 +564,18 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
                       if (e.detail === 0) game.current?.tap(cmd);
                     }}
                   >
-                    {arrow}
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 16 16"
+                      aria-hidden="true"
+                    >
+                      <path
+                        d="M8 2 15 14H1Z"
+                        fill="currentColor"
+                        transform={`rotate(${rotation} 8 8)`}
+                      />
+                    </svg>
                   </button>
                 ))
               )}
@@ -774,8 +781,8 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
                   game.current?.audio.control();
                 }}
               >
-                <option value="touchpad">Touchpad</option>
-                <option value="arrows">Arrow buttons</option>
+                <option value="arrows">D-pad</option>
+                <option value="touchpad">Joystick</option>
               </select>
             </label>
             <p>

@@ -1,4 +1,10 @@
-import { expect, test } from "@playwright/test";
+import { expect, test, type Page } from "@playwright/test";
+
+async function openBench(page: Page) {
+  await page.route("**/CHIPS.DAT", (route) => route.abort());
+  await page.goto("/experimental/patch-bay/");
+  await expect(page.getByRole("heading", { name: "Bench test" })).toBeVisible();
+}
 
 test("a bad campaign download leaves the practice board playable", async ({
   page,
@@ -32,27 +38,7 @@ test("the bench celebrates the clear and focuses Replay", async ({
 }) => {
   test.setTimeout(60_000);
   await page.clock.install();
-  await page.route("**/CHIPS.DAT", (route) =>
-    route.fulfill({
-      contentType: "application/octet-stream",
-      headers: { "access-control-allow-origin": "*" },
-      body: "No campaign",
-    })
-  );
-  await page.goto("/experimental/patch-bay/");
-  await expect(page.getByRole("heading", { name: "Bench test" })).toBeVisible();
-  if (hasTouch) {
-    await expect(
-      page.getByRole("group", { name: "Movement touchpad" })
-    ).toBeVisible();
-    await page.getByRole("button", { name: "Guide" }).tap();
-    await page.getByLabel("Touch controls").selectOption("arrows");
-    await page.getByRole("button", { name: "Close menu" }).tap();
-    await page.reload();
-    await expect(
-      page.getByRole("button", { name: "Move right" })
-    ).toBeEnabled();
-  }
+  await openBench(page);
   for (const dir of [
     "Right",
     "Right",
@@ -93,4 +79,77 @@ test("the bench celebrates the clear and focuses Replay", async ({
   await expect(
     page.getByRole("button", { name: "Start", exact: true })
   ).toBeVisible();
+});
+
+test("the D-pad repeats while held and stops on release", async ({
+  page,
+  hasTouch,
+  browserName,
+}) => {
+  await page.clock.install();
+  await openBench(page);
+  await page.clock.pauseAt(new Date(Date.now() + 60_000));
+  const right = page.getByRole("button", { name: "Move right" });
+  const point = await right.evaluate((button) => {
+    const r = button.getBoundingClientRect();
+    return { x: r.x + r.width / 2, y: r.y + r.height / 2 };
+  });
+  const touch =
+    hasTouch && browserName === "chromium"
+      ? await page.context().newCDPSession(page)
+      : null;
+  if (touch) {
+    await touch.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [point],
+    });
+  } else {
+    await page.mouse.move(point.x, point.y);
+    await page.mouse.down();
+  }
+  await page.clock.runFor(320);
+  if (touch) {
+    await touch.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+  } else await page.mouse.up();
+  await page.clock.runFor(1000);
+
+  // The first chip is three tiles east. The hold moves two, then release stops it.
+  const chips = page.locator("output").first();
+  await expect(chips).toHaveText("02");
+  if (hasTouch) await page.touchscreen.tap(point.x, point.y);
+  else await page.mouse.click(point.x, point.y);
+  await page.clock.runFor(250);
+  await expect(chips).toHaveText("01");
+});
+
+test("gameplay blocks selection and the Guide remembers the joystick", async ({
+  page,
+}) => {
+  await openBench(page);
+  await expect(page.locator("button[data-direction] svg")).toHaveCount(4);
+  const title = page.getByRole("heading", { name: "Bench test" });
+  await page.getByRole("button", { name: "Start", exact: true }).click();
+  await page.getByRole("button", { name: "Pause", exact: true }).click();
+  await title.dblclick();
+  expect(await page.evaluate(() => window.getSelection()?.toString())).toBe("");
+  await page.getByRole("button", { name: "Guide" }).click();
+  await expect(page.getByRole("dialog")).toHaveCSS(
+    "-webkit-user-select",
+    "text"
+  );
+  const controls = page.getByLabel("Touch controls");
+  await expect(controls).toHaveValue("arrows");
+  await controls.selectOption({ label: "Joystick" });
+  await page.getByRole("button", { name: "Close menu" }).click();
+  const joystick = page.getByRole("group", { name: "Movement touchpad" });
+  await expect(joystick).toBeVisible();
+  await page.reload();
+  await expect(joystick).toBeVisible();
+  await page.getByRole("button", { name: "Guide" }).click();
+  await controls.selectOption({ label: "D-pad" });
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Move left" })).toBeEnabled();
 });
