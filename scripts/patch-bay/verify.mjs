@@ -1,5 +1,5 @@
 // Run against a static export served on localhost. Supply private DAT and public TWS paths.
-// node scripts/patch-bay/verify.mjs <url> <dat> <tws> keyboard|touch <output.json> [first] [last]
+// node scripts/patch-bay/verify.mjs <url> <dat> <tws> keyboard|touch|touchpad <output.json> [first] [last]
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
 import fs from "node:fs";
@@ -10,7 +10,7 @@ import { readSolutions } from "./solutions.mjs";
 
 const [url, dat, tws, scheme, output, from = "1", through = "149"] =
   process.argv.slice(2);
-assert(["keyboard", "touch"].includes(scheme));
+assert(["keyboard", "touch", "touchpad"].includes(scheme));
 const digest = (file) =>
   createHash("sha256").update(fs.readFileSync(file)).digest("hex");
 assert.equal(
@@ -19,8 +19,10 @@ assert.equal(
 );
 const recordings = readSolutions(fs.readFileSync(tws));
 assert.equal(recordings.size, 149);
-const touch = scheme === "touch";
+const touch = scheme !== "keyboard";
+const touchpad = scheme === "touchpad";
 const safari = process.env.PATCH_BAY_BROWSER === "webkit";
+assert(!(touchpad && safari), "Trusted touch drags use Chromium CDP");
 const browser = safari
   ? await webkit.launch()
   : await chromium.launch({
@@ -100,7 +102,9 @@ try {
         !clock.armed ||
         !(e.type === "keydown"
           ? e.code.startsWith("Arrow")
-          : e.target.closest('button[aria-label^="Move "]'))
+          : e.target.closest(
+              'button[aria-label^="Move "], [aria-label="Movement touchpad"]'
+            ))
       )
         return;
       if (
@@ -122,7 +126,9 @@ try {
   await page.waitForFunction(
     () =>
       document.querySelector("h2[data-level]")?.textContent === "LESSON 1" &&
-      !document.querySelector('button[aria-label="Move up"]')?.disabled,
+      document.querySelector(
+        "section[aria-label='Patch Bay game console'] footer button:enabled"
+      ),
     undefined,
     { polling: 20 }
   );
@@ -151,23 +157,59 @@ try {
       [r.seed, r.phase]
     );
   const names = { 1: "Up", 2: "Left", 4: "Down", 8: "Right" };
-  const points = {};
-  for (const [dir, name] of Object.entries(names)) {
-    const box = await button("Move " + name.toLowerCase()).boundingBox();
-    points[dir] = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+  const pad = page.getByRole("group", { name: "Movement touchpad" });
+  if (touch && !touchpad) {
+    await activate("Guide");
+    await page
+      .getByLabel("Touch controls")
+      .selectOption("arrows", { force: true });
+    await activate("Close menu");
   }
+  let padBox = touchpad ? await pad.boundingBox() : null;
+  const points = {};
+  if (!touchpad) {
+    for (const [dir, name] of Object.entries(names)) {
+      const box = await button("Move " + name.toLowerCase()).boundingBox();
+      points[dir] = { x: box.x + box.width / 2, y: box.y + box.height / 2 };
+    }
+  }
+  const dragPad = async (dir) => {
+    const x = padBox.x + padBox.width / 2,
+      y = padBox.y + padBox.height / 2;
+    const delta = padBox.width / 4;
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchStart",
+      touchPoints: [{ x, y }],
+    });
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchMove",
+      touchPoints: [
+        {
+          x: x + (dir === 8 ? delta : dir === 2 ? -delta : 0),
+          y: y + (dir === 4 ? delta : dir === 1 ? -delta : 0),
+        },
+      ],
+    });
+    await cdp.send("Input.dispatchTouchEvent", {
+      type: "touchEnd",
+      touchPoints: [],
+    });
+  };
   for (let n = Number(from); n <= Number(through); n++) {
     const r = recordings.get(n);
     await setSeed(r);
     if (n !== 1) {
       if (n === Number(from) || n === 145) {
-        await activate("Levels");
+        await activate(
+          n === 145 && Number(from) < 145 ? "Bonus levels" : "Levels"
+        );
         if (n === 145 && Number(from) < 145)
           assert(
             !(await page.getByRole("button", { name: /145.*[A-Z]/ }).count())
           );
         await submitPassword(n);
-      } else await activate("Next level");
+      } else if (touch) await activate("Next level");
+      else await page.keyboard.press("Enter");
     }
     const title = await page
       .locator('h2[data-level="' + n + '"]')
@@ -186,7 +228,8 @@ try {
       r.moves.map((m) => m[0])
     );
     for (const [, dir] of r.moves) {
-      if (!cdp) {
+      if (touchpad) await dragPad(dir);
+      else if (!cdp) {
         if (touch) await page.touchscreen.tap(points[dir].x, points[dir].y);
         else await page.keyboard.press("Arrow" + names[dir]);
       } else if (touch) {
@@ -240,6 +283,24 @@ try {
       scheme + " " + n + " " + title + " " + JSON.stringify(observed)
     );
     assert.equal(observed.best, r.time, "Reference finish tick on " + n);
+    const clear = page.getByRole("region", { name: "Nice work!" });
+    await clear.waitFor();
+    const action = clear.getByRole("button", {
+      name: n === 144 ? "Bonus levels" : n === 149 ? "Replay" : "Next level",
+      exact: true,
+    });
+    assert(
+      await action.evaluate((el) => el === document.activeElement),
+      "Focused clear action on " + n
+    );
+    if (n === 149) {
+      if (touch) await activate("Replay");
+      else await page.keyboard.press("Enter");
+      assert.equal(
+        await page.locator("[data-mode]").getAttribute("data-mode"),
+        "ready"
+      );
+    }
     report.boards.push({
       number: n,
       title,
@@ -253,8 +314,10 @@ try {
   await page.reload();
   await page.waitForFunction(
     () =>
-      !document.querySelector('button[aria-label="Move up"]')?.disabled &&
-      document.querySelector("canvas"),
+      document.querySelector("h2[data-level]") &&
+      document.querySelector(
+        "section[aria-label='Patch Bay game console'] footer button:enabled"
+      ),
     undefined,
     { polling: 20 }
   );
@@ -299,7 +362,8 @@ try {
     await submitPassword(21);
     const canvas = page.locator("canvas");
     const board = await canvas.boundingBox();
-    if (touch) await activate("Move right");
+    if (touchpad) await dragPad(8);
+    else if (touch) await activate("Move right");
     else await page.keyboard.press("ArrowRight");
     await page.evaluate(() => window.benchClock.advance(12));
     const alert = page
@@ -325,7 +389,10 @@ try {
     }
     if (touch) {
       await page.setViewportSize({ width: 320, height: 568 });
-      await activate("Move down");
+      if (touchpad) {
+        padBox = await pad.boundingBox();
+        await dragPad(4);
+      } else await activate("Move down");
     } else await page.keyboard.press("ArrowDown");
     await page.evaluate(() => window.benchClock.advance(4));
     if (touch) await activate("Read hint");

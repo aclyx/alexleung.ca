@@ -25,7 +25,10 @@ export const emptyReadout: Readout = {
 
 export class Console {
   mode: Mode = "ready";
-  private held = new Map<string, { command: number; repeatAt: number }>();
+  private held = new Map<
+    string,
+    { command: number; repeatAt: number; speed: number; credit: number }
+  >();
   private presses: number[] = [];
   private lastFrame: number | null = null;
   private elapsed = 0;
@@ -48,6 +51,7 @@ export class Console {
     this.mode = "ready";
     this.display.draw(this.engine, performance.now(), true, true);
     this.show();
+    this.animation = requestAnimationFrame(this.frame);
   }
   private show() {
     if (!this.board) return;
@@ -77,6 +81,7 @@ export class Console {
   }
   play() {
     if (this.mode !== "ready" && this.mode !== "paused") return;
+    cancelAnimationFrame(this.animation);
     this.mode = "playing";
     this.audio.start();
     this.lastFrame = performance.now();
@@ -88,17 +93,23 @@ export class Console {
     this.stopClock();
     this.mode = "paused";
     this.audio.pause();
-    this.display.draw(this.engine, performance.now(), true, true);
+    this.display.draw(this.engine, performance.now(), true, true, false);
     this.show();
   }
-  press(source: string, command: number) {
+  press(source: string, command: number, speed = 1) {
     if (this.mode === "ready") this.play();
     if (this.mode !== "playing") return;
-    if (this.held.get(source)?.command === command) return;
+    const held = this.held.get(source);
+    if (held?.command === command) {
+      held.speed = speed;
+      return;
+    }
     this.held.delete(source);
     this.held.set(source, {
       command,
       repeatAt: performance.now() + 4 * tickMs,
+      speed,
+      credit: 0,
     });
     this.presses.push(command);
   }
@@ -110,6 +121,11 @@ export class Console {
     if (this.mode === "playing") this.presses.push(command);
   }
   private frame = (now: number) => {
+    if (this.mode === "ready") {
+      this.display.draw(this.engine, now, false);
+      this.animation = requestAnimationFrame(this.frame);
+      return;
+    }
     this.elapsed += Math.min(250, Math.max(0, now - (this.lastFrame ?? now)));
     this.lastFrame = now;
     let changed = false;
@@ -132,7 +148,14 @@ export class Console {
       // Discrete presses take priority over repeats, including after release.
       if (!command && (this.engine.ticks() + 1) % 4 === 0) {
         const held = Array.from(this.held.values()).at(-1);
-        if (held && now - this.elapsed >= held.repeatAt) command = held.command;
+        if (held && now - this.elapsed >= held.repeatAt) {
+          // Fractional speed spends the same fraction of the original MS move slots.
+          held.credit += held.speed;
+          if (held.credit >= 1) {
+            command = held.command;
+            held.credit--;
+          }
+        }
       }
       const before = this.engine.position();
       const outcome = this.engine.step(command);
@@ -157,7 +180,8 @@ export class Console {
         this.engine,
         now,
         changed,
-        teleported || this.mode === "lost"
+        teleported || this.mode !== "playing",
+        this.mode === "playing"
       );
     if (changed) this.show();
     if (this.mode === "playing" || this.display.moving)
