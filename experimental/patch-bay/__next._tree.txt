@@ -1,0 +1,6 @@
+:HL["/_next/static/chunks/3_p5-0srgt2iw.css","style"]
+:HL["/_next/static/chunks/0z86pjb7pt032.css","style"]
+3:[["children",{"s":"__PAGE__","h":160}]]
+2:[["children",{"s":"patch-bay","h":96,"c":"$Q3"}]]
+1:[["children",{"s":"experimental","h":64,"c":"$Q2"}]]
+0:{"b":"9COpmqiirGN85nnxfGDPD","t":{"t":{"s":"","h":16,"c":"$Q1"}}}
