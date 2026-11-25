@@ -112,9 +112,11 @@ export class PatchAudio {
   effects = true;
   private active = false;
   private ctx?: AudioContext;
+  private observedTime = -1;
+  private observedAt = 0;
   private bus?: GainNode;
   private loop?: AudioBuffer;
-  private loading?: Promise<void>;
+  private loading?: AbortController;
   private track?: AudioBufferSourceNode;
   private offset = 0;
   private trackStart = 0;
@@ -143,7 +145,29 @@ export class PatchAudio {
   }
 
   private context() {
-    return (this.ctx ??= new AudioContext({ latencyHint: "interactive" }));
+    const ctx = this.ctx;
+    if (ctx && ctx.state !== "closed") {
+      const now = performance.now();
+      if (ctx.currentTime !== this.observedTime) {
+        this.observedTime = ctx.currentTime;
+        this.observedAt = now;
+      }
+      // An iOS interruption can leave even a "running" context with a frozen
+      // clock. Only replace it on an interaction, after allowing time to resume.
+      if (now - this.observedAt < 1500) return ctx;
+    }
+    if (ctx) this.closeContext();
+    const next = new AudioContext({ latencyHint: "interactive" });
+    this.ctx = next;
+    this.observedTime = -1;
+    next.onstatechange = () => {
+      if (!this.active || document.hidden || (!this.music && !this.effects))
+        return;
+      if (next.state === "running") this.playTrack();
+      else if (next.state === "interrupted" || next.state === "suspended")
+        void next.resume().catch(() => {});
+    };
+    return next;
   }
   // Menu controls also work before the first move and while the clock is paused.
   control() {
@@ -155,7 +179,9 @@ export class PatchAudio {
       else
         void ctx
           .resume()
-          .then(() => this.play("control"))
+          .then(() => {
+            if (ctx === this.ctx && !document.hidden) this.play("control");
+          })
           .catch(() => {});
     } catch {
       /* Keep controls usable when the audio device is unavailable. */
@@ -173,27 +199,27 @@ export class PatchAudio {
       return;
     try {
       const ctx = this.context();
-      if (ctx.state !== "running")
-        void ctx
-          .resume()
-          .then(() => this.playTrack())
-          .catch(() => {});
+      if (ctx.state !== "running") void ctx.resume().catch(() => {});
       if (this.music && !this.loop && !this.loading) {
-        this.loading = fetch("/assets/patch-bay/relay-logic.flac")
+        const request = new AbortController();
+        this.loading = request;
+        void fetch("/assets/patch-bay/relay-logic.flac", {
+          signal: request.signal,
+        })
           .then((response) => {
             if (!response.ok) throw Error("Music unavailable");
             return response.arrayBuffer();
           })
           .then((bytes) => ctx.decodeAudioData(bytes))
           .then((buffer) => {
-            if (!this.disposed) {
+            if (!request.signal.aborted) {
               this.loop = buffer;
               this.playTrack();
             }
           })
           .catch(() => {})
           .finally(() => {
-            this.loading = undefined;
+            if (this.loading === request) this.loading = undefined;
           });
       }
       this.playTrack();
@@ -245,6 +271,10 @@ export class PatchAudio {
     this.lastPlayed.clear();
   }
   pause() {
+    if (this.active && this.ctx) {
+      this.observedTime = this.ctx.currentTime;
+      this.observedAt = performance.now();
+    }
     this.active = false;
     this.stopTrack();
     this.quietEffects();
@@ -299,9 +329,21 @@ export class PatchAudio {
     if (outcome) this.play(outcome > 0 ? "clear" : "loss");
     else if (moved && (mask & ~((1 << 3) | (1 << 2))) === 0) this.play("step");
   }
+  private closeContext() {
+    this.loading?.abort();
+    this.loading = undefined;
+    this.stopTrack();
+    this.quietEffects();
+    const ctx = this.ctx;
+    this.ctx = undefined;
+    if (ctx) {
+      ctx.onstatechange = null;
+      if (ctx.state !== "closed") void ctx.close().catch(() => {});
+    }
+  }
   dispose() {
     this.disposed = true;
-    this.pause();
-    void this.ctx?.close().catch(() => {});
+    this.active = false;
+    this.closeContext();
   }
 }

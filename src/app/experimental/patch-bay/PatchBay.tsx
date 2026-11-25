@@ -235,7 +235,10 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
       const cmd = keys[e.code];
       if (cmd) {
         e.preventDefault();
-        if (!e.repeat) game.current.press(e.code, cmd);
+        if (!e.repeat) {
+          if (game.current.mode === "playing") game.current.audio.unlock();
+          game.current.press(e.code, cmd);
+        }
       } else if (
         e.code === "Escape" ||
         (e.code === "Space" && !(e.target instanceof HTMLButtonElement))
