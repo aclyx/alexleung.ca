@@ -12,6 +12,8 @@
     "build": "yarn image:variants && next build && yarn build:deploy-marker",
     "build:prod": "NEXT_PUBLIC_ENABLE_ANALYTICS=true yarn build",
     "build:deploy-marker": "node scripts/generate-deploy-marker.mjs",
+    "patch-bay:check-layouts": "node scripts/patch-bay/check-layouts.mjs",
+    "patch-bay:verify": "node scripts/patch-bay/verify.mjs",
     "typecheck": "tsc --noEmit",
     "test": "yarn test:harness && jest",
     "test:last-local": "jest --watchman=false --runInBand --runTestsByPath src/features/clockwerx/__tests__/campaign.test.ts --testNamePattern='recorded browser'",
