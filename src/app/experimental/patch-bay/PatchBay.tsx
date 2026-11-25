@@ -18,6 +18,9 @@ import { BoardDisplay, loadEngine } from "./engine";
 import { restoreCode, saveCode } from "./save";
 
 const rootKey = "patch-bay.v1.";
+const campaignUrl =
+  process.env.NEXT_PUBLIC_PATCH_BAY_CAMPAIGN_URL ||
+  "https://raw.githubusercontent.com/gcmaniac/win10_cc/74da8199a3e45b7d154f08a683132761fabd7663/direct_method/chips_challenge/CHIPS.DAT";
 const directions: readonly [string, number, string][] = [
   ["Up", 1, "▲"],
   ["Left", 2, "◀"],
@@ -75,6 +78,28 @@ function put(key: string, value: string) {
     return false;
   }
 }
+
+async function loadCampaign(signal: AbortSignal) {
+  const cached = stored("dat");
+  if (cached) {
+    try {
+      return await readWindowsCampaign(decodeBytes(cached));
+    } catch {
+      // Replace an unreadable saved copy with the verified download.
+    }
+  }
+  const response = await fetch(campaignUrl, {
+    signal,
+    credentials: "omit",
+    referrerPolicy: "no-referrer",
+  });
+  if (!response.ok) throw Error("Campaign download failed");
+  const bytes = new Uint8Array(await response.arrayBuffer());
+  const levels = await readWindowsCampaign(bytes);
+  if (!signal.aborted) put("dat", encodeBytes(bytes));
+  return levels;
+}
+
 function sprite(id: number, atlasUrl: string) {
   return {
     backgroundImage: `url(${atlasUrl})`,
@@ -83,13 +108,7 @@ function sprite(id: number, atlasUrl: string) {
   };
 }
 
-export function PatchBay({
-  localCampaign,
-  atlasUrl,
-}: {
-  localCampaign: string;
-  atlasUrl: string;
-}) {
+export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
   const canvas = useRef<HTMLCanvasElement>(null),
     message = useRef<HTMLParagraphElement>(null),
     game = useRef<Console | null>(null),
@@ -159,19 +178,18 @@ export function PatchBay({
   }
   useEffect(() => {
     let disposed = false;
+    const request = new AbortController();
+    const timeout = window.setTimeout(() => request.abort(), 8000);
     const atlas = new Image();
     atlas.src = atlasUrl;
     void (async () => {
-      const [engine] = await Promise.all([loadEngine(), atlas.decode()]);
-      const raw = stored("dat") || localCampaign;
-      let levels = testBoards;
-      if (raw)
-        try {
-          levels = await readWindowsCampaign(decodeBytes(raw));
-        } catch {
-          if (!disposed)
-            setNotice("Reopen CHIPS.DAT to use the Windows campaign.");
-        }
+      const [engine, levels] = await Promise.all([
+        loadEngine(),
+        loadCampaign(request.signal)
+          .catch(() => testBoards)
+          .finally(() => window.clearTimeout(timeout)),
+        atlas.decode(),
+      ]);
       if (disposed || !canvas.current) return;
       game.current = new Console(
         engine,
@@ -247,6 +265,8 @@ export function PatchBay({
     document.addEventListener("visibilitychange", hidden);
     return () => {
       disposed = true;
+      window.clearTimeout(timeout);
+      request.abort();
       game.current?.dispose();
       game.current = null;
       window.removeEventListener("keydown", keydown);
@@ -256,7 +276,7 @@ export function PatchBay({
       window.removeEventListener("blur", pause);
       document.removeEventListener("visibilitychange", hidden);
     };
-  }, [atlasUrl, localCampaign]);
+  }, [atlasUrl]);
   function showPanel(which: Exclude<Panel, null>) {
     game.current?.pause();
     openPanel.current = which;
@@ -410,11 +430,14 @@ export function PatchBay({
           <aside className={s.rail}>
             <div className={s.level}>
               <span>
-                {campaign
-                  ? `LEVEL ${String(board.number).padStart(3, "0")} / 149`
-                  : "WORKBENCH"}
+                {ready &&
+                  (campaign
+                    ? `LEVEL ${String(board.number).padStart(3, "0")} / 149`
+                    : "WORKBENCH")}
               </span>
-              <h2 data-level={board.number}>{board.title}</h2>
+              <h2 data-level={ready ? board.number : undefined}>
+                {ready ? board.title : "Loading campaign…"}
+              </h2>
             </div>
             <div className={s.meters}>
               <div>
@@ -452,10 +475,10 @@ export function PatchBay({
             >
               <span>
                 {status ||
-                  (hud.mode === "ready"
+                  (ready && hud.mode === "ready"
                     ? campaign
                       ? "Ready"
-                      : "Try the two-chip circuit. Open Levels to load CHIPS.DAT."
+                      : "Campaign unavailable. Try this board or open CHIPS.DAT in Levels."
                     : "")}
               </span>
               {hintOverflows && hud.mode === "playing" && (

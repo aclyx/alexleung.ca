@@ -42,7 +42,9 @@ An independent decoder compared all 305,152 starting tile IDs across both layers
 
 The routes came from the public Microsoft-rules solution collection, which credits each player. Patch Bay runs the Tile World Microsoft rules engine. [Recordings and player credits](https://davidstolp.com/old/chips/tws/?set=CHIPS) · [Rules implementation](https://github.com/SicklySilverMoon/tworld/blob/df08b921ec718884c141020c6feaf0c0e45f8e8a/mslogic.c)
 
-Serve a production export on localhost. Point `DAT` at the original Windows file and `TWS` at the public MS solution file. The public export starts with an original two-chip practice circuit. Under `yarn dev`, a private copy at `.cache/patch-bay/CHIPS.DAT` loads automatically. On the exported site, select **Levels → Open CHIPS.DAT** once per browser.
+Serve a production export on localhost. Point `DAT` at the original Windows file and `TWS` at the public MS solution file. The replay test serves those local DAT bytes in place of the remote response, checks that Lesson 1 opens on first visit, and checks that reloading uses the saved campaign. It also tests manual import when the host is unavailable.
+
+In the game, the browser fetches the campaign directly from a revision-pinned external URL, checks its SHA-256, and saves the verified bytes locally for return visits. To change the source, set `NEXT_PUBLIC_PATCH_BAY_CAMPAIGN_URL` before building. The host must allow cross-origin reads. If the download fails, the two-chip practice circuit is playable and **Levels → Open CHIPS.DAT** accepts a local copy.
 
 ```sh
 URL=http://127.0.0.1:4180/experimental/patch-bay/

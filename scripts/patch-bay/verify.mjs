@@ -47,7 +47,19 @@ try {
     isMobile: touch,
   });
   page.on("pageerror", (error) => console.error(error));
-  await page.addInitScript(() => {
+  const campaignRequest =
+    process.env.NEXT_PUBLIC_PATCH_BAY_CAMPAIGN_URL || "**/CHIPS.DAT";
+  let downloads = 0;
+  await page.route(campaignRequest, async (route) => {
+    downloads++;
+    await route.fulfill({
+      path: dat,
+      headers: { "access-control-allow-origin": "*" },
+      contentType: "application/octet-stream",
+    });
+  });
+  const first = recordings.get(1);
+  const installReplayClock = (initialSeed) => {
     // Replace only the wall clock and the attempt's entropy. Every move is a trusted
     // browser input, and only the game's ordinary exit can write a best time.
     const nativeRandom = crypto.getRandomValues.bind(crypto);
@@ -56,7 +68,7 @@ try {
       index: 0,
       tick: 0,
       times: [],
-      seed: [0, 0],
+      seed: initialSeed,
       armed: false,
       trusted: 0,
       advance(count) {
@@ -104,15 +116,17 @@ try {
     };
     window.addEventListener("keydown", before, true);
     window.addEventListener("pointerdown", before, true);
-  });
+  };
+  await page.addInitScript(installReplayClock, [first.seed, first.phase]);
   await page.goto(url);
   await page.waitForFunction(
     () =>
-      !document.querySelector('button[aria-label="Move up"]')?.disabled &&
-      document.querySelector("canvas"),
+      document.querySelector("h2[data-level]")?.textContent === "LESSON 1" &&
+      !document.querySelector('button[aria-label="Move up"]')?.disabled,
     undefined,
     { polling: 20 }
   );
+  assert.equal(downloads, 1, "Fresh profile loads the remote campaign");
   const cdp = safari ? null : await page.context().newCDPSession(page);
   const button = (name) =>
     page.getByRole("button", { name, exact: true }).first();
@@ -136,16 +150,6 @@ try {
       },
       [r.seed, r.phase]
     );
-  await setSeed(recordings.get(1));
-  await activate("Levels");
-  await page.locator("input[type=file]").setInputFiles(dat);
-  await page.waitForFunction(
-    () =>
-      document.querySelector("h2[data-level]")?.textContent === "LESSON 1" &&
-      !document.querySelector("dialog").open,
-    undefined,
-    { polling: 20 }
-  );
   const names = { 1: "Up", 2: "Left", 4: "Down", 8: "Right" };
   const points = {};
   for (const [dir, name] of Object.entries(names)) {
@@ -258,6 +262,7 @@ try {
     () => JSON.parse(localStorage.getItem("patch-bay.v1.windows")).best
   );
   for (const row of report.boards) assert.equal(best[row.number], row.ticks);
+  assert.equal(downloads, 1, "Reload uses the locally saved campaign");
   report.reloadVerified = true;
   if (Number(from) === 1 && Number(through) === 149) {
     await activate("Save");
@@ -268,6 +273,7 @@ try {
         viewport: { width: 390, height: 844 },
         hasTouch: true,
       });
+      await fresh.route(campaignRequest, (route) => route.abort());
       await fresh.goto(url);
       await fresh.getByRole("button", { name: "Levels", exact: true }).tap();
       await fresh.locator("input[type=file]").setInputFiles(dat);

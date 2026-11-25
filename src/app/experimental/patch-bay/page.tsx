@@ -27,20 +27,5 @@ export default async function Page() {
     .update(atlas)
     .digest("hex")
     .slice(0, 12);
-  // Local development can use a private copy. Never embed installation media in a static export.
-  let localCampaign = "";
-  if (process.env.NODE_ENV === "development") {
-    try {
-      localCampaign = await readFile(
-        path.join(process.cwd(), ".cache/patch-bay/CHIPS.DAT"),
-        "base64"
-      );
-    } catch {}
-  }
-  return (
-    <PatchBay
-      localCampaign={localCampaign}
-      atlasUrl={`${atlasPath}?v=${revision}`}
-    />
-  );
+  return <PatchBay atlasUrl={`${atlasPath}?v=${revision}`} />;
 }
