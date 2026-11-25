@@ -13,6 +13,14 @@ export const metadata = buildPageMetadata({
   title: "Patch Bay | Alex Leung",
   description:
     "Play the Windows Chip’s Challenge campaign on a circuit-board puzzle console with keyboard or touch controls.",
+  images: [
+    {
+      url: "/assets/patch-bay/share.webp",
+      width: 1200,
+      height: 630,
+      alt: "Patch Bay console showing the orange robot, chips, and colored keys in Lesson 1 of Chip’s Challenge.",
+    },
+  ],
 });
 export const viewport: Viewport = {
   width: "device-width",

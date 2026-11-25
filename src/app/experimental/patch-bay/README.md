@@ -2,6 +2,10 @@
 
 Patch Bay plays the 149-level Windows edition of _Chip’s Challenge_ with keyboard or touch controls at `/experimental/patch-bay/`.
 
+On phones, drag on the round pad to move. A short flick moves one tile. Hold farther from where you touched to pick up speed, then lift to stop. To use arrow buttons, choose **Guide → Touch controls → Arrow buttons**. The game remembers your choice on this device.
+
+After a clear, tap **Next level** or press Enter. Level 144 opens the bonus-level menu, and the final bonus level offers a replay.
+
 ## Architecture
 
 ```mermaid

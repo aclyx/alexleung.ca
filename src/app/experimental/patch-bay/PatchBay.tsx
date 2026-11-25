@@ -16,6 +16,7 @@ import { Console, emptyReadout } from "./console";
 import s from "./console.module.css";
 import { BoardDisplay, loadEngine } from "./engine";
 import { restoreCode, saveCode } from "./save";
+import { Touchpad } from "./Touchpad";
 
 const rootKey = "patch-bay.v1.";
 const campaignUrl =
@@ -127,10 +128,12 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
     [password, setPassword] = useState(""),
     [passwordChoices, setPasswordChoices] = useState<number[]>([]),
     [hintOverflows, setHintOverflows] = useState(false),
+    [touchpad, setTouchpad] = useState(false),
     [music, setMusic] = useState(true),
     [effects, setEffects] = useState(true);
   const board = boards[progress.current - 1],
     campaign = boards.length === 149;
+  const won = hud.mode === "won";
   const stopped = hud.mode === "paused" || hud.mode === "lost";
   const hint =
     hud.hint && campaign && board.number === 16
@@ -150,8 +153,9 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
     return () => observer.disconnect();
   }, [hint, hud.mode]);
   useEffect(() => {
-    if (stopped && !panel) boardAction.current?.focus({ preventScroll: true });
-  }, [stopped, panel]);
+    if ((stopped || won) && !panel)
+      boardAction.current?.focus({ preventScroll: true });
+  }, [stopped, won, panel]);
 
   function remember(p: Progress) {
     save.current = p;
@@ -212,6 +216,12 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
       game.current.audio.configure(musicOn, effectsOn);
       setMusic(musicOn);
       setEffects(effectsOn);
+      const preferredPad = stored("pad");
+      setTouchpad(
+        preferredPad
+          ? preferredPad === "touchpad"
+          : window.matchMedia("(pointer: coarse)").matches
+      );
       install(levels);
       setReady(true);
     })().catch(() => {
@@ -326,24 +336,24 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
     0
   );
   const end144 = campaign && board.number === 144;
-  const status =
-    hud.mode === "won"
-      ? end144
-        ? "Campaign complete"
-        : "Circuit complete"
-      : stopped
-        ? ""
-        : hint;
+  const status = stopped || won ? "" : hint;
+  const clearMessage = !campaign
+    ? "Bench test complete."
+    : end144
+      ? "You cleared the main campaign!"
+      : board.number === boards.length
+        ? "You cleared the final bonus level!"
+        : `Level ${board.number} complete.`;
   function primary() {
-    if (hud.mode === "won" && end144) {
+    if (won && end144) {
       showPanel("levels");
       return;
     }
-    if (hud.mode === "won" && board.number < boards.length) {
+    if (won && board.number < boards.length) {
       select(board.number + 1);
       return;
     }
-    if (hud.mode === "lost" || hud.mode === "won") {
+    if (hud.mode === "lost" || won) {
       select(board.number);
       return;
     }
@@ -353,20 +363,19 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
       canvas.current?.focus({ preventScroll: true });
     }
   }
-  const control =
-    hud.mode === "won"
-      ? end144
-        ? "Bonus levels"
-        : board.number < boards.length
-          ? "Next level"
-          : "Replay"
-      : hud.mode === "lost"
-        ? "Retry level"
-        : hud.mode === "paused"
-          ? "Resume"
-          : hud.mode === "ready"
-            ? "Start"
-            : "Pause";
+  const control = won
+    ? end144
+      ? "Bonus levels"
+      : board.number < boards.length
+        ? "Next level"
+        : "Replay"
+    : hud.mode === "lost"
+      ? "Retry level"
+      : hud.mode === "paused"
+        ? "Resume"
+        : hud.mode === "ready"
+          ? "Start"
+          : "Pause";
   return (
     <div
       className={s.room}
@@ -399,6 +408,26 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
               height={864}
               aria-label="Game board. Move with the arrow keys, WASD, or the directional pad."
             />
+            {won && !panel && (
+              <div className={`${s.interrupt} ${s.clear}`}>
+                <section className={s.readout} aria-labelledby="patch-clear">
+                  <span
+                    aria-hidden="true"
+                    className={s.clearRobot}
+                    style={sprite(0x6e, atlasUrl)}
+                  />
+                  <h2 id="patch-clear">Nice work!</h2>
+                  <p id="patch-result">{clearMessage}</p>
+                  <button
+                    ref={boardAction}
+                    aria-describedby="patch-clear patch-result"
+                    onClick={primary}
+                  >
+                    {control}
+                  </button>
+                </section>
+              </div>
+            )}
             {hud.mode === "paused" && !panel && (
               <div className={s.interrupt}>
                 <div className={s.readout}>
@@ -490,10 +519,7 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
                 </button>
               )}
             </p>
-            <div
-              className={s.pad}
-              aria-label={hud.mode === "lost" ? undefined : "Directional pad"}
-            >
+            <div className={s.pad}>
               {hud.mode === "lost" ? (
                 <div className={s.fault} role="alert">
                   <h2 id="patch-loss">
@@ -503,6 +529,14 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
                     <p id="patch-cause">{causes[hud.cause]}</p>
                   )}
                 </div>
+              ) : touchpad ? (
+                <Touchpad
+                  disabled={!ready || stopped || won}
+                  move={(id, dir, speed) =>
+                    game.current?.press("p" + id, dir, speed)
+                  }
+                  release={(id) => game.current?.release("p" + id)}
+                />
               ) : (
                 directions.map(([name, cmd, arrow]) => (
                   <button
@@ -510,7 +544,7 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
                     className={s["dir" + cmd]}
                     data-direction={cmd}
                     aria-label={"Move " + name.toLowerCase()}
-                    disabled={!ready || stopped || hud.mode === "won"}
+                    disabled={!ready || stopped || won}
                     onPointerDown={(e) => {
                       if (e.button !== 0) return;
                       e.preventDefault();
@@ -553,21 +587,23 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
           <button disabled={!ready} onClick={() => showPanel("guide")}>
             Guide
           </button>
-          <button
-            className={s.primary}
-            disabled={!ready}
-            ref={hud.mode === "lost" ? boardAction : undefined}
-            aria-describedby={
-              hud.mode === "lost"
-                ? causes[hud.cause]
-                  ? "patch-loss patch-cause"
-                  : "patch-loss"
-                : undefined
-            }
-            onClick={primary}
-          >
-            {control}
-          </button>
+          {!won && (
+            <button
+              className={s.primary}
+              disabled={!ready}
+              ref={hud.mode === "lost" ? boardAction : undefined}
+              aria-describedby={
+                hud.mode === "lost"
+                  ? causes[hud.cause]
+                    ? "patch-loss patch-cause"
+                    : "patch-loss"
+                  : undefined
+              }
+              onClick={primary}
+            >
+              {control}
+            </button>
+          )}
           <i />
         </footer>
         {!panel && notice && (
@@ -725,9 +761,27 @@ export function PatchBay({ atlasUrl }: { atlasUrl: string }) {
         {panel === "guide" && (
           <>
             <p>
-              Move with the arrows, WASD, numeric keypad or directional pad.
-              Hold to keep moving, or slide your thumb to turn. Space pauses and
-              resumes.
+              Move with the arrow keys, WASD, or the numeric keypad. Space
+              pauses and resumes.
+            </p>
+            <label>
+              Touch controls{" "}
+              <select
+                value={touchpad ? "touchpad" : "arrows"}
+                onChange={(e) => {
+                  setTouchpad(e.target.value === "touchpad");
+                  put("pad", e.target.value);
+                  game.current?.audio.control();
+                }}
+              >
+                <option value="touchpad">Touchpad</option>
+                <option value="arrows">Arrow buttons</option>
+              </select>
+            </label>
+            <p>
+              {touchpad
+                ? "Drag on the pad to move. Drag farther to move faster. Lift to stop."
+                : "Tap an arrow for one tile. Hold to keep moving, or slide to another arrow to turn."}
             </p>
             <div className={s.legend}>
               {[

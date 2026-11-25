@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 
 import { benchTest } from "../campaign";
 import { BoardDisplay, loadEngine, startBoard, type Engine } from "../engine";
+import { SpriteMotion } from "../spriteMotion";
 
 const wasm = Uint8Array.from(
   readFileSync("public/assets/patch-bay/ms-engine.wasm")
@@ -51,6 +52,88 @@ it("sounds the switch when a tank drives onto it while Chip stands still", () =>
   expect(engine.position()).toBe(spawn);
   expect(engine.cell(spawn + 3) & 255).toBe(0x26);
   expect(engine.sounds() & (1 << 26)).toBeTruthy();
+});
+
+it.each([35, 36, 39, 40])(
+  "lowers switch %i under the robot and raises it when the robot steps off",
+  (id) => {
+    const board = benchTest();
+    board.record.set([id, 0], 10 + spawn + 1);
+    startBoard(engine, board);
+    const frames = jest.spyOn(SpriteMotion.prototype, "frame");
+    try {
+      const display = new BoardDisplay(
+        document.createElement("canvas"),
+        new Image()
+      );
+      display.draw(engine, 0, true, true);
+      expect(frames).not.toHaveBeenCalledWith(id, 1);
+      engine.step(8);
+      display.draw(engine, 0, true, true);
+      expect(frames).toHaveBeenCalledWith(id, 1);
+      frames.mockClear();
+      for (let t = 0; t < 4; t++) engine.step(8);
+      expect(engine.position()).toBe(spawn + 2);
+      display.draw(engine, 0, true, true);
+      expect(frames).not.toHaveBeenCalledWith(id, 1);
+    } finally {
+      frames.mockRestore();
+    }
+  }
+);
+
+it.each(["block", "tank"])("lowers a switch under a %s", (actor) => {
+  const board = benchTest();
+  const extra = actor === "tank" ? 4 : 0;
+  const record = new Uint8Array(board.record.length + extra);
+  record.set(board.record);
+  record.set([actor === "tank" ? 0x4f : 10, 35, 0], 10 + spawn + 1);
+  if (actor === "tank")
+    record.set([4, 0, 10, 2, 14, 15], board.record.length - 2);
+  startBoard(engine, { ...board, record });
+  if (actor === "tank") for (let t = 0; t <= 4; t++) engine.step(0);
+  else engine.step(8);
+  const frames = jest.spyOn(SpriteMotion.prototype, "frame");
+  try {
+    new BoardDisplay(document.createElement("canvas"), new Image()).draw(
+      engine,
+      0,
+      true,
+      true
+    );
+    expect(frames).toHaveBeenCalledWith(35, 1);
+  } finally {
+    frames.mockRestore();
+  }
+});
+
+it("uses a moving pose only after a creature enters a new tile", () => {
+  const board = benchTest();
+  const record = new Uint8Array(board.record.length + 4);
+  record.set(board.record);
+  record.set([0x4f, 0, 1], 10 + spawn + 1);
+  record.set([4, 0, 10, 2, 14, 15], board.record.length - 2);
+  startBoard(engine, { ...board, record });
+  const display = new BoardDisplay(
+    document.createElement("canvas"),
+    new Image()
+  );
+  const frames = jest.spyOn(SpriteMotion.prototype, "frame");
+  try {
+    display.draw(engine, 0, true, true);
+    display.draw(engine, 300, false);
+    expect(frames).toHaveBeenCalledWith(0x4f, 1);
+    for (let t = 0; t <= 4; t++) engine.step(0);
+    display.draw(engine, 310, true);
+    expect(frames).toHaveBeenCalledWith(0x4f, 8);
+    display.draw(engine, 370, true);
+    expect(frames).toHaveBeenCalledWith(0x4f, 9);
+    frames.mockClear();
+    display.draw(engine, 650, true);
+    expect(frames).toHaveBeenCalledWith(0x4f, 1);
+  } finally {
+    frames.mockRestore();
+  }
 });
 
 it.each(["Chip", "tank"])(
