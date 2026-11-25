@@ -1,0 +1,83 @@
+--- mslogic.c
++++ mslogic.c
+@@ -70,6 +70,8 @@
+ 
+ #define lastmove()          (state->lastmove)
+ 
++#define SND_WALL_TOGGLE SND_COUNT
++#define SND_HINT_READ (SND_COUNT + 1)
+ #define addsoundeffect(sfx) (state->soundeffects |= 1 << (sfx))
+ 
+ #define cellat(pos)         (&state->map[pos])
+@@ -531,6 +533,8 @@
+ static void togglewalls(void) {
+     mapcell* cell;
+     int pos;
++
++    addsoundeffect(SND_WALL_TOGGLE);
+ 
+     for (pos = 0; pos < CXGRID * CYGRID; ++pos) {
+         cell = cellat(pos);
+@@ -1043,8 +1047,10 @@
+                 return FALSE;
+         }
+         if (floor == HiddenWall_Temp || floor == BlueWall_Real) {
+-            if (!(flags & CMM_NOEXPOSEWALLS))
++            if (!(flags & CMM_NOEXPOSEWALLS)) {
+                 getfloorat(to)->id = Wall;
++                addsoundeffect(SND_WALL_CREATED);
++            }
+             return FALSE;
+         }
+         if (floor == Block_Static) {
+@@ -1612,25 +1618,32 @@
+     floor = tile->id;
+     crid = creatureid(cellat(oldpos)->top.id); /* Non-existence patch */
+     if (cr->id == Chip) {
++        if (isice(floor)) addsoundeffect(SND_SKATING_FORWARD);
++        if (isslide(floor)) addsoundeffect(SND_SLIDING);
+         switch (floor) {
+             case Empty:
+                 poptile(newpos);
+                 break;
+             case Water:
++                addsoundeffect(SND_WATER_SPLASH);
+                 if (!possession(Boots_Water))
+                     chipstatus() = CHIP_DROWNED;
+                 break;
+             case Fire:
++                addsoundeffect(SND_FIREWALKING);
+                 if (!possession(Boots_Fire))
+                     chipstatus() = CHIP_BURNED;
+                 break;
+             case Dirt:
++            case BlueWall_Fake:
++                addsoundeffect(SND_TILE_EMPTIED);
+                 poptile(newpos);
+                 break;
+-            case BlueWall_Fake:
+-                poptile(newpos);
++            case HintButton:
++                addsoundeffect(SND_HINT_READ);
+                 break;
+             case PopupWall:
++                addsoundeffect(SND_WALL_CREATED);
+                 tile->id = Wall;
+                 break;
+             case Door_Red:
+@@ -1685,6 +1698,7 @@
+                 break;
+         }
+     } else if (cr->id == Block) {
++        addsoundeffect(SND_BLOCK_MOVING);
+         switch (floor) {
+             case Empty:
+                 poptile(newpos);
+@@ -1809,6 +1823,7 @@
+         cellat(oldpos)->bot.state &= ~FS_CLONING;
+ 
+     if (floor == Beartrap) {
++        addsoundeffect(SND_TRAP_ENTERED);
+         if (istrapopen(newpos, oldpos))
+             cr->state |= CS_RELEASED;
+     } else if (cellat(newpos)->bot.id == Beartrap) {

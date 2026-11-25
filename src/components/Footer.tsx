@@ -24,9 +24,9 @@ export default function Footer() {
               label.replace(" Profile", "").replace("X (Twitter)", "X")
             }
           />
-          <LinkText href="/feed.xml" className={footerLinkClassName}>
+          <a href="/feed.xml" className={footerLinkClassName}>
             RSS
-          </LinkText>
+          </a>
           <LinkText href="/contact/" className={footerLinkClassName}>
             Contact
           </LinkText>
