@@ -3,6 +3,7 @@ import { readFileSync } from "node:fs";
 import { benchTest } from "../campaign";
 import { Console } from "../console";
 import { BoardDisplay, loadEngine } from "../engine";
+import { SpriteMotion } from "../spriteMotion";
 
 const originalFetch = global.fetch;
 afterEach(() => {
@@ -76,6 +77,23 @@ it("repeats a held direction and stops on release without a trailing step", asyn
   expect(engine.position()).toBe(start + 2);
 });
 
+it("scales held touchpad moves to the drag distance without retriggering on pointer moves", async () => {
+  const { game, engine, advance } = await openBench();
+  const start = engine.position();
+  game.press("thumb", 8, 0.25);
+  advance(650);
+  expect(engine.position()).toBe(start + 1);
+  game.press("thumb", 8, 0.25);
+  advance(350);
+  expect(engine.position()).toBe(start + 2);
+  game.press("thumb", 8, 1);
+  advance(250);
+  expect(engine.position()).toBe(start + 3);
+  game.release("thumb");
+  advance(1200);
+  expect(engine.position()).toBe(start + 3);
+});
+
 it.each([0, 30, 80, 140])(
   "plays a burst of distinct presses in order at %i ms spacing",
   async (spacing) => {
@@ -146,4 +164,25 @@ it("glides after a step and settles before the next movement beat", async () => 
   expect(display.moving).toBe(true);
   advance(80);
   expect(display.moving).toBe(false);
+});
+
+it("animates the ready board without starting the level timer and freezes on pause", async () => {
+  const { game, engine, advance } = await openBench();
+  const board = benchTest();
+  board.record.set([3, 4, 13, 18, 19, 20, 50, 21], 10 + 14 * 32 + 10);
+  const pose = jest.spyOn(SpriteMotion.prototype, "frame");
+  game.load(board);
+  const ticks = engine.ticks();
+  advance(350);
+  expect(engine.ticks()).toBe(ticks);
+  for (const id of [3, 4, 13, 18, 19, 20, 50, 21, 0x6e])
+    expect(pose).toHaveBeenCalledWith(id, 1);
+  game.press("right", 8);
+  game.release("right");
+  advance(90);
+  expect(pose.mock.calls.some(([id, n]) => id === 0x6f && n >= 3)).toBe(true);
+  game.pause();
+  pose.mockClear();
+  advance(500);
+  expect(pose).not.toHaveBeenCalled();
 });
